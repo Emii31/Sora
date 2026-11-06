@@ -1,0 +1,18 @@
+# Session Log
+
+## 2026-11-07 (Phase 2A Completed)
+- Repaired `scripts/dev_local_smoke.py` to use a foreground Flask execution lifecycle with proper error propagation and `finally` cleanup.
+- Created `docs/TRANSLATION_INVENTORY.md` to map UI translation scope and progress.
+- Translated and rebranded the initial welcome/login interface (`templates/login.html`) to English and Sora branding.
+- Verified `/api/health`, `/app`, and `/login` via isolated smoke test runs. Saved command evidence under `docs/verification/phase_02A/`.
+- Updated project documentation (`docs/phases/PHASE_02A.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`, `docs/DECISIONS.md`).
+
+## 2026-11-07 (Phase 2B Emergency Recovery Incident)
+- **Incident**: Phase 2B edit erroneously truncated `templates/index.html` from 12,807 lines down to 2,421 lines, discarding major application views and logic.
+- **Recovery Action**:
+  - Established isolated backup at `/mnt/data/Companion/recovery/20261107_emergency_recovery/` with full manifest and file hashes.
+  - Rolled back `templates/index.html` to exact commit HEAD (`cbea20b436a255e3cd26d952aaf952c003990b65`). Verified byte identity (`git hash-object` matches `31c36dc06f55e58912215c28bd58514ed036b93c`, 12,807 lines).
+  - Preserved valid Phase 2A login translation and Phase 2B login-copy corrections in `templates/login.html`.
+  - Added strict editing guardrails to `CLAUDE.md` to prevent whole-file replacements, stubs, and unverified large deletions.
+  - Corrected project status documents to reflect Phase 2B rollback.
+- **Session History Source Note**: Prior session logs and context snapshots from early sessions are reconstructed from conversation archives and git history; any claims regarding intermediate uncommitted states during Phase 2B are explicitly qualified as post-incident recovery records.

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -14,7 +14,7 @@
   } catch (e) {}
 })();
 </script>
-<title>Miru — 初次见面</title>
+<title>Sora — First Run</title>
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -849,11 +849,11 @@ body[data-view="api-setup"] .note {
   h1 { font-size: 28px; }
   .choice { grid-template-columns: 40px 1fr; padding-right: 38px; }
   .icon { width: 40px; height: 40px; }
-	  .grid-2,
-	  .credential-grid,
-	  .file-picker,
-	  .api-grid,
-	  .deploy-steps { grid-template-columns: 1fr; }
+		  .grid-2,
+		  .credential-grid,
+		  .file-picker,
+		  .api-grid,
+		  .deploy-steps { grid-template-columns: 1fr; }
   body[data-view="local"] .local-actions .btn { width: 100%; }
 }
 </style>
@@ -870,28 +870,28 @@ body[data-view="api-setup"] .note {
   <div class="topbar">
     <div class="brand">
       <img src="/assets/brand/miru-logo.svg" alt="" onerror="this.onerror=null;this.src='/icon-192.png'">
-      <span>Miru</span>
+      <span>Sora</span>
     </div>
   </div>
 
   <section class="panel">
     <div id="view-home" class="view active">
       <p class="kicker">FIRST RUN</p>
-      <h1>Miru 要住在哪里？</h1>
-      <p class="sub" id="homeScopeCopy">你可以让她住在自己的私有服务器里，让多台设备看到同一个 Miru；也可以先只在这台电脑上使用，所有数据都留在本机。</p>
+      <h1>Where should Sora live?</h1>
+      <p class="sub" id="homeScopeCopy">You can host her on your own private server so multiple devices share the same Sora, or use her exclusively on this computer with all data remaining local.</p>
       <div class="choices">
         <button class="choice" type="button" onclick="showView('multi')">
           <span class="icon">↔</span>
           <span>
-            <span class="choice-title">多设备同步使用</span>
-            <span class="choice-desc">Mac、Windows 和 Android 使用同一个长邀请码，聊天、截图、记忆都同步到同一台私有服务器。</span>
+            <span class="choice-title">Multi-device sync</span>
+            <span class="choice-desc">Mac, Windows, and Android share one invite code, synchronizing chat, screenshots, and memory to your private server.</span>
           </span>
         </button>
         <button class="choice" type="button" onclick="showView('local')">
           <span class="icon">⌂</span>
           <span>
-            <span class="choice-title" id="localChoiceTitle">只在这台电脑使用</span>
-            <span class="choice-desc" id="localChoiceDesc">不需要邀请码，后端、记忆和模型配置都放在本机；手机暂时不会同步。</span>
+            <span class="choice-title" id="localChoiceTitle">This computer only</span>
+            <span class="choice-desc" id="localChoiceDesc">No invite code needed; backend, memory, and model configuration stay on this device.</span>
           </span>
         </button>
       </div>
@@ -899,37 +899,37 @@ body[data-view="api-setup"] .note {
 
     <div id="view-local" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('home')" aria-label="返回">‹</button>
-        <strong id="localToolbarTitle">只在这台电脑使用</strong>
+        <button class="back" type="button" onclick="showView('home')" aria-label="Back">‹</button>
+        <strong id="localToolbarTitle">This computer only</strong>
       </div>
-      <h1 id="localHeading">让 Miru 住在这台电脑</h1>
-      <p class="sub" id="localScopeCopy">本地模式会在这台电脑上创建一个本地账号。聊天、记忆和 API Key 都只写入本机数据目录；不能多设备同步。</p>
+      <h1 id="localHeading">Keep Sora on this computer</h1>
+      <p class="sub" id="localScopeCopy">Local mode creates a local account on this computer. Chat, memory, and API keys are stored exclusively in the local data directory without multi-device sync.</p>
       <div class="message" id="localMsg" style="margin-top:14px"></div>
       <div class="inline-actions local-actions">
-        <button class="btn" id="localBtn" type="button" onclick="startLocalMode()">开始本地使用</button>
+        <button class="btn" id="localBtn" type="button" onclick="startLocalMode()">Start Local Use</button>
       </div>
     </div>
 
     <div id="view-multi" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('home')" aria-label="返回">‹</button>
-        <strong>多设备同步使用</strong>
+        <button class="back" type="button" onclick="showView('home')" aria-label="Back">‹</button>
+        <strong>Multi-device sync</strong>
       </div>
-      <h1>你已经有 Miru 邀请码了吗？</h1>
-      <p class="sub" id="multiScopeCopy">已有账号就直接输入长邀请码；还没有账号，可以使用官方服务器，或者让这台电脑帮你在自己的服务器上创建一个新的 Miru。</p>
+      <h1>Do you already have a Sora invite code?</h1>
+      <p class="sub" id="multiScopeCopy">If you already have an account, enter your long invite code. Otherwise, you can use the official server or let this computer help you create a new Sora on your own server.</p>
       <div class="choices">
         <button class="choice" type="button" onclick="showView('invite')">
           <span class="icon">#</span>
           <span>
-            <span class="choice-title">我已有邀请码</span>
-            <span class="choice-desc">输入形如 MIRU-XXXXXXXXXX-YYYYYY 的长邀请码，Miru 会自己找到对应的私有服务器。</span>
+            <span class="choice-title">I have an invite code</span>
+            <span class="choice-desc">Enter your long invite code (e.g. MIRU-XXXXXXXXXX-YYYYYY), and Sora will locate your private server automatically.</span>
           </span>
         </button>
         <button class="choice" type="button" onclick="showView('new')">
           <span class="icon">＋</span>
           <span>
-            <span class="choice-title">我还没有邀请码</span>
-            <span class="choice-desc">选择官方服务器，或使用自己的云服务器创建一个只属于你的 Miru。</span>
+            <span class="choice-title">I do not have an invite code</span>
+            <span class="choice-desc">Choose the official server or set up your own cloud server to create a dedicated Sora.</span>
           </span>
         </button>
       </div>
@@ -937,41 +937,41 @@ body[data-view="api-setup"] .note {
 
     <div id="view-invite" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('multi')" aria-label="返回">‹</button>
-        <strong>输入邀请码</strong>
+        <button class="back" type="button" onclick="showView('multi')" aria-label="Back">‹</button>
+        <strong>Enter Invite Code</strong>
       </div>
-      <h1>让 Miru 回到你身边</h1>
-      <p class="sub">这里必须使用完整长邀请码。短码无法登录，请确认已经完整复制。</p>
+      <h1>Welcome back to Sora</h1>
+      <p class="sub">Please enter your complete long invite code. Short codes are not supported.</p>
       <form class="form" onsubmit="doInviteLogin(event)" autocomplete="off">
         <div class="field">
-          <label for="codeInput">长邀请码</label>
+          <label for="codeInput">Invite Code</label>
           <input id="codeInput" class="code-input" type="text" placeholder="MIRU-XXXXXXXXXX-YYYYYY" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false">
         </div>
         <div class="message" id="inviteMsg"></div>
-        <button class="btn" id="inviteBtn" type="submit" disabled>登录 Miru</button>
+        <button class="btn" id="inviteBtn" type="submit" disabled>Sign In to Sora</button>
       </form>
     </div>
 
     <div id="view-new" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('multi')" aria-label="返回">‹</button>
-        <strong>创建新账号</strong>
+        <button class="back" type="button" onclick="showView('multi')" aria-label="Back">‹</button>
+        <strong>Create New Account</strong>
       </div>
-      <h1>选择一台服务器</h1>
-      <p class="sub">不管是官方服务器还是你自己的服务器，最后都会得到同一种长邀请码，Mac、Windows 和 Android 都用它登录。</p>
+      <h1>Choose a server</h1>
+      <p class="sub">Whether official or your own, you will receive a long invite code that works for Mac, Windows, and Android.</p>
       <div class="choices">
         <button class="choice" type="button" onclick="showView('official')">
           <span class="icon">★</span>
           <span>
-            <span class="choice-title">使用官方服务器<span class="pill">准备中</span></span>
-            <span class="choice-desc">未来会跳转官网订单页，付款后自动开通 Miru 私有服务器并返回邀请码。</span>
+            <span class="choice-title">Official Server<span class="pill">Coming soon</span></span>
+            <span class="choice-desc">Will redirect to order page; automatically provisions Sora private server and returns invite code upon payment.</span>
           </span>
         </button>
         <button class="choice" type="button" onclick="showView('self')">
           <span class="icon">IP</span>
           <span>
-            <span class="choice-title">使用自己的服务器</span>
-            <span class="choice-desc">输入公网 IPv4、SSH 用户和密码，并选择 Miru 服务包，Miru 会在服务器上创建你的账号并返回邀请码。</span>
+            <span class="choice-title">Self-hosted server</span>
+            <span class="choice-desc">Enter public IPv4, SSH user, and password. Select Sora service package to automatically create your account and return the invite code.</span>
           </span>
         </button>
       </div>
@@ -979,93 +979,93 @@ body[data-view="api-setup"] .note {
 
     <div id="view-official" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('new')" aria-label="返回">‹</button>
-        <strong>官方服务器</strong>
+        <button class="back" type="button" onclick="showView('new')" aria-label="Back">‹</button>
+        <strong>Official Server</strong>
       </div>
-      <h1>官方开通正在准备中</h1>
-      <p class="sub">现在如果你已经有邀请码，可以直接登录；如果你有自己的云服务器，也可以先在自己的服务器上创建 Miru。</p>
+      <h1>Official provisioning is coming soon</h1>
+      <p class="sub">For now, if you have an invite code, you can sign in directly; if you have a cloud server, you can create Sora on your own server.</p>
       <div class="inline-actions">
-        <button class="btn" type="button" onclick="showView('invite')">输入已有邀请码</button>
-        <button class="btn secondary" type="button" onclick="showView('self')">使用自己的服务器</button>
+        <button class="btn" type="button" onclick="showView('invite')">Enter existing invite code</button>
+        <button class="btn secondary" type="button" onclick="showView('self')">Use own server</button>
       </div>
     </div>
 
     <div id="view-self" class="view">
       <div class="toolbar">
-        <button class="back" type="button" onclick="showView('new')" aria-label="返回">‹</button>
-        <strong>自有服务器</strong>
+        <button class="back" type="button" onclick="showView('new')" aria-label="Back">‹</button>
+        <strong>Self-hosted server</strong>
       </div>
-      <h1>在你的服务器上创建 Miru</h1>
-      <p class="sub">自动安装 Docker 目前支持 Ubuntu / Debian；其他 Linux 请先安装 Docker 和 Docker Compose。先从 Miru 发布页下载服务包，再在这里选择它；创建完成后，Mac、Windows 和 Android 都用同一个长邀请码登录。</p>
-      <div class="note">默认会从 5001 到 5010 中选择第一个空闲端口；如果 5001 已被占用，会使用后续端口。请在云安全组或防火墙放行实际端口。首次连接会信任这台服务器的指纹，请确认 IP 是你自己的云服务器。</div>
+      <h1>Create Sora on your server</h1>
+      <p class="sub">Automated Docker setup supports Ubuntu / Debian. For other Linux, first install Docker and Docker Compose. Download the Sora service package from the release page, then select it here. Once created, use the same long invite code on Mac, Windows, and Android.</p>
+      <div class="note">By default, it will choose the first available port from 5001 to 5010. If 5001 is taken, it will use subsequent ports. Please ensure ports are open in your cloud firewall/security group. Initial connection will trust this server's fingerprint; please confirm the IP is your own cloud server.</div>
       <form class="form self-server-form" style="margin-top:16px" onsubmit="createSelfServer(event)" autocomplete="off">
         <div class="self-form-section">
           <div class="field">
-            <label for="selfIp">服务器公网 IPv4</label>
-            <input id="selfIp" type="text" inputmode="decimal" placeholder="输入你的云服务器公网 IPv4" autocomplete="off">
+            <label for="selfIp">Server public IPv4</label>
+            <input id="selfIp" type="text" inputmode="decimal" placeholder="Enter your cloud server public IPv4" autocomplete="off">
           </div>
           <div class="credential-grid">
             <div class="field">
-              <label for="selfUser">SSH 用户</label>
-              <input id="selfUser" type="text" placeholder="云服务器登录页显示的用户名" autocomplete="off">
+              <label for="selfUser">SSH User</label>
+              <input id="selfUser" type="text" placeholder="Username shown in server login window" autocomplete="off">
             </div>
             <div class="field">
-              <label for="selfPassword">SSH 密码 / 密钥</label>
-              <input id="selfPassword" type="password" placeholder="输入密码；私钥有口令时填口令" autocomplete="off">
+              <label for="selfPassword">SSH Password / Key</label>
+              <input id="selfPassword" type="password" placeholder="Enter password; if key has passphrase, enter it" autocomplete="off">
             </div>
           </div>
           <input id="selfSshPrivateKey" class="file-input" type="file">
           <div class="file-picker">
-            <button class="file-picker-btn" type="button" onclick="document.getElementById('selfSshPrivateKey').click()">选择 SSH 私钥</button>
-            <div class="file-name" id="selfSshPrivateKeyName">没有选择私钥</div>
+            <button class="file-picker-btn" type="button" onclick="document.getElementById('selfSshPrivateKey').click()">Select SSH Private Key</button>
+            <div class="file-name" id="selfSshPrivateKeyName">No key selected</div>
           </div>
-          <div class="field-note">用户名必须和云服务器登录窗口保持一致。可以填写登录密码，也可以选择私钥；私钥有口令时在密码栏填写。Mac 或 Windows 已配置 SSH key 时，也可以不选文件并在密码栏输入 <code>//</code>。非 root 密钥用户需有免密 sudo，或在密码栏提供可用的 sudo 密码。</div>
+          <div class="field-note">Username must match the cloud server login window. You can enter a login password or select a private key; if the key has a passphrase, enter it in the password field. If SSH key is already configured on Mac/Windows, you can leave it blank and enter <code>//</code> in the password field. Non-root key users require passwordless sudo, or provide valid sudo password in the password field.</div>
         </div>
         <div class="archive-card soft">
           <div class="archive-title">
-            <strong>Miru 服务包</strong>
-            <span>推荐</span>
+            <strong>Sora Service Package</strong>
+            <span>Recommended</span>
           </div>
           <input id="selfImageTar" class="file-input" type="file">
           <div class="file-picker">
-            <button class="file-picker-btn" type="button" onclick="document.getElementById('selfImageTar').click()">选择服务包</button>
-            <div class="file-name" id="selfImageTarName">还没有选择文件</div>
+            <button class="file-picker-btn" type="button" onclick="document.getElementById('selfImageTar').click()">Select Service Package</button>
+            <div class="file-name" id="selfImageTarName">No file selected</div>
           </div>
-          <div class="file-hint">请选择从 Miru Releases 下载的服务包，例如 miru-server-v0.2.0-linux-amd64.tar.gz。没有选择文件时，会改用高级选项里的在线镜像地址。</div>
+          <div class="file-hint">Please select the service package archive (e.g., miru-server-v0.2.0-linux-amd64.tar.gz), or leave unselected to use the upstream online image address in advanced options. Note: official cloud provisioning and hosted services are currently unavailable upstream placeholders.</div>
         </div>
 
         <details>
-          <summary>高级选项</summary>
+          <summary>Advanced Options</summary>
           <div class="advanced">
             <div class="field">
-              <label for="selfSshPort">SSH 端口</label>
+              <label for="selfSshPort">SSH Port</label>
               <input id="selfSshPort" type="number" min="1" max="65535" value="22">
-              <div class="file-hint">如果填写的用户不是系统管理员，Miru 会在需要系统权限时通过 sudo 完成安装；请确认它有 sudo 权限。</div>
+              <div class="file-hint">If the entered user is not the system administrator, Sora will complete installation using sudo; please ensure it has sudo permissions.</div>
             </div>
             <div class="field">
-              <label for="selfHostHome">服务器保存位置</label>
-              <input id="selfHostHome" type="text" value="/opt/miru-host" autocomplete="off">
+              <label for="selfHostHome">Server save location</label>
+              <input id="selfHostHome" type="text" value="/opt/sora-host" autocomplete="off">
             </div>
             <div class="grid-2">
               <div class="field">
-                <label for="selfPortStart">起始端口</label>
+                <label for="selfPortStart">Start Port</label>
                 <input id="selfPortStart" type="number" min="1" max="65535" value="5001">
               </div>
               <div class="field">
-                <label for="selfPortEnd">结束端口</label>
+                <label for="selfPortEnd">End Port</label>
                 <input id="selfPortEnd" type="number" min="1" max="65535" value="5010">
               </div>
             </div>
             <div class="field">
-              <label for="selfImage">在线镜像地址</label>
-              <input id="selfImage" type="text" value="miru/server:0.2.0" autocomplete="off">
-              <div class="file-hint">已经选择服务包时，这里通常不用改；没有选择服务包时，这里可以填写服务器能直接下载的镜像地址。</div>
+              <label for="selfImage">Online Image Address</label>
+              <input id="selfImage" type="text" value="sora/server:0.2.0" autocomplete="off">
+              <div class="file-hint">Usually doesn't need changing if a service package is selected; if not, enter the image address downloadable by the server here.</div>
             </div>
           </div>
         </details>
 
         <div class="message" id="selfMsg"></div>
-        <button class="btn" id="selfBtn" type="submit">创建 Miru</button>
+        <button class="btn" id="selfBtn" type="submit">Create Sora</button>
       </form>
       <div class="progress" id="selfProgress">
         <div class="deploy-head">
@@ -1073,8 +1073,8 @@ body[data-view="api-setup"] .note {
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
           <div>
-            <div class="phase" id="selfPhase">正在准备</div>
-            <div class="phase-help" id="selfPhaseHelp">Miru 会把部署过程一步步告诉你。</div>
+            <div class="phase" id="selfPhase">Preparing</div>
+            <div class="phase-help" id="selfPhaseHelp">Sora will tell you the deployment process step by step.</div>
           </div>
         </div>
         <div class="progress-track" aria-hidden="true">
@@ -1082,22 +1082,22 @@ body[data-view="api-setup"] .note {
         </div>
         <ol class="deploy-steps" id="selfSteps"></ol>
         <details class="deploy-details">
-          <summary>查看详细过程</summary>
+          <summary>View details</summary>
           <div class="logs" id="selfLogs"></div>
         </details>
       </div>
       <div class="success-card" id="selfSuccess">
         <div>
-          <div class="success-title">Miru 已经在你的服务器上醒来了</div>
-          <p class="sub" style="margin:6px 0 0">下面这个长邀请码同时给 Mac、Windows 和 Android 使用。其他设备输入它，就会连到同一个 Miru。</p>
+          <div class="success-title">Sora has woken up on your server</div>
+          <p class="sub" style="margin:6px 0 0">The long invite code below is used for Mac, Windows, and Android. Other devices enter it, and they will connect to the same Sora.</p>
         </div>
         <div class="success-copy">
-          <label>长邀请码</label>
+          <label>Long Invite Code</label>
           <div class="invite-code-box" id="selfSuccessCode"></div>
         </div>
         <div class="inline-actions">
-          <button class="btn secondary" id="selfCopyInviteBtn" type="button" onclick="copySelfInvite()">复制邀请码</button>
-          <button class="btn" id="selfEnterBtn" type="button" onclick="enterSelfServer()">进入 Miru</button>
+          <button class="btn secondary" id="selfCopyInviteBtn" type="button" onclick="copySelfInvite()">Copy Invite Code</button>
+          <button class="btn" id="selfEnterBtn" type="button" onclick="enterSelfServer()">Enter Sora</button>
         </div>
         <div class="message ok" id="selfSuccessMsg"></div>
       </div>
@@ -1105,74 +1105,74 @@ body[data-view="api-setup"] .note {
 
     <div id="view-api-setup" class="view">
       <h1>API Key</h1>
-      <p class="sub">Miru 需要视觉、聊天、记忆三组模型。保存后会逐项测试，全部通过后再进入应用。</p>
-      <div class="note" id="apiSetupScopeCopy">配置会写入刚创建的 Miru：本地模式存在这台电脑，自有服务器模式存在你的服务器。页面不会显示完整 API Key。</div>
-      <div class="api-format-hint">服务地址填 OpenAI-compatible Base URL。</div>
+      <p class="sub">Sora needs three sets of models: vision, chat, and memory. After saving, it will test each one; after all pass, it will enter the application.</p>
+      <div class="note" id="apiSetupScopeCopy">Configuration will be saved to the newly created Sora: local mode exists on this computer, self-hosted mode exists on your server. The page will not display the full API Key.</div>
+      <div class="api-format-hint">Enter OpenAI-compatible Base URL for service address.</div>
       <div class="api-setup" style="margin-top:16px">
         <div class="api-tier-card">
           <div class="api-tier-head">
-            <strong>视觉模型</strong>
-            <span>推荐 OpenRouter + Qwen VLM；也可以换成其他支持图片输入的模型</span>
+            <strong>Vision Model</strong>
+            <span>Recommended: OpenRouter + Qwen VLM; or replace with other vision-capable models</span>
           </div>
           <div class="api-grid">
             <div class="field">
-              <label for="apiVisionHost">服务地址</label>
-              <input id="apiVisionHost" type="text" placeholder="推荐示例：openrouter.ai/api" autocomplete="off">
+              <label for="apiVisionHost">Service Address</label>
+              <input id="apiVisionHost" type="text" placeholder="Recommended example: openrouter.ai/api" autocomplete="off">
             </div>
             <div class="field">
-              <label for="apiVisionModel">模型名称</label>
-              <input id="apiVisionModel" type="text" placeholder="推荐示例：qwen/qwen3.5-9b" autocomplete="off">
+              <label for="apiVisionModel">Model Name</label>
+              <input id="apiVisionModel" type="text" placeholder="Recommended example: qwen/qwen3.5-9b" autocomplete="off">
             </div>
             <div class="field">
               <label for="apiVisionKey">API Key</label>
-              <input id="apiVisionKey" type="password" placeholder="粘贴 API Key" autocomplete="off">
+              <input id="apiVisionKey" type="password" placeholder="Paste API Key" autocomplete="off">
             </div>
           </div>
         </div>
         <div class="api-tier-card">
           <div class="api-tier-head">
-            <strong>聊天模型</strong>
-            <span>推荐 DeepSeek Pro；也可以换成 GPT、Gemini 或其他强模型</span>
+            <strong>Chat Model</strong>
+            <span>Recommended: DeepSeek Pro; or replace with GPT, Gemini, or other strong models</span>
           </div>
           <div class="api-grid">
             <div class="field">
-              <label for="apiChatHost">服务地址</label>
-              <input id="apiChatHost" type="text" placeholder="推荐示例：api.deepseek.com" autocomplete="off">
+              <label for="apiChatHost">Service Address</label>
+              <input id="apiChatHost" type="text" placeholder="Recommended example: api.deepseek.com" autocomplete="off">
             </div>
             <div class="field">
-              <label for="apiChatModel">模型名称</label>
-              <input id="apiChatModel" type="text" placeholder="推荐示例：deepseek-v4-pro" autocomplete="off">
+              <label for="apiChatModel">Model Name</label>
+              <input id="apiChatModel" type="text" placeholder="Recommended example: deepseek-v4-pro" autocomplete="off">
             </div>
             <div class="field">
               <label for="apiChatKey">API Key</label>
-              <input id="apiChatKey" type="password" placeholder="粘贴 API Key" autocomplete="off">
+              <input id="apiChatKey" type="password" placeholder="Paste API Key" autocomplete="off">
             </div>
           </div>
         </div>
         <div class="api-tier-card">
           <div class="api-tier-head">
-            <strong>记忆模型</strong>
-            <span>推荐 DeepSeek Flash；也可以换成性价比高的文本模型</span>
+            <strong>Memory Model</strong>
+            <span>Recommended: DeepSeek Flash; or replace with cost-effective text models</span>
           </div>
           <div class="api-grid">
             <div class="field">
-              <label for="apiMemoryHost">服务地址</label>
-              <input id="apiMemoryHost" type="text" placeholder="推荐示例：api.deepseek.com" autocomplete="off">
+              <label for="apiMemoryHost">Service Address</label>
+              <input id="apiMemoryHost" type="text" placeholder="Recommended example: api.deepseek.com" autocomplete="off">
             </div>
             <div class="field">
-              <label for="apiMemoryModel">模型名称</label>
-              <input id="apiMemoryModel" type="text" placeholder="推荐示例：deepseek-v4-flash" autocomplete="off">
+              <label for="apiMemoryModel">Model Name</label>
+              <input id="apiMemoryModel" type="text" placeholder="Recommended example: deepseek-v4-flash" autocomplete="off">
             </div>
             <div class="field">
               <label for="apiMemoryKey">API Key</label>
-              <input id="apiMemoryKey" type="password" placeholder="粘贴 API Key" autocomplete="off">
+              <input id="apiMemoryKey" type="password" placeholder="Paste API Key" autocomplete="off">
             </div>
           </div>
         </div>
       </div>
       <div class="message" id="apiSetupMsg" style="margin-top:14px"></div>
       <div class="inline-actions" style="margin-top:16px">
-        <button class="btn" id="apiSetupSaveBtn" type="button" onclick="saveApiSetupAndEnter()">保存、测试并进入 Miru</button>
+        <button class="btn" id="apiSetupSaveBtn" type="button" onclick="saveApiSetupAndEnter()">Save, Test and Enter Sora</button>
       </div>
     </div>
   </section>
@@ -1186,14 +1186,14 @@ body[data-view="api-setup"] .note {
   } catch(e) {}
   if (isAndroidClient) {
     var androidCopy = {
-      homeScopeCopy: '你可以让她住在自己的私有服务器里，让多台设备看到同一个 Miru；也可以先只在这部手机上使用，所有数据都留在本机。',
-      localChoiceTitle: '只在这部手机使用',
-      localChoiceDesc: '不需要邀请码，后端、记忆和模型配置都放在本机；其他设备不会同步。',
-      localToolbarTitle: '只在这部手机使用',
-      localHeading: '让 Miru 住在这部手机',
-      localScopeCopy: '本地模式会在这部手机上创建一个本地账号。聊天、记忆和 API Key 都只写入本机数据目录；不能多设备同步。',
-      multiScopeCopy: '已有账号就直接输入长邀请码；还没有账号，可以使用官方服务器，或者让这部手机帮你在自己的服务器上创建一个新的 Miru。',
-      apiSetupScopeCopy: '配置会写入刚创建的 Miru：本地模式存在这部手机，自有服务器模式存在你的服务器。页面不会显示完整 API Key。'
+      homeScopeCopy: 'You can host her on your own private server so multiple devices share the same Sora, or use her exclusively on this phone with all data remaining local.',
+      localChoiceTitle: 'This phone only',
+      localChoiceDesc: 'No invite code needed; backend, memory, and model configuration stay on this device; no multi-device sync.',
+      localToolbarTitle: 'This phone only',
+      localHeading: 'Keep Sora on this phone',
+      localScopeCopy: 'Local mode creates a local account on this phone. Chat, memory, and API keys are stored exclusively in the local data directory; no multi-device sync.',
+      multiScopeCopy: 'Enter your long invite code if you already have an account. Otherwise, use the official server or let this phone help you create a new Sora on your own server.',
+      apiSetupScopeCopy: 'Configuration will be saved to the newly created Sora: local mode exists on this phone, self-hosted mode exists on your server. The page will not display the full API Key.'
     };
     Object.keys(androidCopy).forEach(function(id) {
       var el = document.getElementById(id);
@@ -1285,19 +1285,19 @@ body[data-view="api-setup"] .note {
   var pollInFlight = false;
   var selfProgressStartedAt = 0;
   var API_TIER_LABELS = {
-    vision: '视觉模型',
-    chat: '聊天模型',
-    memory: '记忆模型'
+    vision: 'Vision Model',
+    chat: 'Chat Model',
+    memory: 'Memory Model'
   };
 
   var DEPLOY_STEPS = [
-    {key: 'local_upload', title: '读取服务包', hint: '从这台电脑接收文件'},
-    {key: 'connect', title: '连接服务器', hint: '确认 IP、SSH 和权限'},
-    {key: 'upload', title: '准备文件', hint: '把 Miru 需要的文件放到服务器'},
-    {key: 'image_upload', title: '传送 Miru', hint: '上传或下载服务包'},
-    {key: 'create_instance', title: '启动 Miru', hint: '在服务器上启动你的 Miru'},
-    {key: 'public_health', title: '确认连接', hint: '从这台电脑检查公网端口'},
-    {key: 'done', title: '进入 Miru', hint: '打开你的私有 Miru'}
+    {key: 'local_upload', title: 'Reading service package', hint: 'Receiving file from this computer'},
+    {key: 'connect', title: 'Connecting to server', hint: 'Confirming IP, SSH, and permissions'},
+    {key: 'upload', title: 'Preparing files', hint: 'Placing required files on the server'},
+    {key: 'image_upload', title: 'Transmitting Sora', hint: 'Uploading or downloading service package'},
+    {key: 'create_instance', title: 'Starting Sora', hint: 'Starting your Sora on the server'},
+    {key: 'public_health', title: 'Confirming connection', hint: 'Checking public port from this computer'},
+    {key: 'done', title: 'Enter Sora', hint: 'Open your private Sora'}
   ];
   var PHASE_ORDER = {
     queued: 0,
@@ -1415,18 +1415,18 @@ body[data-view="api-setup"] .note {
     var any = !!(host || model || key);
     if (!any) return null;
     if (!host || !model || !key) {
-      throw new Error('请把' + tier + '的服务地址、模型名称和 API Key 填完整。');
+      throw new Error('Please complete the Service Address, Model Name, and API Key for ' + tier + '.');
     }
     return { host: host, model: model, api_key: key };
   }
 
   function collectApiSetupPayloads() {
-    var vision = collectApiTier('apiVision', '视觉模型');
-    var chat = collectApiTier('apiChat', '聊天模型');
-    var memory = collectApiTier('apiMemory', '记忆模型');
+    var vision = collectApiTier('apiVision', 'Vision Model');
+    var chat = collectApiTier('apiChat', 'Chat Model');
+    var memory = collectApiTier('apiMemory', 'Memory Model');
     var filled = [vision, chat, memory].filter(Boolean).length;
     if (filled < 3) {
-      throw new Error('请把视觉、聊天、记忆三组都填完整，并测试通过后进入 Miru。');
+      throw new Error('Please complete all three sets (Vision, Chat, Memory) and test before entering Sora.');
     }
     var out = [];
     if (vision) out.push(['vision', vision]);
@@ -1449,7 +1449,7 @@ body[data-view="api-setup"] .note {
     });
     var data = await res.json().catch(function(){ return {}; });
     if (!res.ok || !data.ok) {
-      throw new Error(data.error || ('保存' + tier + '失败'));
+      throw new Error(data.error || ('Failed to save ' + tier));
     }
   }
 
@@ -1468,7 +1468,7 @@ body[data-view="api-setup"] .note {
     });
     var data = await res.json().catch(function(){ return {}; });
     if (!res.ok || !data.ok) {
-      throw new Error(label + '测试失败：' + (data.error || '请检查服务地址、模型名称和 API Key。'));
+      throw new Error(label + ' test failed: ' + (data.error || 'Please check service address, model name, and API key.'));
     }
     return data;
   }
@@ -1499,7 +1499,7 @@ body[data-view="api-setup"] .note {
     });
     var data = await res.json().catch(function(){ return {}; });
     if (!res.ok || !data.ok) {
-      throw new Error(data.error || 'Miru 启动准备失败，请稍后再试。');
+      throw new Error(data.error || 'Failed to complete Sora setup, please try again later.');
     }
     return data;
   }
@@ -1519,33 +1519,33 @@ body[data-view="api-setup"] .note {
     try {
       payloads = collectApiSetupPayloads();
     } catch(e) {
-      setApiSetupMessage(e.message || '请检查模型配置。', false);
+      setApiSetupMessage(e.message || 'Please check model configuration.', false);
       return;
     }
     apiSetupBusy = true;
     if (apiSetupSaveBtn) {
       apiSetupSaveBtn.disabled = true;
-      apiSetupSaveBtn.textContent = '正在保存';
+      apiSetupSaveBtn.textContent = 'Saving';
     }
     try {
       for (var i = 0; i < payloads.length; i++) {
-        setApiSetupMessage('正在保存' + (API_TIER_LABELS[payloads[i][0]] || payloads[i][0]) + '…', true);
+        setApiSetupMessage('Saving ' + (API_TIER_LABELS[payloads[i][0]] || payloads[i][0]) + '…', true);
         await saveApiTier(payloads[i][0], payloads[i][1]);
       }
-      if (apiSetupSaveBtn) apiSetupSaveBtn.textContent = '正在测试';
+      if (apiSetupSaveBtn) apiSetupSaveBtn.textContent = 'Testing';
       for (var j = 0; j < payloads.length; j++) {
-        setApiSetupMessage('正在测试' + (API_TIER_LABELS[payloads[j][0]] || payloads[j][0]) + '连通性…', true);
+        setApiSetupMessage('Testing connectivity for ' + (API_TIER_LABELS[payloads[j][0]] || payloads[j][0]) + '…', true);
         await testApiTier(payloads[j][0]);
       }
-      setApiSetupMessage('模型配置已保存并测试通过，正在进入 Miru。', true);
+      setApiSetupMessage('Model configuration saved and tested successfully, entering Sora.', true);
       await enterMiruFromApiSetup('configured');
     } catch(e) {
-      setApiSetupMessage(e.message || '保存失败，请稍后再试。', false);
+      setApiSetupMessage(e.message || 'Save failed, please try again later.', false);
     } finally {
       apiSetupBusy = false;
       if (apiSetupSaveBtn) {
         apiSetupSaveBtn.disabled = false;
-        apiSetupSaveBtn.textContent = '保存、测试并进入 Miru';
+        apiSetupSaveBtn.textContent = 'Save, Test and Enter Sora';
       }
     }
   };
@@ -1561,11 +1561,11 @@ body[data-view="api-setup"] .note {
     if (selfBtn) {
       selfBtn.style.display = '';
       selfBtn.disabled = false;
-      selfBtn.textContent = '创建 Miru';
+      selfBtn.textContent = 'Create Sora';
     }
     selfProgress.classList.remove('active');
-    selfPhase.textContent = '正在准备';
-    selfPhaseHelp.textContent = 'Miru 会把部署过程一步步告诉你。';
+    selfPhase.textContent = 'Preparing';
+    selfPhaseHelp.textContent = 'Sora will tell you the deployment process step by step.';
     selfProgressFill.style.width = '0%';
     selfSteps.innerHTML = '';
     selfLogs.innerHTML = '';
@@ -1591,579 +1591,579 @@ body[data-view="api-setup"] .note {
   });
 
   if (selfImageTar) {
-	    selfImageTar.addEventListener('change', function() {
-	      var file = selfImageTar.files && selfImageTar.files[0];
-	      if (!file) {
-	        selfImageTarName.textContent = '还没有选择文件';
+		    selfImageTar.addEventListener('change', function() {
+		      var file = selfImageTar.files && selfImageTar.files[0];
+		      if (!file) {
+		        selfImageTarName.textContent = 'No file selected';
+		        return;
+		      }
+		      selfImageTarName.textContent = file.name + ' · ' + formatBytes(file.size);
+	      setSelfMessage('', false);
+	    });
+	  }
+
+	  if (selfSshPrivateKey) {
+	    selfSshPrivateKey.addEventListener('change', function() {
+	      var file = selfSshPrivateKey.files && selfSshPrivateKey.files[0];
+	      selfSshPrivateKeyName.textContent = file ? file.name : 'No key selected';
+	      setSelfMessage('', false);
+	    });
+	  }
+
+	  window.doInviteLogin = async function(ev) {
+	    if (ev) ev.preventDefault();
+	    var code = normalizeCode(inviteInput.value);
+	    await loginWithCode(code, inviteBtn, setInviteMessage);
+	  };
+
+	  window.startLocalMode = async function() {
+	    if (localBusy) {
+	      setLocalMessage('Preparing local Sora', true);
+	      return;
+	    }
+	    localBusy = true;
+	    if (localBtn) {
+	      localBtn.disabled = true;
+	      localBtn.textContent = 'Preparing';
+	    }
+	    setLocalMessage('Creating local account…', true);
+	    try {
+	      var res = await fetch('/api/client/local/start', {
+	        method: 'POST',
+	        headers: androidClientHeaders({'Content-Type': 'application/json'}),
+	        body: JSON.stringify({})
+	      });
+	      var data = await res.json().catch(function(){ return {}; });
+	      if (res.ok && data.ok && data.token) {
+	        try {
+	          localStorage.setItem('miru_auth_token', data.token);
+	          localStorage.setItem('miru_local_mode', '1');
+	          localStorage.removeItem('miru_invitation_code');
+	          if (data.server_url) localStorage.setItem('miru_server_url', data.server_url);
+	        } catch(e) {}
+	        persistAndroidCredentials(
+	          data.server_url || window.location.origin, data.token, '', 'local', data.user_id || '');
+	        setLocalMessage(data.is_new ? 'Local Sora is ready.' : 'Local Sora found.', true);
+	        if (!data.is_new) {
+	          window.location.href = withDesktopClientParams('/app?token=' + encodeURIComponent(data.token));
+	          return;
+	        }
+	        beginApiSetup({
+	          mode: 'local',
+	          token: data.token,
+	          server_url: '',
+	          redirect_url: withDesktopClientParams('/app?token=' + encodeURIComponent(data.token))
+	        });
 	        return;
 	      }
-	      selfImageTarName.textContent = file.name + ' · ' + formatBytes(file.size);
-      setSelfMessage('', false);
-    });
-  }
+	      setLocalMessage(data.error || 'Failed to prepare local Sora, please try again later', false);
+	    } catch (e) {
+	      setLocalMessage('Local backend not responding, please restart Sora and try again', false);
+	    } finally {
+	      localBusy = false;
+	      if (localBtn) {
+	        localBtn.disabled = false;
+	        localBtn.textContent = 'Start Local Use';
+	      }
+	    }
+	  };
 
-  if (selfSshPrivateKey) {
-    selfSshPrivateKey.addEventListener('change', function() {
-      var file = selfSshPrivateKey.files && selfSshPrivateKey.files[0];
-      selfSshPrivateKeyName.textContent = file ? file.name : '没有选择私钥';
-      setSelfMessage('', false);
-    });
-  }
+	  async function loginWithCode(code, button, setMessage, options) {
+	    options = options || {};
+	    if (inviteBusy) {
+	      setMessage('Logging in', true);
+	      return options.returnState ? null : false;
+	    }
+	    if (!isValidCode(code)) {
+	      setMessage('Invalid invite code format, please check your copy', false);
+	      return options.returnState ? null : false;
+	    }
+	    inviteBusy = true;
+	    if (button) {
+	      button.disabled = true;
+	      button.textContent = 'Connecting';
+	    }
+	    setMessage('', false);
+	    try {
+	      var ctrl = new AbortController();
+	      var timer = setTimeout(function(){ ctrl.abort(); }, 18000);
+	      var loginPayload = { code: code };
+	      if (options.setupComplete === false) loginPayload.setup_complete = false;
+	      var res = await fetch('/api/auth/login', {
+	        method: 'POST',
+	        headers: androidClientHeaders({'Content-Type': 'application/json'}),
+	        body: JSON.stringify(loginPayload),
+	        signal: ctrl.signal
+	      });
+	      clearTimeout(timer);
+	      var data = await res.json().catch(function(){ return {}; });
+	      if (res.ok && data.token) {
+	        try {
+	          localStorage.setItem('miru_auth_token', data.token);
+	          localStorage.setItem('miru_invitation_code', code);
+	        } catch(e) {}
+	        var base = '';
+	        if (data.server_url && /^https?:\/\//.test(data.server_url)) {
+	          base = data.server_url.replace(/\/+$/, '');
+	        }
+	        persistAndroidCredentials(
+	          base || window.location.origin, data.token, code, 'remote', data.user_id || '');
+	        var redirectUrl = withDesktopClientParams(base + '/app?token=' + encodeURIComponent(data.token));
+	        if (options.returnState) {
+	          setMessage('Login successful.', true);
+	          return {
+	            ok: true,
+	            token: data.token,
+	            server_url: base,
+	            redirect_url: redirectUrl,
+	            user_id: data.user_id || ''
+	          };
+	        }
+	        setMessage('Login successful, opening Sora', true);
+	        location.href = redirectUrl;
+	        return true;
+	      }
+	      setMessage(data.error || 'Invite code invalid or server not responding', false);
+	      return options.returnState ? null : false;
+	    } catch (e) {
+	      setMessage(e && e.name === 'AbortError' ? 'Connection timeout, please check server port' : 'Network not ready, try again later', false);
+	      return options.returnState ? null : false;
+	    } finally {
+	      inviteBusy = false;
+	      if (button === inviteBtn) {
+	        button.disabled = !isValidCode(inviteInput.value);
+	        button.textContent = 'Sign In to Sora';
+	      } else if (button) {
+	        button.disabled = false;
+	        button.textContent = 'Retry';
+	      }
+	    }
+	  }
 
-  window.doInviteLogin = async function(ev) {
-    if (ev) ev.preventDefault();
-    var code = normalizeCode(inviteInput.value);
-    await loginWithCode(code, inviteBtn, setInviteMessage);
-  };
+	  async function loadSelfDefaults() {
+	    try {
+	      var res = await fetch('/api/client/provision/self-server/defaults', {
+	        headers: androidClientHeaders({})
+	      });
+	      if (!res.ok) return;
+	      var data = await res.json();
+	      var d = data.defaults || {};
+	      setIfEmpty('selfUser', d.ssh_user);
+	      setIfEmpty('selfSshPort', d.ssh_port);
+	      setIfEmpty('selfHostHome', d.host_home);
+	      setIfEmpty('selfPortStart', d.port_start);
+	      setIfEmpty('selfPortEnd', d.port_end);
+	      setIfEmpty('selfImage', d.image);
+	    } catch(e) {}
+	  }
 
-  window.startLocalMode = async function() {
-    if (localBusy) {
-      setLocalMessage('正在准备本地 Miru', true);
-      return;
-    }
-    localBusy = true;
-    if (localBtn) {
-      localBtn.disabled = true;
-      localBtn.textContent = '正在准备';
-    }
-    setLocalMessage('正在创建本地账号…', true);
-    try {
-      var res = await fetch('/api/client/local/start', {
-        method: 'POST',
-        headers: androidClientHeaders({'Content-Type': 'application/json'}),
-        body: JSON.stringify({})
-      });
-      var data = await res.json().catch(function(){ return {}; });
-      if (res.ok && data.ok && data.token) {
-        try {
-          localStorage.setItem('miru_auth_token', data.token);
-          localStorage.setItem('miru_local_mode', '1');
-          localStorage.removeItem('miru_invitation_code');
-          if (data.server_url) localStorage.setItem('miru_server_url', data.server_url);
-        } catch(e) {}
-        persistAndroidCredentials(
-          data.server_url || window.location.origin, data.token, '', 'local', data.user_id || '');
-        setLocalMessage(data.is_new ? '本地 Miru 已经准备好了。' : '已经找到本地 Miru。', true);
-        if (!data.is_new) {
-          window.location.href = withDesktopClientParams('/app?token=' + encodeURIComponent(data.token));
-          return;
-        }
-        beginApiSetup({
-          mode: 'local',
-          token: data.token,
-          server_url: '',
-          redirect_url: withDesktopClientParams('/app?token=' + encodeURIComponent(data.token))
-        });
-        return;
-      }
-      setLocalMessage(data.error || '本地 Miru 准备失败，请稍后再试', false);
-    } catch (e) {
-      setLocalMessage('本地后端没有响应，请重启 Miru 后再试', false);
-    } finally {
-      localBusy = false;
-      if (localBtn) {
-        localBtn.disabled = false;
-        localBtn.textContent = '开始本地使用';
-      }
-    }
-  };
+	  function setIfEmpty(id, value) {
+	    var el = document.getElementById(id);
+	    if (el && (el.value === '' || el.value == null) && value != null) el.value = value;
+	  }
 
-  async function loginWithCode(code, button, setMessage, options) {
-    options = options || {};
-    if (inviteBusy) {
-      setMessage('正在登录中', true);
-      return options.returnState ? null : false;
-    }
-    if (!isValidCode(code)) {
-      setMessage('邀请码格式不对，请确认是否完整复制', false);
-      return options.returnState ? null : false;
-    }
-    inviteBusy = true;
-    if (button) {
-      button.disabled = true;
-      button.textContent = '连接中';
-    }
-    setMessage('', false);
-    try {
-      var ctrl = new AbortController();
-      var timer = setTimeout(function(){ ctrl.abort(); }, 18000);
-      var loginPayload = { code: code };
-      if (options.setupComplete === false) loginPayload.setup_complete = false;
-      var res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: androidClientHeaders({'Content-Type': 'application/json'}),
-        body: JSON.stringify(loginPayload),
-        signal: ctrl.signal
-      });
-      clearTimeout(timer);
-      var data = await res.json().catch(function(){ return {}; });
-      if (res.ok && data.token) {
-        try {
-          localStorage.setItem('miru_auth_token', data.token);
-          localStorage.setItem('miru_invitation_code', code);
-        } catch(e) {}
-        var base = '';
-        if (data.server_url && /^https?:\/\//.test(data.server_url)) {
-          base = data.server_url.replace(/\/+$/, '');
-        }
-        persistAndroidCredentials(
-          base || window.location.origin, data.token, code, 'remote', data.user_id || '');
-        var redirectUrl = withDesktopClientParams(base + '/app?token=' + encodeURIComponent(data.token));
-        if (options.returnState) {
-          setMessage('登录成功。', true);
-          return {
-            ok: true,
-            token: data.token,
-            server_url: base,
-            redirect_url: redirectUrl,
-            user_id: data.user_id || ''
-          };
-        }
-        setMessage('登录成功，正在打开 Miru', true);
-        location.href = redirectUrl;
-        return true;
-      }
-      setMessage(data.error || '邀请码无效或服务器没有响应', false);
-      return options.returnState ? null : false;
-    } catch (e) {
-      setMessage(e && e.name === 'AbortError' ? '连接超时，请检查服务器端口是否开放' : '网络未就绪，稍后再试', false);
-      return options.returnState ? null : false;
-    } finally {
-      inviteBusy = false;
-      if (button === inviteBtn) {
-        button.disabled = !isValidCode(inviteInput.value);
-        button.textContent = '登录 Miru';
-      } else if (button) {
-        button.disabled = false;
-        button.textContent = '重新创建';
-      }
-    }
-  }
-
-  async function loadSelfDefaults() {
-    try {
-      var res = await fetch('/api/client/provision/self-server/defaults', {
-        headers: androidClientHeaders({})
-      });
-      if (!res.ok) return;
-      var data = await res.json();
-      var d = data.defaults || {};
-      setIfEmpty('selfUser', d.ssh_user);
-      setIfEmpty('selfSshPort', d.ssh_port);
-      setIfEmpty('selfHostHome', d.host_home);
-      setIfEmpty('selfPortStart', d.port_start);
-      setIfEmpty('selfPortEnd', d.port_end);
-      setIfEmpty('selfImage', d.image);
-    } catch(e) {}
-  }
-
-  function setIfEmpty(id, value) {
-    var el = document.getElementById(id);
-    if (el && (el.value === '' || el.value == null) && value != null) el.value = value;
-  }
-
-  window.createSelfServer = async function(ev) {
-    if (ev) ev.preventDefault();
-    if (selfBusy) return;
-    if (selfRetryJobId) {
-      selfBusy = true;
-      selfBtn.disabled = true;
-      selfBtn.textContent = '检查中';
-      setSelfMessage('正在重新检查刚才的创建任务。', true);
-      pollSelfJob(selfRetryJobId);
-      return;
-    }
-    if (selfHealthRetryJobId) {
-      selfBusy = true;
-      selfBtn.disabled = true;
-      selfBtn.textContent = '检查中';
-      setSelfMessage('正在重新检查这台电脑能不能访问刚创建的 Miru。', true);
-      verifySelfServerPublicHealth({ job_id: selfHealthRetryJobId });
-      return;
-    }
-	    var payload = {
-	      server_ip: valueOf('selfIp'),
-	      ssh_password: valueOf('selfPassword'),
-	      ssh_user: valueOf('selfUser'),
-	      ssh_port: valueOf('selfSshPort') || 22,
-	      host_home: valueOf('selfHostHome') || '/opt/miru-host',
-	      port_start: valueOf('selfPortStart') || 5001,
-      port_end: valueOf('selfPortEnd') || 5010,
-      image: valueOf('selfImage') || 'miru/server:0.2.0',
-      allow_no_api: true
-    };
-	    if (!payload.server_ip) {
+	  window.createSelfServer = async function(ev) {
+	    if (ev) ev.preventDefault();
+	    if (selfBusy) return;
+	    if (selfRetryJobId) {
+	      selfBusy = true;
+	      selfBtn.disabled = true;
+	      selfBtn.textContent = 'Checking';
+	      setSelfMessage('Re-checking creation task.', true);
+	      pollSelfJob(selfRetryJobId);
+	      return;
+	    }
+	    if (selfHealthRetryJobId) {
+	      selfBusy = true;
+	      selfBtn.disabled = true;
+	      selfBtn.textContent = 'Checking';
+	      setSelfMessage('Re-checking access to Sora.', true);
+	      verifySelfServerPublicHealth({ job_id: selfHealthRetryJobId });
+	      return;
+	    }
+		    var payload = {
+		      server_ip: valueOf('selfIp'),
+		      ssh_password: valueOf('selfPassword'),
+		      ssh_user: valueOf('selfUser'),
+		      ssh_port: valueOf('selfSshPort') || 22,
+		      host_home: valueOf('selfHostHome') || '/opt/sora-host',
+		      port_start: valueOf('selfPortStart') || 5001,
+	      port_end: valueOf('selfPortEnd') || 5010,
+	      image: valueOf('selfImage') || 'sora/server:0.2.0',
+	      allow_no_api: true
+	    };
+		    if (!payload.server_ip) {
+		      resetSelfProgress();
+		      setSelfMessage('Please enter server public IPv4', false);
+		      return;
+		    }
+		    if (!payload.ssh_user) {
+		      resetSelfProgress();
+		      setSelfMessage('Please enter SSH username matching server login', false);
+		      return;
+		    }
+	    var sshKeyFile = selfSshPrivateKey && selfSshPrivateKey.files
+	      ? selfSshPrivateKey.files[0] : null;
+	    if (!payload.ssh_password && !sshKeyFile) {
 	      resetSelfProgress();
-	      setSelfMessage('请输入服务器公网 IPv4', false);
-	      return;
-	    }
-	    if (!payload.ssh_user) {
+	      setSelfMessage('Please enter SSH password, select private key, or use // for desktop key', false);
+		      return;
+		    }
+	    selfBusy = true;
+	    selfHealthRetryJobId = '';
+	    selfBtn.disabled = true;
+	    selfBtn.style.display = '';
+	    selfBtn.textContent = 'Creating';
+	    selfSuccess.classList.remove('active');
+	    selfSuccessMsg.textContent = '';
+	    setSelfMessage('', false);
+	    selfProgress.classList.add('active');
+	    selfProgressStartedAt = Date.now();
+	    var imageFile = selfImageTar && selfImageTar.files ? selfImageTar.files[0] : null;
+	    selfPhase.textContent = imageFile ? 'Reading service package' : 'Submitting task';
+	    selfPhaseHelp.textContent = imageFile ? 'Transferring service package to Sora, then uploading to server.' : 'No service package selected, using online image address.';
+	    selfProgressFill.style.width = '3%';
+	    renderDeploySteps(imageFile ? 'local_upload' : 'prepare');
+	    selfLogs.innerHTML = '';
+	    try {
+	      var form = new FormData();
+	      Object.keys(payload).forEach(function(key) {
+	        form.append(key, String(payload[key]));
+	      });
+	      if (imageFile) form.append('image_tar', imageFile);
+	      if (sshKeyFile) form.append('ssh_private_key', sshKeyFile);
+	      var data = await postSelfServerCreate(form, Boolean(imageFile));
+	      if (!data.job) throw new Error(data.error || 'Failed to create deployment task');
+	      pollSelfJob(data.job.job_id);
+	    } catch (e) {
+	      selfBusy = false;
+	      selfBtn.disabled = false;
+	      selfBtn.textContent = 'Create Sora';
 	      resetSelfProgress();
-	      setSelfMessage('请输入 SSH 用户名，和云服务器登录窗口里的用户名保持一致', false);
+	      setSelfMessage(e.message || 'Creation failed', false);
+	    }
+	  };
+
+	  function valueOf(id) {
+	    var el = document.getElementById(id);
+	    return el ? String(el.value || '').trim() : '';
+	  }
+
+	  function postSelfServerCreate(form, hasImageFile) {
+	    return new Promise(function(resolve, reject) {
+	      var xhr = new XMLHttpRequest();
+	      xhr.open('POST', '/api/client/provision/self-server/create');
+	      var clientHeaders = androidClientHeaders({});
+	      if (clientHeaders['X-Miru-Client-Secret']) {
+	        xhr.setRequestHeader('X-Miru-Client-Secret', clientHeaders['X-Miru-Client-Secret']);
+	      }
+	      xhr.timeout = hasImageFile ? 10 * 60 * 1000 : 30000;
+	      xhr.upload.onprogress = function(ev) {
+	        if (!hasImageFile || !ev.lengthComputable) return;
+	        var pct = Math.max(0, Math.min(100, Math.round(ev.loaded * 100 / ev.total)));
+	        selfPhase.textContent = 'Reading service package (' + pct + '%)';
+	        selfPhaseHelp.textContent = 'Transferring file to local Sora, actual upload to server shown next.';
+	        selfProgressFill.style.width = Math.min(14, 3 + pct * 0.11) + '%';
+	        renderDeploySteps('local_upload');
+	      };
+	      xhr.onload = function() {
+	        var data = {};
+	        try { data = JSON.parse(xhr.responseText || '{}'); } catch(e) {}
+	        if (xhr.status >= 200 && xhr.status < 300 && data.job) {
+	          resolve(data);
+	          return;
+	        }
+	        reject(new Error(data.error || 'Failed to create deployment task'));
+	      };
+	      xhr.onerror = function() { reject(new Error('Local Sora not responding, please restart App')); };
+	      xhr.ontimeout = function() { reject(new Error('Service package read timeout, please confirm file integrity')); };
+	      xhr.send(form);
+	    });
+	  }
+
+	  function formatBytes(size) {
+	    if (!size) return '0 B';
+	    var units = ['B', 'KB', 'MB', 'GB'];
+	    var n = size;
+	    var i = 0;
+	    while (n >= 1024 && i < units.length - 1) {
+	      n = n / 1024;
+	      i++;
+	    }
+	    return (i === 0 ? n.toFixed(0) : n.toFixed(1)) + ' ' + units[i];
+	  }
+
+	  function pollSelfJob(jobId) {
+	    if (pollTimer) clearInterval(pollTimer);
+	    var pollFailures = 0;
+	    var run = async function() {
+	      if (pollInFlight) return;
+	      pollInFlight = true;
+	      try {
+	        var res = await fetch('/api/client/provision/self-server/status/' + encodeURIComponent(jobId), {
+	          headers: androidClientHeaders({})
+	        });
+	        var data = await res.json().catch(function(){ return {}; });
+	        if (!res.ok || !data.job) {
+	          var err = new Error(data.error || 'Failed to read deployment status');
+	          err.status = res.status;
+	          throw err;
+	        }
+	        pollFailures = 0;
+	        renderJob(data.job);
+	      if (data.job.status === 'succeeded') {
+	        clearInterval(pollTimer);
+	        pollTimer = null;
+	        selfRetryJobId = '';
+	        await verifySelfServerPublicHealth(data.job);
+	          return;
+	        }
+	      if (data.job.status === 'failed') {
+	        clearInterval(pollTimer);
+	        pollTimer = null;
+	        selfRetryJobId = '';
+	        selfBusy = false;
+	        selfBtn.disabled = false;
+	          selfBtn.textContent = 'Retry';
+	          setSelfMessage(data.job.error || 'Creation failed, check SSH, Docker, and firewall ports', false);
+	        }
+	      } catch (e) {
+	        pollFailures += 1;
+	        var msg = (e && e.message) || 'Failed to read deployment status';
+	        if (e && e.status === 404) {
+	          clearInterval(pollTimer);
+	          pollTimer = null;
+	          selfRetryJobId = '';
+	          selfBusy = false;
+	          selfBtn.disabled = false;
+	          selfBtn.textContent = 'Create Sora';
+	          resetSelfProgress();
+	          setSelfMessage('Creation task interrupted, please retry. Sora will re-check server status, ports will not be occupied twice.', false);
+	          return;
+	        }
+	        if (pollFailures < 3) {
+	          setSelfMessage(msg + ', continuing to check, do not recreate.', false);
+	        } else {
+	          clearInterval(pollTimer);
+	          pollTimer = null;
+	          selfRetryJobId = jobId;
+	          selfBusy = false;
+	          selfBtn.disabled = false;
+	          selfBtn.textContent = 'Re-check status';
+	          setSelfMessage('Temporarily unable to read deployment status, but creation on server may still be in progress. Re-checking will view the task.', false);
+	        }
+	      } finally {
+	        pollInFlight = false;
+	      }
+	    };
+	    run();
+	    pollTimer = setInterval(run, 1800);
+	  }
+
+	  function renderSelfSuccess(code) {
+	    selfCurrentInvitationCode = normalizeCode(code || '');
+	    selfSuccessCode.textContent = selfCurrentInvitationCode || 'Failed to read invite code';
+	    selfSuccess.classList.add('active');
+	    setSelfMessage('Creation complete. Copy the invite code for other devices, or enter the application.', true);
+	    selfSuccessMsg.textContent = '';
+	    if (selfCurrentInvitationCode && navigator.clipboard && navigator.clipboard.writeText) {
+	      navigator.clipboard.writeText(selfCurrentInvitationCode).then(function() {
+	        selfSuccessMsg.textContent = 'Invite code copied, ready to paste on mobile.';
+	        selfSuccessMsg.className = 'message ok';
+	      }).catch(function() {});
+	    }
+	    try { selfSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
+	  }
+
+	  async function verifySelfServerPublicHealth(job) {
+	    var jobId = job && job.job_id ? job.job_id : selfHealthRetryJobId;
+	    if (!jobId) {
+	      selfBusy = false;
+	      selfBtn.disabled = false;
+	      selfBtn.textContent = 'Create Sora';
+	      setSelfMessage('Deployment task incomplete, please retry.', false);
 	      return;
 	    }
-    var sshKeyFile = selfSshPrivateKey && selfSshPrivateKey.files
-      ? selfSshPrivateKey.files[0] : null;
-    if (!payload.ssh_password && !sshKeyFile) {
-      resetSelfProgress();
-      setSelfMessage('请输入 SSH 密码、选择 SSH 私钥，或在桌面端输入 // 使用本机密钥', false);
+	    selfHealthRetryJobId = jobId;
+	    selfSuccess.classList.remove('active');
+	    selfSuccessMsg.textContent = '';
+	    selfCurrentInvitationCode = normalizeCode((job && job.invitation_code) || selfCurrentInvitationCode || '');
+	    selfProgress.classList.add('active');
+	    selfPhase.textContent = 'Confirming public access';
+	    selfPhaseHelp.textContent = 'Sora is running on the server, checking if this computer can open it.';
+	    selfProgressFill.style.width = '96%';
+	    renderDeploySteps('public_health');
+	    selfBtn.style.display = '';
+	    selfBtn.disabled = true;
+	    selfBtn.textContent = 'Checking';
+	    setSelfMessage('Confirming this computer can access the newly created Sora.', true);
+	    try {
+	      var res = await fetch('/api/client/provision/self-server/public-health/' + encodeURIComponent(jobId), {
+	        method: 'POST',
+	        headers: androidClientHeaders({})
+	      });
+	      var data = await res.json().catch(function(){ return {}; });
+	      if (!res.ok || !data.ok) {
+	        throw new Error(data.error || 'Temporarily unable to access the newly created Sora.');
+	      }
+	      selfHealthRetryJobId = '';
+	      selfBusy = false;
+	      selfBtn.disabled = true;
+	      selfBtn.style.display = 'none';
+	      selfPhase.textContent = 'Complete';
+	      selfPhaseHelp.textContent = 'Public access confirmed, you can now enter Sora.';
+	      selfProgressFill.style.width = '100%';
+	      renderDeploySteps('done');
+	      renderSelfSuccess((job && job.invitation_code) || selfCurrentInvitationCode);
+	    } catch (e) {
+	      selfBusy = false;
+	      selfBtn.disabled = false;
+	      selfBtn.style.display = '';
+	      selfBtn.textContent = 'Re-check public access';
+	      selfPhaseHelp.textContent = 'Server started, but this computer cannot reach public port.';
+	      setSelfMessage((e && e.message) || 'Temporarily unable to access newly created Sora.', false);
+	    }
+	  }
+
+	  window.copySelfInvite = function() {
+	    var code = selfCurrentInvitationCode || selfSuccessCode.textContent || '';
+	    if (!code) {
+	      selfSuccessMsg.textContent = 'No invite code.';
+	      selfSuccessMsg.className = 'message';
 	      return;
 	    }
-    selfBusy = true;
-    selfHealthRetryJobId = '';
-    selfBtn.disabled = true;
-    selfBtn.style.display = '';
-    selfBtn.textContent = '创建中';
-    selfSuccess.classList.remove('active');
-    selfSuccessMsg.textContent = '';
-    setSelfMessage('', false);
-    selfProgress.classList.add('active');
-    selfProgressStartedAt = Date.now();
-    var imageFile = selfImageTar && selfImageTar.files ? selfImageTar.files[0] : null;
-    selfPhase.textContent = imageFile ? '正在读取服务包' : '正在提交任务';
-    selfPhaseHelp.textContent = imageFile ? '先把你选择的服务包交给本机 Miru，再由她上传到服务器。' : '没有选择服务包，会尝试使用高级选项里的在线镜像地址。';
-    selfProgressFill.style.width = '3%';
-    renderDeploySteps(imageFile ? 'local_upload' : 'prepare');
-    selfLogs.innerHTML = '';
-    try {
-      var form = new FormData();
-      Object.keys(payload).forEach(function(key) {
-        form.append(key, String(payload[key]));
-      });
-      if (imageFile) form.append('image_tar', imageFile);
-      if (sshKeyFile) form.append('ssh_private_key', sshKeyFile);
-      var data = await postSelfServerCreate(form, Boolean(imageFile));
-      if (!data.job) throw new Error(data.error || '无法创建部署任务');
-      pollSelfJob(data.job.job_id);
-    } catch (e) {
-      selfBusy = false;
-      selfBtn.disabled = false;
-      selfBtn.textContent = '创建 Miru';
-      resetSelfProgress();
-      setSelfMessage(e.message || '创建失败', false);
-    }
-  };
+	    function copied() {
+	      selfSuccessMsg.textContent = 'Invite code copied.';
+	      selfSuccessMsg.className = 'message ok';
+	    }
+	    function fallback() {
+	      var range = document.createRange();
+	      range.selectNodeContents(selfSuccessCode);
+	      var sel = window.getSelection();
+	      sel.removeAllRanges();
+	      sel.addRange(range);
+	      try { document.execCommand('copy'); copied(); }
+	      catch(e) {
+	        selfSuccessMsg.textContent = 'Copy failed, please select manually.';
+	        selfSuccessMsg.className = 'message';
+	      }
+	      sel.removeAllRanges();
+	    }
+	    if (navigator.clipboard && navigator.clipboard.writeText) {
+	      navigator.clipboard.writeText(code).then(copied).catch(fallback);
+	    } else {
+	      fallback();
+	    }
+	  };
 
-  function valueOf(id) {
-    var el = document.getElementById(id);
-    return el ? String(el.value || '').trim() : '';
-  }
+	  window.enterSelfServer = async function() {
+	    var code = selfCurrentInvitationCode || selfSuccessCode.textContent || '';
+	    if (!isValidCode(code)) {
+	      selfSuccessMsg.textContent = 'Invite code incomplete, cannot enter.';
+	      selfSuccessMsg.className = 'message';
+	      return;
+	    }
+	    selfEnterBtn.disabled = true;
+	    selfEnterBtn.textContent = 'Entering';
+	    selfSuccessMsg.textContent = 'Logging into desktop…';
+	    selfSuccessMsg.className = 'message ok';
+	    var state = await loginWithCode(code, null, function(text, good) {
+	      selfSuccessMsg.textContent = text || '';
+	      selfSuccessMsg.className = good ? 'message ok' : 'message';
+	    }, { returnState: true, setupComplete: false });
+	    if (!state || !state.ok) {
+	      selfEnterBtn.disabled = false;
+	      selfEnterBtn.textContent = 'Enter Sora';
+	      return;
+	    }
+	    beginApiSetup({
+	      mode: 'remote',
+	      token: state.token,
+	      server_url: state.server_url,
+	      redirect_url: state.redirect_url
+	    });
+	  };
 
-  function postSelfServerCreate(form, hasImageFile) {
-    return new Promise(function(resolve, reject) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/client/provision/self-server/create');
-      var clientHeaders = androidClientHeaders({});
-      if (clientHeaders['X-Miru-Client-Secret']) {
-        xhr.setRequestHeader('X-Miru-Client-Secret', clientHeaders['X-Miru-Client-Secret']);
-      }
-      xhr.timeout = hasImageFile ? 10 * 60 * 1000 : 30000;
-      xhr.upload.onprogress = function(ev) {
-        if (!hasImageFile || !ev.lengthComputable) return;
-        var pct = Math.max(0, Math.min(100, Math.round(ev.loaded * 100 / ev.total)));
-        selfPhase.textContent = '正在读取服务包（' + pct + '%）';
-        selfPhaseHelp.textContent = '这一步只是把文件交给本机 Miru，真正上传到服务器会在下一步显示。';
-        selfProgressFill.style.width = Math.min(14, 3 + pct * 0.11) + '%';
-        renderDeploySteps('local_upload');
-      };
-      xhr.onload = function() {
-        var data = {};
-        try { data = JSON.parse(xhr.responseText || '{}'); } catch(e) {}
-        if (xhr.status >= 200 && xhr.status < 300 && data.job) {
-          resolve(data);
-          return;
-        }
-        reject(new Error(data.error || '无法创建部署任务'));
-      };
-      xhr.onerror = function() { reject(new Error('本机 Miru 没有响应，请重启 App 后再试')); };
-      xhr.ontimeout = function() { reject(new Error('服务包读取超时，请确认文件完整后重试')); };
-      xhr.send(form);
-    });
-  }
+	  async function resumePendingApiSetup() {
+	    try {
+	      var res = await fetch('/api/client-config', { headers: androidClientHeaders({}) });
+	      if (!res.ok) return;
+	      var cfg = await res.json();
+	      if (!cfg || !cfg.client_mode || !cfg.auth_token || cfg.setup_complete !== false) return;
+	      var localOnly = !!cfg.local_only;
+	      var base = (!localOnly && cfg.server_url) ? String(cfg.server_url).replace(/\/+$/, '') : '';
+	      beginApiSetup({
+	        mode: cfg.mode || (localOnly ? 'local' : 'remote'),
+	        token: cfg.auth_token,
+	        server_url: localOnly ? '' : base,
+	        redirect_url: withDesktopClientParams((localOnly ? '' : base) + '/app?token=' + encodeURIComponent(cfg.auth_token))
+	      });
+	      setApiSetupMessage('Continuing model configuration. Sora will start after testing.', true);
+	    } catch(e) {}
+	  }
 
-  function formatBytes(size) {
-    if (!size) return '0 B';
-    var units = ['B', 'KB', 'MB', 'GB'];
-    var n = size;
-    var i = 0;
-    while (n >= 1024 && i < units.length - 1) {
-      n = n / 1024;
-      i++;
-    }
-    return (i === 0 ? n.toFixed(0) : n.toFixed(1)) + ' ' + units[i];
-  }
+	  function renderJob(job) {
+	    var phaseKey = job.phase_key || 'prepare';
+	    var progress = typeof job.progress === 'number' ? job.progress : 0;
+	    selfPhase.textContent = job.phase || job.status || 'Processing';
+	    selfPhaseHelp.textContent = phaseHelp(phaseKey);
+	    selfProgressFill.style.width = Math.max(0, Math.min(100, progress)) + '%';
+	    renderDeploySteps(phaseKey);
+	    selfLogs.innerHTML = '';
+	    (job.logs || []).forEach(function(line) {
+	      var div = document.createElement('div');
+	      div.className = 'log-line';
+	      div.textContent = line;
+	      selfLogs.appendChild(div);
+	    });
+	    selfLogs.scrollTop = selfLogs.scrollHeight;
+	  }
 
-  function pollSelfJob(jobId) {
-    if (pollTimer) clearInterval(pollTimer);
-    var pollFailures = 0;
-    var run = async function() {
-      if (pollInFlight) return;
-      pollInFlight = true;
-      try {
-        var res = await fetch('/api/client/provision/self-server/status/' + encodeURIComponent(jobId), {
-          headers: androidClientHeaders({})
-        });
-        var data = await res.json().catch(function(){ return {}; });
-        if (!res.ok || !data.job) {
-          var err = new Error(data.error || '部署状态读取失败');
-          err.status = res.status;
-          throw err;
-        }
-        pollFailures = 0;
-        renderJob(data.job);
-      if (data.job.status === 'succeeded') {
-        clearInterval(pollTimer);
-        pollTimer = null;
-        selfRetryJobId = '';
-        await verifySelfServerPublicHealth(data.job);
-          return;
-        }
-      if (data.job.status === 'failed') {
-        clearInterval(pollTimer);
-        pollTimer = null;
-        selfRetryJobId = '';
-        selfBusy = false;
-        selfBtn.disabled = false;
-          selfBtn.textContent = '重新创建';
-          setSelfMessage(data.job.error || '创建失败，请检查 SSH、Docker 和安全组端口', false);
-        }
-      } catch (e) {
-        pollFailures += 1;
-        var msg = (e && e.message) || '部署状态读取失败';
-        if (e && e.status === 404) {
-          clearInterval(pollTimer);
-          pollTimer = null;
-          selfRetryJobId = '';
-          selfBusy = false;
-          selfBtn.disabled = false;
-          selfBtn.textContent = '创建 Miru';
-          resetSelfProgress();
-          setSelfMessage('刚才的创建已经中断，请重新创建一次。Miru 会重新检查服务器状态，不会重复占用端口。', false);
-          return;
-        }
-        if (pollFailures < 3) {
-          setSelfMessage(msg + '，正在继续确认，先不要重复创建。', false);
-        } else {
-          clearInterval(pollTimer);
-          pollTimer = null;
-          selfRetryJobId = jobId;
-          selfBusy = false;
-          selfBtn.disabled = false;
-          selfBtn.textContent = '重新检查状态';
-          setSelfMessage('暂时读不到部署状态，但服务器上的创建可能仍在继续。重新检查会先查看刚才的任务。', false);
-        }
-      } finally {
-        pollInFlight = false;
-      }
-    };
-    run();
-    pollTimer = setInterval(run, 1800);
-  }
+	  function phaseHelp(phaseKey) {
+	    if (phaseKey === 'local_upload') return 'Transferring service package to local Sora.';
+	    if (phaseKey === 'image_upload') return 'Uploading service package to server, time depends on network.';
+	    if (phaseKey === 'image_uploaded') return 'Service package reached server, preparing to start Sora.';
+	    if (phaseKey === 'image_load') return 'Server preparing Sora, may take time depending on package size.';
+	    if (phaseKey === 'image_pull') {
+	      var elapsed = selfProgressStartedAt ? Math.floor((Date.now() - selfProgressStartedAt) / 1000) : 0;
+	      if (elapsed > 60) return 'Server downloading Sora from online mirror, may take a few minutes.';
+	      return 'Downloading Sora: fetching from online mirror.';
+	    }
+	    if (phaseKey === 'host_prepare' || phaseKey === 'upload') return 'Placing required files on server.';
+	    if (phaseKey === 'create_instance') return 'Service is on the server, starting your Sora.';
+	    if (phaseKey === 'ready') return 'Sora is awake, preparing invite code.';
+	    if (phaseKey === 'public_health') return 'Confirming this computer can access newly created Sora.';
+	    if (phaseKey === 'done') return 'Complete, taking you to Sora.';
+	    if (phaseKey === 'failed') return 'Failed, see detailed log for reason.';
+	    if (phaseKey === 'connect') return 'Connecting to your cloud server.';
+	    return 'Sora will tell you the deployment process step by step.';
+	  }
 
-  function renderSelfSuccess(code) {
-    selfCurrentInvitationCode = normalizeCode(code || '');
-    selfSuccessCode.textContent = selfCurrentInvitationCode || '邀请码读取失败';
-    selfSuccess.classList.add('active');
-    setSelfMessage('已经创建完成。先复制邀请码给其他设备，或者直接进入桌面端。', true);
-    selfSuccessMsg.textContent = '';
-    if (selfCurrentInvitationCode && navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(selfCurrentInvitationCode).then(function() {
-        selfSuccessMsg.textContent = '已复制邀请码，可以直接去手机端粘贴。';
-        selfSuccessMsg.className = 'message ok';
-      }).catch(function() {});
-    }
-    try { selfSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
-  }
-
-  async function verifySelfServerPublicHealth(job) {
-    var jobId = job && job.job_id ? job.job_id : selfHealthRetryJobId;
-    if (!jobId) {
-      selfBusy = false;
-      selfBtn.disabled = false;
-      selfBtn.textContent = '创建 Miru';
-      setSelfMessage('创建任务状态不完整，请重新创建一次。', false);
-      return;
-    }
-    selfHealthRetryJobId = jobId;
-    selfSuccess.classList.remove('active');
-    selfSuccessMsg.textContent = '';
-    selfCurrentInvitationCode = normalizeCode((job && job.invitation_code) || selfCurrentInvitationCode || '');
-    selfProgress.classList.add('active');
-    selfPhase.textContent = '正在确认公网访问';
-    selfPhaseHelp.textContent = 'Miru 已在服务器上启动，正在确认这台电脑能打开它。';
-    selfProgressFill.style.width = '96%';
-    renderDeploySteps('public_health');
-    selfBtn.style.display = '';
-    selfBtn.disabled = true;
-    selfBtn.textContent = '检查中';
-    setSelfMessage('正在确认这台电脑可以访问刚创建的 Miru。', true);
-    try {
-      var res = await fetch('/api/client/provision/self-server/public-health/' + encodeURIComponent(jobId), {
-        method: 'POST',
-        headers: androidClientHeaders({})
-      });
-      var data = await res.json().catch(function(){ return {}; });
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || '这台电脑暂时访问不到刚创建的 Miru。');
-      }
-      selfHealthRetryJobId = '';
-      selfBusy = false;
-      selfBtn.disabled = true;
-      selfBtn.style.display = 'none';
-      selfPhase.textContent = '完成';
-      selfPhaseHelp.textContent = '公网访问已经确认，可以进入 Miru。';
-      selfProgressFill.style.width = '100%';
-      renderDeploySteps('done');
-      renderSelfSuccess((job && job.invitation_code) || selfCurrentInvitationCode);
-    } catch (e) {
-      selfBusy = false;
-      selfBtn.disabled = false;
-      selfBtn.style.display = '';
-      selfBtn.textContent = '重新检查公网访问';
-      selfPhaseHelp.textContent = '服务器内已启动，但这台电脑还访问不到公网端口。';
-      setSelfMessage((e && e.message) || '这台电脑暂时访问不到刚创建的 Miru。', false);
-    }
-  }
-
-  window.copySelfInvite = function() {
-    var code = selfCurrentInvitationCode || selfSuccessCode.textContent || '';
-    if (!code) {
-      selfSuccessMsg.textContent = '还没有拿到邀请码。';
-      selfSuccessMsg.className = 'message';
-      return;
-    }
-    function copied() {
-      selfSuccessMsg.textContent = '已复制邀请码。';
-      selfSuccessMsg.className = 'message ok';
-    }
-    function fallback() {
-      var range = document.createRange();
-      range.selectNodeContents(selfSuccessCode);
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      try { document.execCommand('copy'); copied(); }
-      catch(e) {
-        selfSuccessMsg.textContent = '复制失败，请手动选中邀请码。';
-        selfSuccessMsg.className = 'message';
-      }
-      sel.removeAllRanges();
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(code).then(copied).catch(fallback);
-    } else {
-      fallback();
-    }
-  };
-
-  window.enterSelfServer = async function() {
-    var code = selfCurrentInvitationCode || selfSuccessCode.textContent || '';
-    if (!isValidCode(code)) {
-      selfSuccessMsg.textContent = '邀请码格式不完整，无法进入。';
-      selfSuccessMsg.className = 'message';
-      return;
-    }
-    selfEnterBtn.disabled = true;
-    selfEnterBtn.textContent = '正在进入';
-    selfSuccessMsg.textContent = '正在登录桌面端…';
-    selfSuccessMsg.className = 'message ok';
-    var state = await loginWithCode(code, null, function(text, good) {
-      selfSuccessMsg.textContent = text || '';
-      selfSuccessMsg.className = good ? 'message ok' : 'message';
-    }, { returnState: true, setupComplete: false });
-    if (!state || !state.ok) {
-      selfEnterBtn.disabled = false;
-      selfEnterBtn.textContent = '进入 Miru';
-      return;
-    }
-    beginApiSetup({
-      mode: 'remote',
-      token: state.token,
-      server_url: state.server_url,
-      redirect_url: state.redirect_url
-    });
-  };
-
-  async function resumePendingApiSetup() {
-    try {
-      var res = await fetch('/api/client-config', { headers: androidClientHeaders({}) });
-      if (!res.ok) return;
-      var cfg = await res.json();
-      if (!cfg || !cfg.client_mode || !cfg.auth_token || cfg.setup_complete !== false) return;
-      var localOnly = !!cfg.local_only;
-      var base = (!localOnly && cfg.server_url) ? String(cfg.server_url).replace(/\/+$/, '') : '';
-      beginApiSetup({
-        mode: cfg.mode || (localOnly ? 'local' : 'remote'),
-        token: cfg.auth_token,
-        server_url: localOnly ? '' : base,
-        redirect_url: withDesktopClientParams((localOnly ? '' : base) + '/app?token=' + encodeURIComponent(cfg.auth_token))
-      });
-      setApiSetupMessage('继续完成模型配置。测试通过后，Miru 才会正式启动。', true);
-    } catch(e) {}
-  }
-
-  function renderJob(job) {
-    var phaseKey = job.phase_key || 'prepare';
-    var progress = typeof job.progress === 'number' ? job.progress : 0;
-    selfPhase.textContent = job.phase || job.status || '处理中';
-    selfPhaseHelp.textContent = phaseHelp(phaseKey);
-    selfProgressFill.style.width = Math.max(0, Math.min(100, progress)) + '%';
-    renderDeploySteps(phaseKey);
-    selfLogs.innerHTML = '';
-    (job.logs || []).forEach(function(line) {
-      var div = document.createElement('div');
-      div.className = 'log-line';
-      div.textContent = line;
-      selfLogs.appendChild(div);
-    });
-    selfLogs.scrollTop = selfLogs.scrollHeight;
-  }
-
-  function phaseHelp(phaseKey) {
-    if (phaseKey === 'local_upload') return '正在把你选择的服务包交给本机 Miru。';
-    if (phaseKey === 'image_upload') return '正在把 Miru 服务包传到你的服务器，这一步取决于家里网络和云服务器带宽。';
-    if (phaseKey === 'image_uploaded') return '服务包已经到服务器上，接下来会启动 Miru。';
-    if (phaseKey === 'image_load') return '服务器正在准备 Miru，服务包越大这一步越久。';
-    if (phaseKey === 'image_pull') {
-      var elapsed = selfProgressStartedAt ? Math.floor((Date.now() - selfProgressStartedAt) / 1000) : 0;
-      if (elapsed > 60) return '服务器正在从在线镜像源下载 Miru，取决于网络，可能需要几分钟。';
-      return '正在下载 Miru 服务：从高级选项里的在线镜像源获取镜像。';
-    }
-    if (phaseKey === 'host_prepare' || phaseKey === 'upload') return '正在把 Miru 需要的文件放到服务器上。';
-    if (phaseKey === 'create_instance') return '服务已经在服务器上，正在启动属于你的 Miru。';
-    if (phaseKey === 'ready') return 'Miru 已经醒来，正在准备邀请码。';
-    if (phaseKey === 'public_health') return '正在确认这台电脑可以访问刚创建的 Miru。';
-    if (phaseKey === 'done') return '完成了，正在带你进入 Miru。';
-    if (phaseKey === 'failed') return '没有完成，下面的详细过程里会保留失败原因。';
-    if (phaseKey === 'connect') return '正在连接你填写的云服务器。';
-    return 'Miru 会把部署过程一步步告诉你。';
-  }
-
-  function renderDeploySteps(phaseKey) {
-    var current = PHASE_ORDER[phaseKey];
-    if (current == null) current = 0;
-    selfSteps.innerHTML = '';
-    DEPLOY_STEPS.forEach(function(step, index) {
-      var li = document.createElement('li');
-      li.className = 'deploy-step';
-      if (phaseKey === 'failed') {
-        if (index < Math.max(0, current)) li.classList.add('done');
-      } else if (index < current) {
-        li.classList.add('done');
-      } else if (index === current) {
-        li.classList.add('current');
-      }
-      var title = document.createElement('strong');
-      title.textContent = step.title;
-      var hint = document.createElement('span');
-      hint.textContent = step.hint;
-      li.appendChild(title);
-      li.appendChild(hint);
-      selfSteps.appendChild(li);
-    });
-  }
-  resumePendingApiSetup();
-})();
-</script>
-</body>
-</html>
+	  function renderDeploySteps(phaseKey) {
+	    var current = PHASE_ORDER[phaseKey];
+	    if (current == null) current = 0;
+	    selfSteps.innerHTML = '';
+	    DEPLOY_STEPS.forEach(function(step, index) {
+	      var li = document.createElement('li');
+	      li.className = 'deploy-step';
+	      if (phaseKey === 'failed') {
+	        if (index < Math.max(0, current)) li.classList.add('done');
+	      } else if (index < current) {
+	        li.classList.add('done');
+	      } else if (index === current) {
+	        li.classList.add('current');
+	      }
+	      var title = document.createElement('strong');
+	      title.textContent = step.title;
+	      var hint = document.createElement('span');
+	      hint.textContent = step.hint;
+	      li.appendChild(title);
+	      li.appendChild(hint);
+	      selfSteps.appendChild(li);
+	    });
+	  }
+	  resumePendingApiSetup();
+	})();
+	</script>
+	</body>
+	</html>
