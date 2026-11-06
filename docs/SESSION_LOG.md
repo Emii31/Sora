@@ -16,3 +16,8 @@
   - Added strict editing guardrails to `CLAUDE.md` to prevent whole-file replacements, stubs, and unverified large deletions.
   - Corrected project status documents to reflect Phase 2B rollback.
 - **Session History Source Note**: Prior session logs and context snapshots from early sessions are reconstructed from conversation archives and git history; any claims regarding intermediate uncommitted states during Phase 2B are explicitly qualified as post-incident recovery records.
+
+## 2026-11-07 (Sora Git Publishing Policy & Checkpoint Push)
+- Enforced Sora-only Git publishing policy: `origin` points to `https://github.com/Emii31/Sora.git`, `upstream` points to `https://github.com/kiyotakali/Miru.git` with push disabled.
+- Recorded publishing policy in `CLAUDE.md` and `docs/DECISIONS.md`.
+- Created policy checkpoint commit and pushed to `origin/main`.

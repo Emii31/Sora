@@ -23,3 +23,12 @@
 19. **HTTP 200 and syntax validity do not establish preserved functionality.**
 20. **Select tests relevant to changed behavior.**
 21. **Append session records; do not replace earlier entries.**
+
+## Git Publishing Policy (Sora-Only)
+22. **Commit locally in this Sora working repository; push only to `origin` (`https://github.com/Emii31/Sora.git`).**
+23. **`upstream` (`https://github.com/kiyotakali/Miru.git`) is strictly fetch-only (push URL disabled). Never create upstream PRs, issues, comments, or send messages to upstream maintainers.**
+24. **At each completed and validated task, create a reviewed checkpoint and push it to the user's repository (`origin`).**
+25. **Never commit or push secrets, runtime memory, credentials, or recovery dumps.**
+26. **Never use force-push or mirror-push; only fast-forward pushes to `origin/main`.**
+27. **Rejected or damaged work must be fully recovered and verified before publishing.**
+28. **Preserve upstream license and third-party attribution.**
