@@ -5977,21 +5977,21 @@ function settingsRenderIdentityPanel() {
     wrap.appendChild(row);
   }
 
-  addRow('你的名字', 'settingsSelfCanonicalName', '真实姓名', cfg.canonical_name);
-  addRow('别名', 'settingsSelfAliases', '逗号分隔，如 alex, 小明 (各平台用户名也写在这里)', aliasStr);
-  addRow('补充说明', 'settingsSelfNotes', '经常发表情包的就是我', cfg.notes);
+  addRow('Your Name', 'settingsSelfCanonicalName', 'Real Name', cfg.canonical_name);
+  addRow('Alias', 'settingsSelfAliases', 'Comma-separated, e.g. alex, Little Ming (usernames for each platform also included)', aliasStr);
+  addRow('Notes', 'settingsSelfNotes', 'I often post stickers', cfg.notes);
 
   var footer = document.createElement('div');
   footer.style.cssText = 'display:flex;align-items:center;gap:16px;';
   var btn = document.createElement('button');
   btn.className = 'btn btn-save';
-  btn.textContent = '保存';
+  btn.textContent = 'Save';
   btn.onclick = settingsSaveIdentity;
   footer.appendChild(btn);
   if (cfg.updated_at) {
     var ts = document.createElement('span');
     ts.style.cssText = 'font-size:12px;color:var(--text-muted);';
-    ts.textContent = '最近更新：' + cfg.updated_at;
+    ts.textContent = 'Last updated: ' + cfg.updated_at;
     footer.appendChild(ts);
   }
   wrap.appendChild(footer);
@@ -7593,11 +7593,11 @@ async function settingsSaveIdentity() {
     });
     const data = await res.json();
     if (!res.ok || !data.ok) {
-      settingsShowFlash(data.error || '身份设置保存失败', 'error');
+      settingsShowFlash(data.error || 'Failed to save identity settings', 'error');
       return;
     }
     selfProfileState = data.profile || selfProfileState;
-    settingsShowFlash('身份设置已保存');
+    settingsShowFlash('Identity settings saved');
     settingsRenderIdentityPanel();
 
     // Belt-and-suspenders cache invalidation: the backend broadcasts
@@ -7611,7 +7611,7 @@ async function settingsSaveIdentity() {
       MiruCache.markStale('memory_tree');
     } catch(e) { /* MiruCache optional */ }
   } catch (err) {
-    settingsShowFlash('身份设置保存失败: ' + err.message, 'error');
+    settingsShowFlash('Identity settings save failed: ' + err.message, 'error');
   }
 }
 
