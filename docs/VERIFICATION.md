@@ -10,6 +10,11 @@
 - **Phase 2B Rollback**:
   - Phase 2B main template translation was rejected due to destructive large-scale file truncation (`templates/index.html` reduced from 12,807 lines to 2,421 lines).
   - `templates/index.html` fully restored to HEAD (`cbea20b436a255e3cd26d952aaf952c003990b65`), verified via `git hash-object` and byte identity.
+- **Phase 2B.2 Verification**:
+  - `templates/index.html`: Identity settings panel fields, button labels, and save feedback messages translated.
+  - Preservation checks: Script blocks and Style blocks verified identical (with authorized exceptions for UI strings).
+  - `git diff --check`: PASS.
+  - Backup: `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_2_patch.html`.
 - **Phase 2B.3 Verification**:
   - `templates/index.html`: AI Models settings panel fields, button labels, descriptions, and save/test feedback messages translated.
   - Preservation checks: Script blocks and Style blocks verified identical (with authorized exceptions for UI strings).

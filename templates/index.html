@@ -5845,7 +5845,7 @@ const SETTINGS_AI_TIER_META = {
   },
   chat: {
     title: 'Chat Model',
-    subtitle: 'Handles Miru responses and proactive messages. Recommended: DeepSeek Pro, or other powerful models like GPT/Gemini.',
+    subtitle: 'Handles Sora responses and proactive messages. Recommended: DeepSeek Pro, or other powerful models like GPT/Gemini.',
     hostHint: 'e.g. api.deepseek.com',
     modelHint: 'e.g. deepseek-v4-pro',
   },
@@ -5899,7 +5899,7 @@ function settingsRenderAiPanel() {
         : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
           ? 'on this Linux PC'
           : 'on this Mac')
-    : 'on the Miru private server';
+    : 'on the Sora private server';
   html += '<div style="max-width:860px;">';
   html += '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">';
   html += 'These settings are saved ' + aiStorageScope + '. They take effect immediately after saving, no restart needed; API keys are not displayed in the interface.';
@@ -6003,12 +6003,12 @@ var _charDetailModelId = null; // currently editing model
 function settingsRenderAiriPanel() {
   var html = '';
   html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">';
-  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">Persona List</div>';
+  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">形象列表</div>';
   html += '<div style="display:flex;gap:8px;">';
-  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">Upload Model (.zip)</button>';
+  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">上传模型 (.zip)</button>';
   html += '</div>';
   html += '</div>';
-  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">Loading...</div></div>';
+  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">加载中...</div></div>';
   // Detail panel (hidden by default)
   html += '<div id="settingsCharDetail" style="display:none;"></div>';
   document.getElementById('settingsPanelAiri').innerHTML = html;
