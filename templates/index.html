@@ -45,7 +45,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<title>Miru</title>
+<title>Sora</title>
 <style>
 :root {
   /* === 和風 Light — washi cream base (千恋万花) === */
@@ -3906,13 +3906,13 @@ async function _doLogin() {
 <!-- Mobile tab bar -->
 <nav class="mobile-tab-bar" id="mobileTabBar">
   <button data-tab="chat" onclick="_mobileTab('chat')" class="active">
-    <span class="tab-icon">💬</span><span>对话</span>
+    <span class="tab-icon">💬</span><span>Chat</span>
   </button>
   <button data-tab="memory" onclick="_mobileTab('memory')">
-    <span class="tab-icon">📖</span><span>记忆</span>
+    <span class="tab-icon">📖</span><span>Memory</span>
   </button>
   <button data-tab="settings" onclick="_openMobileSettings()">
-    <span class="tab-icon">⚙️</span><span>设置</span>
+    <span class="tab-icon">⚙️</span><span>Settings</span>
   </button>
 </nav>
 
@@ -3934,7 +3934,7 @@ async function _doLogin() {
 <header>
   <div class="brand-block">
     <div class="brand-line">
-      <h1>Miru</h1>
+      <h1>Sora</h1>
       <span class="brand-tagline">Your AI Companion</span>
       <span class="brand-days" id="brandStatusRight" style="display:none">
         <span class="brand-days-prefix">The</span>
@@ -3946,30 +3946,30 @@ async function _doLogin() {
       <span class="brand-status-left" id="brandStatusLeft"></span>
     </div>
   </div>
-  <button class="header-settings-btn" title="设置" onclick="openSettingsModal()">设置</button>
-  <button class="header-refresh-btn" id="refreshBtn" onclick="refreshAll()" title="刷新数据">刷新</button>
-  <button class="header-pet-btn" id="launchPetBtn" onclick="launchDesktopPet()" title="启动桌宠">桌宠</button>
-  <button class="header-exit-btn" id="exitBtn" onclick="shutdownServer()" title="退出 ContextLife">退出</button>
+  <button class="header-settings-btn" title="Settings" onclick="openSettingsModal()">Settings</button>
+  <button class="header-refresh-btn" id="refreshBtn" onclick="refreshAll()" title="Refresh">Refresh</button>
+  <button class="header-pet-btn" id="launchPetBtn" onclick="launchDesktopPet()" title="Desktop Pet">Desktop Pet</button>
+  <button class="header-exit-btn" id="exitBtn" onclick="shutdownServer()" title="Exit">Exit</button>
 </header>
 
 <div class="main">
   <!-- Sidebar -->
   <div class="sidebar-panel" id="sidebarPanel">
     <div class="sidebar-nav">
-      <button class="sidebar-nav-btn" onclick="showCompanionChat()" title="对话" id="navCompanionChat">
-        <span class="nav-icon">CH</span><span class="nav-label">对话</span>
+      <button class="sidebar-nav-btn" onclick="showCompanionChat()" title="Chat" id="navCompanionChat">
+        <span class="nav-icon">CH</span><span class="nav-label">Chat</span>
       </button>
-      <button class="sidebar-nav-btn" onclick="toggleAiriPanel()" title="伴随面板" id="navAiriVisual">
-        <span class="nav-icon">AI</span><span class="nav-label">伴随</span>
+      <button class="sidebar-nav-btn" onclick="toggleAiriPanel()" title="Companion Panel" id="navAiriVisual">
+        <span class="nav-icon">AI</span><span class="nav-label">Companion</span>
       </button>
-      <button class="sidebar-nav-btn" onclick="navMemoryBrowser()" title="记忆" id="navMemoryBrowser">
-        <span class="nav-icon">ME</span><span class="nav-label">记忆</span>
+      <button class="sidebar-nav-btn" onclick="navMemoryBrowser()" title="Memory" id="navMemoryBrowser">
+        <span class="nav-icon">ME</span><span class="nav-label">Memory</span>
       </button>
-      <button class="sidebar-nav-btn" onclick="navEmotionCurve()" title="情绪" id="navEmotionCurve">
-        <span class="nav-icon">EM</span><span class="nav-label">情绪</span>
+      <button class="sidebar-nav-btn" onclick="navEmotionCurve()" title="Emotions" id="navEmotionCurve">
+        <span class="nav-icon">EM</span><span class="nav-label">Emotions</span>
       </button>
-      <button class="sidebar-nav-btn" onclick="navMiruEmotion()" title="我的心情" id="navMiruEmotion">
-        <span class="nav-icon">ME</span><span class="nav-label">我的心情</span>
+      <button class="sidebar-nav-btn" onclick="navMiruEmotion()" title="My Mood" id="navMiruEmotion">
+        <span class="nav-icon">ME</span><span class="nav-label">My Mood</span>
       </button>
     </div>
   </div>
@@ -4034,15 +4034,15 @@ async function _doLogin() {
 <div class="settings-modal-backdrop" id="settingsModal" onclick="closeSettingsModal()">
   <div class="settings-modal" onclick="event.stopPropagation()">
     <div class="settings-modal-header">
-      <div class="settings-modal-title">全局设置</div>
-      <button class="settings-close-btn" onclick="closeSettingsModal()">关闭</button>
+      <div class="settings-modal-title">Global Settings</div>
+      <button class="settings-close-btn" onclick="closeSettingsModal()">Close</button>
     </div>
     <div class="settings-tabs">
-      <button class="settings-tab-btn active" id="settingsTabIdentity" onclick="switchSettingsTab('identity')">身份</button>
-      <button class="settings-tab-btn" id="settingsTabAiri" onclick="switchSettingsTab('airi')" style="display:none">角色管理</button>
-      <button class="settings-tab-btn" id="settingsTabAi" onclick="switchSettingsTab('ai')">模型</button>
-      <button class="settings-tab-btn" id="settingsTabDevices" onclick="switchSettingsTab('devices')">设备</button>
-      <button class="settings-tab-btn" id="settingsTabSystem" onclick="switchSettingsTab('system')">系统</button>
+      <button class="settings-tab-btn active" id="settingsTabIdentity" onclick="switchSettingsTab('identity')">Identity</button>
+      <button class="settings-tab-btn" id="settingsTabAiri" onclick="switchSettingsTab('airi')" style="display:none">Characters</button>
+      <button class="settings-tab-btn" id="settingsTabAi" onclick="switchSettingsTab('ai')">AI Models</button>
+      <button class="settings-tab-btn" id="settingsTabDevices" onclick="switchSettingsTab('devices')">Devices</button>
+      <button class="settings-tab-btn" id="settingsTabSystem" onclick="switchSettingsTab('system')">System</button>
     </div>
     <div class="settings-modal-body">
       <div id="settingsFlashWrap"></div>

@@ -6,7 +6,7 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | Area | Path | Scope | Status |
 | :--- | :--- | :--- | :--- |
 | **Welcome/Login UI** | `templates/login.html` | Visible headings, labels, buttons | **Implemented & Verified (Phase 2A)** |
-| **Main UI Shell** | `templates/index.html` | App shell, nav, controls | **Rolled back / Pending Re-evaluation (Phase 2B)** |
+| **Main UI Shell** | `templates/index.html` | App shell, nav, controls | **Static navigation translated (Phase 2B.1)** |
 | **Backend Errors** | Various (`app.py`, `core.py`) | Error messages, logs | Untouched |
 | **Prompts/Persona** | `character.py`, `prompt.py`, `memory_prompts_v*.py` | AI personality, system prompts | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |
