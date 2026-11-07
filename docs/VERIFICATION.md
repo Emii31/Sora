@@ -19,6 +19,7 @@
   - `templates/index.html`: AI Models settings panel fields, button labels, descriptions, and save/test feedback messages translated.
   - Preservation checks: Script blocks and Style blocks verified identical (with authorized exceptions for UI strings).
   - `git diff --check`: PASS.
+  - Test suite coverage recovery: All 9 original test functions in `tests/test_owner_ai_config_frontend.py` fully restored and verified (18/18 tests passed across frontend, backend, and self-profile suites). Evidence saved under `docs/verification/phase_02B_3/test_results.txt`.
   - Backup: `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_3_patch.html`.
 - **Recovery Backup**:
   - Saved under `/mnt/data/Companion/recovery/20261107_emergency_recovery/` with full manifest and file hashes.

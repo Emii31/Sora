@@ -23,6 +23,7 @@
 19. **HTTP 200 and syntax validity do not establish preserved functionality.**
 20. **Select tests relevant to changed behavior.**
 21. **Append session records; do not replace earlier entries.**
+22. **Translation changes must preserve existing test functions and behavioral assertions. Only directly affected copy expectations may change.**
 
 ## Git Publishing Policy (Sora-Only)
 22. **Commit locally in this Sora working repository; push only to `origin` (`https://github.com/Emii31/Sora.git`).**

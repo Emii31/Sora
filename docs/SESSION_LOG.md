@@ -39,7 +39,10 @@
 - Documentation created/updated (`docs/phases/PHASE_02B_3.md`, `docs/STATUS.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
 - Pre-edit backup saved at `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_3_patch.html`.
 
-## 2026-11-08 (Correction: Phase 2B.3 Records)
-- Correction: Appended missing Phase 2B.2 session history accidentally overwritten.
-- Updated AI model descriptions to use Sora branding.
-- Restored unintentional string changes in `settingsRenderAiriPanel`.
+## 2026-11-08 (Test Coverage Recovery Incident)
+- **Incident**: Independent review of commit `a3e6503` revealed that `tests/test_owner_ai_config_frontend.py` had missing test functions and assertions covering system invitation codes, account switching, and Windows platform copy.
+- **Recovery Action**:
+  - Restored all 9 original test functions in `tests/test_owner_ai_config_frontend.py` from commit `c1f8c67`.
+  - Updated translated assertion copy expectations to English.
+  - Added CLAUDE.md guardrail requiring translation changes to preserve existing test functions and behavioral assertions.
+  - Verified full test suite (`tests/test_owner_ai_config_frontend.py`, `tests/test_owner_ai_config.py`, `tests/test_self_profile.py` — 18/18 passed). Saved evidence under `docs/verification/phase_02B_3/test_results.txt`.
