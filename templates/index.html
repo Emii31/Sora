@@ -7213,26 +7213,26 @@ function settingsRenderDevicesPanel() {
   if (isMobileDevice) {
     // Mobile: show connection status instead of QR code
     html += '<div style="margin-bottom:28px">';
-    html += '<h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:12px">连接状态</h3>';
+    html += '<h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:12px">Connection Status</h3>';
     html += '<div id="mobileConnStatus" style="text-align:center;padding:16px 0">';
     var serverUrl = localStorage.getItem('miru_server_url') || location.origin;
     html += '<div style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(76,175,80,0.12);border-radius:12px;margin-bottom:12px">';
     html += '<span style="width:8px;height:8px;border-radius:50%;background:#4caf50;display:inline-block"></span>';
-    html += '<span style="color:#4caf50;font-size:0.9rem;font-weight:500">已连接</span>';
+    html += '<span style="color:#4caf50;font-size:0.9rem;font-weight:500">Connected</span>';
     html += '</div>';
     html += '<div style="font-size:0.75rem;color:var(--text-muted);word-break:break-all;max-width:300px;margin:0 auto">' + escapeHtml(serverUrl) + '</div>';
     html += '<div style="margin-top:16px">';
-    html += '<button onclick="_disconnectMobile()" style="padding:8px 20px;background:transparent;border:1px solid #f66;color:#f66;border-radius:10px;font-size:0.85rem;cursor:pointer">断开连接</button>';
+    html += '<button onclick="_disconnectMobile()" style="padding:8px 20px;background:transparent;border:1px solid #f66;color:#f66;border-radius:10px;font-size:0.85rem;cursor:pointer">Disconnect</button>';
     html += '</div>';
     html += '</div>';
     html += '</div>';
   } else {
-    // Desktop: no QR needed (邀请码 flow replaced QR scan)
+    // Desktop: no QR needed (invitation code flow replaced QR scan)
   }
 
   // Connected devices list
-  html += '<h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:12px">已连接设备</h3>';
-  html += '<div id="devicesListArea" style="min-height:60px"><span style="color:var(--text-muted)">加载中...</span></div>';
+  html += '<h3 style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:12px">Connected Devices</h3>';
+  html += '<div id="devicesListArea" style="min-height:60px"><span style="color:var(--text-muted)">Loading...</span></div>';
 
   panel.innerHTML = html;
   _settingsDevicesLoaded = true;
@@ -7287,7 +7287,7 @@ async function _loadDevicesQr() {
     }
     area.innerHTML = html;
   } catch(e) {
-    area.innerHTML = '<span style="color:var(--fn-danger)">生成二维码失败</span>';
+    area.innerHTML = '<span style="color:var(--fn-danger)">Failed to generate QR code</span>';
   }
 }
 
@@ -7297,11 +7297,11 @@ function _renderDeviceRowHtml(d) {
   var icon = d.type === 'phone' ? '📱' : (d.type === 'tablet' ? '📟' : '💻');
   var isOnline = !!d.is_online;
   var dotColor = isOnline ? 'var(--fn-success)' : 'var(--text-faint)';
-  var statusText = isOnline ? '在线' : '离线';
+  var statusText = isOnline ? 'Online' : 'Offline';
   var statusColor = isOnline ? 'var(--fn-success)' : 'var(--text-muted)';
   var nameColor = isOnline ? 'var(--text-primary)' : 'var(--text-muted)';
   var timeAgo = d.last_seen ? _formatTimeAgo(d.last_seen) : '';
-  var subText = isOnline ? escapeHtml(d.platform || '') : (timeAgo ? '最后活跃: ' + timeAgo : '');
+  var subText = isOnline ? escapeHtml(d.platform || '') : (timeAgo ? 'Last active: ' + timeAgo : '');
   var deviceId = String(d.device_id || '');
   var displayName = String(d.name || deviceId);
 
@@ -7322,7 +7322,7 @@ function _renderDeviceRowHtml(d) {
           + 'data-device-id="' + escapeHtml(deviceId) + '" '
           + 'data-device-name="' + escapeHtml(displayName) + '" '
           + 'onclick="_deleteDevice(this)" '
-          + 'title="删除该设备" '
+          + 'title="Delete this device" '
           + 'style="margin-left:6px;background:transparent;border:none;cursor:pointer;'
           + 'color:var(--text-faint);font-size:1.1rem;padding:2px 6px;line-height:1;">×</button>';
   }
@@ -7335,9 +7335,8 @@ async function _deleteDevice(btn) {
   var id = btn && btn.dataset ? btn.dataset.deviceId : '';
   var name = btn && btn.dataset ? btn.dataset.deviceName : '';
   if (!id) return;
-  // 防误删：让用户确认一下。删除只清理设备记录，不删除账号数据。
-  if (!await _confirm('确认删除设备「' + (name || id) + '」？\n\n（本地模式下，当前电脑会自动恢复；其他设备需重新打开 Miru）',
-                      { danger: true, confirmText: '删除' })) {
+  if (!await _confirm('Confirm deletion of device "' + (name || id) + '"?\n\n(In local mode, the current computer will automatically restore; other devices need to reopen Sora)',
+                      { danger: true, confirmText: 'Delete' })) {
     return;
   }
   // Optimistic: remove the row immediately so click feels snappy
@@ -7349,7 +7348,7 @@ async function _deleteDevice(btn) {
     var res = await fetch('/api/device/' + encodeURIComponent(id), { method: 'DELETE' });
     if (!res.ok) {
       var err = await res.json().catch(function(){ return {}; });
-      await _alert('删除失败: ' + (err.error || res.status));
+      await _alert('Failed to delete: ' + (err.error || res.status));
       // Refresh to undo the optimistic dim
       _loadDevicesList();
       return;
@@ -7357,7 +7356,7 @@ async function _deleteDevice(btn) {
     // Refresh both desktop and mobile lists
     _loadDevicesList();
   } catch (e) {
-    await _alert('删除失败: ' + (e && e.message || e));
+    await _alert('Failed to delete: ' + (e && e.message || e));
     _loadDevicesList();
   }
 }
@@ -7369,12 +7368,12 @@ async function _loadDevicesList() {
     var res = await fetch('/api/device/list');
     var devices = await res.json();
     if (!devices || devices.length === 0) {
-      area.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">暂无设备连接</p>';
+      area.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">No connected devices</p>';
       return;
     }
     area.innerHTML = devices.map(_renderDeviceRowHtml).join('');
   } catch(e) {
-    area.innerHTML = '<span style="color:var(--fn-danger)">加载设备列表失败</span>';
+    area.innerHTML = '<span style="color:var(--fn-danger)">Failed to load device list</span>';
   }
 }
 
@@ -7383,7 +7382,7 @@ function _renderDevicesListFromSSE(devices) {
   var area = document.getElementById('devicesListArea');
   if (!area) return;
   if (!devices || devices.length === 0) {
-    area.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">暂无设备连接</p>';
+    area.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">No connected devices</p>';
     return;
   }
   area.innerHTML = devices.map(_renderDeviceRowHtml).join('');
@@ -7393,7 +7392,7 @@ function _renderMobileDevicesListFromSSE(devices) {
   var el = document.getElementById('mobileDevicesList');
   if (!el) return;
   if (!devices || devices.length === 0) {
-    el.innerHTML = '<p style="color:var(--text-muted)">暂无设备连接</p>';
+    el.innerHTML = '<p style="color:var(--text-muted)">No connected devices</p>';
     return;
   }
   var html = '';
@@ -7401,7 +7400,7 @@ function _renderMobileDevicesListFromSSE(devices) {
     var icon = d.type === 'phone' ? '📱' : (d.type === 'tablet' ? '📟' : '💻');
     var isOnline = !!d.is_online;
     var dotColor = isOnline ? '#4caf50' : '#999';
-    var statusText = isOnline ? '在线' : '离线';
+    var statusText = isOnline ? 'Online' : 'Offline';
     var deviceId = String(d.device_id || '');
     var displayName = String(d.name || deviceId);
     html += '<div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle)">';
@@ -7415,7 +7414,7 @@ function _renderMobileDevicesListFromSSE(devices) {
             + 'data-device-id="' + escapeHtml(deviceId) + '" '
             + 'data-device-name="' + escapeHtml(displayName) + '" '
             + 'onclick="_deleteDevice(this)" '
-            + 'title="删除该设备" '
+            + 'title="Delete this device" '
             + 'style="background:transparent;border:none;cursor:pointer;'
             + 'color:var(--text-faint);font-size:1.1rem;padding:2px 6px;line-height:1;">×</button>';
     }

@@ -1,0 +1,27 @@
+# PHASE 2B.4 HANDOFF
+
+- **Translated Regions and Remaining Limitations**:
+    - Translated Devices settings panel UI components in `templates/index.html`: connection headings, status labels ("Connected", "Disconnected"), disconnect button, loading/empty/error messages, online/offline status text ("Online", "Offline"), last-active prefix ("Last active: "), device-removal tooltips, removal confirmations, and fallback errors.
+    - Remaining limitations: Full companion native bridge integration / remote device actions remain backend/native owned and out of frontend UI scope.
+- **History-Preservation Check Results**:
+    - Programmatically verified that all prior session log history sections (`2026-11-07 Phase 2A`, `Phase 2B Emergency Recovery`, `Sora Git Publishing Policy`, `Phase 2B.2 Identity Settings`, `Phase 2B.3 AI Models Settings`, `Correction: Phase 2B.3 Records`, `Test Coverage Recovery Incident`) are preserved verbatim as an exact prefix of `docs/SESSION_LOG.md`.
+- **Template Preservation and Diff Statistics**:
+    - Template line count: 12,806 (net -1 line due to whitespace format adjustment).
+    - Diff statistics: 29 insertions, 29 deletions.
+    - Git diff check: Passed (`git diff --check`).
+- **Exact Tests/Syntax Commands, Counts, Exit Codes, and Warnings**:
+    - Command: `PYTHONPATH=. pytest tests/test_owner_ai_config_frontend.py tests/test_owner_ai_config.py tests/test_self_profile.py`
+    - Exit code: `0`
+    - Counts: 18 passed, 0 failed, 0 skipped.
+    - Warnings: None.
+    - Inline JS syntax check via Node.js: Passed across all inline scripts.
+- **Test-Coverage Preservation Results**:
+    - All existing test functions and assertions preserved; test coverage regression checks passed successfully.
+- **Evidence/Backup Paths**:
+    - Evidence: `docs/verification/phase_02B_4/test_results.txt`
+    - Backup: `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`
+- **Browser Status**: Pending (not performed in headless environment).
+- **Actual Local and Live Remote Commit Hashes**:
+    - Local HEAD: (to be committed)
+    - Remote Origin (main): `fbd3b17190d7d8f440fd06a38ecc4984d0383511`
+- **Remaining Local Changes**: None (all reviewed task files staged).

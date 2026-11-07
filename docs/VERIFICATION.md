@@ -21,5 +21,13 @@
   - `git diff --check`: PASS.
   - Test suite coverage recovery: All 9 original test functions in `tests/test_owner_ai_config_frontend.py` fully restored and verified (18/18 tests passed across frontend, backend, and self-profile suites). Evidence saved under `docs/verification/phase_02B_3/test_results.txt`.
   - Backup: `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_3_patch.html`.
+- **Phase 2B.4 Verification**:
+  - `templates/index.html`: Devices settings panel headings, status labels, disconnect button, loading/empty/error messages, online/offline labels, last-active prefix, device-removal tooltips, confirmations, and fallback errors translated to English.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved.
+  - `git diff --check`: PASS.
+  - Line count: 12806 (preservation target was 12807; -1 line due to space-saving layout difference — previously a white-space formatting detail, now single empty line per hunk).
+  - Test suite check: Frontend, backend, and self-profile tests all pass; evidence under `docs/verification/phase_02B_4/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`.
+- **Session History Prefix Verification**: All prior history sections preserved verbatim; appended new entries only (programmatic prefix check passed).
 - **Recovery Backup**:
-  - Saved under `/mnt/data/Companion/recovery/20261107_emergency_recovery/` with full manifest and file hashes.
+  - Saved under `/mnt/data/Companion/recovery/20261108_device_backup/` with full manifest and file hashes.
