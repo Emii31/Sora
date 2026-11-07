@@ -7012,7 +7012,7 @@ function _loadSettingsInvitationCode() {
   var hint = document.getElementById('settingsInvitationHint');
   var btn = document.getElementById('settingsCopyInvitationBtn');
   if (!input) return;
-  input.value = '加载中...';
+  input.value = 'Loading...';
   if (btn) btn.disabled = true;
   fetch('/api/auth/invitation', { cache: 'no-store' }).then(function(r) {
     return r.json().then(function(data) {
@@ -7022,37 +7022,37 @@ function _loadSettingsInvitationCode() {
     var data = result.data || {};
     if (result.ok && (data.local_only || data.mode === 'local')) {
       input.value = '';
-      input.placeholder = '本地模式不需要邀请码';
+      input.placeholder = 'Local mode does not require an invitation code';
       try { localStorage.removeItem('miru_invitation_code'); } catch(e) {}
       if (btn) btn.disabled = true;
       if (hint) {
         hint.textContent = window.MiruAndroid
-          ? '当前 Miru 只在这部手机上使用，其他设备不会同步。需要多设备时，请回到首启页选择私有服务器。'
+          ? 'Sora is currently used only on this phone and will not sync with other devices. For multi-device use, please return to the startup page and select Private Server.'
           : window.__MIRU_DESKTOP_PLATFORM__ === 'windows'
-            ? '当前 Miru 只在这台 Windows 电脑上使用，手机和其他电脑不会同步。需要多设备时，请回到首启页选择私有服务器。'
+            ? 'Sora is currently used only on this Windows PC and will not sync with phones or other computers. For multi-device use, please return to the startup page and select Private Server.'
             : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
-              ? '当前 Miru 只在这台 Linux 电脑上使用，手机和其他电脑不会同步。需要多设备时，请回到首启页选择私有服务器。'
-              : '当前 Miru 只在这台 Mac 上使用，手机和其他电脑不会同步。需要多设备时，请回到首启页选择私有服务器。';
+              ? 'Sora is currently used only on this Linux PC and will not sync with phones or other computers. For multi-device use, please return to the startup page and select Private Server.'
+              : 'Sora is currently used only on this Mac and will not sync with phones or other computers. For multi-device use, please return to the startup page and select Private Server.';
       }
       return;
     }
     if (!result.ok || !data.ok || !data.invitation_code) {
       input.value = '';
-      input.placeholder = '暂时无法读取邀请码';
-      if (hint) hint.textContent = data.error || '暂时无法读取邀请码，请稍后再试。';
+      input.placeholder = 'Unable to load invitation code';
+      if (hint) hint.textContent = data.error || 'Unable to load invitation code, please try again later.';
       return;
     }
     input.value = data.invitation_code;
     try { localStorage.setItem('miru_invitation_code', data.invitation_code); } catch(e) {}
     if (btn) btn.disabled = false;
     if (hint) {
-      var server = data.server_url ? ('当前服务器：' + data.server_url + '。') : '';
-      hint.textContent = server + '给自己的手机或另一台电脑登录用，请不要发给别人。';
+      var server = data.server_url ? ('Current server: ' + data.server_url + '. ') : '';
+      hint.textContent = server + 'For logging in on your phone or another computer. Do not share with others.';
     }
   }).catch(function() {
     input.value = '';
-    input.placeholder = '暂时无法读取邀请码';
-    if (hint) hint.textContent = '网络不稳定，暂时无法读取邀请码。';
+    input.placeholder = 'Unable to load invitation code';
+    if (hint) hint.textContent = 'Network unstable, unable to load invitation code.';
   });
 }
 
@@ -7060,16 +7060,16 @@ function _copySettingsInvitationCode() {
   var input = document.getElementById('settingsInvitationCode');
   var btn = document.getElementById('settingsCopyInvitationBtn');
   var code = input && input.value ? input.value.trim() : '';
-  if (!code || code === '加载中...') {
-    settingsShowFlash('邀请码还没有加载好', 'error');
+  if (!code || code === 'Loading...') {
+    settingsShowFlash('Invitation code not yet loaded', 'error');
     return;
   }
   function copied() {
-    settingsShowFlash('邀请码已复制，可以发到你的另一台设备上登录。');
+    settingsShowFlash('Invitation code copied, you can use it to log in on your other device.');
     if (btn) {
       var old = btn.textContent;
-      btn.textContent = '已复制';
-      setTimeout(function() { btn.textContent = old || '复制邀请码'; }, 1400);
+      btn.textContent = 'Copied';
+      setTimeout(function() { btn.textContent = old || 'Copy invitation code'; }, 1400);
     }
   }
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -7080,7 +7080,7 @@ function _copySettingsInvitationCode() {
         document.execCommand('copy');
         copied();
       } catch(e) {
-        settingsShowFlash('复制失败，可以手动选中邀请码复制', 'error');
+        settingsShowFlash('Copy failed, you can manually select and copy the invitation code', 'error');
       }
     });
     return;
@@ -7091,7 +7091,7 @@ function _copySettingsInvitationCode() {
     document.execCommand('copy');
     copied();
   } catch(e) {
-    settingsShowFlash('复制失败，可以手动选中邀请码复制', 'error');
+    settingsShowFlash('Copy failed, you can manually select and copy the invitation code', 'error');
   }
 }
 
@@ -7100,14 +7100,14 @@ async function settingsSwitchAccount() {
   var isWindowsDesktop = window.__MIRU_DESKTOP_PLATFORM__ === 'windows';
   var msg = isLocal
     ? (window.MiruAndroid
-      ? '要回到 Miru 初始界面吗？\n\n本地单设备数据会继续留在这部手机上。之后再次选择“只在这部手机使用”，会回到同一个本地 Miru。'
+      ? 'Return to Sora initial screen?\n\nLocal single-device data will remain on this phone. If you select "Use only on this phone" again, you will return to the same local Sora.'
       : isWindowsDesktop
-      ? '要回到 Miru 初始界面吗？\n\n本地单设备数据会继续留在这台 Windows 电脑上。之后再次选择“只在这台电脑使用”，会回到同一个本地 Miru。'
+      ? 'Return to Sora initial screen?\n\nLocal single-device data will remain on this Windows PC. If you select "Use only on this PC" again, you will return to the same local Sora.'
       : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
-      ? '要回到 Miru 初始界面吗？\n\n本地单设备数据会继续留在这台 Linux 电脑上。之后再次选择“只在这台电脑使用”，会回到同一个本地 Miru。'
-      : '要回到 Miru 初始界面吗？\n\n本地单设备数据会继续留在这台 Mac 上。之后再次选择“只在这台 Mac 使用”，会回到同一个本地 Miru。')
-    : '要回到 Miru 初始界面吗？\n\n这只会退出这台设备，不会删除服务器上的聊天、记忆或邀请码。';
-  if (!await _confirm(msg, { confirmText: '切换账号' })) return;
+      ? 'Return to Sora initial screen?\n\nLocal single-device data will remain on this Linux PC. If you select "Use only on this PC" again, you will return to the same local Sora.'
+      : 'Return to Sora initial screen?\n\nLocal single-device data will remain on this Mac. If you select "Use only on this Mac" again, you will return to the same local Sora.')
+    : 'Return to Sora initial screen?\n\nThis will only sign out of this device, it will not delete chats, memories, or invitation codes on the server.';
+  if (!await _confirm(msg, { confirmText: 'Switch Account' })) return;
 
   try {
     if (typeof window._purgeAllUserScopedState === 'function') {
@@ -7164,10 +7164,10 @@ function _fmtScreenshotTime(iso) {
   var now = new Date();
   var pad = function(n) { return String(n).padStart(2, '0'); };
   var todayStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
-  if (datePart === todayStr) return '今天 ' + hhmm;
+  if (datePart === todayStr) return 'Today ' + hhmm;
   var yd = new Date(now.getTime() - 86400000);
   var yStr = yd.getFullYear() + '-' + pad(yd.getMonth() + 1) + '-' + pad(yd.getDate());
-  if (datePart === yStr) return '昨天 ' + hhmm;
+  if (datePart === yStr) return 'Yesterday ' + hhmm;
   // Same year → MM-DD HH:MM; otherwise YYYY-MM-DD HH:MM
   if (datePart.substring(0, 4) === String(now.getFullYear())) {
     return datePart.substring(5) + ' ' + hhmm;
@@ -7179,10 +7179,10 @@ function _loadScreenshotStats() {
   var el = document.getElementById('screenshotStatsContent');
   if (!el) return;
   fetch('/api/screenshot/stats', { cache: 'no-store' }).then(function(r) { return r.json(); }).then(function(body) {
-    if (!body.ok || !body.stats) { el.textContent = '暂无数据'; return; }
+    if (!body.ok || !body.stats) { el.textContent = 'No data'; return; }
     var stats = body.stats;
     var keys = Object.keys(stats);
-    if (keys.length === 0) { el.textContent = '暂无截图记录'; return; }
+    if (keys.length === 0) { el.textContent = 'No screenshot history'; return; }
     // Sort by total desc
     keys.sort(function(a, b) { return (stats[b].total || 0) - (stats[a].total || 0); });
     var html = '';
@@ -7190,18 +7190,18 @@ function _loadScreenshotStats() {
       var s = stats[keys[i]];
       var timePart = '';
       if (s.last_time) {
-        timePart = ' · 最近 ' + _fmtScreenshotTime(s.last_time);
+        timePart = ' · Last ' + _fmtScreenshotTime(s.last_time);
       }
       html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;flex-wrap:wrap;">';
       html += '<span style="color:var(--text-primary);min-width:100px;">' + escapeHtml(s.name || keys[i]) + '</span>';
-      html += '<span>' + s.total + ' 张</span>';
-      if (s.today > 0) html += '<span style="color:var(--airi-pink);">(今日 ' + s.today + ')</span>';
+      html += '<span>' + s.total + ' </span>';
+      if (s.today > 0) html += '<span style="color:var(--airi-pink);">(Today ' + s.today + ')</span>';
       if (timePart) html += '<span style="color:var(--text-muted);font-size:12px;">' + timePart + '</span>';
       html += '</div>';
     }
     el.innerHTML = html;
   }).catch(function() {
-    el.textContent = '加载失败';
+    el.textContent = 'Failed to load';
   });
 }
 
@@ -7335,6 +7335,7 @@ async function _deleteDevice(btn) {
   var id = btn && btn.dataset ? btn.dataset.deviceId : '';
   var name = btn && btn.dataset ? btn.dataset.deviceName : '';
   if (!id) return;
+  // Confirm before removing a device record; account data is not deleted.
   if (!await _confirm('Confirm deletion of device "' + (name || id) + '"?\n\n(In local mode, the current computer will automatically restore; other devices need to reopen Sora)',
                       { danger: true, confirmText: 'Delete' })) {
     return;

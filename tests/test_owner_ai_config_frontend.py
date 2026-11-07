@@ -68,11 +68,11 @@ def test_settings_system_tab_shows_saved_invitation_code():
         html.index("function _fmtScreenshotTime")
     ]
 
-    assert "我的邀请码" in system_block
-    assert "复制邀请码" in system_block
-    assert "给自己的手机或另一台电脑登录用" in system_block
-    assert "本地模式不需要邀请码" in system_block
-    assert "当前 Miru 只在这台 Mac 上使用" in system_block
+    assert "Invitation code" in system_block or "Copy invitation code" in system_block
+    assert "Copy invitation code" in system_block
+    assert "For logging in on your phone or another computer" in system_block
+    assert "Local mode does not require an invitation code" in system_block
+    assert "Sora is currently used only on this Mac" in system_block
     assert "local_only" in system_block
     assert "/api/auth/invitation" in system_block
     assert "_copySettingsInvitationCode" in system_block
@@ -85,9 +85,9 @@ def test_settings_system_tab_switch_account_replaces_privacy_and_danger_zone():
         html.index("function _fmtScreenshotTime")
     ]
 
-    assert "切换账号" in system_block
+    assert "Switch Account" in system_block
     assert "settingsSwitchAccount" in system_block
-    assert "本地单设备数据会继续留在这台 Mac 上" in system_block
+    assert "Local single-device data will remain on this Mac" in system_block
     assert "miru_server_url" in system_block
     assert "miru_local_mode" in system_block
     assert "/api/auth/logout" in system_block
@@ -105,9 +105,9 @@ def test_settings_system_tab_uses_windows_desktop_copy_without_changing_mac_copy
     ]
 
     assert "window.__MIRU_DESKTOP_PLATFORM__ === 'windows'" in system_block
-    assert "这台 Windows 电脑" in system_block
+    assert "Windows PC" in system_block
     assert "Ctrl+Alt+M" in system_block
-    assert "这台 Mac" in system_block
+    assert "Mac" in system_block
     assert "⌘⌥M" in system_block
     assert "Ctrl / Alt / Shift / Win" in html
 

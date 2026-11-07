@@ -51,3 +51,15 @@
   - Updated translated assertion copy expectations to English.
   - Added CLAUDE.md guardrail requiring translation changes to preserve existing test functions and behavioral assertions.
   - Verified full test suite (`tests/test_owner_ai_config_frontend.py`, `tests/test_owner_ai_config.py`, `tests/test_self_profile.py` — 18/18 passed). Saved evidence under `docs/verification/phase_02B_3/test_results.txt`.
+
+## 2026-11-08 (Phase 2B.4: Devices Settings Panel Translation)
+- Translated frontend-owned UI strings in Devices settings panel (connection headings, disconnect, connected devices list, online/offline labels, deletion confirmation).
+- Changes: Contextual patches in `templates/index.html`. 12807 lines preserved.
+- Preservation checks: Style and Script blocks byte-identical (except authorized UI string updates).
+- Verification: `git diff --check` PASSED.
+- Documentation created/updated (`docs/phases/PHASE_02B_4.md`, `docs/STATUS.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
+- Pre-edit backup saved at `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`.
+
+## 2026-11-08 (Phase 2B.5: System Account and Desktop-Preference UI Translation)
+- Translate frontend-owned UI strings in the System panel: invitation code label, loading/copy feedback, local-mode hints, desktop pet shortcuts, screenshot stats notes, account heading, data retention explanation, switch-account confirmation, save button feedback.
+- New entries appended; existing session/verification history preserved verbatim.

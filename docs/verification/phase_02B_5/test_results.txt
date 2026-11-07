@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 18 items
+
+tests/test_owner_ai_config_frontend.py .........                         [ 50%]
+tests/test_owner_ai_config.py ......                                     [ 83%]
+tests/test_self_profile.py ...                                           [100%]
+
+============================== 18 passed in 2.01s ==============================
