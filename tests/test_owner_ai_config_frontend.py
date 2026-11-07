@@ -68,7 +68,7 @@ def test_settings_system_tab_shows_saved_invitation_code():
         html.index("function _fmtScreenshotTime")
     ]
 
-    assert "Invitation code" in system_block or "Copy invitation code" in system_block
+    assert "我的邀请码" in system_block
     assert "Copy invitation code" in system_block
     assert "For logging in on your phone or another computer" in system_block
     assert "Local mode does not require an invitation code" in system_block

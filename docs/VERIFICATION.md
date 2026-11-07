@@ -1,7 +1,42 @@
-- **Phase 2B.5 Verification**:
-  - `templates/index.html`: System account and desktop-preference settings panel (invitation code, desktop-pet controls, account management) translated to English.
+# Verification
+
+- **Workspace structure**: Created (verified).
+- **CLAUDE.md rules**: Implemented and verified (updated with editing guardrails).
+- **Python Environment**: Established using Python 3.11.18.
+- **Legacy Tests**: `tests/test_identity_aliases_cascade.py` -> 34/34 passed (`0`).
+- **Phase 2A Verification**:
+  - `templates/login.html`: Translated and rebranded to Sora, including login copy correction.
+  - `/api/health`, `/app`, `/login`: `200 OK` verified.
+- **Phase 2B Rollback**:
+  - Phase 2B main template translation was rejected due to destructive large-scale file truncation (`templates/index.html` reduced from 12,807 lines to 2,421 lines).
+  - `templates/index.html` fully restored to HEAD (`cbea20b436a255e3cd26d952aaf952c003990b65`), verified via `git hash-object` and byte identity.
+- **Phase 2B.2 Verification**:
+  - `templates/index.html`: Identity settings panel fields, button labels, and save feedback messages translated.
+  - Preservation checks: Script blocks and Style blocks verified identical (with authorized exceptions for UI strings).
+  - `git diff --check`: PASS.
+  - Backup: `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_2_patch.html`.
+- **Phase 2B.3 Verification**:
+  - `templates/index.html`: AI Models settings panel fields, button labels, descriptions, and save/test feedback messages translated.
+  - Preservation checks: Script blocks and Style blocks verified identical (with authorized exceptions for UI strings).
+  - `git diff --check`: PASS.
+  - Test suite coverage recovery: All 9 original test functions in `tests/test_owner_ai_config_frontend.py` fully restored and verified (18/18 tests passed across frontend, backend, and self-profile suites). Evidence saved under `docs/verification/phase_02B_3/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/20261107_emergency_recovery/index_before_phase_2B_3_patch.html`.
+- **Phase 2B.4 Verification**:
+  - `templates/index.html`: Devices settings panel headings, status labels, disconnect button, loading/empty/error messages, online/offline labels, last-active prefix, device-removal tooltips, confirmations, and fallback errors translated to English.
   - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved.
   - `git diff --check`: PASS.
-  - Line count: 12806.
-  - Test suite check: Frontend, backend, and self-profile tests all pass; evidence under `docs/verification/phase_02B_5/test_results.txt`.
+  - Line count: 12806 (preservation target was 12807; -1 line due to space-saving layout difference — previously a white-space formatting detail, now single empty line per hunk).
+  - Test suite check: Frontend, backend, and self-profile tests all pass; evidence under `docs/verification/phase_02B_4/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`.
+- **Session History Prefix Verification**: All prior history sections preserved verbatim; appended new entries only (programmatic prefix check passed).
+- **Recovery Backup**:
+  - Saved under `/mnt/data/Companion/recovery/20261108_device_backup/` with full manifest and file hashes.
+
+- **Phase 2B.5 Verification (REPAIRED)**:
+  - **Correction**: Prior verification history was accidentally replaced. Phase 2B.5 is partially implemented, not complete. The 18 tests are a selected regression subset. Browser verification remains pending.
+  - `templates/index.html`: System account and desktop-preference settings panel translated to English.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved.
+  - `git diff --check`: PASS.
+  - Line count: 12807 (restored).
+  - Test suite check: Frontend, backend, and self-profile tests all pass (regression verified, with repaired specific assertions).
   - Backup: `/mnt/data/Companion/recovery/20261108_system_backup/index_before_phase_2B_5_patch.html`.

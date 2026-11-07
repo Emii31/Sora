@@ -60,6 +60,8 @@
 - Documentation created/updated (`docs/phases/PHASE_02B_4.md`, `docs/STATUS.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
 - Pre-edit backup saved at `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`.
 
-## 2026-11-08 (Phase 2B.5: System Account and Desktop-Preference UI Translation)
+## 2026-11-08 (Phase 2B.5: System Account and Desktop-Preference UI Translation and Repair)
 - Translate frontend-owned UI strings in the System panel: invitation code label, loading/copy feedback, local-mode hints, desktop pet shortcuts, screenshot stats notes, account heading, data retention explanation, switch-account confirmation, save button feedback.
-- New entries appended; existing session/verification history preserved verbatim.
+- Repaired test assertion in `tests/test_owner_ai_config_frontend.py` to restore strict testing specificity.
+- Restored VERIFICATION.md and SESSION_LOG.md history prefix completeness.
+- Saved repair evidence under `docs/verification/phase_02B_5_repair/`.
