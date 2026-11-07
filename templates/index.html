@@ -5838,22 +5838,22 @@ function closeSettingsModal() {
 
 const SETTINGS_AI_TIER_META = {
   vision: {
-    title: '视觉模型',
-    subtitle: '用于自动截图和视觉观察。推荐 OpenRouter + Qwen VLM，也可以换成其他支持图片输入的模型。',
-    hostHint: '推荐示例：openrouter.ai/api',
-    modelHint: '推荐示例：qwen/qwen3.5-9b',
+    title: 'Vision Model',
+    subtitle: 'For automatic screenshots and visual observation. Recommended: OpenRouter + Qwen VLM, or other models supporting vision input.',
+    hostHint: 'e.g. openrouter.ai/api',
+    modelHint: 'e.g. qwen/qwen3.5-9b',
   },
   chat: {
-    title: '聊天模型',
-    subtitle: '负责 Miru 正面回复和主动消息。推荐 DeepSeek Pro，也可以换成 GPT、Gemini 或其他强模型。',
-    hostHint: '推荐示例：api.deepseek.com',
-    modelHint: '推荐示例：deepseek-v4-pro',
+    title: 'Chat Model',
+    subtitle: 'Handles Miru responses and proactive messages. Recommended: DeepSeek Pro, or other powerful models like GPT/Gemini.',
+    hostHint: 'e.g. api.deepseek.com',
+    modelHint: 'e.g. deepseek-v4-pro',
   },
   memory: {
-    title: '记忆模型',
-    subtitle: '负责后台记忆、Attention 和整理任务。推荐 DeepSeek Flash，也可以换成性价比高的文本模型。',
-    hostHint: '推荐示例：api.deepseek.com',
-    modelHint: '推荐示例：deepseek-v4-flash',
+    title: 'Memory Model',
+    subtitle: 'Handles background memory, Attention, and task organization. Recommended: DeepSeek Flash, or other high-efficiency text models.',
+    hostHint: 'e.g. api.deepseek.com',
+    modelHint: 'e.g. deepseek-v4-flash',
   },
 };
 
@@ -5868,12 +5868,12 @@ function _settingsAiTier(tier) {
 }
 
 function _settingsAiStatusText(cfg) {
-  if (cfg.has_api_key && cfg.host && cfg.model) return '已配置';
+  if (cfg.has_api_key && cfg.host && cfg.model) return 'Configured';
   var missing = [];
-  if (!cfg.host) missing.push('服务地址');
-  if (!cfg.model) missing.push('模型名称');
+  if (!cfg.host) missing.push('Service URL');
+  if (!cfg.model) missing.push('Model Name');
   if (!cfg.has_api_key) missing.push('API Key');
-  return '缺少 ' + missing.join(' / ');
+  return 'Missing: ' + missing.join(' / ');
 }
 
 function settingsRenderAiPanel() {
@@ -5881,11 +5881,11 @@ function settingsRenderAiPanel() {
   if (!panel) return;
 
   if (!settingsAiConfigState) {
-    panel.innerHTML = '<div style="padding:20px;color:var(--text-muted);">加载模型配置中...</div>';
+    panel.innerHTML = '<div style="padding:20px;color:var(--text-muted);">Loading model configuration...</div>';
     return;
   }
   if (settingsAiConfigState.error) {
-    panel.innerHTML = '<div class="settings-flash err">模型配置加载失败：'
+    panel.innerHTML = '<div class="settings-flash err">Failed to load model configuration: '
       + _settingsEsc(settingsAiConfigState.error) + '</div>';
     return;
   }
@@ -5893,17 +5893,17 @@ function settingsRenderAiPanel() {
   var html = '';
   var aiStorageScope = _clientModeMode === 'local'
     ? (window.MiruAndroid
-      ? '这部手机中'
+      ? 'on this phone'
       : window.__MIRU_DESKTOP_PLATFORM__ === 'windows'
-        ? '这台 Windows 电脑中'
+        ? 'on this Windows PC'
         : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
-          ? '这台 Linux 电脑中'
-          : '这台 Mac 中')
-    : '当前 Miru 私有服务器中';
+          ? 'on this Linux PC'
+          : 'on this Mac')
+    : 'on the Miru private server';
   html += '<div style="max-width:860px;">';
   html += '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">';
-  html += '这些配置保存在' + aiStorageScope + '。保存后会立即生效，不需要重启；API key 不会在界面回显。';
-  html += '<br><span style="font-size:12px;color:var(--text-muted);">服务地址填 OpenAI-compatible Base URL。</span>';
+  html += 'These settings are saved ' + aiStorageScope + '. They take effect immediately after saving, no restart needed; API keys are not displayed in the interface.';
+  html += '<br><span style="font-size:12px;color:var(--text-muted);">Base URL should be OpenAI-compatible.</span>';
   html += '</div>';
   html += '<div class="sync-settings-grid">';
 
@@ -5921,17 +5921,17 @@ function settingsRenderAiPanel() {
     html += '<span id="settingsAiStatus_' + tier + '" style="font-size:12px;color:' + (cfg.has_api_key && cfg.host && cfg.model ? 'var(--fn-success)' : 'var(--fn-warning)') + ';">' + _settingsEsc(status) + '</span>';
     html += '</div>';
     html += '<div class="sync-settings-grid" style="margin-top:4px;">';
-    html += '<div><label>服务地址</label><input class="edit-input" id="settingsAi_' + tier + '_host" type="text" value="' + _settingsEsc(cfg.host || '') + '" placeholder="' + _settingsEsc(meta.hostHint) + '"></div>';
-    html += '<div><label>模型名称</label><input class="edit-input" id="settingsAi_' + tier + '_model" type="text" value="' + _settingsEsc(cfg.model || '') + '" placeholder="' + _settingsEsc(meta.modelHint) + '"></div>';
-    html += '<div><label>API Key</label><input class="edit-input" id="settingsAi_' + tier + '_apiKey" type="password" value="" autocomplete="off" placeholder="' + _settingsEsc(masked ? ('已保存 ' + masked + '，留空则保留') : '粘贴 API key') + '"></div>';
-    html += '<div><label>最大回复长度</label><input class="edit-input" id="settingsAi_' + tier + '_maxTokens" type="number" min="1" max="1000000" step="1" value="' + _settingsEsc(cfg.max_tokens || '') + '"></div>';
+    html += '<div><label>Base URL</label><input class="edit-input" id="settingsAi_' + tier + '_host" type="text" value="' + _settingsEsc(cfg.host || '') + '" placeholder="' + _settingsEsc(meta.hostHint) + '"></div>';
+    html += '<div><label>Model Name</label><input class="edit-input" id="settingsAi_' + tier + '_model" type="text" value="' + _settingsEsc(cfg.model || '') + '" placeholder="' + _settingsEsc(meta.modelHint) + '"></div>';
+    html += '<div><label>API Key</label><input class="edit-input" id="settingsAi_' + tier + '_apiKey" type="password" value="" autocomplete="off" placeholder="' + _settingsEsc(masked ? ('Saved ' + masked + ' (leave empty to keep)') : 'Paste API key') + '"></div>';
+    html += '<div><label>Maximum Output Tokens</label><input class="edit-input" id="settingsAi_' + tier + '_maxTokens" type="number" min="1" max="1000000" step="1" value="' + _settingsEsc(cfg.max_tokens || '') + '"></div>';
     html += '</div>';
     html += '<label class="sync-toggle-row" style="margin-top:6px;color:var(--text-secondary);">';
-    html += '<input type="checkbox" id="settingsAi_' + tier + '_clearKey"> 清空这个模型已保存的 API key';
+    html += '<input type="checkbox" id="settingsAi_' + tier + '_clearKey"> Clear saved API key for this model';
     html += '</label>';
     html += '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;">';
-    html += '<button class="btn btn-save" id="settingsAi_' + tier + '_saveBtn" onclick="settingsSaveAiTier(\'' + tier + '\')">保存 ' + meta.title + '</button>';
-    html += '<button class="btn btn-edit" id="settingsAi_' + tier + '_testBtn" onclick="settingsTestAiTier(\'' + tier + '\')">测试</button>';
+    html += '<button class="btn btn-save" id="settingsAi_' + tier + '_saveBtn" onclick="settingsSaveAiTier(\'' + tier + '\')">Save ' + meta.title + '</button>';
+    html += '<button class="btn btn-edit" id="settingsAi_' + tier + '_testBtn" onclick="settingsTestAiTier(\'' + tier + '\')">Test</button>';
     html += '<span id="settingsAi_' + tier + '_result" style="font-size:12px;color:var(--text-muted);"></span>';
     html += '</div>';
     html += '</div>';
@@ -6003,12 +6003,12 @@ var _charDetailModelId = null; // currently editing model
 function settingsRenderAiriPanel() {
   var html = '';
   html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">';
-  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">形象列表</div>';
+  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">Persona List</div>';
   html += '<div style="display:flex;gap:8px;">';
-  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">上传模型 (.zip)</button>';
+  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">Upload Model (.zip)</button>';
   html += '</div>';
   html += '</div>';
-  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">加载中...</div></div>';
+  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">Loading...</div></div>';
   // Detail panel (hidden by default)
   html += '<div id="settingsCharDetail" style="display:none;"></div>';
   document.getElementById('settingsPanelAiri').innerHTML = html;
@@ -7488,14 +7488,14 @@ function settingsCollectAiTierPayload(tier) {
   var maxTokensRaw = (maxEl && maxEl.value || '').trim();
   var clearKey = !!(clearEl && clearEl.checked);
 
-  if (!host) throw new Error('服务地址不能为空');
-  if (!model) throw new Error('模型名称不能为空');
+  if (!host) throw new Error('Service URL cannot be empty');
+  if (!model) throw new Error('Model Name cannot be empty');
 
   var payload = { host: host, model: model };
   if (maxTokensRaw) {
     var maxTokens = parseInt(maxTokensRaw, 10);
     if (!Number.isFinite(maxTokens) || maxTokens < 1 || maxTokens > 1000000) {
-      throw new Error('最大回复长度必须是 1 到 1000000 之间的整数');
+      throw new Error('Max Output Tokens must be an integer between 1 and 1000000');
     }
     payload.max_tokens = maxTokens;
   }
@@ -7525,7 +7525,7 @@ async function settingsSaveAiTier(tier) {
   try {
     var payload = settingsCollectAiTierPayload(tier);
     _settingsSetAiTierBusy(tier, true);
-    _settingsSetAiTierResult(tier, '保存中...', 'muted');
+    _settingsSetAiTierResult(tier, 'Saving...', 'muted');
     const res = await fetch('/api/owner/ai-config/' + encodeURIComponent(tier), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -7537,10 +7537,10 @@ async function settingsSaveAiTier(tier) {
     }
     settingsAiConfigState = { ok: true, config: data.config };
     settingsRenderAiPanel();
-    settingsShowFlash('模型配置已保存，会从下一次调用开始生效。');
+    settingsShowFlash('Model configuration saved. Takes effect from the next request.');
   } catch (err) {
     _settingsSetAiTierResult(tier, err.message || String(err), 'error');
-    settingsShowFlash('保存模型配置失败: ' + (err.message || String(err)), 'error');
+    settingsShowFlash('Failed to save model configuration: ' + (err.message || String(err)), 'error');
   } finally {
     _settingsSetAiTierBusy(tier, false);
   }
@@ -7549,7 +7549,7 @@ async function settingsSaveAiTier(tier) {
 async function settingsTestAiTier(tier) {
   try {
     _settingsSetAiTierBusy(tier, true);
-    _settingsSetAiTierResult(tier, '测试中...', 'muted');
+    _settingsSetAiTierResult(tier, 'Testing...', 'muted');
     const res = await fetch('/api/owner/ai-config/' + encodeURIComponent(tier) + '/test', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -7564,7 +7564,7 @@ async function settingsTestAiTier(tier) {
       if (data.error) parts.push(data.error);
       throw new Error(parts.join(' · ') || ('HTTP ' + res.status));
     }
-    _settingsSetAiTierResult(tier, '测试成功 · ' + (data.elapsed_ms || 0) + 'ms · ' + (data.host || '') + ' · ' + (data.model || ''), 'ok');
+    _settingsSetAiTierResult(tier, 'Test successful · ' + (data.elapsed_ms || 0) + 'ms · ' + (data.host || '') + ' · ' + (data.model || ''), 'ok');
   } catch (err) {
     _settingsSetAiTierResult(tier, err.message || String(err), 'error');
   } finally {
