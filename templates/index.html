@@ -3992,7 +3992,7 @@ async function _doLogin() {
     <!-- Detail View (card/persons/tasks/review) -->
     <div class="detail-view" id="detailView" style="display:none">
       <div class="detail-header">
-        <button class="detail-back-btn" id="detailBackBtn" onclick="handleDetailBack()">← 返回对话</button>
+        <button class="detail-back-btn" id="detailBackBtn" onclick="handleDetailBack()">← Back对话</button>
       </div>
       <div class="detail-content" id="detailContent"></div>
     </div>
@@ -4417,7 +4417,7 @@ function _applyCharacterData(data) {
   var emptyEl = document.getElementById('emptyCompanionState');
   if (emptyEl) {
     var p = emptyEl.querySelector('p');
-    if (p) p.textContent = '和 ' + CHARACTER.name + ' 聊天吧！';
+    if (p) p.textContent = 'Chat with ' + CHARACTER.name + '!';
   }
   // Mobile header — keep connection dot intact (it lives inside the same span)
   var mh = document.getElementById('mobileHeaderName');
@@ -5428,12 +5428,12 @@ function showDetailView(html, backTarget) {
   currentView = 'detail';
   detailBackTarget = backTarget || 'chat';
   const backLabels = {
-    journalGallery: '← 返回日记列表',
-    miruJournalList: '← 返回日记列表',
-    memoryBrowser: '← 返回记忆',
-    emotionCalendar: '← 返回日历',
+    journalGallery: '← Back日记列表',
+    miruJournalList: '← Back日记列表',
+    memoryBrowser: '← Back记忆',
+    emotionCalendar: '← Back日历',
   };
-  detailBackBtn.textContent = backLabels[detailBackTarget] || '← 返回对话';
+  detailBackBtn.textContent = backLabels[detailBackTarget] || '← Back对话';
   companionChatView.style.display = 'none';
   detailView.style.display = 'flex';
   detailContent.innerHTML = html;
@@ -7869,7 +7869,7 @@ function _openPrivacyModal() {
   var header = document.createElement('div');
   header.style.cssText = 'position:sticky;top:0;z-index:1;background:rgba(255,249,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(58,46,42,0.08);display:flex;align-items:center;padding:14px 16px;';
   var backBtn = document.createElement('button');
-  backBtn.textContent = '← 返回设置';
+  backBtn.textContent = '← Back设置';
   backBtn.style.cssText = 'background:none;border:none;color:var(--text-secondary,#6B5D54);font-size:15px;cursor:pointer;padding:4px 8px;';
   backBtn.onclick = function() { overlay.remove(); };
   header.appendChild(backBtn);
@@ -8254,7 +8254,7 @@ function _buildEmotionCalendarHtml(month, dayData) {
 
 function _emotionDayDetail(dateStr) {
   // Use the top-level back button system (set target=emotionCalendar) instead
-  // of an inline button — avoids the duplicate "← 返回对话 / ← 返回日历" stack.
+  // of an inline button — avoids the duplicate "← Back对话 / ← Back日历" stack.
   showDetailView('<div class="loading"><div class="spinner"></div><span>加载情绪数据...</span></div>', 'emotionCalendar');
   cachedFetch('/api/emotion/' + dateStr, 'emotion_' + dateStr, function(data) {
     var entries = Array.isArray(data) ? data : [];
@@ -9581,7 +9581,7 @@ async function _ddlShowDayDetail(dateStr) {
       if (it.detail) h += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">' + escapeHtml(it.detail) + '</div>';
       h += '</div>';
     });
-    h += '<button onclick="_loadDDLView()" style="margin-top:12px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer">← 返回月历</button>';
+    h += '<button onclick="_loadDDLView()" style="margin-top:12px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer">← Back月历</button>';
     h += '</div>';
     detailContent.innerHTML = h;
   } catch(e) {}
@@ -10225,7 +10225,7 @@ function _updateConnectionStatus(status) {
       _sseConsecutiveErrors = 0;
       // Only show "已重新连接" banner if we were showing an error/reconnecting banner
       if (banner.style.display === 'block') {
-        bannerText.textContent = '已重新连接';
+        bannerText.textContent = 'Reconnected';
         banner.style.background = 'var(--fn-success)';
         _connectionBannerTimer = setTimeout(function() { banner.style.display = 'none'; }, 2000);
       }
@@ -10233,12 +10233,12 @@ function _updateConnectionStatus(status) {
     } else if (status === 'reconnecting') {
       // Only show banner after multiple consecutive errors (not on first disconnect)
       if (_sseConsecutiveErrors >= _SSE_ERROR_BANNER_THRESHOLD) {
-        bannerText.textContent = '连接中断，正在重连...';
+        bannerText.textContent = 'Connection interrupted, reconnecting...';
         banner.style.background = 'var(--fn-warning)';
         banner.style.display = 'block';
       }
     } else {
-      bannerText.textContent = '连接已断开';
+      bannerText.textContent = 'Connection lost';
       banner.style.background = 'var(--fn-danger)';
       banner.style.display = 'block';
     }

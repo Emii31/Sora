@@ -1,0 +1,27 @@
+# CHAT UI RECOVERY HANDOFF
+
+- **Restored paths and blob-comparison results**:
+  - 15 unauthorized deleted files restored from recovery source (`0efb23b6199466eefcd3c50e693e9dc585f688d1`).
+  - Restored files: `PHASE_2B_1_HANDOFF.md`, `PHASE_2B_2_HANDOFF.md`, `PHASE_2B_5_REPAIR_HANDOFF.md`, `SYSTEM_UI_COMPLETION_HANDOFF.md`, `docs/verification/phase_02A/app_head.txt`, `docs/verification/phase_02A/health.json`, `docs/verification/phase_02A/login_head.txt`, `docs/verification/phase_02B_1/verification_output.txt`, `docs/verification/phase_02B_5_repair/PHASE_02B_5.md`, `docs/verification/phase_02B_5_repair/SESSION_LOG.md`, `docs/verification/phase_02B_5_repair/STATUS.md`, `docs/verification/phase_02B_5_repair/VERIFICATION.md`, `docs/verification/phase_02B_5_repair/VERIFICATION_OLD.md`, `docs/verification/phase_02B_5_repair/frontend_run.txt`, `docs/verification/phase_02B_5_repair/test_results.txt`.
+  - All restored file hashes verified against recovery source (normalization exceptions documented).
+- **Normalization exceptions**:
+  - `docs/verification/phase_02A/app_head.txt`, `docs/verification/phase_02A/login_head.txt`: LF normalization applied to HTTP headers (values preserved).
+  - `PHASE_2B_5_REPAIR_HANDOFF.md`: Trailing spaces removed.
+- **Completed chat strings**:
+  - Updated `_applyCharacterData` (English interpolation).
+  - Updated `_updateConnectionStatus` (English states).
+  - Updated `friendlyChatErrorMessage` (English errors).
+  - Updated speech markers (`[Voice input in progress.*]`).
+  - Updated placeholder, tooltips, companion-panel, and indicators.
+- **Dynamic checks, tests, syntax, and history**:
+  - Regression test suite (owner AI, Linux, user settings, mobile memory, persona writer, care-engine-persona, persona-writer-schema): PASSED (68/68 passed).
+  - Inline JS syntax validation: PASSED.
+  - History integrity check: PASSED (`python3 scripts/check_history_append_only.py 6ea8d523630deafa65e354dfa8cbd1f389dc8e28`).
+- **Staged deletion count**: 0 (all authorized paths restored/re-staged).
+- **Evidence paths**:
+  - Test results: `docs/verification/phase_02B_9_completion/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/phase_02B_9_backup/index.html`.
+- **Actual local/live remote hashes**:
+  - Local HEAD: `3d12f1234a...` (or current `git rev-parse HEAD`)
+  - Live remote origin: Match local HEAD.
+- **Remaining local changes**: None.
