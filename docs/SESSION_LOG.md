@@ -78,3 +78,19 @@
 - Enforced executable history prefix check via scripts/check_history_append_only.py with starting checkpoint baseline.
 - Verified test suite (48 passed across frontend, user-settings, and mobile suites).
 - Documentation created/updated (docs/phases/PHASE_02B_6.md, docs/STATUS.md, docs/TRANSLATION_INVENTORY.md, docs/VERIFICATION.md, docs/SESSION_LOG.md).
+
+## 2026-11-09 (Phase 2B.7: Characters List and Detail-Display Translation)
+- Translated frontend-owned UI strings in Characters settings panel:
+  - Character list heading ("Character List"), upload button label ("Upload Model (.zip)"), loading state ("Loading..."), empty state ("No models found. Add one by uploading or searching in chat."), error state ("Failed to load character list: ").
+  - Character-card badge ("In Use").
+  - Detail panel navigation ("← Back"), loading state ("Loading character data..."), error state ("Failed to load: ", "Back").
+  - Detail panel preview actions ("Use this character", "Change avatar") and Live2D layout controls ("Live2D layout", "Scale", "Save layout").
+  - Detail panel form fields and hints (Character Name, Addressing User, Personality, Speech Patterns, Appearance, Backstory, Interests).
+  - Character style settings heading and prompt hints (Role Summary, Role Summary (Detailed), Tone Style, Chat Tone, Character Archetype).
+  - Advanced settings section and Memory Bank Name field.
+  - Detail panel actions ("Save Character Settings", "Delete Character").
+- Deferred action behavior, action dialogs (delete confirmation modal), and action handlers/save flash messages as authorized.
+- Exact line count of `templates/index.html` preserved at 12807 (32 additions, 32 deletions).
+- Ran syntax validation and regression test suite (68 passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py`.
+- Documentation created/updated (`docs/phases/PHASE_02B_7.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).

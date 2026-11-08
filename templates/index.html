@@ -6003,12 +6003,12 @@ var _charDetailModelId = null; // currently editing model
 function settingsRenderAiriPanel() {
   var html = '';
   html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">';
-  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">形象列表</div>';
+  html += '<div style="font-size:15px;font-weight:600;color:var(--text-primary);">Character List</div>';
   html += '<div style="display:flex;gap:8px;">';
-  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">上传模型 (.zip)</button>';
+  html += '<button class="btn btn-edit" type="button" onclick="settingsClickUploadModel()">Upload Model (.zip)</button>';
   html += '</div>';
   html += '</div>';
-  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">加载中...</div></div>';
+  html += '<div id="settingsPersonaList"><div style="color:var(--text-muted);font-size:13px;">Loading...</div></div>';
   // Detail panel (hidden by default)
   html += '<div id="settingsCharDetail" style="display:none;"></div>';
   document.getElementById('settingsPanelAiri').innerHTML = html;
@@ -6305,7 +6305,7 @@ async function settingsLoadPersonaList() {
 
     var html = '';
     if (!models || models.length === 0) {
-      html += '<div style="color:var(--text-muted);font-size:13px;padding:8px 0;">暂无模型。可通过上传或对话搜索添加。</div>';
+      html += '<div style="color:var(--text-muted);font-size:13px;padding:8px 0;">No models found. Add one by uploading or searching in chat.</div>';
     } else {
       html += '<div class="char-card-grid">';
       for (var i = 0; i < models.length; i++) {
@@ -6317,7 +6317,7 @@ async function settingsLoadPersonaList() {
         html += '</div>';
         html += '<div class="char-card-info">';
         html += '<div class="char-card-name">' + escapeHtml(m.name || m.id) + '</div>';
-        if (isActive) html += '<div class="char-card-badge">当前使用中</div>';
+        if (isActive) html += '<div class="char-card-badge">In Use</div>';
         html += '</div>';
         html += '</div>';
       }
@@ -6327,7 +6327,7 @@ async function settingsLoadPersonaList() {
     // Generate Live2D rendered previews for models with default avatars
     if (models.length > 0) _settingsGeneratePreviews(models);
   } catch (err) {
-    container.innerHTML = '<div style="color:var(--fn-danger);font-size:13px;">加载形象列表失败: ' + escapeHtml(err.message) + '</div>';
+    container.innerHTML = '<div style="color:var(--fn-danger);font-size:13px;">Failed to load character list: ' + escapeHtml(err.message) + '</div>';
   }
 }
 
@@ -6339,7 +6339,7 @@ async function settingsOpenCharDetail(modelId) {
 
   listEl.style.display = 'none';
   detailEl.style.display = 'block';
-  detailEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">加载角色数据...</div>';
+  detailEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Loading character data...</div>';
 
   try {
     var res = await fetch('/api/models/' + modelId + '/fields', { cache: 'no-store' });
@@ -6347,8 +6347,8 @@ async function settingsOpenCharDetail(modelId) {
     if (fields.error) throw new Error(fields.error);
     settingsRenderCharDetail(modelId, fields);
   } catch (err) {
-    detailEl.innerHTML = '<div style="color:var(--fn-danger);">加载失败: ' + escapeHtml(err.message) + '</div>' +
-      '<button class="btn" style="margin-top:12px;" onclick="settingsCloseCharDetail()">返回</button>';
+    detailEl.innerHTML = '<div style="color:var(--fn-danger);">Failed to load: ' + escapeHtml(err.message) + '</div>' +
+      '<button class="btn" style="margin-top:12px;" onclick="settingsCloseCharDetail()">Back</button>';
   }
 }
 
@@ -6361,7 +6361,7 @@ function settingsRenderCharDetail(modelId, fields) {
 
   // Back button
   html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">';
-  html += '<button class="btn" onclick="settingsCloseCharDetail()" style="font-size:13px;padding:4px 12px;">← 返回</button>';
+  html += '<button class="btn" onclick="settingsCloseCharDetail()" style="font-size:13px;padding:4px 12px;">← Back</button>';
   html += '<span style="font-size:16px;font-weight:600;color:var(--text-primary);">' + escapeHtml(fields.name || modelId) + '</span>';
   html += '</div>';
 
@@ -6371,19 +6371,19 @@ function settingsRenderCharDetail(modelId, fields) {
   html += '<div class="char-detail-preview">';
   html += '<div id="char-detail-l2d-container" style="width:100%;background:#FFF0EC;border-radius:12px;overflow:hidden;border:1px solid var(--border-default);"></div>';
   html += '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
-  html += '<button class="btn btn-save" style="font-size:12px;flex:1;" onclick="settingsSetActiveModel(\'' + escapeHtml(modelId) + '\');settingsCloseCharDetail();">使用此角色</button>';
-  html += '<button class="btn btn-edit" style="font-size:12px;" onclick="settingsClickAvatarUpload(\'' + escapeHtml(modelId) + '\')">换头像</button>';
+  html += '<button class="btn btn-save" style="font-size:12px;flex:1;" onclick="settingsSetActiveModel(\'' + escapeHtml(modelId) + '\');settingsCloseCharDetail();">Use this character</button>';
+  html += '<button class="btn btn-edit" style="font-size:12px;" onclick="settingsClickAvatarUpload(\'' + escapeHtml(modelId) + '\')">Change avatar</button>';
   html += '</div>';
 
   // Layout params
   var ly = fields.layout || { scale: 1, x: 0, y: 0 };
-  html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Live2D 布局</div>';
+  html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Live2D layout</div>';
   html += '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">';
-  html += '<label style="font-size:11px;color:var(--text-muted);">缩放<input id="cdLayoutScale" type="number" step="0.05" min="0.1" max="3" value="' + ly.scale + '" class="char-field-input" style="width:56px;padding:3px 6px;margin-left:4px;"></label>';
+  html += '<label style="font-size:11px;color:var(--text-muted);">Scale<input id="cdLayoutScale" type="number" step="0.05" min="0.1" max="3" value="' + ly.scale + '" class="char-field-input" style="width:56px;padding:3px 6px;margin-left:4px;"></label>';
   html += '<label style="font-size:11px;color:var(--text-muted);">X<input id="cdLayoutX" type="number" step="1" value="' + ly.x + '" class="char-field-input" style="width:56px;padding:3px 6px;margin-left:4px;"></label>';
   html += '<label style="font-size:11px;color:var(--text-muted);">Y<input id="cdLayoutY" type="number" step="1" value="' + ly.y + '" class="char-field-input" style="width:56px;padding:3px 6px;margin-left:4px;"></label>';
   html += '</div>';
-  html += '<button class="btn btn-save" style="font-size:11px;margin-top:4px;width:100%;" onclick="settingsSaveCharLayout()">保存布局</button>';
+  html += '<button class="btn btn-save" style="font-size:11px;margin-top:4px;width:100%;" onclick="settingsSaveCharLayout()">Save layout</button>';
 
   html += '</div>';
 
@@ -6403,36 +6403,36 @@ function settingsRenderCharDetail(modelId, fields) {
     return h;
   }
 
-  html += field('cdName', '角色名字', fields.name, 'text');
-  html += field('cdUserAddress', '对用户的称呼', fields.user_address, 'text', '角色怎么称呼你');
-  html += field('cdPersonality', '性格', fields.personality, 'textarea', '角色的性格特点');
-  html += field('cdSpeechPatterns', '说话方式', fields.speech_patterns, 'textarea', '语气词、自称、口癖等');
-  html += field('cdAppearance', '外表', fields.appearance, 'textarea');
-  html += field('cdBackstory', '背景故事', fields.backstory, 'textarea');
-  html += field('cdInterests', '兴趣爱好', fields.interests, 'textarea');
+  html += field('cdName', 'Character Name', fields.name, 'text');
+  html += field('cdUserAddress', 'Addressing User', fields.user_address, 'text', 'How the character addresses you');
+  html += field('cdPersonality', 'Personality', fields.personality, 'textarea', 'Character personality traits');
+  html += field('cdSpeechPatterns', 'Speech Patterns', fields.speech_patterns, 'textarea', 'Tone particles, pronouns, catchphrases, etc.');
+  html += field('cdAppearance', 'Appearance', fields.appearance, 'textarea');
+  html += field('cdBackstory', 'Backstory', fields.backstory, 'textarea');
+  html += field('cdInterests', 'Interests', fields.interests, 'textarea');
 
   // Prompt Hints as friendly labels
   html += '<div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border-subtle);">';
-  html += '<div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">角色风格设定</div>';
-  html += field('cdRoleSummary', '角色定位', hints.role_summary, 'text', '一句话描述角色的定位');
-  html += field('cdRoleSummaryFull', '角色定位（详细）', hints.role_summary_full, 'text', '完整的角色定位描述');
-  html += field('cdToneShort', '语气风格', hints.tone_short, 'text', '简短描述角色的说话语气');
-  html += field('cdToneChat', '聊天语气', hints.tone_chat, 'text', '像在哪里聊天一样的感觉');
-  html += field('cdArchetype', '角色类型', hints.archetype, 'text', '如"元气少女""呆萌小生物"等');
+  html += '<div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Character Style Settings</div>';
+  html += field('cdRoleSummary', 'Role Summary', hints.role_summary, 'text', 'One-sentence summary of character role');
+  html += field('cdRoleSummaryFull', 'Role Summary (Detailed)', hints.role_summary_full, 'text', 'Complete description of character role');
+  html += field('cdToneShort', 'Tone Style', hints.tone_short, 'text', 'Brief description of speaking tone');
+  html += field('cdToneChat', 'Chat Tone', hints.tone_chat, 'text', 'Conversational tone and atmosphere');
+  html += field('cdArchetype', 'Character Archetype', hints.archetype, 'text', 'e.g. "cheerful girl", "cute companion", etc.');
   html += '</div>';
 
   // Advanced settings (collapsed)
   html += '<details style="margin-top:12px;">';
-  html += '<summary style="font-size:13px;color:var(--text-muted);cursor:pointer;">高级设置</summary>';
+  html += '<summary style="font-size:13px;color:var(--text-muted);cursor:pointer;">Advanced Settings</summary>';
   html += '<div style="padding-top:8px;">';
-  html += field('cdMemoryBankName', '记忆库名称', hints.memory_bank_name, 'text', '观测记忆库的显示名称');
+  html += field('cdMemoryBankName', 'Memory Bank Name', hints.memory_bank_name, 'text', 'Display name of observation memory bank');
   html += '</div>';
   html += '</details>';
 
   // Save + delete actions
   html += '<div class="char-detail-actions">';
-  html += '<button class="btn btn-save" onclick="settingsSaveCharFields()">保存角色设定</button>';
-  html += '<button class="btn btn-danger" onclick="settingsDeleteModel(\'' + escapeHtml(modelId) + '\')">删除角色</button>';
+  html += '<button class="btn btn-save" onclick="settingsSaveCharFields()">Save Character Settings</button>';
+  html += '<button class="btn btn-danger" onclick="settingsDeleteModel(\'' + escapeHtml(modelId) + '\')">Delete Character</button>';
   html += '</div>';
 
   html += '</div>'; // end form

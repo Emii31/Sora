@@ -59,3 +59,15 @@
   - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 7499308930f8434154450e4921c4205160dac680.
   - Browser verification: Pending.
   - Backup: /mnt/data/Companion/recovery/phase_02B_6_backup/index.html.
+
+
+- **Phase 2B.7 Verification (Characters List & Detail-Display Translation)**:
+  - templates/index.html: Characters list, card display labels, and detail panel headings/fields/actions translated to English with Sora conventions.
+  - Components translated: Character list header, upload button, loading/empty/error states, card In Use badge, detail panel navigation, preview actions, Live2D layout controls, detail form fields, style prompt hints, advanced settings, and action buttons.
+  - Deferred items: Action dialogs (`deleteModelConfirmModal`), action handlers and save flash messages.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved. Line count 12807 preserved exact (32 additions, 32 deletions).
+  - git diff --check: PASS.
+  - Test suite check: 68/68 tests passed across owner AI frontend, Linux settings, user settings, mobile notification memory UI, and persona suites. Inline JS syntax validated via node.
+  - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 6154ca66c726c6d42c84d305ec4088921afbf8c7.
+  - Browser verification: Pending.
+  - Backup: /mnt/data/Companion/recovery/phase_02B_7_backup/index.html.
