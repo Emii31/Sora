@@ -1,9 +1,0 @@
-HTTP/1.1 200 OK
-Server: Werkzeug/3.1.9 Python/3.11.18
-Date: Fri, 06 Nov 2026 20:41:12 GMT
-Content-Type: text/html; charset=utf-8
-Content-Length: 490118
-Cache-Control: no-cache, no-store, must-revalidate
-Vary: Accept-Encoding
-Connection: close
-

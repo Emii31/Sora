@@ -1,7 +1,0 @@
-- **Phase 2B.5 Verification**:
-  - `templates/index.html`: System account and desktop-preference settings panel (invitation code, desktop-pet controls, account management) translated to English.
-  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved.
-  - `git diff --check`: PASS.
-  - Line count: 12806.
-  - Test suite check: Frontend, backend, and self-profile tests all pass; evidence under `docs/verification/phase_02B_5/test_results.txt`.
-  - Backup: `/mnt/data/Companion/recovery/20261108_system_backup/index_before_phase_2B_5_patch.html`.

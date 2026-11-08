@@ -1,0 +1,31 @@
+# PHASE 02B_9 COMPLETION HANDOFF
+
+- **Translated components and deferred copy**:
+  - **Translated**:
+    - Chat composer placeholder ("Chat with Sora..."), send button text/title ("Send"), voice-input tooltips ("Click to stop voice input", "Voice Input").
+    - Interim transcript markers ("Voice input in progress").
+    - Chat error messages ("Sora is temporarily unable to reply...", "Sora is not configured with AI models...", "Cannot connect to the Sora server...").
+    - Companion panel header/description/controls ("Companion Panel", "Shares chat history with the current ContextLife session", "Refresh", "Collapse").
+    - New-message indicator ("New Messages").
+  - **Deferred**:
+    - Login interface, onboarding questionnaire, memory/emotion screens, permission guides, backend/native error strings.
+- **Character-name and speech-marker verification**:
+  - `CHARACTER.name` interpolation preserved in composer placeholder (`'Chat with ' + CHARACTER.name + '...'`).
+  - Interim voice marker cleanup expressions updated to `[Voice input in progress.*]`.
+- **Exact tests/syntax/history results**:
+  - Regression suite (owner AI, Linux, user settings, mobile memory, persona writer): PASSED (68/68 passed, 2 warnings).
+  - Inline JS syntax: PASSED.
+  - History integrity check: `python3 scripts/check_history_append_only.py 0efb23b6199466eefcd3c50e693e9dc585f688d1` PASSED.
+- **Whitespace checks**:
+  - Http-header evidence files normalized to LF.
+  - Trailing spaces in `PHASE_2B_5_REPAIR_HANDOFF.md` removed.
+  - `git diff --check` passed against starting checkpoint.
+- **Evidence paths**:
+  - Test results: `docs/verification/phase_02B_9/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/phase_02B_9_backup/index.html` (SHA-256: `c02935aca12fbbfd4a3dceb1665622a3c5d7823ae8f7098325ad5b259fc043ac`).
+- **Browser/microphone status**:
+  - Browser verification (microphone/chat functionality) pending.
+- **Actual local/live remote hashes**:
+  - Local HEAD: `81b21237e19d67562854972e276e5d848731d102` (after commits)
+  - Live remote origin: `81b21237e19d67562854972e276e5d848731d102`
+- **Remaining local changes**: None.

@@ -4523,7 +4523,7 @@ function startVoiceInput() {
   voiceRecognition.onstart = () => {
     voiceListening = true;
     voiceBtn.classList.add('voice-active');
-    voiceBtn.title = '点击停止语音输入';
+    voiceBtn.title = 'Click to stop voice input';
     finalTranscript = '';
   };
   voiceRecognition.onresult = (event) => {
@@ -4537,13 +4537,13 @@ function startVoiceInput() {
       }
     }
     // Remove any previous interim marker
-    textInput.value = textInput.value.replace(/\[语音识别中.*\]$/, '').trimEnd();
+    textInput.value = textInput.value.replace(/\[Voice input in progress.*\]$/, '').trimEnd();
     if (finalTranscript) {
       textInput.value = (textInput.value ? textInput.value + '\n' : '') + finalTranscript;
       finalTranscript = '';
     }
     if (interim) {
-      textInput.value = textInput.value + '[语音识别中: ' + interim + ']';
+      textInput.value = textInput.value + '[Voice input in progress: ' + interim + ']';
     }
     autoResizeTextInput();
   };
@@ -4555,10 +4555,10 @@ function startVoiceInput() {
     stopVoiceInput();
   };
   voiceRecognition.onend = () => {
-    textInput.value = textInput.value.replace(/\[语音识别中.*\]$/, '').trimEnd();
+    textInput.value = textInput.value.replace(/\[Voice input in progress.*\]$/, '').trimEnd();
     voiceListening = false;
     voiceBtn.classList.remove('voice-active');
-    voiceBtn.title = '语音输入';
+    voiceBtn.title = 'Voice Input';
     autoResizeTextInput();
   };
   voiceRecognition.start();
@@ -4571,7 +4571,7 @@ function stopVoiceInput() {
   }
   voiceListening = false;
   voiceBtn.classList.remove('voice-active');
-  voiceBtn.title = '语音输入';
+  voiceBtn.title = 'Voice Input';
 }
 
 // ===== View Switching =====
@@ -4584,7 +4584,7 @@ function setSidebarActive(btnId) {
 
 function switchInputMode(mode) {
   chatMode = mode;
-  textInput.placeholder = '和 ' + CHARACTER.name + ' 聊天...';
+  textInput.placeholder = 'Chat with ' + CHARACTER.name + '...';
 }
 
 function toggleSidebarGroup(groupId) {
@@ -10098,12 +10098,12 @@ function addCompanionLoadingIndicator() {
 
 function friendlyChatErrorMessage(raw) {
   var text = String(raw || '').trim();
-  if (!text) return 'Miru 暂时没能回复，请稍后再试。';
+  if (!text) return 'Sora is temporarily unable to reply. Please try again later.';
   if (text.indexOf('模型配置还没有完成') >= 0 || text.indexOf('AI tier') >= 0) {
-    return 'Miru 还没有配置好模型。请先到设置里的「模型」页填写视觉、聊天、记忆三类 API Key，再回来和她说话。';
+    return 'Sora is not configured with AI models yet. Please go to the AI Models settings page to fill in the API Keys for Vision, Chat, and Memory models.';
   }
   if (text.indexOf('Unable to connect') >= 0 || text.indexOf('无法连接服务器') >= 0) {
-    return '暂时连不上 Miru 的服务器，请检查网络或服务器是否还在运行。';
+    return 'Cannot connect to the Sora server. Please check your network or server status.';
   }
   return text;
 }
