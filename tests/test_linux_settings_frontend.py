@@ -10,8 +10,8 @@ from test_windows_capture_recovery_frontend import _function_source
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node not available")
 @pytest.mark.parametrize("platform,device", [
-    ("linux", "这台 Linux 电脑"), ("windows", "这台 Windows 电脑"),
-    ("macos", "这台 Mac"), ("android", "这部手机"),
+    ("linux", "Linux PC"), ("windows", "Windows PC"),
+    ("macos", "Mac"), ("android", "phone"),
 ])
 @pytest.mark.parametrize("mode", ["local", "remote"])
 def test_settings_copy_matches_device_and_storage_scope(platform, device, mode):
@@ -59,20 +59,19 @@ const _confirm = async message => { confirmation = message; return false; };
   const account = elements.settingsPanelSystem.innerHTML;
   const invitation = elements.settingsInvitationHint.textContent;
   if (fixture.mode === 'local') {
-    const device = fixture.device + (fixture.platform === 'macos' ? ' ' : '');
-    assert.ok(ai.includes('这些配置保存在' + device + '中。'), 'AI storage scope');
-    assert.ok(account.includes('不会删除' + device + '上的本地 Miru 数据'), 'account description');
-    assert.ok(invitation.includes('只在' + device + '上使用'), 'local invitation hint');
-    assert.ok(confirmation.includes('数据会继续留在' + device + '上'), 'switch confirmation');
+    assert.ok(ai.includes('These settings are saved on this ' + fixture.device), 'AI storage scope');
+    assert.ok(account.includes('it will not delete the local Sora data on this ' + fixture.device), 'account description');
+    assert.ok(invitation.includes('Sora is currently used only on this ' + fixture.device), 'local invitation hint');
+    assert.ok(confirmation.includes('Local single-device data will remain on this ' + fixture.device), 'switch confirmation');
     if (fixture.platform === 'linux') {
-      assert.ok(confirmation.includes('“只在这台电脑使用”'));
+      assert.ok(confirmation.includes('"Use only on this PC"'));
       for (const copy of [ai, account, invitation, confirmation]) assert.ok(!copy.includes('Mac'));
     }
   } else {
-    assert.ok(ai.includes('当前 Miru 私有服务器中'));
-    assert.ok(account.includes('服务器里的 Miru 数据不会被删除'));
+    assert.ok(ai.includes('on the Sora private server'));
+    assert.ok(account.includes('the Sora data on the server will not be deleted'));
     assert.equal(elements.settingsInvitationCode.value, 'fixture-code');
-    assert.ok(confirmation.includes('不会删除服务器上的聊天、记忆或邀请码'));
+    assert.ok(confirmation.includes('it will not delete chats, memories, or invitation codes on the server'));
   }
   console.log(JSON.stringify({ ok: true }));
 })().catch(error => { console.error(error.stack); process.exitCode = 1; });

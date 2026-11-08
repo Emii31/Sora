@@ -1,0 +1,2 @@
+PASSED: docs/SESSION_LOG.md correctly preserves history from bf4729a
+PASSED: docs/VERIFICATION.md correctly preserves history from bf4729a

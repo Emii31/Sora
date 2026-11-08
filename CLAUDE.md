@@ -26,10 +26,11 @@
 22. **Translation changes must preserve existing test functions and behavioral assertions. Only directly affected copy expectations may change.**
 
 ## Git Publishing Policy (Sora-Only)
-22. **Commit locally in this Sora working repository; push only to `origin` (`https://github.com/Emii31/Sora.git`).**
-23. **`upstream` (`https://github.com/kiyotakali/Miru.git`) is strictly fetch-only (push URL disabled). Never create upstream PRs, issues, comments, or send messages to upstream maintainers.**
-24. **At each completed and validated task, create a reviewed checkpoint and push it to the user's repository (`origin`).**
-25. **Never commit or push secrets, runtime memory, credentials, or recovery dumps.**
-26. **Never use force-push or mirror-push; only fast-forward pushes to `origin/main`.**
-27. **Rejected or damaged work must be fully recovered and verified before publishing.**
-28. **Preserve upstream license and third-party attribution.**
+23. **Before modifying documentation, run `python3 scripts/check_history_append_only.py <base_revision>` to ensure prefix integrity.**
+24. **Commit locally in this Sora working repository; push only to `origin` (`https://github.com/Emii31/Sora.git`).**
+25. **`upstream` (`https://github.com/kiyotakali/Miru.git`) is strictly fetch-only (push URL disabled). Never create upstream PRs, issues, comments, or send messages to upstream maintainers.**
+26. **At each completed and validated task, create a reviewed checkpoint and push it to the user's repository (`origin`).**
+27. **Never commit or push secrets, runtime memory, credentials, or recovery dumps.**
+28. **Never use force-push or mirror-push; only fast-forward pushes to `origin/main`.**
+29. **Rejected or damaged work must be fully recovered and verified before publishing.**
+30. **Preserve upstream license and third-party attribution.**

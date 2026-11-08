@@ -6958,13 +6958,13 @@ function settingsRenderSystemPanel() {
   html += '<label>Account</label>';
   const accountScopeText = _clientModeMode === 'local'
     ? (window.MiruAndroid
-      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this phone.'
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Sora data on this phone.'
       : isWindowsDesktop
-      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Windows PC.'
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Sora data on this Windows PC.'
       : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
-      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Linux PC.'
-      : 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Mac.')
-    : 'Currently in multi-device mode. Switching accounts will only sign out of this device; the Miru data on the server will not be deleted.';
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Sora data on this Linux PC.'
+      : 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Sora data on this Mac.')
+    : 'Currently in multi-device mode. Switching accounts will only sign out of this device; the Sora data on the server will not be deleted.';
   html += '<div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:10px;">' + accountScopeText + '</div>';
   html += '<button type="button" class="btn" onclick="settingsSwitchAccount()" style="padding:8px 16px;font-size:13px;">Switch Account</button>';
   html += '</div>';
@@ -7624,9 +7624,9 @@ function settingsStartHotkeyCapture() {
   var btn = document.getElementById('settingsSysPetHotkeyBtn');
   if (!input || !btn) return;
   var prevValue = input.value;
-  input.value = '按下快捷键…';
+  input.value = 'Press hotkey...';
   input.style.borderColor = '#FFB7C5';
-  btn.textContent = '取消';
+  btn.textContent = 'Cancel';
   btn.onclick = function() { settingsStopHotkeyCapture(prevValue); };
 
   function onKeyDown(e) {
@@ -7643,8 +7643,8 @@ function settingsStartHotkeyCapture() {
     if (e.metaKey)  parts.push(isMac ? 'cmd' : 'meta');
     // Must have at least one modifier
     if (parts.length === 0) {
-      input.value = '需要至少一个修饰键';
-      setTimeout(function() { input.value = '按下快捷键…'; }, 1200);
+      input.value = 'Need at least one modifier key';
+      setTimeout(function() { input.value = 'Press hotkey...'; }, 1200);
       return;
     }
     parts.push(e.key.length === 1 ? e.key.toLowerCase() : e.key.toLowerCase());
@@ -7653,7 +7653,7 @@ function settingsStartHotkeyCapture() {
     _hotkeyCapturing = false;
     input.value = combo;
     input.style.borderColor = '';
-    btn.textContent = '录制快捷键';
+    btn.textContent = 'Record Hotkey';
     btn.onclick = function() { settingsStartHotkeyCapture(); };
   }
 
@@ -7665,7 +7665,7 @@ function settingsStopHotkeyCapture(restoreValue) {
   var input = document.getElementById('settingsSysPetHotkey');
   var btn = document.getElementById('settingsSysPetHotkeyBtn');
   if (input) { input.value = restoreValue || ''; input.style.borderColor = ''; }
-  if (btn) { btn.textContent = '录制快捷键'; btn.onclick = function() { settingsStartHotkeyCapture(); }; }
+  if (btn) { btn.textContent = 'Record Hotkey'; btn.onclick = function() { settingsStartHotkeyCapture(); }; }
   // Remove any lingering listener (safe to call even if not present)
   try { document.removeEventListener('keydown', arguments.callee._listener, true); } catch(e) {}
 }
@@ -7700,9 +7700,9 @@ function _recordHotkey(btn) {
   var hidden = document.getElementById('settingsSysPetHotkey');
   if (!display || !hidden) return;
   var origBtnText = btn.textContent;
-  btn.textContent = '按键中... (Esc 取消)';
+  btn.textContent = 'Recording... (Esc to cancel)';
   btn.disabled = true;
-  display.value = '请按下组合键';
+  display.value = 'Press key combination';
   display.style.color = 'var(--airi-pink)';
 
   var cleanup = function() {
@@ -7733,8 +7733,8 @@ function _recordHotkey(btn) {
     // Require at least one modifier (bare letters would conflict with typing).
     if (parts.length === 0) {
       display.value = _IS_MAC_UA
-        ? '需要带修饰键（如 ⌘ / ⌃ / ⌥ / ⇧）'
-        : '需要带修饰键（如 Ctrl / Alt / Shift / Win）';
+        ? 'Modifier key required (e.g. ⌘ / ⌃ / ⌥ / ⇧)'
+        : 'Modifier key required (e.g. Ctrl / Alt / Shift / Win)';
       return; // keep listening
     }
 
@@ -7799,7 +7799,7 @@ async function settingsSaveSystem() {
     //   - PWA / Android → fetch /api/user-settings (VPS or current origin)
     const data = await _saveUserSettings(payload);
     if (!data.ok) {
-      settingsShowFlash(data.error || '系统设置保存失败', 'error');
+      settingsShowFlash(data.error || 'Failed to save system settings', 'error');
       return;
     }
     // Real-time push to desktop pet (separate Tauri webview, won't see the
@@ -7822,14 +7822,14 @@ async function settingsSaveSystem() {
     if (window.MiruAndroid && typeof window.MiruAndroid.setScreenCaptureInterval === 'function') {
       window.MiruAndroid.setScreenCaptureInterval(screenshotInterval);
     }
-    settingsShowFlash('系统设置已保存');
+    settingsShowFlash('System settings saved');
     // Refresh only system panel data
     try {
       appConfigState = await _loadUserSettings();
       settingsRenderSystemPanel();
     } catch(e) {}
   } catch (err) {
-    settingsShowFlash('系统设置保存失败: ' + err.message, 'error');
+    settingsShowFlash('Failed to save system settings: ' + err.message, 'error');
   }
 }
 
