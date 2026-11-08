@@ -59,7 +59,7 @@ def test_screenshot_defaults_match_all_clients():
     assert "CHECK_INTERVAL = 30" in sensor_source
     assert 'get("auto_screenshot_interval", 30)' in app_source
     assert "cfg.auto_screenshot_interval || 30" in html
-    assert "默认30秒；低于10秒会显著增加耗电与 API 费用" in html
+    assert "default 30 seconds; below 10 seconds significantly increases power consumption and API costs" in html
     assert 'getInt(key + ".capture_interval_s", 30)' in profile_source
     assert "Math.max(5, Math.min(3600, seconds))" in activity_source
     assert "DEFAULT_INTERVAL_S = 30" in service_source

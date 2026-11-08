@@ -70,3 +70,11 @@
 - Translated remaining authorized UI strings in System panel: hotkey recording feedback, reset button, save-button feedback, and Miru-to-Sora branding in account descriptions.
 - Implemented `scripts/check_history_append_only.py` to enforce documentation prefix integrity for `docs/SESSION_LOG.md` and `docs/VERIFICATION.md`.
 - Verified all frontend tests, syntax, and structural constraints.
+
+
+## 2026-11-09 (Phase 2B.6: Screen Observation and Wallpaper Settings Translation)
+- Translated frontend-owned UI strings for screen observation (label, enabled/disabled states, auto-screenshot interval, analyzed screenshots header/loading text) and Android Live2D wallpaper (labels, buttons, status feedback).
+- Updated Android capture UI components (_toggleAndroidScreenCapture, _updateAndroidCaptureUI, _updateAndroidWallpaperUI, _syncAllScreenCaptureUI, _updateCaptureHeaderIcon) to English and Sora branding.
+- Enforced executable history prefix check via scripts/check_history_append_only.py with starting checkpoint baseline.
+- Verified test suite (48 passed across frontend, user-settings, and mobile suites).
+- Documentation created/updated (docs/phases/PHASE_02B_6.md, docs/STATUS.md, docs/TRANSLATION_INVENTORY.md, docs/VERIFICATION.md, docs/SESSION_LOG.md).

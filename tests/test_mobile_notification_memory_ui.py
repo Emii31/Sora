@@ -102,13 +102,13 @@ def test_android_capture_header_active_uses_running_service_only():
 def test_android_local_ai_settings_use_phone_storage_copy():
     html = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
     start = html.index("var aiStorageScope = _clientModeMode === 'local'")
-    end = html.index(": '当前 Miru 私有服务器中';", start)
+    end = html.index(": 'on the Sora private server';", start)
     storage_copy = html[start:end]
 
     assert "window.MiruAndroid" in storage_copy
-    assert "'这部手机中'" in storage_copy
-    assert "'这台 Windows 电脑中'" in storage_copy
-    assert "'这台 Mac 中'" in storage_copy
+    assert "'on this phone'" in storage_copy
+    assert "'on this Windows PC'" in storage_copy
+    assert "'on this Mac'" in storage_copy
 
 
 def test_android_capture_permission_denial_clears_preference():

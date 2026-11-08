@@ -48,3 +48,14 @@
   - Test suite check: 9/9 frontend tests passed; syntax validated.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py` (pre-commit check verified).
   - Browser verification: Pending.
+
+
+- **Phase 2B.6 Verification (Screen Observation & Wallpaper Settings)**:
+  - templates/index.html: Screen observation and Android Live2D wallpaper UI strings translated to English with Sora branding.
+  - Handlers and helpers translated: _toggleAndroidScreenCapture, _updateAndroidCaptureUI, _updateAndroidWallpaperUI, _syncAllScreenCaptureUI, _updateCaptureHeaderIcon.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved. Line count 12807 preserved exact.
+  - git diff --check: PASS.
+  - Test suite check: 48/48 tests passed across owner AI frontend, Linux settings, user settings, and mobile notification memory UI suites.
+  - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 7499308930f8434154450e4921c4205160dac680.
+  - Browser verification: Pending.
+  - Backup: /mnt/data/Companion/recovery/phase_02B_6_backup/index.html.

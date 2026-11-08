@@ -6917,36 +6917,36 @@ function settingsRenderSystemPanel() {
       ? (typeof _androidCaptureIsOn === 'function' && _androidCaptureIsOn())
       : !!cfg.screenshot_enabled;
   html += '<div class="sync-settings-item" style="grid-column:1 / -1">';
-  html += '<label>屏幕观察</label>';
+  html += '<label>Screen Observation</label>';
   html += '<div style="display:flex;align-items:center;gap:12px;">';
   html += '<label class="miru-toggle" style="margin:0;"><input type="checkbox" id="settingsSysScreenshotEnabled" ' + (ssEnabled ? 'checked' : '') + '><span class="miru-toggle-slider"></span></label>';
-  html += '<span style="font-size:13px;color:var(--text-secondary);" id="settingsSysScreenshotLabel">' + (ssEnabled ? '已开启 — Miru 会定时截取屏幕并分析' : '已关闭') + '</span>';
+  html += '<span style="font-size:13px;color:var(--text-secondary);" id="settingsSysScreenshotLabel">' + (ssEnabled ? 'Enabled — Sora periodically captures and analyzes screen' : 'Disabled') + '</span>';
   html += '</div>';
   html += '</div>';
 
   // Auto-screenshot interval (only meaningful when enabled)
   var currentInterval = cfg.auto_screenshot_interval || 30;
   html += '<div class="sync-settings-item" id="settingsSysIntervalWrap" style="' + (ssEnabled ? '' : 'opacity:0.5;pointer-events:none;') + '">';
-  html += '<label>自动截屏间隔（秒）</label>';
+  html += '<label>Auto-Screenshot Interval (seconds)</label>';
   html += '<input id="settingsSysAutoScreenshotInterval" class="edit-input" type="number" min="5" max="3600" step="5" value="' + escapeHtml(String(currentInterval)) + '" style="max-width:120px;text-align:center;">';
-  html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">Miru 自动截屏观测的时间间隔（5~3600秒，默认30秒；低于10秒会显著增加耗电与 API 费用）</div>';
+  html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">Sora automatic screenshot observation interval (5~3600 seconds, default 30 seconds; below 10 seconds significantly increases power consumption and API costs)</div>';
   html += '</div>';
 
   // Screenshot stats (all devices, loaded async from VPS)
   html += '<div class="sync-settings-item" id="settingsSysScreenshotStats" style="grid-column:1 / -1">';
-  html += '<label>已分析截图</label>';
-  html += '<div id="screenshotStatsContent" style="font-size:13px;color:var(--text-muted);">加载中...</div>';
+  html += '<label>Analyzed Screenshots</label>';
+  html += '<div id="screenshotStatsContent" style="font-size:13px;color:var(--text-muted);">Loading...</div>';
   html += '</div>';
 
   // Android Live2D wallpaper (only visible in APK)
   if (window.MiruAndroid && typeof window.MiruAndroid.setLiveWallpaper === 'function') {
     html += '<div class="sync-settings-item" id="androidWallpaperSection">';
-    html += '<label>Live2D 动态壁纸</label>';
+    html += '<label>Live2D Wallpaper</label>';
     html += '<div style="display:flex;align-items:center;gap:10px;">';
-    html += '<button class="btn" id="androidWallpaperBtn" onclick="_setAndroidLiveWallpaper()" style="min-width:120px;">设为壁纸</button>';
+    html += '<button class="btn" id="androidWallpaperBtn" onclick="_setAndroidLiveWallpaper()" style="min-width:120px;">Set as Wallpaper</button>';
     html += '<span id="androidWallpaperStatus" style="font-size:12px;color:var(--text-muted);"></span>';
     html += '</div>';
-    html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">将 Live2D 角色设为动态壁纸（同时应用于锁屏和桌面）</div>';
+    html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">Set Live2D character as dynamic wallpaper (applied to both lock screen and desktop)</div>';
     html += '</div>';
     _updateAndroidWallpaperUI();
   }
@@ -6978,7 +6978,7 @@ function settingsRenderSystemPanel() {
       var on = ssCb.checked;
       var label = document.getElementById('settingsSysScreenshotLabel');
       var wrap = document.getElementById('settingsSysIntervalWrap');
-      if (label) label.textContent = on ? '已开启 — Miru 会定时截取屏幕并分析' : '已关闭';
+      if (label) label.textContent = on ? 'Enabled — Sora periodically captures and analyzes screen' : 'Disabled';
       if (wrap) { wrap.style.opacity = on ? '1' : '0.5'; wrap.style.pointerEvents = on ? '' : 'none'; }
       // Persist immediately so the pet toolbar and ScreenSensor reflect the
       // same state before the user presses the broader "Save System Settings" button.
@@ -11775,7 +11775,7 @@ function _toggleAndroidScreenCapture() {
     }
     window.MiruAndroid.requestScreenCapture(serverUrl, authToken, deviceId);
     var btn = document.getElementById('androidCaptureToggleBtn');
-    if (btn) { btn.textContent = '等待授权...'; btn.disabled = true; }
+    if (btn) { btn.textContent = 'Waiting for permission...'; btn.disabled = true; }
   }
 }
 
@@ -11798,27 +11798,27 @@ function _updateAndroidCaptureUI() {
     if (!btn) return;
     btn.disabled = false;
     if (status.active) {
-      btn.textContent = '停止';
+      btn.textContent = 'Stop';
       btn.className = 'btn btn-danger';
       if (statusEl) {
-        var txt = '运行中';
-        if (status.queuedCount > 0) txt += ' · ' + status.queuedCount + ' 张待补传';
+        var txt = 'Running';
+        if (status.queuedCount > 0) txt += ' · ' + status.queuedCount + ' queued';
         statusEl.textContent = txt;
       }
       _startAndroidCapturePolling();
     } else if (status.preferenceEnabled) {
       // User had it enabled but service was killed (app restart) — need re-auth
-      btn.textContent = '重新授权';
+      btn.textContent = 'Re-authorize';
       btn.className = 'btn btn-save';
-      if (statusEl) statusEl.textContent = '需要重新授权（App 重启后需确认一次）';
+      if (statusEl) statusEl.textContent = 'Re-authorization required (confirm once after app restart)';
     } else {
-      btn.textContent = '开启';
+      btn.textContent = 'Start';
       btn.className = 'btn btn-save';
       if (statusEl) {
         if (status.error) {
-          statusEl.textContent = '已停止 (' + status.error + ')';
+          statusEl.textContent = 'Stopped (' + status.error + ')';
         } else {
-          statusEl.textContent = '未开启';
+          statusEl.textContent = 'Not started';
         }
       }
       _stopAndroidCapturePolling();
@@ -11838,12 +11838,12 @@ function _updateAndroidWallpaperUI() {
   if (!btn) return;
   var active = window.MiruAndroid.isLiveWallpaperActive();
   if (active) {
-    btn.textContent = '已设置';
+    btn.textContent = 'Applied';
     btn.className = 'btn';
     btn.disabled = false;
-    if (statusEl) statusEl.textContent = 'Live2D 壁纸已激活';
+    if (statusEl) statusEl.textContent = 'Live2D wallpaper active';
   } else {
-    btn.textContent = '设为壁纸';
+    btn.textContent = 'Set as Wallpaper';
     btn.className = 'btn btn-save';
     btn.disabled = false;
     if (statusEl) statusEl.textContent = '';
@@ -11910,7 +11910,7 @@ function _syncAllScreenCaptureUI() {
   var on = _androidCaptureIsOn();
   if (sw.checked !== on) sw.checked = on;
   var label = document.getElementById('settingsSysScreenshotLabel');
-  if (label) label.textContent = on ? '已开启 — Miru 会定时截取屏幕并分析' : '已关闭';
+  if (label) label.textContent = on ? 'Enabled — Sora periodically captures and analyzes screen' : 'Disabled';
   var wrap = document.getElementById('settingsSysIntervalWrap');
   if (wrap) { wrap.style.opacity = on ? '1' : '0.5'; wrap.style.pointerEvents = on ? '' : 'none'; }
 }
@@ -11922,7 +11922,7 @@ function _updateCaptureHeaderIcon() {
   var active = _androidCaptureIsOn();
   var needsAuth = _androidCaptureNeedsAuthorization();
   btn.classList.toggle('active', active);
-  btn.title = active ? '屏幕观察中（点击停止）' : (needsAuth ? '屏幕观察需要重新授权' : '开启屏幕观察');
+  btn.title = active ? 'Screen observation active (click to stop)' : (needsAuth ? 'Screen observation requires reauthorization' : 'Start screen observation');
 }
 
 function _initCaptureHeaderIcon() {

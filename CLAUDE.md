@@ -26,7 +26,7 @@
 22. **Translation changes must preserve existing test functions and behavioral assertions. Only directly affected copy expectations may change.**
 
 ## Git Publishing Policy (Sora-Only)
-23. **Before modifying documentation, run `python3 scripts/check_history_append_only.py <base_revision>` to ensure prefix integrity.**
+23. **After editing documentation and immediately before committing, run `python3 scripts/check_history_append_only.py <task_starting_checkpoint>` to ensure prefix integrity.**
 24. **Commit locally in this Sora working repository; push only to `origin` (`https://github.com/Emii31/Sora.git`).**
 25. **`upstream` (`https://github.com/kiyotakali/Miru.git`) is strictly fetch-only (push URL disabled). Never create upstream PRs, issues, comments, or send messages to upstream maintainers.**
 26. **At each completed and validated task, create a reviewed checkpoint and push it to the user's repository (`origin`).**

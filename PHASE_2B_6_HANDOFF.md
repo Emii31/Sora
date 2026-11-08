@@ -1,0 +1,23 @@
+# PHASE 2B_6 HANDOFF
+
+- **Translated regions**:
+    - System panel screen-observation label and status.
+    - Screenshot interval label/help text.
+    - Analyzed-screenshot heading.
+    - Android capture UI (Waiting for permission, Start, Stop, Re-authorize, running/queued status).
+    - Android Live2D wallpaper labels, buttons, and status.
+- **Deferred text**:
+    - Permission dialogs, background keep-alive guides, character settings, chat, memory/emotion screens, backend/native strings.
+- **Verification**:
+    - Template/diff checks: Passed.
+    - Behavior-preservation checks: Passed.
+    - Tests/syntax commands: `pytest` passed (36/36).
+    - History integrity check: `python3 scripts/check_history_append_only.py 7499308` passed.
+- **Evidence/backup paths**:
+    - `docs/verification/phase_02B_6/test_results.txt`.
+    - `/mnt/data/Companion/recovery/phase_02B_6_backup/index.html`.
+- **Browser/native verification**: Pending.
+- **Actual local/live remote hashes**:
+    - Local HEAD: 8d2c6729583b6329c21868514930191836691459
+    - Live remote origin (main): 8d2c6729583b6329c21868514930191836691459
+- **Remaining local changes**: None.
