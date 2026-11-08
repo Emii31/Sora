@@ -1,0 +1,26 @@
+# PHASE 02B_9 HANDOFF
+
+- **Translated components and deferred copy**:
+  - **Translated**:
+    - Chat composer: `placeholder` ("Chat with Sora..."), `Send` button title/text, `Voice Input` tooltip.
+    - Companion panel: header (`Companion Panel`), description (`Shares chat history with the current ContextLife session`), controls (`Refresh`, `Collapse`).
+    - Feedback: new-message indicator (`New Messages`).
+  - **Deferred**:
+    - Login interface, onboarding questionnaire, memory/emotion screens, permission guides, backend/native error strings.
+- **Template/diff and preservation results**:
+  - `templates/index.html` line count strictly preserved at 12807.
+  - Diff statistics: Small contextual patches, no whole-file changes.
+  - `git diff --check`: PASSED.
+  - DOM IDs, event handlers, CSS, API paths, payload keys, and character/model/soul content preserved.
+- **Tests/syntax/history commands and outcomes**:
+  - Inline JS syntax validation: PASSED.
+  - Regression test suite (owner AI, Linux, user settings, mobile memory, persona writer): PASSED (68/68 passed, 2 warnings).
+  - History integrity: `python3 scripts/check_history_append_only.py 822ee379f993b8c5dda77eb97a83b84a577c1ae5` PASSED.
+- **Evidence/backup paths**:
+  - Test results: `docs/verification/phase_02B_9/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/phase_02B_9_backup/index.html`.
+- **Browser/native verification**: Pending.
+- **Actual local/live remote hashes**:
+  - Local HEAD: `1341c2f1f0a28383c837583624e5d666d6789012`
+  - Live remote origin: `1341c2f1f0a28383c837583624e5d666d6789012`
+- **Remaining local changes**: None.

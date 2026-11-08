@@ -3982,10 +3982,10 @@ async function _doLogin() {
       <div class="chat-messages" id="companionChatMessages">
         <div class="empty-chat-state" id="emptyCompanionState">
           <div class="icon">CHAT</div>
-          <p>和 Airi 聊天吧！</p><!-- updated dynamically by loadCharacter -->
+          <p>Chat with Sora to get the day started!<!-- updated dynamically by loadCharacter --></p>
         </div>
       </div>
-      <div class="companion-new-msg-indicator" id="companionNewMsgIndicator" style="display:none" onclick="companionScrollToNewMessages()">↓ 新消息</div>
+      <div class="companion-new-msg-indicator" id="companionNewMsgIndicator" style="display:none" onclick="companionScrollToNewMessages()">↓ New Messages</div>
     </div>
 
 
@@ -4001,12 +4001,12 @@ async function _doLogin() {
   <aside class="airi-side-panel" id="airiSidePanel" aria-hidden="true">
     <div class="airi-side-panel-header">
       <div class="airi-side-panel-title">
-        <strong>伴随面板</strong>
-        <span>和当前 ContextLife 会话共享同一条聊天记录</span>
+        <strong>Companion Panel</strong>
+        <span>Shares chat history with the current ContextLife session</span>
       </div>
       <div class="airi-side-panel-actions">
-        <button class="airi-side-btn" type="button" onclick="reloadAiriPanel()">刷新</button>
-        <button class="airi-side-btn" type="button" onclick="hideAiriPanel()">收起</button>
+        <button class="airi-side-btn" type="button" onclick="reloadAiriPanel()">Refresh</button>
+        <button class="airi-side-btn" type="button" onclick="hideAiriPanel()">Collapse</button>
       </div>
     </div>
     <div class="airi-side-panel-body" id="airiPanelBody">
@@ -4024,9 +4024,9 @@ async function _doLogin() {
 
 <div class="input-bar-wrapper">
   <div class="input-bar">
-    <textarea id="textInput" placeholder="和 Airi 聊天..." rows="1"></textarea>
-    <button class="voice-btn" id="voiceBtn" title="语音输入" style="display:none">🎤</button>
-    <button class="send-btn" id="sendBtn" title="发送">发送</button>
+    <textarea id="textInput" placeholder="Chat with Sora..." rows="1"></textarea>
+    <button class="voice-btn" id="voiceBtn" title="Voice Input" style="display:none">🎤</button>
+    <button class="send-btn" id="sendBtn" title="Send">Send</button>
   </div>
 </div>
 

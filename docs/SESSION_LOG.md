@@ -106,3 +106,13 @@
 - Ran syntax validation and regression test suite (68 passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py`.
 - Documentation created/updated (`docs/phases/PHASE_02B_8.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
+
+## 2026-11-09 (Phase 2B.9: Chat Controls and Frontend Feedback Translation)
+- Translated frontend-owned UI strings for chat controls and feedback mechanisms:
+  - Chat composer: placeholder ("Chat with Sora..."), send button ("Send"), voice-input button ("Voice Input").
+  - Companion panel: header ("Companion Panel"), description ("Shares chat history with the current ContextLife session"), controls ("Refresh", "Collapse").
+  - Feedback: new-message indicator ("New Messages").
+- Exact line count of `templates/index.html` preserved at 12807.
+- Ran syntax validation and regression test suite (68 passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py`.
+- Documentation created/updated (`docs/phases/PHASE_02B_9.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).

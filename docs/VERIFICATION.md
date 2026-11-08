@@ -81,3 +81,13 @@
   - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 7b3e2809912926ed37c0ed1763fefb23dd288e57.
   - Browser verification: Pending.
   - Backup: /mnt/data/Companion/recovery/phase_02B_8_backup/index.html.
+
+- **Phase 2B.9 Verification (Chat Controls and Frontend Feedback Translation)**:
+  - templates/index.html: Chat composer, companion-panel, and feedback UI translated to English.
+  - Components translated: Chat placeholder, Send button, Voice Input tooltip, Companion panel header/description/controls, New Messages indicator.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved. Line count 12807 preserved.
+  - git diff --check: PASS.
+  - Test suite check: 68/68 tests passed across regression suite. Inline JS syntax validated via node.
+  - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 822ee379f993b8c5dda77eb97a83b84a577c1ae5.
+  - Browser verification: Pending.
+  - Backup: /mnt/data/Companion/recovery/phase_02B_9_backup/index.html.
