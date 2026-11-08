@@ -94,3 +94,15 @@
 - Ran syntax validation and regression test suite (68 passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py`.
 - Documentation created/updated (`docs/phases/PHASE_02B_7.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
+
+## 2026-11-09 (Phase 2B.8: Character Action Dialogs and Feedback Translation)
+- Translated frontend-owned UI strings for character action dialogs, saving/loading feedback, and action messages within the Characters settings panel:
+  - Deletion confirmation modal ("Delete Character", "Delete this character model? Associated soul.md and avatar files will also be deleted. This action cannot be undone.", "Cancel", "Delete").
+  - Feedback messages: "Saving...", "Character settings saved", "Save failed...", "Layout saved", "Uploading avatar...", "Avatar updated", "Upload failed...", "soul.md saved", "Renamed", "Rename failed...", "Character switched", "Switch failed...", "Character deleted", "Delete failed...", "Uploading...", "Model uploaded...", "Upload failed...", "Editor content not found".
+  - Soul-editor feedback: "Loading...", "Failed to load...".
+  - Rename dialog buttons: "OK", "Cancel".
+  - Validation messages: "Name cannot be empty".
+- Exact line count of `templates/index.html` preserved at 12807 (44 additions, 44 deletions).
+- Ran syntax validation and regression test suite (68 passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py`.
+- Documentation created/updated (`docs/phases/PHASE_02B_8.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).

@@ -71,3 +71,13 @@
   - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 6154ca66c726c6d42c84d305ec4088921afbf8c7.
   - Browser verification: Pending.
   - Backup: /mnt/data/Companion/recovery/phase_02B_7_backup/index.html.
+
+- **Phase 2B.8 Verification (Character Action Dialogs and Feedback Translation)**:
+  - templates/index.html: Character action dialogs, saving/loading feedback, and action messages within Characters settings panel translated to English.
+  - Components translated: Deletion confirmation modal, save/load/success/fallback feedback, layout save feedback, avatar upload messages, model upload progress/validation, rename dialog, character activation feedback, and soul-editor controls/feedback.
+  - Preservation checks: Script blocks, Style blocks, DOM IDs, handlers, URLs, payload keys, escaping preserved. Line count 12807 preserved exact (44 additions, 44 deletions).
+  - git diff --check: PASS.
+  - Test suite check: 68/68 tests passed across owner AI frontend, Linux settings, user settings, mobile notification memory UI, and persona suites. Inline JS syntax validated via node.
+  - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 7b3e2809912926ed37c0ed1763fefb23dd288e57.
+  - Browser verification: Pending.
+  - Backup: /mnt/data/Companion/recovery/phase_02B_8_backup/index.html.

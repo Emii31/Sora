@@ -11,7 +11,7 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **AI Models Settings** | `templates/index.html` | AI configuration settings panel | **Implemented & Verified (Phase 2B.3)** |
 | **Devices Settings** | `templates/index.html` | Devices settings panel | **Implemented & Verified (Phase 2B.4)** |
 | **System Settings** | `templates/index.html` | Account & desktop preferences, hotkey/save feedback, screen observation & wallpaper | **Implemented & Verified (Phase 2B.5 & 2B.6)** |
-| **Characters Settings** | `templates/index.html` | Character list, card display labels, detail panel fields & actions | **Implemented & Verified (Phase 2B.7)** |
+| **Characters Settings** | `templates/index.html` | Character list, card display labels, detail panel fields & actions, dialogs, feedback | **Implemented & Verified (Phase 2B.8)** |
 | **Backend Errors** | Various (`app.py`, `core.py`) | Error messages, logs | Untouched |
 | **Prompts/Persona** | `character.py`, `prompt.py`, `memory_prompts_v*.py` | AI personality, system prompts | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |

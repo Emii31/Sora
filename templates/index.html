@@ -4057,13 +4057,13 @@ async function _doLogin() {
 
 <div class="confirm-modal-backdrop" id="deleteModelConfirmModal" onclick="cancelDeleteModel()">
   <div class="confirm-modal" onclick="event.stopPropagation()">
-    <div class="confirm-modal-title">确认删除角色</div>
+    <div class="confirm-modal-title">Delete Character</div>
     <div class="confirm-modal-text">
-      确定删除此模型？关联的 soul.md 和头像也会一并删除，此操作无法撤销。
+      Delete this character model? Associated soul.md and avatar files will also be deleted. This action cannot be undone.
     </div>
     <div class="card-actions" style="margin-top:14px">
-      <button class="btn btn-cancel" onclick="cancelDeleteModel()">取消</button>
-      <button class="btn btn-danger" onclick="confirmDeleteModel()">确认删除</button>
+      <button class="btn btn-cancel" onclick="cancelDeleteModel()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDeleteModel()">Delete</button>
     </div>
   </div>
 </div>
@@ -6499,7 +6499,7 @@ async function settingsSaveCharFields() {
     }
   };
   try {
-    settingsShowFlash('保存中...');
+    settingsShowFlash('Saving...');
     var res = await fetch('/api/models/' + _charDetailModelId + '/fields', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -6507,14 +6507,14 @@ async function settingsSaveCharFields() {
     });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('角色设定已保存');
+      settingsShowFlash('Character settings saved');
       // Refresh CHARACTER if this is the active model
       try { var cr = await fetch('/api/character', {cache:'no-store'}); window.CHARACTER = await cr.json(); } catch(e) {}
     } else {
-      settingsShowFlash('保存失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Save failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('保存失败: ' + err.message, 'error');
+    settingsShowFlash('Save failed: ' + err.message, 'error');
   }
 }
 
@@ -6531,7 +6531,7 @@ async function settingsSaveCharLayout() {
     });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('布局已保存');
+      settingsShowFlash('Layout saved');
       // Capture thumbnail from live canvas and upload as avatar
       if (_l2dDetailApp && _l2dDetailApp.view) {
         var modelId = _charDetailModelId;
@@ -6552,10 +6552,10 @@ async function settingsSaveCharLayout() {
         } catch(e) {}
       }
     } else {
-      settingsShowFlash('保存失败', 'error');
+      settingsShowFlash('Save failed', 'error');
     }
   } catch (err) {
-    settingsShowFlash('保存失败: ' + err.message, 'error');
+    settingsShowFlash('Save failed: ' + err.message, 'error');
   }
 }
 
@@ -6583,11 +6583,11 @@ async function settingsDoAvatarUpload(input) {
   var formData = new FormData();
   formData.append('file', file);
   try {
-    settingsShowFlash('上传头像中...');
+    settingsShowFlash('Uploading avatar...');
     var res = await fetch('/api/models/' + _pendingAvatarModelId + '/avatar', { method: 'POST', body: formData });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('头像已更新');
+      settingsShowFlash('Avatar updated');
       settingsLoadPersonaList();
       // Refresh CHARACTER avatar in chat panel if this is the active model
       try {
@@ -6595,10 +6595,10 @@ async function settingsDoAvatarUpload(input) {
         window.CHARACTER = await charRes.json();
       } catch(e) {}
     } else {
-      settingsShowFlash('上传失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Upload failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('上传失败: ' + err.message, 'error');
+    settingsShowFlash('Upload failed: ' + err.message, 'error');
   }
 }
 
@@ -6608,13 +6608,13 @@ async function settingsToggleSoulEditor(modelId) {
   if (wrap.style.display === 'none') {
     wrap.style.display = 'block';
     var editor = document.getElementById('soulEditor_' + modelId);
-    if (editor && (!editor.value || editor.value === '加载中...')) {
+    if (editor && (!editor.value || editor.value === 'Loading...')) {
       try {
         var res = await fetch('/api/models/' + modelId + '/soul', { cache: 'no-store' });
         var data = await res.json();
         editor.value = data.content || '';
       } catch (err) {
-        editor.value = '加载失败: ' + err.message;
+        editor.value = 'Failed to load: ' + err.message;
       }
     }
   } else {
@@ -6633,17 +6633,17 @@ async function settingsSaveModelSoul(modelId) {
     });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('soul.md 已保存');
+      settingsShowFlash('soul.md saved');
       // Refresh CHARACTER global if this is active model
       try {
         var charRes = await fetch('/api/character', { cache: 'no-store' });
         window.CHARACTER = await charRes.json();
       } catch(e) {}
     } else {
-      settingsShowFlash('保存失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Save failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('保存失败: ' + err.message, 'error');
+    settingsShowFlash('Save failed: ' + err.message, 'error');
   }
 }
 
@@ -6661,12 +6661,12 @@ async function settingsSaveModelLayout(modelId) {
     });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('布局已保存');
+      settingsShowFlash('Layout saved');
     } else {
-      settingsShowFlash('保存失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Save failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('保存失败: ' + err.message, 'error');
+    settingsShowFlash('Save failed: ' + err.message, 'error');
   }
 }
 
@@ -6676,8 +6676,8 @@ function settingsStartRename(modelId, currentName) {
   var parent = nameSpan.parentElement;
   // Replace name span + edit button with input + save/cancel
   parent.innerHTML = '<input id="renameInput_' + modelId + '" type="text" value="' + escapeHtml(currentName) + '" style="font-size:13px;padding:3px 6px;background:var(--bg-input);color:var(--text-primary);border:1px solid var(--airi-pink);border-radius:4px;width:140px;">' +
-    '<button class="btn btn-save" style="font-size:11px;padding:2px 8px;margin-left:4px;" onclick="settingsDoRename(\'' + modelId + '\')">确定</button>' +
-    '<button class="btn" style="font-size:11px;padding:2px 8px;margin-left:2px;" onclick="settingsLoadPersonaList()">取消</button>';
+    '<button class="btn btn-save" style="font-size:11px;padding:2px 8px;margin-left:4px;" onclick="settingsDoRename(\'' + modelId + '\')">OK</button>' +
+    '<button class="btn" style="font-size:11px;padding:2px 8px;margin-left:2px;" onclick="settingsLoadPersonaList()">Cancel</button>';
   var inp = document.getElementById('renameInput_' + modelId);
   if (inp) { inp.focus(); inp.select(); }
 }
@@ -6686,7 +6686,7 @@ async function settingsDoRename(modelId) {
   var inp = document.getElementById('renameInput_' + modelId);
   if (!inp) return;
   var newName = inp.value.trim();
-  if (!newName) { settingsShowFlash('名称不能为空', 'error'); return; }
+  if (!newName) { settingsShowFlash('Name cannot be empty', 'error'); return; }
   try {
     var res = await fetch('/api/models/' + modelId, {
       method: 'PATCH',
@@ -6695,15 +6695,15 @@ async function settingsDoRename(modelId) {
     });
     var data = await res.json();
     if (data.ok) {
-      settingsShowFlash('已重命名');
+      settingsShowFlash('Renamed');
       settingsLoadPersonaList();
       // Refresh CHARACTER if active model
       try { var cr = await fetch('/api/character', { cache: 'no-store' }); window.CHARACTER = await cr.json(); } catch(e) {}
     } else {
-      settingsShowFlash('重命名失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Rename failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('重命名失败: ' + err.message, 'error');
+    settingsShowFlash('Rename failed: ' + err.message, 'error');
   }
 }
 
@@ -6721,7 +6721,7 @@ async function settingsSetActiveModel(modelId) {
     });
     const data = await res.json();
     if (data.ok) {
-      settingsShowFlash('模型已切换');
+      settingsShowFlash('Character switched');
       settingsLoadPersonaList();
       // Refresh CHARACTER global (name, avatar change with persona)
       try {
@@ -6729,10 +6729,10 @@ async function settingsSetActiveModel(modelId) {
         window.CHARACTER = await charRes.json();
       } catch(e) {}
     } else {
-      settingsShowFlash('切换失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Switch failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('切换失败: ' + err.message, 'error');
+    settingsShowFlash('Switch failed: ' + err.message, 'error');
   }
 }
 
@@ -6757,18 +6757,18 @@ function confirmDeleteModel() {
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data.ok) {
-        settingsShowFlash('模型已删除');
+        settingsShowFlash('Character deleted');
         settingsCloseCharDetail();
         fetch('/api/character', { cache: 'no-store' })
           .then(function(r) { return r.json(); })
           .then(function(c) { window.CHARACTER = c; })
           .catch(function() {});
       } else {
-        settingsShowFlash('删除失败: ' + (data.error || ''), 'error');
+        settingsShowFlash('Delete failed: ' + (data.error || ''), 'error');
       }
     })
     .catch(function(err) {
-      settingsShowFlash('删除失败: ' + err.message, 'error');
+      settingsShowFlash('Delete failed: ' + err.message, 'error');
     });
 }
 
@@ -6791,17 +6791,17 @@ async function settingsUploadModel(input) {
   const formData = new FormData();
   formData.append('file', file);
   try {
-    settingsShowFlash('上传中...');
+    settingsShowFlash('Uploading...');
     const res = await fetch('/api/models/upload', { method: 'POST', body: formData });
     const data = await res.json();
     if (data.ok) {
-      settingsShowFlash('模型上传成功: ' + (data.model.name || ''));
+      settingsShowFlash('Model uploaded: ' + (data.model.name || ''));
       settingsLoadPersonaList();
     } else {
-      settingsShowFlash('上传失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Upload failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('上传失败: ' + err.message, 'error');
+    settingsShowFlash('Upload failed: ' + err.message, 'error');
   }
   input.value = '';
 }
@@ -6809,7 +6809,7 @@ async function settingsUploadModel(input) {
 async function settingsSaveSoul() {
   const content = (document.getElementById('settingsSoulEditor') || {}).value;
   if (content === undefined || content === null) {
-    settingsShowFlash('未找到编辑器内容', 'error');
+    settingsShowFlash('Editor content not found', 'error');
     return;
   }
   try {
@@ -6820,7 +6820,7 @@ async function settingsSaveSoul() {
     });
     const data = await res.json();
     if (data.ok) {
-      settingsShowFlash('soul.md 已保存 (' + (data.name || '') + ')');
+      settingsShowFlash('soul.md saved (' + (data.name || '') + ')');
       // Refresh CHARACTER global
       try {
         const charRes = await fetch('/api/character', { cache: 'no-store' });
@@ -6829,10 +6829,10 @@ async function settingsSaveSoul() {
       settingsRenderAiriPanel();
       switchSettingsTab('airi');
     } else {
-      settingsShowFlash('保存失败: ' + (data.error || ''), 'error');
+      settingsShowFlash('Save failed: ' + (data.error || ''), 'error');
     }
   } catch (err) {
-    settingsShowFlash('保存失败: ' + err.message, 'error');
+    settingsShowFlash('Save failed: ' + err.message, 'error');
   }
 }
 
@@ -7471,7 +7471,7 @@ async function settingsLoadAll() {
     settingsRenderSystemPanel();
     settingsLoadAiConfig();
   } catch (err) {
-    settingsShowFlash('加载设置失败: ' + err.message, 'error');
+    settingsShowFlash('Failed to load settings: ' + err.message, 'error');
   }
 }
 

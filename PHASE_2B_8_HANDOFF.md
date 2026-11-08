@@ -1,0 +1,28 @@
+# PHASE 02B_8 HANDOFF
+
+- **Dialogs/feedback translated and deferred copy**:
+  - **Translated**:
+    - Deletion confirmation modal (`Delete Character`, `Delete this character model? Associated soul.md and avatar files will also be deleted. This action cannot be undone.`, `Cancel`, `Delete`).
+    - Feedback messages (`Saving...`, `Character settings saved`, `Save failed...`, `Layout saved`, `Uploading avatar...`, `Avatar updated`, `Upload failed...`, `soul.md saved`, `Renamed`, `Rename failed...`, `Character switched`, `Switch failed...`, `Character deleted`, `Delete failed...`, `Uploading...`, `Model uploaded...`, `Upload failed...`, `Editor content not found`).
+    - Soul-editor feedback (`Loading...`, `Failed to load...`).
+    - Rename dialog buttons (`OK`, `Cancel`).
+    - Validation messages (`Name cannot be empty`).
+  - **Deferred**:
+    - None (scope completed as requested).
+- **Template/diff and preservation results**:
+  - `templates/index.html` line count strictly preserved at 12807.
+  - Diff statistics: 44 additions, 44 deletions.
+  - `git diff --check`: PASSED.
+  - DOM IDs, event handlers, CSS, API paths, payload keys, and character/model/soul content preserved.
+- **Tests/syntax/history commands and outcomes**:
+  - Inline JS syntax validation: PASSED.
+  - Regression test suite (owner AI, Linux, user settings, mobile memory, persona writer): PASSED (68/68 passed, 2 warnings).
+  - History integrity: `python3 scripts/check_history_append_only.py 7b3e2809912926ed37c0ed1763fefb23dd288e57` PASSED.
+- **Evidence/backup paths**:
+  - Test results: `docs/verification/phase_02B_8/test_results.txt`.
+  - Backup: `/mnt/data/Companion/recovery/phase_02B_8_backup/index.html` (SHA-256: `c02935aca12fbbfd4a3dceb1665622a3c5d7823ae8f7098325ad5b259fc043ac`).
+- **Browser/native verification**: Pending.
+- **Actual local/live remote hashes**:
+  - Local HEAD: `81b21237e19d67562854972e276e5d848731d102`
+  - Live remote origin: `81b21237e19d67562854972e276e5d848731d102`
+- **Remaining local changes**: None.
