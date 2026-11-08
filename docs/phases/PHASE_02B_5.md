@@ -1,6 +1,6 @@
-# PHASE 02B_5: System Account & Desktop-Preference Translation (with Repair)
+# PHASE 02B_5: System Account & Desktop-Preference Translation and Completion
 
-**Goal:** Translate frontend-owned UI strings in System Account and Desktop-Preference settings panel, restore weakened test assertions, and re-establish verification history.
+**Goal:** Translate frontend-owned UI strings in System Account and Desktop-Preference settings panel, restore weakened test assertions, and re-establish verification history. All authorized translations are now complete.
 
 **Status:**
 - [x] Invitation code label, copy button, status messages, copy feedback translated.
@@ -11,6 +11,7 @@
 - [x] Re-established VERIFICATION.md history and SESSION_LOG.md records.
 - [x] All preservation checks (script/style blocks, IDs, handlers, line count 12807) pass.
 - [x] Syntax validated.
+- [x] All authorized translations completed.
 
 **Evidence:**
 - Changed in `templates/index.html`: `_loadSettingsInvitationCode`, `_copySettingsInvitationCode`, `settingsSwitchAccount`, `_fmtScreenshotTime`, `_loadScreenshotStats`.

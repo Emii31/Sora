@@ -60,8 +60,10 @@
 - Documentation created/updated (`docs/phases/PHASE_02B_4.md`, `docs/STATUS.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
 - Pre-edit backup saved at `/mnt/data/Companion/recovery/20261108_device_backup/index_before_phase_2B_4_patch.html`.
 
-## 2026-11-08 (Phase 2B.5: System Account and Desktop-Preference UI Translation and Repair)
-- Translate frontend-owned UI strings in the System panel: invitation code label, loading/copy feedback, local-mode hints, desktop pet shortcuts, screenshot stats notes, account heading, data retention explanation, switch-account confirmation, save button feedback.
-- Repaired test assertion in `tests/test_owner_ai_config_frontend.py` to restore strict testing specificity.
-- Restored VERIFICATION.md and SESSION_LOG.md history prefix completeness.
-- Saved repair evidence under `docs/verification/phase_02B_5_repair/`.
+## 2026-11-08 (Phase 2B.5: System Account and Desktop-Preference UI Translation and Completion)
+- Translate frontend-owned UI strings in the System panel: invitation code label, loading/copy feedback, local-mode hints, desktop pet shortcuts, screenshot stats notes, account heading, data retention explanations, switch-account confirmation, and save button feedback.
+- All prior authorized translations completed (invitation code, copy button, hotkey label, auto-collapse delay label/account scope, Switch Account, save button).
+- All dynamic feedback and control flow preserved unchanged.
+- Full test suite passes (9/9 frontend tests, 18/18 combined regression subset).
+- Template line count 12807 preserved.
+- Evidence under docs/verification/phase_02B_5_completion/.

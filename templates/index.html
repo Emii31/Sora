@@ -6845,16 +6845,16 @@ function settingsRenderSystemPanel() {
 
   // Current account invitation code — used to connect the user's own other devices.
   html += '<div class="sync-settings-item" style="grid-column:1 / -1">';
-  html += '<label>我的邀请码</label>';
+  html += '<label>Invitation code</label>';
   html += '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">';
-  html += '<input id="settingsInvitationCode" type="text" readonly value="加载中..." '
+  html += '<input id="settingsInvitationCode" type="text" readonly value="Loading..." '
         + 'style="flex:1;min-width:260px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;'
         + 'font-size:13px;letter-spacing:0.02em;padding:9px 12px;background:var(--bg-elevated);'
         + 'border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);">';
   html += '<button type="button" id="settingsCopyInvitationBtn" onclick="_copySettingsInvitationCode()" class="btn" '
-        + 'style="padding:8px 14px;font-size:13px;">复制邀请码</button>';
+        + 'style="padding:8px 14px;font-size:13px;">Copy invitation code</button>';
   html += '</div>';
-  html += '<div id="settingsInvitationHint" style="margin-top:7px;font-size:12px;color:var(--text-muted);line-height:1.5;">给自己的手机或另一台电脑登录用，请不要发给别人。</div>';
+  html += '<div id="settingsInvitationHint" style="margin-top:7px;font-size:12px;color:var(--text-muted);line-height:1.5;">For logging in on your phone or another computer. Do not share with others.</div>';
   html += '</div>';
 
   // Pet hotkey — DESKTOP-ONLY + PER-DEVICE LOCAL.
@@ -6874,7 +6874,7 @@ function settingsRenderSystemPanel() {
       || (navigator.platform && navigator.platform.toUpperCase().indexOf('MAC') >= 0
           ? 'cmd+option+m' : 'ctrl+alt+m');
     html += '<div class="sync-settings-item" style="grid-column:1 / -1">';
-    html += '<label>桌宠唤醒快捷键</label>';
+    html += '<label>Desktop Pet Hotkey</label>';
     html += '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">';
     html += '<input id="settingsSysPetHotkeyDisplay" type="text" readonly '
           + 'value="' + escapeHtml(_formatHotkeyDisplay(currentHotkey)) + '" '
@@ -6885,11 +6885,11 @@ function settingsRenderSystemPanel() {
     html += '<input id="settingsSysPetHotkey" type="hidden" value="' + escapeHtml(currentHotkey) + '">';
     html += '<button type="button" id="settingsSysPetHotkeyBtn" '
           + 'onclick="_recordHotkey(this)" class="btn" '
-          + 'style="padding:8px 14px;font-size:13px;">🎙 录制</button>';
+          + 'style="padding:8px 14px;font-size:13px;">🎙 Record</button>';
     html += '<button type="button" onclick="_resetHotkey()" class="btn" '
-          + 'style="padding:8px 14px;font-size:13px;background:transparent;">恢复默认</button>';
+          + 'style="padding:8px 14px;font-size:13px;background:transparent;">Reset to default</button>';
     html += '</div>';
-    html += '<div style="margin-top:8px;font-size:12px;color:var(--text-muted);">点"录制"后按下组合键（如 ' + hotkeyExample + '）即可修改。<b>仅对当前这台电脑生效，保存在浏览器本地，不上传服务器。</b>保存后 5 秒内桌宠端自动应用。</div>';
+    html += '<div style="margin-top:8px;font-size:12px;color:var(--text-muted);">Press a key combination after clicking "Record" (e.g. ' + hotkeyExample + ') to change it.<b>Only applies to this computer; saved locally in the browser and not uploaded to the server.</b>The desktop pet applies the change within 5 seconds of saving.</div>';
     html += '</div>';
   }
 
@@ -6901,9 +6901,9 @@ function settingsRenderSystemPanel() {
     var currentDelay = parseInt(localDelay, 10) || cfg.pet_collapse_delay || 4000;
     var delaySec = (currentDelay / 1000).toFixed(1).replace(/\.0$/, '');
     html += '<div class="sync-settings-item">';
-    html += '<label>桌宠自动隐去延迟（秒）</label>';
+    html += '<label>Desktop Pet Auto-Collapse Delay (seconds)</label>';
     html += '<input id="settingsSysPetCollapseDelay" class="edit-input" type="number" min="1" max="60" step="0.5" value="' + escapeHtml(delaySec) + '" style="max-width:120px;text-align:center;">';
-    html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">消息完全显示后多少秒自动隐去界面（最少1秒）。<b>仅对当前这台电脑生效，不上传服务器。</b></div>';
+    html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">Seconds to wait after a message is fully shown before auto-collapsing the interface (minimum 1 second).<b>Only applies to this computer; not uploaded to the server.</b></div>';
     html += '</div>';
   }
 
@@ -6952,21 +6952,21 @@ function settingsRenderSystemPanel() {
   }
 
   html += '</div>';
-  html += '<div class="card-actions" style="margin-top:14px"><button class="btn btn-save" onclick="settingsSaveSystem()">保存系统设置</button></div>';
+  html += '<div class="card-actions" style="margin-top:14px"><button class="btn btn-save" onclick="settingsSaveSystem()">Save System Settings</button></div>';
 
   html += '<div class="sync-settings-item" style="grid-column:1 / -1;margin-top:18px;">';
-  html += '<label>账号</label>';
+  html += '<label>Account</label>';
   const accountScopeText = _clientModeMode === 'local'
     ? (window.MiruAndroid
-      ? '当前是本地单设备模式。切换账号只会退出当前界面，不会删除这部手机上的本地 Miru 数据。'
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this phone.'
       : isWindowsDesktop
-      ? '当前是本地单设备模式。切换账号只会退出当前界面，不会删除这台 Windows 电脑上的本地 Miru 数据。'
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Windows PC.'
       : window.__MIRU_DESKTOP_PLATFORM__ === 'linux'
-      ? '当前是本地单设备模式。切换账号只会退出当前界面，不会删除这台 Linux 电脑上的本地 Miru 数据。'
-      : '当前是本地单设备模式。切换账号只会退出当前界面，不会删除这台 Mac 上的本地 Miru 数据。')
-    : '当前是多设备模式。切换账号只会清掉这台设备的登录状态，服务器里的 Miru 数据不会被删除。';
+      ? 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Linux PC.'
+      : 'Currently in local single-device mode. Switching accounts will only sign out of this interface; it will not delete the local Miru data on this Mac.')
+    : 'Currently in multi-device mode. Switching accounts will only sign out of this device; the Miru data on the server will not be deleted.';
   html += '<div style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:10px;">' + accountScopeText + '</div>';
-  html += '<button type="button" class="btn" onclick="settingsSwitchAccount()" style="padding:8px 16px;font-size:13px;">切换账号</button>';
+  html += '<button type="button" class="btn" onclick="settingsSwitchAccount()" style="padding:8px 16px;font-size:13px;">Switch Account</button>';
   html += '</div>';
   document.getElementById('settingsPanelSystem').innerHTML = html;
   // Refresh Android screen capture UI after rendering
@@ -6981,7 +6981,7 @@ function settingsRenderSystemPanel() {
       if (label) label.textContent = on ? '已开启 — Miru 会定时截取屏幕并分析' : '已关闭';
       if (wrap) { wrap.style.opacity = on ? '1' : '0.5'; wrap.style.pointerEvents = on ? '' : 'none'; }
       // Persist immediately so the pet toolbar and ScreenSensor reflect the
-      // same state before the user presses the broader "保存系统设置" button.
+      // same state before the user presses the broader "Save System Settings" button.
       _persistScreenCaptureSettings({ screenshot_enabled: on });
       // Android APK: additionally delegate to MediaProjection flow so this
       // switch stays in sync with the chat header icon and Android button.
