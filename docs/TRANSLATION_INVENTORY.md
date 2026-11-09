@@ -15,6 +15,7 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **Memory Browser Overview** | `templates/index.html` | Domain tabs, slot cards, empty/loading states, quick entries | **Implemented & Verified (Phase 2B.11)** |
 | **Memory Detail View & Actions** | `templates/index.html` | Slot detail view, delete/archive confirmations, edit modal, merge dialog | **Implemented & Verified (Phase 2B.12)** |
 | **Core Portrait & Journal Views** | `templates/index.html` | Core portrait view, journal list, journal book reader, highlights, stats, sharing/export copy | **Implemented & Verified (Phase 2B.13)** |
+| **Commitments & Journal Localization** | `templates/index.html` | Commitments (DDL) tracker overview/list/form, Journal English date formatting (`_journalFormatDate`) | **Implemented & Verified (Phase 2B.14)** |
 | **Backend Errors** | Various (`app.py`, `core.py`) | Error messages, logs | Untouched |
 | **Prompts/Persona** | `character.py`, `prompt.py`, `memory_prompts_v*.py` | AI personality, system prompts | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |

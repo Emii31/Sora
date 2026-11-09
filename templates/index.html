@@ -5522,14 +5522,14 @@ function wrapSystemContent(innerHTML) {
 // ===== Miru Journal =====
 
 function _journalFormatDate(dateStr) {
-  // "2026-03-31" → { day: "31", monthYear: "2026年3月", weekday: "周二" }
+  // "2026-03-31" → { day: "31", monthYear: "Nov 2026", weekday: "Tue" }
   const parts = dateStr.split('-');
   if (parts.length !== 3) return { day: dateStr, monthYear: '', weekday: '' };
   const y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
-  const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+  const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let wd = '';
   try { wd = weekdays[new Date(y, m-1, d).getDay()]; } catch(e) {}
-  return { day: String(d), monthYear: y + '年' + m + '月', weekday: wd };
+  return { day: String(d), monthYear: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1] + ' ' + y, weekday: wd };
 }
 
 // Track which day is currently open in the book view for prev/next nav
@@ -5538,7 +5538,7 @@ var _journalEntriesCache = [];
 
 function buildJournalListHtml(entries) {
   var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
-  let html = '<div class="query-result-header"><h2>' + charName + "'s Journal</h2>";
+  let html = '<div class="query-result-header"><h2>' + escapeHtml(charName) + "'s Journal</h2>";
   html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Watching over your days silently and recording what matters</div>';
   html += '</div>';
 
@@ -9263,7 +9263,7 @@ async function navDDLTracker(backTarget) {
   // Sidebar's "DDL" button was removed; DDL now enters from the memory hub.
   setSidebarActive('navMemoryBrowser');
   _nextNavGen();
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载承诺...</span></div>',
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading commitments...</span></div>',
                  backTarget || 'chat');
   currentView = 'ddl';
   await _loadDDLView();
@@ -9277,7 +9277,7 @@ async function _loadDDLView() {
   }
   cachedFetch('/api/commitments?include_done=true', 'commitments', function(data) {
     if (data._error) {
-      detailContent.innerHTML = '<div style="padding:20px;color:var(--text-muted)">加载失败</div>';
+      detailContent.innerHTML = '<div style="padding:20px;color:var(--text-muted)">Load failed</div>';
       return;
     }
     var items = data.items || [];

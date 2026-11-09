@@ -127,3 +127,10 @@
   - Test suite check: All tests passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_13/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).
+
+- **Phase 2B.14 Verification (Commitments Overview and Journal Localization)**:
+  - `templates/index.html`: Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday) and escaped character name in Journal header. Translated Commitments tracker (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`) including headers, view toggle buttons, stats badges, add form, and list items.
+  - Preservation checks: Internal identifiers, status values, routes, payloads, caching, date logic, saved user content, and 12,807-line template preserved exact.
+  - Test suite check: 19/19 passed (`tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_14/EVIDENCE.md`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c6fa892af815d5fcda928d6af776eb791e192732` (PASSED).
