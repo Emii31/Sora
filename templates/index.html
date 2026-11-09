@@ -8142,10 +8142,10 @@ async function navEmotionCurve(targetMonth) {
   var now = new Date();
   var month = targetMonth || (now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0'));
   _emotionCalMonth = month;
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载情绪日历...</span></div>', 'chat');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading emotion calendar...</span></div>', 'chat');
   cachedFetch('/api/emotion/month/' + month, 'emotion_month_' + month, function(data) {
     if (data._error) {
-      detailContent.innerHTML = '<div class="no-data-hint">加载失败</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Failed to load</div>';
       return;
     }
     detailContent.innerHTML = _buildEmotionCalendarHtml(month, data || {});
@@ -8164,16 +8164,16 @@ function _buildEmotionCalendarHtml(month, dayData) {
   // ── v2: dark glass panel wraps the whole calendar view ─────────────
   var h = '<div class="emo-panel">';
   h += '<div class="emo-section-h">' +
-       '<span class="title">情绪日历</span>' +
+       '<span class="title">Emotion Calendar</span>' +
        '<span class="spacer"></span>' +
-       '<span class="meta">' + year + '年' + mon + '月</span>' +
+       '<span class="meta">' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mon - 1] + ' ' + year + '</span>' +
        '</div>';
-  h += '<div class="emo-subtitle">每天一个小色点，颜色 = dominant mood，亮度 = 当天的能量。点哪天看哪天的情绪河。</div>';
+  h += '<div class="emo-subtitle">Each dot represents a day: color = dominant mood, brightness = daily energy. Click any day to view its emotion river.</div>';
 
   // Month nav
   h += '<div class="emo-cal-h">' +
        '<button class="nav-btn" onclick="navEmotionCurve(\'' + prevM + '\')" aria-label="prev">&lsaquo;</button>' +
-       '<span class="month-label">' + year + ' 年 ' + mon + ' 月</span>' +
+       '<span class="month-label">' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mon - 1] + ' ' + year + '</span>' +
        '<button class="nav-btn" onclick="navEmotionCurve(\'' + nextM + '\')"' +
        (isCurrentMonth ? ' disabled' : '') + ' aria-label="next">&rsaquo;</button>' +
        '</div>';
@@ -8207,7 +8207,7 @@ function _buildEmotionCalendarHtml(month, dayData) {
     if (info) {
       var color = MOOD_COLORS[info.dominant_mood] || '#AAAAAA';
       h += '<div class="mood-dot" style="background:' + color + ';color:' + color + '" ' +
-           'title="' + escapeHtml(info.dominant_mood) + ' (' + info.count + '条)"></div>';
+           'title="' + escapeHtml(info.dominant_mood) + ' (' + info.count + ' entries)"></div>';
     }
     h += '</div>';
   }
@@ -8227,25 +8227,25 @@ function _buildEmotionCalendarHtml(month, dayData) {
 
     h += '<div class="emo-section-divider"></div>';
     h += '<div class="emo-section-h">' +
-         '<span class="title">本月概览</span>' +
+         '<span class="title">Monthly Overview</span>' +
          '<span class="spacer"></span>' +
-         '<span class="meta">' + totalDays + ' 天有记录</span>' +
+         '<span class="meta">' + totalDays + ' days recorded</span>' +
          '</div>';
     h += '<div class="emo-chips" style="margin-top:10px">';
     sorted.slice(0, 6).forEach(function(pair) {
       var color = MOOD_COLORS[pair[0]] || '#AAA';
       h += '<span class="emo-chip"><i style="background:' + color + '"></i>' +
-           escapeHtml(pair[0]) + ' <span class="pct">' + pair[1] + '天</span></span>';
+           escapeHtml(pair[0]) + ' <span class="pct">' + pair[1] + ' days</span></span>';
     });
     h += '</div>';
     h += '<div style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.45)">' +
-         '月均 valence: <b style="color:' + avgVColor + '">' +
+         'Monthly avg valence: <b style="color:' + avgVColor + '">' +
          (avgV >= 0 ? '+' : '') + avgV.toFixed(2) + '</b></div>';
   }
 
   // "Today" quick link
   h += '<div style="text-align:center;margin-top:20px">';
-  h += '<button class="emo-cta-btn" onclick="_emotionDayDetail(\'' + today + '\')">查看今天详情 →</button>';
+  h += '<button class="emo-cta-btn" onclick="_emotionDayDetail(\'' + today + '\')">View Today\'s Details →</button>';
   h += '</div>';
 
   h += '</div>'; // /.emo-panel
@@ -8255,7 +8255,7 @@ function _buildEmotionCalendarHtml(month, dayData) {
 function _emotionDayDetail(dateStr) {
   // Use the top-level back button system (set target=emotionCalendar) instead
   // of an inline button — avoids the duplicate "← Back to Chat / ← Back to Calendar" stack.
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载情绪数据...</span></div>', 'emotionCalendar');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading emotion data...</span></div>', 'emotionCalendar');
   cachedFetch('/api/emotion/' + dateStr, 'emotion_' + dateStr, function(data) {
     var entries = Array.isArray(data) ? data : [];
     detailContent.innerHTML = buildEmotionCurveHtml(entries, dateStr);

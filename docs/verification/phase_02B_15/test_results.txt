@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 20 items
+
+tests/test_memory_browser_dom_render.py .                                [  5%]
+tests/test_journal_navigation_frontend.py ..                             [ 15%]
+tests/test_commitment_dedup.py ...                                       [ 30%]
+tests/test_commitment_id_stability.py ..                                 [ 40%]
+tests/test_mobile_notification_memory_ui.py ............                 [100%]
+
+============================== 20 passed in 9.08s ==============================

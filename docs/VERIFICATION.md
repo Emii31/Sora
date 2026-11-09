@@ -149,3 +149,9 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 696056bb7ddaf1eacd4182c2b31929f51372dff1` (PASSED).
 
+- **Phase 2B.16 Verification (Emotion Calendar Overview Localization)**:
+  - `templates/index.html`: Translated Emotion Calendar overview UI strings (`navEmotionCurve`, `_buildEmotionCalendarHtml`, and loading state in `_emotionDayDetail`) to English with Sora conventions. Covers title ("Emotion Calendar"), subtitle, month/year displays (`Nov 2026`), navigation labels, day tooltips (`[count] entries`), monthly overview ("Monthly Overview", recorded days, chip counts, monthly avg valence), and "Today" quick link ("View Today's Details →").
+  - Preservation checks: Monday-first layout, local date calculations (`_miruLocalDateKey`), month keys, day-click dates (`_emotionDayDetail`), mood codes, colors, cache keys, routes, and saved content preserved. Exact 12,807 lines maintained.
+  - Node & DOM verification (`tests/test_emotion_calendar_dom.js`): Verified English month displays, Monday-first weekday order (`Mon`-`Sun`), day handler integration, and tooltip counts.
+  - Test suite check: 26/26 passed (`tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_16/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).

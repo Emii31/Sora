@@ -185,3 +185,16 @@
 - Ran focused test suite (20/20 passed: `tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_15/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 696056bb7ddaf1eacd4182c2b31929f51372dff1` (PASSED).
 
+## 2026-11-10 (Phase 2B.16: Emotion Calendar Overview Localization)
+- Translated Emotion Calendar overview UI strings in `templates/index.html` (`navEmotionCurve`, `_buildEmotionCalendarHtml`, and loading state in `_emotionDayDetail`) to English with Sora conventions:
+  - Title & Subtitle: `"Emotion Calendar"`, `"Each dot represents a day: color = dominant mood, brightness = daily energy. Click any day to view its emotion river."`
+  - Month/year displays & headers: English short month and year format (`"Nov 2026"`).
+  - Day tooltips: `[mood] ([count] entries)`.
+  - Monthly overview section: `"Monthly Overview"`, `[totalDays] days recorded`, chip counts (`[count] days`), `Monthly avg valence: [valence]`.
+  - Quick action link: `"View Today's Details →"`.
+  - Loading / error states: `"Loading emotion calendar..."`, `"Failed to load"`, `"Loading emotion data..."`.
+- Preserved Monday-first layout, local date calculations (`_miruLocalDateKey`), month keys, day-click dates (`_emotionDayDetail`), mood codes, colors, cache keys, routes, and saved content.
+- Maintained exact 12,807 line count (`templates/index.html`).
+- Verified calendar renderer in Node with fixed month and synthetic mood data (`tests/test_emotion_calendar_dom.js`).
+- Ran test suite (26/26 passed: `tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_16/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 0b37a8a111a71192081ae53a972e37cb0f4deb97` (PASSED).
