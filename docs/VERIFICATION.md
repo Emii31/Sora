@@ -163,3 +163,11 @@
   - Test suite check: 26/26 passed (`tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_17/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).
+
+- **Phase 2B.18 Verification (My Mood Dashboard Translation)**:
+  - `templates/index.html`: Translated My Mood dashboard UI strings (`navMiruEmotion`, `buildMiruEmotionHtml`, `buildMiruEmotionRiver`) to English with Sora conventions. Covers headers (`Mood Dashboard`, `Mood River`, `Mood Log`), subtitles, hero relationship card (`Together for N days`, `📅 First met YYYY-MM-DD`), current mood display, stats, and timeline log with singular/plural support and empty state (`No mood records yet`).
+  - Preservation checks: Mood descriptions, character names, mood codes, relationship dates, numeric values, color interpolation (`_miruValenceColor`), and chart behavior preserved. Exact 12,807 lines maintained.
+  - Node DOM harness (`tests/test_miru_emotion_dom.js`): executed real renderer with synthetic empty/populated histories, day counts, stored mood text, numeric values, and hover tooltips.
+  - Test suite check: 37/37 passed across emotion-related and core UI suites. Evidence under `docs/verification/phase_02B_18/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).

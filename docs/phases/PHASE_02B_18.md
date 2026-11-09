@@ -1,0 +1,12 @@
+## 2026-11-10 (Phase 2B.18: My Mood Dashboard Translation)
+- Translated frontend-owned UI strings in `buildMiruEmotionHtml` (`templates/index.html`):
+  - Dashboard headers ("Mood Dashboard", "Mood River", "Emotion Log"), subtitles, and hero card labels ("Days together", "First met").
+  - Current mood display, stats ("Avg Valence", "Avg Intensity", "Peak", "Trough", "Records"), and history timeline entries.
+  - History metadata labels and empty-state placeholders ("No mood records yet").
+- Preserved all mood classifications, numeric values, color scales, relationship tracking logic, and canvas rendering behavior.
+- Maintained exact 12,807 line count (`templates/index.html`).
+- Verified via Node DOM harness (`tests/test_miru_emotion_dom.js`):
+  - Validated English translation of dashboard components, statistics, and timeline rows.
+  - Mocked canvas/hover functionality confirmed correct tooltips in English.
+- Ran comprehensive regression suite (37/37 passed across emotion-related and core UI tests).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).

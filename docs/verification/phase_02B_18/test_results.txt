@@ -1,0 +1,85 @@
+Miru Tooltip HTML: <b style="color:#FFB7C5">Warm</b> · <span style="font-variant-numeric:tabular-nums">2026-11-10 10:00</span><div style="opacity:0.7;font-size:11px;margin-top:2px">valence +0.70 · arousal 0.50</div><div style="opacity:0.85;margin-top:4px;font-size:11px">Feeling close</div>
+All My Mood dashboard DOM assertions passed successfully.
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 37 items
+
+tests/test_miru_emotion_v2.py .........                                  [ 24%]
+tests/test_miru_emotion_api.py ...                                       [ 32%]
+tests/test_miru_emotion_prompt.py ......                                 [ 48%]
+tests/test_miru_emotion_context.py .....                                 [ 62%]
+tests/test_emotion_local_date_frontend.py ..                             [ 67%]
+tests/test_mobile_notification_memory_ui.py ............                 [100%]
+
+=============================== warnings summary ===============================
+tests/test_miru_emotion_prompt.py::test_prompt_contains_soul_and_blocks
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_prompt_contains_soul_and_blocks returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_prompt.py::test_call_miru_emotion_eval_valid
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_call_miru_emotion_eval_valid returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_prompt.py::test_call_miru_emotion_eval_invalid
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_call_miru_emotion_eval_invalid returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_prompt.py::test_screenshot_path_text_only
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_screenshot_path_text_only returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_prompt.py::test_chat_path_with_image_desc_text_only
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_chat_path_with_image_desc_text_only returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_prompt.py::test_today_chat_image_placeholder_in_user_text
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_prompt.py::test_today_chat_image_placeholder_in_user_text returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_context.py::test_format_today_chat_handles_image_placeholders
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_context.py::test_format_today_chat_handles_image_placeholders returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_context.py::test_format_user_emotion_arc_buckets
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_context.py::test_format_user_emotion_arc_buckets returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_context.py::test_seconds_since_helpers
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_context.py::test_seconds_since_helpers returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_context.py::test_evaluate_miru_emotion_writes_state_and_history
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_context.py::test_evaluate_miru_emotion_writes_state_and_history returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_miru_emotion_context.py::test_evaluate_miru_emotion_skips_on_none_result
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_miru_emotion_context.py::test_evaluate_miru_emotion_skips_on_none_result returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 37 passed, 11 warnings in 1.10s ========================

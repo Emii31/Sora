@@ -212,3 +212,13 @@
 - Verified via Node harness (`tests/test_emotion_river_dom.js`) loading and executing the real `buildEmotionCurveHtml` parser with DOM/canvas mocks.
 - Ran test suite (26/26 passed: `tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_17/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).
+
+## 2026-11-10 (Phase 2B.18: My Mood Dashboard Translation)
+- Translated My Mood dashboard UI strings in `templates/index.html` (`navMiruEmotion`, `buildMiruEmotionHtml`, `buildMiruEmotionRiver`) to English with Sora conventions:
+  - Headers & Subtitles: `"Mood Dashboard"`, `"Mood River"`, `"Mood Log"`, trajectories description.
+  - Relationship Hero card: `"Together for N days"`, `📅 First met YYYY-MM-DD`, singular/plural day labels (`"day"` / `"days"`).
+  - Current mood display, valence/arousal stats, history timeline entries, and empty state (`"No mood records yet"`).
+- Preserved mood descriptions, character names, mood codes, relationship dates, numeric values, color interpolation (`_miruValenceColor`), chart behavior, and exact 12,807-line template integrity.
+- Verified via Node DOM harness (`tests/test_miru_emotion_dom.js`) executing the real renderers with synthetic empty and populated histories, day counts, stored mood text, numeric values, and hover tooltips.
+- Ran comprehensive test suite (37/37 passed across emotion-related and core UI suites). Evidence saved under `docs/verification/phase_02B_18/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).

@@ -9053,14 +9053,14 @@ function buildEmotionCurveHtml(entries, dateStr) {
 async function navMiruEmotion() {
   setSidebarActive('navMiruEmotion');
   _nextNavGen();
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载我的心情...</span></div>', 'chat');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading My Mood...</span></div>', 'chat');
   // Load both caches in parallel
   var curDone = false, histDone = false;
   var curData = null, histData = null;
   function tryRender() {
     if (!curDone || !histDone) return;
     if ((curData && curData._error) || (histData && histData._error)) {
-      detailContent.innerHTML = '<div class="no-data-hint">加载失败</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Failed to load</div>';
       return;
     }
     detailContent.innerHTML = buildMiruEmotionHtml(curData, histData);
@@ -9086,26 +9086,26 @@ function buildMiruEmotionHtml(curData, history) {
   let html = '<div class="emo-panel">';
 
   html += '<div class="emo-section-h">' +
-          '<span class="title">心情仪表盘</span>' +
+          '<span class="title">Mood Dashboard</span>' +
           '<span class="spacer"></span>' +
-          '<span class="meta">第 ' + displayDays + ' 天</span>' +
+          '<span class="meta">Day ' + displayDays + '</span>' +
           '</div>';
-  html += '<div class="emo-subtitle">我现在的心情，以及最近 50 段心情变化的轨迹。</div>';
+  html += '<div class="emo-subtitle">My current mood and trajectory over the last 50 mood entries.</div>';
 
   // --- Hero card (pink glass on dark — looks like a glass card) ---
   html += '<div class="emo-rel-hero">';
   html += '<div class="row">';
-  html += '<span class="label">我们在一起</span>';
+  html += '<span class="label">Together for</span>';
   html += '<span class="days">' + displayDays + '</span>';
-  html += '<span class="day-label">天</span>';
+  html += '<span class="day-label">' + (displayDays === 1 ? 'day' : 'days') + '</span>';
   html += '</div>';
   if (firstMeet) {
-    html += '<div class="first-meet">\u{1F5D3}\u{FE0F}  首次相遇 ' + escapeHtml(firstMeet) + '</div>';
+    html += '<div class="first-meet">📅  First met ' + escapeHtml(firstMeet) + '</div>';
   }
   html += '</div>';
 
   // --- Current mood: orb + name + reason ---
-  const moodDisplay = current.mood || '平静';
+  const moodDisplay = current.mood || 'Calm';
   const valence = (current.valence || 0);
   const arousal = (current.arousal || 0.2);
   const reason = current.reason || '';
@@ -9125,21 +9125,21 @@ function buildMiruEmotionHtml(curData, history) {
   if (history && history.length > 1) {
     html += '<div class="emo-section-divider"></div>';
     html += '<div class="emo-section-h">' +
-            '<span class="title">心情长河</span>' +
+            '<span class="title">Mood River</span>' +
             '<span class="spacer"></span>' +
-            '<span class="meta">最近 ' + history.length + (rawHistoryCount === history.length ? ' 段' : '/' + rawHistoryCount + ' 段') + '</span>' +
+            '<span class="meta">Last ' + history.length + (rawHistoryCount === history.length ? (history.length === 1 ? ' entry' : ' entries') : '/' + rawHistoryCount + ' entries') + '</span>' +
             '</div>';
     html += '<div class="emo-subtitle" style="margin-bottom:10px">' +
-            'valence 越高色带越粉，越低越紫蓝。我每次心情真正变化，都会留一道光。</div>';
+            'Higher valence shifts the ribbon toward pink, lower toward purple-blue. Every genuine emotional shift leaves a trail of light.</div>';
     html += buildMiruEmotionRiver(history);
   }
 
   // --- History timeline ---
   if (history && history.length > 0) {
     html += '<div class="emo-section-divider"></div>';
-    html += '<div class="emo-section-h"><span class="title">心情记录</span>' +
+    html += '<div class="emo-section-h"><span class="title">Mood Log</span>' +
             '<span class="spacer"></span><span class="meta">' +
-            (rawHistoryCount === history.length ? history.length + ' 段' : history.length + ' 段 · 已压缩 ' + rawHistoryCount + ' 条原始记录') +
+            (rawHistoryCount === history.length ? (history.length === 1 ? '1 entry' : history.length + ' entries') : history.length + ' entries · Compressed ' + rawHistoryCount + ' raw records') +
             '</span></div>';
     html += '<div class="emo-timeline" style="margin-top:6px">';
     history.slice().reverse().forEach(function(h) {
@@ -9147,7 +9147,7 @@ function buildMiruEmotionHtml(curData, history) {
       const color = _miruValenceColor(v);
       const ts = (h.timestamp || '').slice(11, 16);
       const valSign = v >= 0 ? '+' : '';
-      const repeatTxt = h._repeatCount > 1 ? '<span class="dev">· 连续' + h._repeatCount + '次</span>' : '';
+      const repeatTxt = h._repeatCount > 1 ? '<span class="dev">· ' + h._repeatCount + 'x consecutive</span>' : '';
       html += '<div class="emo-timeline-row">' +
               '<span class="dot" style="background:' + color + ';box-shadow:0 0 6px ' + color + '80"></span>' +
               '<span class="time">' + escapeHtml(ts) + '</span>' +
@@ -9158,7 +9158,7 @@ function buildMiruEmotionHtml(curData, history) {
     });
     html += '</div>';
   } else {
-    html += '<div style="padding:40px 0;text-align:center;color:rgba(255,255,255,0.5)">还没有心情记录</div>';
+    html += '<div style="padding:40px 0;text-align:center;color:rgba(255,255,255,0.5)">No mood records yet</div>';
   }
 
   html += '</div>'; // /.emo-panel
@@ -9232,15 +9232,15 @@ function buildMiruEmotionRiver(entries) {
       xMin: 0, xMax: Math.max(1, N - 1),
       height: 200, showAxis: true,
       xTicks,
-      emptyText: '还没有心情记录',
+      emptyText: 'No mood records',
     });
     draw();
     attachMoodRiverHover(cv, (raw) => {
       const ts = (raw.timestamp || '').slice(0, 16).replace('T', ' ');
       const reason = raw.reason ? '<div style="opacity:0.85;margin-top:4px;font-size:11px">' + escapeHtml(String(raw.reason).slice(0, 140)) + '</div>' : '';
-      const rep = raw._repeatCount > 1 ? ' · 连续' + raw._repeatCount + '次已压缩' : '';
+      const rep = raw._repeatCount > 1 ? ' · Compressed ' + raw._repeatCount + ' repeats' : '';
       return (
-        '<b style="color:' + (raw.color || '#fff') + '">' + escapeHtml(raw.mood || '心情') + '</b>' +
+        '<b style="color:' + (raw.color || '#fff') + '">' + escapeHtml(raw.mood || 'Mood') + '</b>' +
         ' · <span style="font-variant-numeric:tabular-nums">' + escapeHtml(ts) + '</span>' +
         '<div style="opacity:0.7;font-size:11px;margin-top:2px">valence ' +
         (raw.v >= 0 ? '+' : '') + raw.v.toFixed(2) +
