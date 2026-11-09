@@ -178,3 +178,10 @@
 - Verified test suite: 20/20 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_14/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 0e1cd05d7665984df558cd99aab49ec28dd941c6` (PASSED).
 
+## 2026-11-10 (Phase 2B.15: Commitments Calendar Localization & Samsung String Restoration)
+- Translated Commitments day-detail heading in `_ddlShowDayDetail` from Chinese (`' 的承诺'`) to English (`'Commitments for ' + dateStr`), preserving date keys, Monday-first layout, navigation, status colors, and stored commitment text.
+- Restored the exact Samsung background instruction string in `_showBgKeepAliveGuide()` to `'1. 设置 → 电池 → 后台使用限制 → 从不休眠应用 → 添加 Miru'`.
+- Verified calendar rendering, Monday-first layout, English heading, and day-detail date passed to the handler via DOM/Node test.
+- Ran focused test suite (20/20 passed: `tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_15/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 696056bb7ddaf1eacd4182c2b31929f51372dff1` (PASSED).
+

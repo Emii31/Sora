@@ -142,3 +142,10 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 0e1cd05d7665984df558cd99aab49ec28dd941c6` (PASSED).
 
+- **Phase 2B.15 Verification (Commitments Calendar Localization & Samsung String Restoration)**:
+  - `templates/index.html`: Translated day-detail heading in `_ddlShowDayDetail` (`Commitments for [dateStr]`) and restored Samsung background keep-alive instruction string. Preserved 12,807 lines exact, Monday-first layout, date keys, and handlers.
+  - Node & DOM verification: Fixed synthetic month and commitments tested in Node; confirmed English heading, Monday-first layout, and correct date handler integration.
+  - Test suite check: 20/20 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_15/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 696056bb7ddaf1eacd4182c2b31929f51372dff1` (PASSED).
+
