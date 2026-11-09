@@ -86,8 +86,13 @@ def test_first_run_wizard_exposes_expected_paths():
     assert "Auto-login" not in html
     assert "value=\"miru/server:0.2.0\"" in html
     assert "miru/server:0.2.0" in html
+    assert "image: valueOf('selfImage') || 'miru/server:0.2.0'" in html
     assert "miru/server:0.1.0" not in html
     assert "sora/server:0.2.0" not in html
+    assert "value=\"/opt/miru-host\"" in html
+    assert "/opt/miru-host" in html
+    assert "host_home: valueOf('selfHostHome') || '/opt/miru-host'" in html
+    assert "/opt/sora-host" not in html
     assert "ccr.ccs.tencentyun.com/contextlife/miru-server" not in html
     assert "Initial connection will trust this server's fingerprint" in html
     assert "Please enter SSH username matching server login" in html

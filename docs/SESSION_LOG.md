@@ -122,3 +122,10 @@
 - Updated `tests/test_first_run_wizard.py` to explicitly verify both image defaults (`miru/server:0.2.0`), restore the scoped `<h1>API Key</h1>` assertion, and restore checks for opening the selected port and checking previous deployment tasks.
 - Ran first-run wizard and chat-error tests (`tests/test_first_run_wizard.py` and `tests/test_chat_error_copy.py`) via `PYTHONPATH=. .venv/bin/python -m pytest`, with 7/7 tests passed. Saved evidence under `docs/verification/phase_02B_9_deploy_fix/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py e40d2dbe88f00d794397d2186c7353995148789b` (PASSED).
+
+## 2026-11-10 (Phase 2B.10: Onboarding Questionnaire Translation)
+- Aligned `selfHostHome` defaults in `templates/login.html` and tested image/directory defaults.
+- Translated the in-app onboarding questionnaire overlay in `templates/index.html` (welcome heading, subtitle, skip/next/finish buttons, 5 questions, text placeholders, option labels including student, casual, night_owl).
+- Preserved all onboarding keys, option values, selection logic, async submission, and persistence behavior.
+- Ran onboarding and wizard test suite (20/20 passed). Evidence saved under `docs/verification/phase_02B_10/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py` (PASSED).

@@ -98,3 +98,10 @@
   - Test suite check: 7/7 passed (`tests/test_first_run_wizard.py` and `tests/test_chat_error_copy.py`). Evidence under `docs/verification/phase_02B_9_deploy_fix/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py e40d2dbe88f00d794397d2186c7353995148789b` (PASSED).
+
+- **Phase 2B.10 Verification (Onboarding Questionnaire Translation)**:
+  - `templates/login.html`: Aligned `selfHostHome` default to `/opt/miru-host`.
+  - `templates/index.html`: Translated onboarding overlay UI strings, buttons, questions, placeholders, and option values while preserving question keys and submission payload structures.
+  - Test suite check: 20/20 passed (`tests/test_first_run_wizard.py`, `tests/test_chat_error_copy.py`, `tests/test_onboarding_persistence.py`, `tests/test_onboarding_api_setup_skip.py`, `tests/test_onboarding_async.py`). Evidence under `docs/verification/phase_02B_10/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 778bf240ff626a40b66cf3137bff56ac10464233` (PASSED).

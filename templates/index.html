@@ -3866,8 +3866,8 @@ async function _doLogin() {
     <div class="ob-question" id="obQuestion"></div>
     <div id="obInput"></div>
     <div class="ob-actions">
-      <button class="ob-btn ob-btn-skip" id="obSkip" onclick="_obNext(true)">跳过</button>
-      <button class="ob-btn ob-btn-next" id="obNext" onclick="_obNext(false)">下一步</button>
+      <button class="ob-btn ob-btn-skip" id="obSkip" onclick="_obNext(true)">Skip</button>
+      <button class="ob-btn ob-btn-next" id="obNext" onclick="_obNext(false)">Next</button>
     </div>
   </div>
 </div>
@@ -11554,24 +11554,24 @@ async function initPWA() {
 
 // ===== Onboarding =====
 var _obQuestions = [
-  { key: 'name', q: '该怎么称呼你？', type: 'text', placeholder: '输入你的名字...' },
-  { key: 'occupation', q: '你是？', type: 'options', options: [
-    { value: 'student', label: '学生' },
-    { value: 'developer', label: '开发者' },
-    { value: 'designer', label: '设计师' },
-    { value: 'creator', label: '创作者' },
-    { value: 'other', label: '其他' },
+  { key: 'name', q: 'What should I call you?', type: 'text', placeholder: 'Enter your name...' },
+  { key: 'occupation', q: 'What is your occupation?', type: 'options', options: [
+    { value: 'student', label: 'Student' },
+    { value: 'developer', label: 'Developer' },
+    { value: 'designer', label: 'Designer' },
+    { value: 'creator', label: 'Creator' },
+    { value: 'other', label: 'Other' },
   ]},
-  { key: 'focus', q: '最近在忙什么？', type: 'text', placeholder: '比如期末考试、找工作、学新技能...' },
-  { key: 'style', q: '希望 Miru 用什么风格跟你说话？', type: 'options', options: [
-    { value: 'casual', label: '随意轻松' },
-    { value: 'polite', label: '礼貌温和' },
-    { value: 'playful', label: '活泼俏皮' },
+  { key: 'focus', q: 'What are you busy with lately?', type: 'text', placeholder: 'e.g., exams, job hunting, learning new skills...' },
+  { key: 'style', q: 'What style of conversation do you prefer?', type: 'options', options: [
+    { value: 'casual', label: 'Casual & Relaxed' },
+    { value: 'polite', label: 'Polite & Gentle' },
+    { value: 'playful', label: 'Lively & Playful' },
   ]},
-  { key: 'schedule', q: '你的作息？', type: 'options', options: [
-    { value: 'early_bird', label: '早睡早起' },
-    { value: 'night_owl', label: '夜猫子' },
-    { value: 'irregular', label: '不固定' },
+  { key: 'schedule', q: 'What is your schedule like?', type: 'options', options: [
+    { value: 'early_bird', label: 'Early Bird' },
+    { value: 'night_owl', label: 'Night Owl' },
+    { value: 'irregular', label: 'Irregular' },
   ]},
 ];
 var _obStep = 0;
@@ -11580,8 +11580,8 @@ var _obAnswers = {};
 function _obRender() {
   var overlay = document.getElementById('onboardingOverlay');
   var q = _obQuestions[_obStep];
-  document.getElementById('obTitle').textContent = _obStep === 0 ? '初次见面！' : '';
-  document.getElementById('obSubtitle').textContent = _obStep === 0 ? '回答几个问题，让 Miru 更了解你' : '';
+  document.getElementById('obTitle').textContent = _obStep === 0 ? 'Nice to meet you!' : '';
+  document.getElementById('obSubtitle').textContent = _obStep === 0 ? 'Answer a few questions so Sora can get to know you better' : '';
   document.getElementById('obQuestion').textContent = q.q;
   // Progress dots
   var dotsHtml = '';
@@ -11606,7 +11606,7 @@ function _obRender() {
     inputDiv.innerHTML = html;
   }
   // Button text
-  document.getElementById('obNext').textContent = _obStep === _obQuestions.length - 1 ? '完成' : '下一步';
+  document.getElementById('obNext').textContent = _obStep === _obQuestions.length - 1 ? 'Finish' : 'Next';
 }
 
 function _obSelect(key, value) {

@@ -1,0 +1,35 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 21 items
+
+tests/test_onboarding_dom_render.py .                                    [  4%]
+tests/test_first_run_wizard.py ....                                      [ 23%]
+tests/test_chat_error_copy.py ...                                        [ 38%]
+tests/test_onboarding_persistence.py .....                               [ 61%]
+tests/test_onboarding_api_setup_skip.py .....                            [ 85%]
+tests/test_onboarding_async.py ...                                       [100%]
+
+=============================== warnings summary ===============================
+tests/test_onboarding_async.py::test_initialize_returns_fast_not_blocking_on_llm
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_onboarding_async.py::test_initialize_returns_fast_not_blocking_on_llm returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_onboarding_async.py::test_concurrent_submits_produce_exactly_one_greeting
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_onboarding_async.py::test_initialize_returns_fast_not_blocking_on_llm returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_onboarding_async.py::test_second_submit_after_first_finished_is_skipped
+  /mnt/data/Companion/Miru/.venv/lib/python3.11/site-packages/_pytest/python.py:191: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_onboarding_async.py::test_second_submit_after_first_finished_is_skipped returned <class 'tuple'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 21 passed, 3 warnings in 4.74s ========================

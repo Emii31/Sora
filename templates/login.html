@@ -1044,7 +1044,7 @@ body[data-view="api-setup"] .note {
             </div>
             <div class="field">
               <label for="selfHostHome">Server save location</label>
-              <input id="selfHostHome" type="text" value="/opt/sora-host" autocomplete="off">
+              <input id="selfHostHome" type="text" value="/opt/miru-host" autocomplete="off">
             </div>
             <div class="grid-2">
               <div class="field">
@@ -1786,7 +1786,7 @@ body[data-view="api-setup"] .note {
 		      ssh_password: valueOf('selfPassword'),
 		      ssh_user: valueOf('selfUser'),
 		      ssh_port: valueOf('selfSshPort') || 22,
-		      host_home: valueOf('selfHostHome') || '/opt/sora-host',
+		      host_home: valueOf('selfHostHome') || '/opt/miru-host',
 		      port_start: valueOf('selfPortStart') || 5001,
 	      port_end: valueOf('selfPortEnd') || 5010,
 	      image: valueOf('selfImage') || 'miru/server:0.2.0',
