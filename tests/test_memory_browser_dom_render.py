@@ -49,3 +49,11 @@ def test_memory_browser_dom_render():
     assert res["detailDeleteBtn"] is True
     assert res["detailRelatedDdl"] is True
     assert res["detailContentHeader"] is True
+    assert res["coreTitle"] is True
+    assert res["coreStatus"] is True
+    assert res["coreBlock1"] is True
+    assert res["coreBlock2"] is True
+    assert res["journalListTitle"] is True
+    assert res["journalListSubtitle"] is True
+    assert res["journalBookMemories"] is True
+    assert res["journalBookStats"] is True

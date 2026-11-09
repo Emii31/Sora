@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: 2B.12 (Memory Detail View and Action Dialogs Translation - Completed)
-- **Current Status**: Translated memory detail view (metadata, content headers), archive/delete/edit/merge dialogs, and feedback messages. Verified detail view rendering and actions through existing memory DOM tests. Line count 12807 preserved.
+- **Phase**: 2B.13 (Core Portrait and Journal Views Translation - Completed)
+- **Current Status**: Translated Core Portrait and Journal views (list view, book view, highlights, narrative fallback, stats strip, navigation buttons, share/export copy, and legacy badges) in `templates/index.html`. Verified via `tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, and regression suites. Line count 12807 preserved.
 - **Next Action**: None authorized.

@@ -5240,10 +5240,10 @@ async function viewMemoryFile(path) {
 
 function navCoreMemory(backTarget) {
   _nextNavGen();
-  showDetailView('<div class="loading"><div class="spinner"></div><span>\u52A0\u8F7D\u6838\u5FC3\u753B\u50CF...</span></div>', backTarget || 'memoryBrowser');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading core portrait...</span></div>', backTarget || 'memoryBrowser');
   cachedFetch('/api/core-memory', 'core_memory', function(data) {
     if (data && data._error) {
-      detailContent.innerHTML = '<div class="no-data-hint">\u52A0\u8F7D\u5931\u8D25: ' + escapeHtml(String(data._error)) + '</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Load failed: ' + escapeHtml(String(data._error)) + '</div>';
       return;
     }
     detailContent.innerHTML = _renderCoreMemoryHtml(data || {});
@@ -5256,13 +5256,13 @@ function _renderCoreMemoryHtml(data) {
   var persona = blocks.persona || {};
   var html = '<div class="slot-detail">';
   html += '<div class="slot-detail-header">';
-  html += '<span class="slot-detail-icon">\uD83D\uDC9E</span>';
+  html += '<span class="slot-detail-icon">\uD83D\uDC96</span>';
   html += '<div class="slot-detail-title-block">';
-  html += '<h2>\u6838\u5FC3\u753B\u50CF</h2>';
-  html += '<div class="slot-detail-status">\u59CB\u7EC8\u6CE8\u5165\u4E3B\u5BF9\u8BDD\u548C AttentionEngine</div>';
+  html += '<h2>Core Portrait</h2>';
+  html += '<div class="slot-detail-status">Always injected into main chat and AttentionEngine</div>';
   html += '</div></div>';
-  html += _renderCoreMemoryBlock('\u6211\u7406\u89E3\u7684\u4F60', human.content || '', human.chars || 0);
-  html += _renderCoreMemoryBlock('\u6211\u548C\u4F60\u7684\u5173\u7CFB', persona.content || '', persona.chars || 0);
+  html += _renderCoreMemoryBlock('My understanding of you', human.content || '', human.chars || 0);
+  html += _renderCoreMemoryBlock('My relationship with you', persona.content || '', persona.chars || 0);
   html += '</div>';
   return html;
 }
@@ -5273,7 +5273,7 @@ function _renderCoreMemoryBlock(title, content, chars) {
   if (content && content.trim()) {
     html += '<div class="markdown-rendered">' + _renderMarkdown(content) + '</div>';
   } else {
-    html += '<div class="no-data-hint">\u8FD8\u6CA1\u6709\u5185\u5BB9\u3002</div>';
+    html += '<div class="no-data-hint">No content yet.</div>';
   }
   html += '</div>';
   return html;
@@ -5538,8 +5538,8 @@ var _journalEntriesCache = [];
 
 function buildJournalListHtml(entries) {
   var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
-  let html = '<div class="query-result-header"><h2>' + charName + ' 的日记</h2>';
-  html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">她默默看着你的每一天，写下记得的事</div>';
+  let html = '<div class="query-result-header"><h2>' + charName + "'s Journal</h2>";
+  html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Watching over your days silently and recording what matters</div>';
   html += '</div>';
 
   // Today (local) — used to pin a "not yet" placeholder to the top
@@ -5560,7 +5560,7 @@ function buildJournalListHtml(entries) {
     var mood = e.mood || {};
     var isTodayPending = e._todayPending === true;
     var emoji = mood.emoji || (isTodayPending ? '🌙' : '📖');
-    var title = e.title || (isTodayPending ? '今天' : (e.has_json ? '' : '（旧日记，待迁移）'));
+    var title = e.title || (isTodayPending ? 'Today' : (e.has_json ? '' : '(Legacy journal, pending migration)'));
     var moodLabel = mood.label || '';
 
     if (isTodayPending) {
@@ -5577,9 +5577,9 @@ function buildJournalListHtml(entries) {
     html += '<span class="jr-title">' + escapeHtml(title || '—') + '</span></div>';
     if (moodLabel) html += '<div class="jr-mood">' + escapeHtml(moodLabel) + '</div>';
     if (isTodayPending) {
-      html += '<div class="jr-today-wait">' + escapeHtml(charName) + ' 还没来得及写啦，等今天结束再来吧～</div>';
+      html += '<div class="jr-today-wait">' + escapeHtml(charName) + " hasn't written this yet. Check back when the day is done~</div>";
     } else if (!e.has_json) {
-      html += '<div class="jr-legacy-hint">点击生成新格式</div>';
+      html += '<div class="jr-legacy-hint">Click to generate new format</div>';
     }
     html += '</div>';
     html += '</div>';
@@ -5634,13 +5634,13 @@ function buildJournalBookHtml(journal) {
     });
     html += '</div>';
   } else if (isEmpty) {
-    html += '<div class="jb-narrative"><p style="opacity:0.7">（她记得你没有出现。）</p></div>';
+    html += '<div class="jb-narrative"><p style="opacity:0.7">(She remembers you were not around.)</p></div>';
   }
 
   // Highlights
   if (highlights && highlights.length > 0) {
     html += '<div class="jb-highlights">';
-    html += '<div class="jb-highlights-label">记得的瞬间</div>';
+    html += '<div class="jb-highlights-label">Memories of the Day</div>';
     highlights.forEach(function(h) {
       html += '<div class="jb-highlight">';
       if (h.time) html += '<span class="jb-highlight-time">' + escapeHtml(h.time) + '</span>';
@@ -5656,14 +5656,14 @@ function buildJournalBookHtml(journal) {
   // Stats strip (tiny, subtle)
   if (stats && (stats.first_active || stats.last_active || stats.chat_count)) {
     html += '<div class="jb-stats">';
-    if (stats.first_active) html += '<span>首次活动 ' + escapeHtml(stats.first_active) + '</span>';
-    if (stats.last_active) html += '<span>· 末次 ' + escapeHtml(stats.last_active) + '</span>';
-    if (stats.chat_count) html += '<span>· ' + stats.chat_count + ' 句对话</span>';
+    if (stats.first_active) html += '<span>First active ' + escapeHtml(stats.first_active) + '</span>';
+    if (stats.last_active) html += '<span>· Last active ' + escapeHtml(stats.last_active) + '</span>';
+    if (stats.chat_count) html += '<span>· ' + stats.chat_count + ' messages</span>';
     html += '</div>';
   }
 
   if (isLegacy) {
-    html += '<div class="jb-legacy-badge">原始日记（旧格式）— 点击重生成升级为新日记</div>';
+    html += '<div class="jb-legacy-badge">Legacy journal (old format) — click to regenerate and upgrade</div>';
   }
 
   html += '</div>'; // /jb-page
@@ -5671,7 +5671,7 @@ function buildJournalBookHtml(journal) {
   // Action bar (not captured in share PNG)
   html += '<div class="journal-book-actions">';
   if (prevDate) {
-    html += '<button class="jba-btn" onclick="viewJournalDetail(\'' + escapeHtml(prevDate) + '\')">← 前一天</button>';
+    html += '<button class="jba-btn" onclick="viewJournalDetail(\'' + escapeHtml(prevDate) + '\')">← Previous day</button>';
   } else {
     html += '<span></span>';
   }
@@ -5684,11 +5684,11 @@ function buildJournalBookHtml(journal) {
   // 分享按钮仅在手机端显示 —— 桌面端直接系统截图更顺手，
   // 且移动端分享走 Web Share API 直达 IM/相册才有实际意义。
   if (_isMobile) {
-    html += '<button class="jba-btn jba-share" onclick="_shareJournalAsPng()">分享</button>';
+    html += '<button class="jba-btn jba-share" onclick="_shareJournalAsPng()">Share</button>';
   }
   html += '</div>';
   if (nextDate) {
-    html += '<button class="jba-btn" onclick="viewJournalDetail(\'' + escapeHtml(nextDate) + '\')">后一天 →</button>';
+    html += '<button class="jba-btn" onclick="viewJournalDetail(\'' + escapeHtml(nextDate) + '\')">Next day →</button>';
   } else {
     html += '<span></span>';
   }
@@ -5708,17 +5708,17 @@ function buildJournalBookHtml(journal) {
 // 任一步失败都给出具体错误提示，绝不静默。
 async function _shareJournalAsPng() {
   var card = document.getElementById('journalBookPage');
-  if (!card) { _shareShowError('找不到日记页面'); return; }
+  if (!card) { _shareShowError('Journal page not found'); return; }
 
   // 前置：设备/浏览器是否支持 Web Share with files
   if (!navigator.canShare || !navigator.share || !window.File) {
-    _shareShowError('你的浏览器不支持系统分享面板，请升级或使用 Miru APK');
+    _shareShowError('Your browser does not support system sharing. Please upgrade or use Sora APK');
     return;
   }
 
   var btn = document.querySelector('.jba-btn.jba-share');
   var origText = btn && btn.textContent;
-  if (btn) { btn.textContent = '生成中...'; btn.disabled = true; }
+  if (btn) { btn.textContent = 'Generating...'; btn.disabled = true; }
   var restore = function() { if (btn) { btn.textContent = origText; btn.disabled = false; } };
 
   try {
@@ -5729,26 +5729,26 @@ async function _shareJournalAsPng() {
       { scale: 2, backgroundColor: '#F5F0E8', useCORS: true });
     var blob = await new Promise(function(resolve, reject) {
       canvas.toBlob(function(b) {
-        if (b) resolve(b); else reject(new Error('图片生成失败'));
+        if (b) resolve(b); else reject(new Error('Image generation failed'));
       }, 'image/png');
     });
     var label = _journalCurrentDate || 'journal';
     var file = new File([blob], 'miru-journal-' + label + '.png',
                         { type: 'image/png' });
     if (!navigator.canShare({ files: [file] })) {
-      throw new Error('系统拒绝分享图片文件');
+      throw new Error('System refused to share image file');
     }
     await navigator.share({
       files: [file],
-      title: 'Miru 日记 ' + label,
-      text: 'Miru 的日记 — ' + label,
+      title: 'Sora Journal ' + label,
+      text: "Sora's Journal — " + label,
     });
     // 分享成功（或用户在面板点了取消，两者浏览器都不抛错）
   } catch (e) {
     // AbortError = 用户自己点了取消，不算失败
     if (e && e.name === 'AbortError') { restore(); return; }
     console.error('[share] failed:', e);
-    _shareShowError('分享失败：' + (e && e.message ? e.message : e));
+    _shareShowError('Share failed: ' + (e && e.message ? e.message : e));
   } finally {
     restore();
   }
@@ -5766,7 +5766,7 @@ function _loadHtml2Canvas() {
     return p.catch(function() { return _loadScript(url); });
   }, Promise.reject()).then(function() {
     if (typeof html2canvas === 'undefined') {
-      throw new Error('html2canvas 未加载，请检查网络');
+      throw new Error('html2canvas not loaded, please check network');
     }
   });
 }
@@ -5776,7 +5776,7 @@ function _loadScript(src) {
     var s = document.createElement('script');
     s.src = src;
     s.onload = function() { resolve(); };
-    s.onerror = function() { reject(new Error('加载 ' + src + ' 失败')); };
+    s.onerror = function() { reject(new Error('Failed to load ' + src)); };
     document.head.appendChild(s);
   });
 }
@@ -8015,11 +8015,11 @@ async function showMiruJournalList() {
   // Sidebar's "日记" button was removed; journal now enters from the memory hub.
   setSidebarActive('navMemoryBrowser');
   _nextNavGen();
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载日记列表...</span></div>',
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading journal list...</span></div>',
                  journalListBackTarget);
   cachedFetch('/api/journal', 'journal_list', function(data) {
     if (data._error) {
-      detailContent.innerHTML = '<div class="no-data-hint">加载失败: ' + escapeHtml(data._error) + '</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Load failed: ' + escapeHtml(data._error) + '</div>';
       return;
     }
     var entries = Array.isArray(data) ? data : [];
@@ -8042,10 +8042,10 @@ async function navMiruJournal(backTarget) {
 }
 
 function _buildJournalGalleryHtml_LEGACY(entries) {
-  let html = '<div class="query-result-header"><h2>' + CHARACTER.name + ' 的日记</h2></div>';
+  let html = '<div class="query-result-header"><h2>' + CHARACTER.name + "'s Journal</h2></div>";
 
   if (!entries || entries.length === 0) {
-    html += '<div class="no-data-hint">暂无日记记录</div>';
+    html += '<div class="no-data-hint">No journal records</div>';
     return html;
   }
 
@@ -8072,7 +8072,7 @@ function _buildJournalGalleryHtml_LEGACY(entries) {
     // Tags (time-of-day sections + diary flag)
     html += '<div class="journal-card-tags">';
     if (e.has_diary) {
-      html += '<span class="journal-tag diary">日记</span>';
+      html += '<span class="journal-tag diary">Journal</span>';
     }
     uniqueSections.filter(s => s !== '晨间记录' && s !== '每日回顾').forEach(s => {
       html += '<span class="journal-tag">' + escapeHtml(s) + '</span>';
@@ -8081,7 +8081,7 @@ function _buildJournalGalleryHtml_LEGACY(entries) {
 
     // Meta
     html += '<div class="journal-card-meta">';
-    if (obsCount > 0) html += '<span>' + obsCount + ' 条观察</span>';
+    if (obsCount > 0) html += '<span>' + obsCount + ' observations</span>';
     html += '<span>' + Math.round(e.size / 1024) + ' KB</span>';
     html += '</div>';
 
@@ -8101,10 +8101,10 @@ async function viewJournalDetail(date) {
   if (date === _td) return;
   _nextNavGen();
   _journalCurrentDate = date;
-  showDetailView('<div class="loading"><div class="spinner"></div><span>加载日记...</span></div>', 'miruJournalList');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading journal...</span></div>', 'miruJournalList');
   cachedFetch('/api/journal/' + encodeURIComponent(date), 'journal_' + date, function(data) {
     if (data._error) {
-      detailContent.innerHTML = '<div class="no-data-hint">网络错误: ' + escapeHtml(data._error) + '</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Network error: ' + escapeHtml(data._error) + '</div>';
       return;
     }
     if (data.error) {

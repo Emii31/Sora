@@ -156,3 +156,11 @@
 - Preserved 12,807-line template, internal slot keys, routes, request methods, payload keys, cache invalidation, and navigation.
 - Updated `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran memory UI test suite (13/13 passed). Evidence saved under `docs/verification/phase_02B_12/test_results.txt` and `EVIDENCE.md`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 5343bb58e959662fb8944c91a9928513b4535783` (PASSED).
+
+## 2026-11-10 (Phase 2B.13: Core Portrait and Journal Views Translation)
+- Translated frontend-owned UI strings in Core Portrait and Journal views (`templates/index.html`):
+  - Core Portrait (`navCoreMemory`, `_renderCoreMemoryHtml`, `_renderCoreMemoryBlock`): loading/error states, title ("Core Portrait"), status ("Always injected into main chat and AttentionEngine"), block titles ("My understanding of you", "My relationship with you"), empty state ("No content yet.").
+  - Journal views (`buildJournalListHtml`, `buildJournalBookHtml`, `showMiruJournalList`, `viewJournalDetail`, `_buildJournalGalleryHtml_LEGACY`, `_shareJournalAsPng`): list title/subtitle, today pending status & wait messages, legacy hints & badges, book highlights ("Memories of the Day"), narrative fallback ("(She remembers you were not around.)"), stats strip ("First active", "Last active", "N messages"), prev/next buttons ("← Previous day", "Next day →"), share button ("Share"), and error/loading toast messages.
+- Preserved 12,807-line template, stored entries, narratives, Markdown, dates, counts, character names, routes, cache behavior, back targets, and escaping.
+- Updated `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran test suites (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_mobile_notification_memory_ui.py`) — all passed successfully. Evidence saved under `docs/verification/phase_02B_13/test_results.txt` and `EVIDENCE.md`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).

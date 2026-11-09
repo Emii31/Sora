@@ -31,6 +31,10 @@ global.document = {
 global.escapeHtml = function(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 };
+global._renderMarkdown = function(str) { return str; };
+global._journalFormatDate = function(dateStr) { return { day: '1', monthYear: '2026年11月', weekday: '周一' }; };
+global._journalEntriesCache = [];
+global._isMobile = false;
 
 // Extract functions and variables
 const startIdx = html.indexOf('var _DOMAIN_LABELS = {');
@@ -39,8 +43,18 @@ const codeSnippet = html.substring(startIdx, endIdx);
 
 const buildBrowserMatch = html.match(/function buildMemoryBrowserHtml\(tree, slots\) \{[\s\S]*?\n\}/);
 const detailRenderMatch = html.match(/function _renderSlotDetailHtml\(domain, slot, mainMd, relatedDdls\) \{[\s\S]*?\n\}/);
+const coreMemoryMatch = html.match(/function _renderCoreMemoryHtml\(data\) \{[\s\S]*?\n\}/);
+const coreBlockMatch = html.match(/function _renderCoreMemoryBlock\(title, content, chars\) \{[\s\S]*?\n\}/);
+const journalListMatch = html.match(/function buildJournalListHtml\(entries\) \{[\s\S]*?\n\}/);
+const journalBookMatch = html.match(/function buildJournalBookHtml\(journal\) \{[\s\S]*?\n\}/);
 
-let codeToRun = codeSnippet + '\n' + (detailRenderMatch ? detailRenderMatch[0] : '') + '\n' + (buildBrowserMatch ? buildBrowserMatch[0] : '');
+let codeToRun = codeSnippet + '\n' +
+    (detailRenderMatch ? detailRenderMatch[0] : '') + '\n' +
+    (buildBrowserMatch ? buildBrowserMatch[0] : '') + '\n' +
+    (coreBlockMatch ? coreBlockMatch[0] : '') + '\n' +
+    (coreMemoryMatch ? coreMemoryMatch[0] : '') + '\n' +
+    (journalListMatch ? journalListMatch[0] : '') + '\n' +
+    (journalBookMatch ? journalBookMatch[0] : '');
 
 try {
     eval(codeToRun);
@@ -65,6 +79,9 @@ try {
     const groupHtml = _buildSlotGroupHtml('project', syntheticSlots.project);
     const emptyGroupHtml = _buildSlotGroupHtml('person', syntheticSlots.person);
     const detailHtml = _renderSlotDetailHtml('project', syntheticSlots.project.active[0], '# Hello\n- Test item', ['DDL 1: 2026-12-31']);
+    const coreHtml = _renderCoreMemoryHtml({ blocks: { human: { content: 'User profile', chars: 12 }, persona: { content: 'Relationship profile', chars: 20 } } });
+    const journalListHtml = buildJournalListHtml([{ date: '2026-11-09', title: 'Day 1', has_json: true, mood: { emoji: '🌟', label: 'Happy' } }]);
+    const journalBookHtml = buildJournalBookHtml({ date: '2026-11-09', title: 'Day 1', narrative: 'Had a great day coding.', highlights: [{ time: '10:00', text: 'Started task' }], stats: { first_active: '09:00', last_active: '18:00', chat_count: 42 } });
 
     console.log(JSON.stringify({
         domainLabels,
@@ -87,7 +104,15 @@ try {
         detailLastActive: detailHtml.includes('Last active: 2026-11-10'),
         detailDeleteBtn: detailHtml.includes('Delete'),
         detailRelatedDdl: detailHtml.includes('Related DDL'),
-        detailContentHeader: detailHtml.includes('Content')
+        detailContentHeader: detailHtml.includes('Content'),
+        coreTitle: coreHtml.includes('Core Portrait'),
+        coreStatus: coreHtml.includes('Always injected into main chat and AttentionEngine'),
+        coreBlock1: coreHtml.includes('My understanding of you'),
+        coreBlock2: coreHtml.includes('My relationship with you'),
+        journalListTitle: journalListHtml.includes('Sora\'s Journal'),
+        journalListSubtitle: journalListHtml.includes('Watching over your days silently'),
+        journalBookMemories: journalBookHtml.includes('Memories of the Day'),
+        journalBookStats: journalBookHtml.includes('First active 09:00')
     }));
 } catch (e) {
     console.error("ERROR:", e);

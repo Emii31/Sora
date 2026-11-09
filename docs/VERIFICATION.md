@@ -119,3 +119,11 @@
   - Test suite check: 13/13 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_12/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 5343bb58e959662fb8944c91a9928513b4535783` (PASSED).
+
+- **Phase 2B.13 Verification (Core Portrait and Journal Views Translation)**:
+  - `templates/index.html`: Translated Core Portrait view (`navCoreMemory`, `_renderCoreMemoryHtml`, `_renderCoreMemoryBlock`) and Journal views (`buildJournalListHtml`, `buildJournalBookHtml`, `showMiruJournalList`, `viewJournalDetail`, `_buildJournalGalleryHtml_LEGACY`, `_shareJournalAsPng`).
+  - Components translated: Loading/error states, Core Portrait header/status/blocks, Journal list header/subtitle/today pending/legacy hints, Journal book reader (highlights, narrative fallback, stats strip, legacy badge, prev/next buttons, share button/toasts).
+  - Preservation checks: Stored entries, narratives, Markdown, dates, counts, character names, routes, cache behavior, back targets, escaping, and 12,807-line template preserved exact.
+  - Test suite check: All tests passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_13/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).
