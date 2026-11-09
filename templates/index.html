@@ -4079,7 +4079,7 @@ async function _doLogin() {
       <input id="clearAllConfirmInput" class="edit-input" type="text" placeholder="请输入：清空全部" oninput="onClearAllConfirmInput()">
     </div>
     <div class="card-actions" style="margin-top:14px">
-      <button class="btn btn-cancel" onclick="closeClearAllConfirmModal()">取消</button>
+      <button class="btn btn-cancel" onclick="closeClearAllConfirmModal()">Cancel</button>
       <button class="btn btn-danger" id="clearAllConfirmSubmitBtn" onclick="executeClearAllRecords()" disabled>确认清空</button>
     </div>
   </div>
@@ -8179,7 +8179,7 @@ function _buildEmotionCalendarHtml(month, dayData) {
        '</div>';
 
   // Weekday headers
-  var wds = ['一','二','三','四','五','六','日'];
+  var wds = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   h += '<div class="emo-cal-grid">';
   wds.forEach(function(d) { h += '<div class="wd">' + d + '</div>'; });
   h += '</div>';
@@ -9299,27 +9299,27 @@ function _buildDDLViewHTML(items) {
   var h = '<div id="ddl-view-container" style="padding:16px">';
   // Header
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
-  h += '<h3 style="margin:0;color:var(--text-primary);font-size:18px">DDL 追踪</h3>';
+  h += '<h3 style="margin:0;color:var(--text-primary);font-size:18px">Commitments</h3>';
   h += '<div style="display:flex;gap:8px">';
-  h += '<button onclick="_ddlSwitchView(\'list\')" style="padding:4px 12px;border-radius:8px;border:1px solid var(--border);background:' + (_ddlViewMode==='list'?'var(--airi-pink-mid)':'transparent') + ';color:' + (_ddlViewMode==='list'?'var(--airi-pink)':'var(--text-secondary)') + ';font-size:12px;cursor:pointer">列表</button>';
-  h += '<button onclick="_ddlSwitchView(\'calendar\')" style="padding:4px 12px;border-radius:8px;border:1px solid var(--border);background:' + (_ddlViewMode==='calendar'?'var(--airi-pink-mid)':'transparent') + ';color:' + (_ddlViewMode==='calendar'?'var(--airi-pink)':'var(--text-secondary)') + ';font-size:12px;cursor:pointer">月历</button>';
-  h += '<button onclick="_ddlShowAddForm()" style="padding:4px 12px;border-radius:8px;border:none;background:var(--airi-pink);color:#fff;font-size:12px;cursor:pointer">+ 新建</button>';
+  h += '<button onclick="_ddlSwitchView(\'list\')" style="padding:4px 12px;border-radius:8px;border:1px solid var(--border);background:' + (_ddlViewMode==='list'?'var(--airi-pink-mid)':'transparent') + ';color:' + (_ddlViewMode==='list'?'var(--airi-pink)':'var(--text-secondary)') + ';font-size:12px;cursor:pointer">List</button>';
+  h += '<button onclick="_ddlSwitchView(\'calendar\')" style="padding:4px 12px;border-radius:8px;border:1px solid var(--border);background:' + (_ddlViewMode==='calendar'?'var(--airi-pink-mid)':'transparent') + ';color:' + (_ddlViewMode==='calendar'?'var(--airi-pink)':'var(--text-secondary)') + ';font-size:12px;cursor:pointer">Calendar</button>';
+  h += '<button onclick="_ddlShowAddForm()" style="padding:4px 12px;border-radius:8px;border:none;background:var(--airi-pink);color:#fff;font-size:12px;cursor:pointer">+ New</button>';
   h += '</div></div>';
 
   // Stats bar
   h += '<div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">';
-  h += _ddlStatBadge(active.length, '进行中', 'var(--airi-pink)');
-  if (overdue.length > 0) h += _ddlStatBadge(overdue.length, '逾期', '#e74c3c');
-  h += _ddlStatBadge(completed.length, '已完成', '#27ae60');
+  h += _ddlStatBadge(active.length, 'Active', 'var(--airi-pink)');
+  if (overdue.length > 0) h += _ddlStatBadge(overdue.length, 'Overdue', '#e74c3c');
+  h += _ddlStatBadge(completed.length, 'Completed', '#27ae60');
   h += '</div>';
 
   // Add form (hidden by default)
   h += '<div id="ddlAddForm" style="display:none;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">';
-  h += '<input id="ddlAddTitle" type="text" placeholder="承诺标题" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px;box-sizing:border-box;margin-bottom:8px">';
+  h += '<input id="ddlAddTitle" type="text" placeholder="Commitment Title" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px;box-sizing:border-box;margin-bottom:8px">';
   h += '<div style="display:flex;gap:8px;align-items:center">';
   h += '<input id="ddlAddDeadline" type="date" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:14px">';
-  h += '<button onclick="_ddlSubmitAdd()" style="padding:8px 16px;border-radius:8px;border:none;background:var(--airi-pink);color:#fff;font-size:13px;cursor:pointer;white-space:nowrap">添加</button>';
-  h += '<button onclick="document.getElementById(\'ddlAddForm\').style.display=\'none\'" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer">取消</button>';
+  h += '<button onclick="_ddlSubmitAdd()" style="padding:8px 16px;border-radius:8px;border:none;background:var(--airi-pink);color:#fff;font-size:13px;cursor:pointer;white-space:nowrap">Add</button>';
+  h += '<button onclick="document.getElementById(\'ddlAddForm\').style.display=\'none\'" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer">Cancel</button>';
   h += '</div></div>';
 
   if (_ddlViewMode === 'list') {
@@ -9344,11 +9344,11 @@ function _buildDDLListView(active, completed) {
   active.forEach(function(it) { (urgencyGroups[it.urgency] || urgencyGroups.normal).push(it); });
 
   var groupLabels = {
-    overdue: {label: '逾期', color: '#e74c3c', bg: 'rgba(231,76,60,0.08)'},
-    today: {label: '今天截止', color: '#e67e22', bg: 'rgba(230,126,34,0.08)'},
-    soon: {label: '3天内', color: '#f1c40f', bg: 'rgba(241,196,15,0.08)'},
-    normal: {label: '进行中', color: 'var(--airi-pink)', bg: 'var(--airi-pink-dim)'},
-    no_deadline: {label: '无截止日期', color: 'var(--text-muted)', bg: 'var(--bg-secondary)'},
+    overdue: {label: 'Overdue', color: '#e74c3c', bg: 'rgba(231,76,60,0.08)'},
+    today: {label: 'Due Today', color: '#e67e22', bg: 'rgba(230,126,34,0.08)'},
+    soon: {label: 'Within 3 Days', color: '#f1c40f', bg: 'rgba(241,196,15,0.08)'},
+    normal: {label: 'In Progress', color: 'var(--airi-pink)', bg: 'var(--airi-pink-dim)'},
+    no_deadline: {label: 'No Deadline', color: 'var(--text-muted)', bg: 'var(--bg-secondary)'},
   };
 
   ['overdue','today','soon','normal','no_deadline'].forEach(function(key) {
@@ -9366,12 +9366,12 @@ function _buildDDLListView(active, completed) {
   // Completed (collapsible)
   if (completed.length > 0) {
     h += '<div style="margin-top:20px">';
-    h += '<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'span\').textContent=this.nextElementSibling.style.display===\'none\'?\'▶\':\'▼\'" style="background:none;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px 0"><span>▶</span> 已完成 (' + completed.length + ')</button>';
+    h += '<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'span\').textContent=this.nextElementSibling.style.display===\'none\'?\'▶\':\'▼\'" style="background:none;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px 0"><span>▶</span> Completed (' + completed.length + ')</button>';
     h += '<div style="display:none">';
     completed.forEach(function(it) {
       h += '<div style="padding:8px 12px;margin-bottom:4px;background:var(--bg-secondary);border-radius:8px;opacity:0.6">';
       h += '<div style="font-size:13px;color:var(--text-muted);text-decoration:line-through">' + escapeHtml(it.title) + '</div>';
-      if (it.completed) h += '<div style="font-size:11px;color:var(--text-faint);margin-top:2px">完成于 ' + it.completed + '</div>';
+      if (it.completed) h += '<div style="font-size:11px;color:var(--text-faint);margin-top:2px">Completed at ' + it.completed + '</div>';
       h += '</div>';
     });
     h += '</div></div>';
@@ -9383,17 +9383,17 @@ function _buildDDLListView(active, completed) {
 function _ddlItemCard(it, meta) {
   var h = '<div style="padding:10px 14px;margin-bottom:6px;background:' + meta.bg + ';border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;gap:10px">';
   // Checkbox
-  h += '<button onclick="_ddlComplete(\'' + it.id + '\')" style="width:22px;height:22px;border-radius:6px;border:2px solid ' + meta.color + ';background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0" title="标记完成"></button>';
+  h += '<button onclick="_ddlComplete(\'' + it.id + '\')" style="width:22px;height:22px;border-radius:6px;border:2px solid ' + meta.color + ';background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0" title="Mark complete"></button>';
   // Content
   h += '<div style="flex:1;min-width:0">';
   h += '<div style="font-size:14px;color:var(--text-primary);line-height:1.5;word-break:break-word;overflow-wrap:anywhere">' + escapeHtml(it.title) + '</div>';
   var subParts = [];
-  if (it.deadline) subParts.push('截止 ' + it.deadline);
-  if (it.added) subParts.push('添加 ' + it.added.substring(0,10));
+  if (it.deadline) subParts.push('Due ' + it.deadline);
+  if (it.added) subParts.push('Added ' + it.added.substring(0,10));
   if (subParts.length) h += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px">' + subParts.join(' · ') + '</div>';
   h += '</div>';
   // Delete button
-  h += '<button onclick="_ddlDelete(\'' + it.id + '\')" style="background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px" title="删除">×</button>';
+  h += '<button onclick="_ddlDelete(\'' + it.id + '\')" style="background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px" title="Delete">×</button>';
   h += '</div>';
   return h;
 }
@@ -9403,18 +9403,18 @@ function _buildDDLCalendarView(items) {
   if (!_ddlCalendarMonth) _ddlCalendarMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   var year = _ddlCalendarMonth.getFullYear();
   var month = _ddlCalendarMonth.getMonth();
-  var monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   var h = '<div style="margin-bottom:16px">';
   // Month nav
   h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">';
   h += '<button onclick="_ddlCalendarNav(-1)" style="background:none;border:none;color:var(--text-secondary);font-size:18px;cursor:pointer;padding:4px 8px">‹</button>';
-  h += '<span style="font-size:15px;font-weight:600;color:var(--text-primary)">' + year + '年 ' + monthNames[month] + '</span>';
+  h += '<span style="font-size:15px;font-weight:600;color:var(--text-primary)">' + monthNames[month] + ' ' + year + '</span>';
   h += '<button onclick="_ddlCalendarNav(1)" style="background:none;border:none;color:var(--text-secondary);font-size:18px;cursor:pointer;padding:4px 8px">›</button>';
   h += '</div>';
 
   // Weekday headers
-  var weekdays = ['一','二','三','四','五','六','日'];
+  var weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   h += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;margin-bottom:4px">';
   weekdays.forEach(function(d) {
     h += '<div style="font-size:11px;color:var(--text-muted);padding:4px 0">' + d + '</div>';
@@ -12379,7 +12379,7 @@ function _showBgKeepAliveGuide() {
     oppo:    '1. 设置 → 电池 → 自启动管理 → 找到 Miru → 允许\n2. 最近任务列表 → 下拉 Miru 卡片 → 锁定',
     xiaomi:  '1. 设置 → 应用设置 → 应用管理 → Miru → 省电策略 → 无限制\n2. 最近任务列表 → 长按 Miru → 锁定',
     huawei:  '1. 设置 → 电池 → 启动管理 → Miru → 手动管理 → 全部允许\n2. 最近任务列表 → 下拉 Miru 卡片 → 锁定',
-    samsung: '1. 设置 → 电池 → 后台使用限制 → 从不休眠应用 → 添加 Miru',
+    samsung: '1. 设置 → 电池 → 后台使用限制 → 从不休眠应用 → Added Miru',
     other:   '1. 设置 → 电池/应用管理 → 找到 Miru → 允许后台运行\n2. 最近任务列表 → 锁定 Miru'
   };
 

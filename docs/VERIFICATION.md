@@ -128,9 +128,17 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).
 
-- **Phase 2B.14 Verification (Commitments Overview and Journal Localization & Finalization)**:
-  - `templates/index.html`: Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday), configured fallback character name to `"Sora"` with HTML escaping, and translated Commitments tracker (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`) including headers, view toggle buttons, stats badges, add form, and list items.
+- **Phase 2B.14 Verification (Commitments Overview and Journal Localization)**:
+  - `templates/index.html`: Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday) and escaped character name in Journal header. Translated Commitments tracker (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`) including headers, view toggle buttons, stats badges, add form, and list items.
   - Preservation checks: Internal identifiers, status values, routes, payloads, caching, date logic, saved user content, and 12,807-line template preserved exact.
-  - Test suite check: 20/20 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_14/test_results.txt`.
+  - Test suite check: 19/19 passed (`tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_14/EVIDENCE.md`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
-  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 0e1cd051785502a5c17d3d75c2e171cc853c8939` (PASSED).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c6fa892af815d5fcda928d6af776eb791e192732` (PASSED).
+
+- **Phase 2B.14 Verification (Commitments Overview Final Correction & DOM Verification)**:
+  - `templates/index.html`: Complete translation of Commitments tracker UI strings in `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`, and `_buildDDLCalendarView`.
+  - Node DDL DOM execution check: Executed `_buildDDLViewHTML` in Node with synthetic items; confirmed presence of "Commitments", "List", "Calendar", "Commitment Title", counts, and English labels, and absence of Chinese labels.
+  - Test suite check: 20/20 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_14/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 0e1cd05d7665984df558cd99aab49ec28dd941c6` (PASSED).
+

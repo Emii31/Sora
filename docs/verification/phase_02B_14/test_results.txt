@@ -11,4 +11,4 @@ tests/test_commitment_dedup.py ...                                       [ 30%]
 tests/test_commitment_id_stability.py ..                                 [ 40%]
 tests/test_mobile_notification_memory_ui.py ............                 [100%]
 
-============================== 20 passed in 3.30s ==============================
+============================== 20 passed in 8.45s ==============================
