@@ -19,7 +19,7 @@ function getElement(id) {
 }
 
 global.window = {
-    CHARACTER: { name: 'Miru' }
+    CHARACTER: { name: 'Sora' }
 };
 global.CHARACTER = global.window.CHARACTER;
 
@@ -34,12 +34,13 @@ global.escapeHtml = function(str) {
 
 // Extract functions and variables
 const startIdx = html.indexOf('var _DOMAIN_LABELS = {');
-const endIdx = html.indexOf('function viewSlotDetail(');
+const endIdx = html.indexOf('function buildMemoryBrowserHtml(');
 const codeSnippet = html.substring(startIdx, endIdx);
 
 const buildBrowserMatch = html.match(/function buildMemoryBrowserHtml\(tree, slots\) \{[\s\S]*?\n\}/);
+const detailRenderMatch = html.match(/function _renderSlotDetailHtml\(domain, slot, mainMd, relatedDdls\) \{[\s\S]*?\n\}/);
 
-let codeToRun = codeSnippet + '\n' + buildBrowserMatch[0];
+let codeToRun = codeSnippet + '\n' + (detailRenderMatch ? detailRenderMatch[0] : '') + '\n' + (buildBrowserMatch ? buildBrowserMatch[0] : '');
 
 try {
     eval(codeToRun);
@@ -49,7 +50,7 @@ try {
     const syntheticSlots = {
         project: {
             active: [
-                { id: 'p1', title: 'Sora App', summary: 'Build companion app', last_active: '2026-11-10T12:00:00Z', status: 'active', pinned: true },
+                { id: 'p1', title: 'Sora App', summary: 'Build companion app', last_active: '2026-11-10T12:00:00Z', created: '2026-11-01', status: 'active', pinned: true, aliases: ['app', 'sora'] },
                 { id: 'p5', title: 'Unpinned Active', summary: 'Active stuff', last_active: '2026-11-10', status: 'active', pinned: false }
             ],
             paused: [{ id: 'p2', title: 'Old project', summary: 'Paused stuff', last_active: '2026-10-01', status: 'paused' }],
@@ -63,11 +64,12 @@ try {
     const browserHtml = buildMemoryBrowserHtml(null, syntheticSlots);
     const groupHtml = _buildSlotGroupHtml('project', syntheticSlots.project);
     const emptyGroupHtml = _buildSlotGroupHtml('person', syntheticSlots.person);
+    const detailHtml = _renderSlotDetailHtml('project', syntheticSlots.project.active[0], '# Hello\n- Test item', ['DDL 1: 2026-12-31']);
 
     console.log(JSON.stringify({
         domainLabels,
         hasCorePortrait: browserHtml.includes('Core Portrait'),
-        hasJournal: browserHtml.includes('Miru\'s Journal'),
+        hasJournal: browserHtml.includes('Sora\'s Journal'),
         hasDDLs: browserHtml.includes('DDLs & Commitments'),
         hasProjectsTab: browserHtml.includes('Projects'),
         hasPeopleTab: browserHtml.includes('People'),
@@ -77,7 +79,15 @@ try {
         pinnedTooltip: groupHtml.includes('title="Pinned"'),
         pausedTooltip: groupHtml.includes('title="Paused"'),
         archivedTooltip: groupHtml.includes('title="Archived"'),
-        activeTooltip: groupHtml.includes('title="Active"')
+        activeTooltip: groupHtml.includes('title="Active"'),
+        detailActiveStatus: detailHtml.includes('Active'),
+        detailSummary: detailHtml.includes('Summary:'),
+        detailAliases: detailHtml.includes('Aliases:'),
+        detailCreated: detailHtml.includes('Created: 2026-11-01'),
+        detailLastActive: detailHtml.includes('Last active: 2026-11-10'),
+        detailDeleteBtn: detailHtml.includes('Delete'),
+        detailRelatedDdl: detailHtml.includes('Related DDL'),
+        detailContentHeader: detailHtml.includes('Content')
     }));
 } catch (e) {
     console.error("ERROR:", e);

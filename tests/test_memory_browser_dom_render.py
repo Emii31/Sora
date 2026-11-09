@@ -41,3 +41,11 @@ def test_memory_browser_dom_render():
     assert res["pausedTooltip"] is True
     assert res["archivedTooltip"] is True
     assert res["activeTooltip"] is True
+    assert res["detailActiveStatus"] is True
+    assert res["detailSummary"] is True
+    assert res["detailAliases"] is True
+    assert res["detailCreated"] is True
+    assert res["detailLastActive"] is True
+    assert res["detailDeleteBtn"] is True
+    assert res["detailRelatedDdl"] is True
+    assert res["detailContentHeader"] is True

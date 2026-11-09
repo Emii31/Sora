@@ -112,3 +112,10 @@
   - Test suite check: 13/13 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_11/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 5067d9db4f3d5beb7b8d7785968c133e9461d5f9` (PASSED).
+
+- **Phase 2B.12 Verification (Memory Detail View and Action Dialogs Translation)**:
+  - `templates/index.html`: Translated Memory detail view and action handlers/dialogs (loading/error states, status labels, metadata fields, delete button, archive confirmation, delete confirmation, edit modal, and merge dialog).
+  - Preservation checks: Internal slot keys, request methods, routes, payload structures, cache invalidation (`_invalidateMemoryCache`), navigation, stored memory content, and 12,807-line template preserved exact.
+  - Test suite check: 13/13 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_12/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 5343bb58e959662fb8944c91a9928513b4535783` (PASSED).

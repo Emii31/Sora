@@ -141,3 +141,18 @@
 - Preserved 12,807-line template, domain keys, item counts, icons, archive visibility rules, caching, routes, and all user data / stored memory content.
 - Created `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran memory UI test suite (13/13 passed). Evidence saved under `docs/verification/phase_02B_11/test_results.txt` and `EVIDENCE.md`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 5067d9db4f3d5beb7b8d7785968c133e9461d5f9` (PASSED).
+
+## 2026-11-10 (Phase 2B.12: Memory Detail View and Action Dialogs Translation)
+- Translated frontend-owned UI strings in the Memory detail view and action handlers/dialogs (`templates/index.html`):
+  - Detail view loading/error states (`"Loading..."`, `"Load failed: ..."`, `"Memory does not exist"`).
+  - Status labels (`"Active"`, `"Paused"`, `"Archived"`), metadata fields (`"Summary:"`, `"Aliases:"`, `"Created:"`, `"Last active:"`, `"Related DDL"`, `"Content"`, `"Content is empty"`), and delete action button (`🗑 Delete`).
+  - Slot action dialogs and feedback messages:
+    - Archive confirmation & error (`"Archive this memory? It will not appear in the main memory view."`, `"Archive failed (...)"`).
+    - Unarchive and pin error messages (`"Unarchive failed (...)"`, `"Pin operation failed (...)"`).
+    - Delete confirmation & error (`"Are you sure you want to delete this memory? This action cannot be undone, and the main file will also be deleted."`, `"Delete failed (...)"`, `"Server rejected"`).
+    - Edit modal (`"Edit memory"`, Title, Icon, Summary, Aliases, Cancel, Save, Save failed).
+    - Merge modal (`"Merge into which memory?"`, merge description, candidate check `"No other memories available to merge in this domain"`, Confirm Merge, progress indicator `"LLM is merging content, please wait..."`, Merge failed).
+  - Updated overview empty-state fallback character name to `"Sora"` (`(window.CHARACTER && CHARACTER.name) || 'Sora'`).
+- Preserved 12,807-line template, internal slot keys, routes, request methods, payload keys, cache invalidation, and navigation.
+- Updated `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran memory UI test suite (13/13 passed). Evidence saved under `docs/verification/phase_02B_12/test_results.txt` and `EVIDENCE.md`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 5343bb58e959662fb8944c91a9928513b4535783` (PASSED).

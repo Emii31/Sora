@@ -1,0 +1,21 @@
+# Phase 2B.12: Memory Detail View and Action Dialogs Translation
+
+- **Status**: Verified
+- **Scope**: Translate Memory detail view and action dialogs in `templates/index.html`.
+- **Changes**:
+  - Translated detail view loading/error states (`Loading...`, `Load failed: ...`, `Memory does not exist`).
+  - Translated status text (`Active`, `Paused`, `Archived`), metadata fields (`Summary:`, `Aliases:`, `Created:`, `Last active:`, `Related DDL`, `Content`, `Content is empty`), and delete action button (`🗑 Delete`).
+  - Translated slot action handlers and dialogs:
+    - Archive confirmation (`Archive this memory? It will not appear in the main memory view.`) and error (`Archive failed (...)`).
+    - Unarchive error (`Unarchive failed (...)`).
+    - Pin toggle error (`Pin operation failed (...)`).
+    - Delete confirmation (`Are you sure you want to delete this memory? This action cannot be undone, and the main file will also be deleted.`) and error (`Delete failed (...)`, `Server rejected`).
+    - Edit modal (`Edit memory`, Title, Icon, Summary, Aliases, Cancel, Save, Save failed).
+    - Merge modal (`Merge into which memory?`, description about LLM combining main.md and deleting source memory, candidate validation `No other memories available to merge in this domain`, Confirm Merge, progress state `LLM is merging content, please wait...`, Merge failed).
+  - Updated overview empty-state character fallback name to `Sora` (`(window.CHARACTER && CHARACTER.name) || 'Sora'`).
+  - Preserved 12,807-line template, internal slot keys, routes, request methods, payload structures, cache invalidation, and navigation.
+- **Verification**:
+  - Ran `tests/test_memory_browser_dom_render.py` and `tests/test_mobile_notification_memory_ui.py` (13/13 passed).
+  - Evidence saved under `docs/verification/phase_02B_12/`.
+- **Git / History**:
+  - Enforced history prefix integrity via `scripts/check_history_append_only.py 5343bb58e959662fb8944c91a9928513b4535783`.
