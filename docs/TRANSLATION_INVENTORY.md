@@ -12,6 +12,7 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **Devices Settings** | `templates/index.html` | Devices settings panel | **Implemented & Verified (Phase 2B.4)** |
 | **System Settings** | `templates/index.html` | Account & desktop preferences, hotkey/save feedback, screen observation & wallpaper | **Implemented & Verified (Phase 2B.5 & 2B.6)** |
 | **Chat Controls** | `templates/index.html` | Composer, voice input, companion panel, feedback | **Implemented & Verified (Phase 2B.9)** |
+| **Memory Browser Overview** | `templates/index.html` | Domain tabs, slot cards, empty/loading states, quick entries | **Implemented & Verified (Phase 2B.11)** |
 | **Backend Errors** | Various (`app.py`, `core.py`) | Error messages, logs | Untouched |
 | **Prompts/Persona** | `character.py`, `prompt.py`, `memory_prompts_v*.py` | AI personality, system prompts | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |

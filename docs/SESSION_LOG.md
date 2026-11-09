@@ -129,3 +129,15 @@
 - Preserved all onboarding keys, option values, selection logic, async submission, and persistence behavior.
 - Ran onboarding and wizard test suite (20/20 passed). Evidence saved under `docs/verification/phase_02B_10/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py` (PASSED).
+
+## 2026-11-10 (Phase 2B.11: Memory Browser Overview Translation)
+- Translated frontend-owned UI strings in the Memory browser overview (`templates/index.html`):
+  - Domain tab labels: Projects, People, Topics, Self (`_DOMAIN_LABELS`).
+  - Loading and error states in `navMemoryBrowser`: `"Loading memories..."`, `"Load failed: ..."`.
+  - Empty state message in `_buildSlotGroupHtml`: `"No [Domain] memories yet. Chat more with [Miru], and they will organize them automatically."` (preserving character name and neutral pronouns).
+  - Archived collapsible heading: `"Archived (n)"`.
+  - Slot card metadata and status badge tooltips in `_renderSlotCardHtml`: `"Last active: YYYY-MM-DD"`, `title="Pinned"`, `title="Paused"`, `title="Archived"`, `title="Active"`.
+  - Quick-entry index cards in `buildMemoryBrowserHtml`: Core Portrait, Journal (`[Name]'s Journal`), DDLs & Commitments.
+- Preserved 12,807-line template, domain keys, item counts, icons, archive visibility rules, caching, routes, and all user data / stored memory content.
+- Created `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran memory UI test suite (13/13 passed). Evidence saved under `docs/verification/phase_02B_11/test_results.txt` and `EVIDENCE.md`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 5067d9db4f3d5beb7b8d7785968c133e9461d5f9` (PASSED).

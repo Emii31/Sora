@@ -4672,7 +4672,7 @@ let _memorySearchTimer = null;
 function navMemoryBrowser() {
   setSidebarActive('navMemoryBrowser');
   _nextNavGen();
-  showDetailView('<div class="loading"><div class="spinner"></div><span>\u52A0\u8F7D\u8BB0\u5FC6...</span></div>', 'chat');
+  showDetailView('<div class="loading"><div class="spinner"></div><span>Loading memories...</span></div>', 'chat');
 
   // 2026-05-17 perf: 之前同时拉 slots + tree, paint 卡在两个都返回 (_maybePaint).
   // 但 buildMemoryBrowserHtml 早已不用 tree (兼容视图已删),
@@ -4681,7 +4681,7 @@ function navMemoryBrowser() {
   var _rendered = false;
   function _onSlots(d) {
     if (d && d._error && !_rendered) {
-      detailContent.innerHTML = '<div class="no-data-hint">\u52A0\u8F7D\u5931\u8D25: ' + escapeHtml(String(d._error)) + '</div>';
+      detailContent.innerHTML = '<div class="no-data-hint">Load failed: ' + escapeHtml(String(d._error)) + '</div>';
       return;
     }
     var slots = (d && d.slots) || {};
@@ -4703,10 +4703,10 @@ function navMemoryBrowser() {
 var _activeMemoryTab = 'project';   // current tab in memory hub
 var _slotsCache = null;             // last fetched slots payload
 var _DOMAIN_LABELS = {
-  project: { label: '\u9879\u76EE', icon: '\uD83D\uDCC2' },     // \u9879\u76EE \uD83D\uDCC2
-  person:  { label: '\u4EBA\u7269', icon: '\uD83D\uDC65' },     // \u4EBA\u7269 \uD83D\uDC65
-  topic:   { label: '\u8BDD\u9898', icon: '\uD83D\uDCAD' },     // \u8BDD\u9898 \uD83D\uDCAD
-  self:    { label: '\u81EA\u5DF1', icon: '\uD83D\uDD2E' },     // \u81EA\u5DF1 \uD83D\uDD2E
+  project: { label: 'Projects', icon: '\uD83D\uDCC2' },
+  person:  { label: 'People', icon: '\uD83D\uDC65' },
+  topic:   { label: 'Topics', icon: '\uD83D\uDCAD' },
+  self:    { label: 'Self', icon: '\uD83D\uDD2E' },
 };
 var _DOMAIN_ORDER = ['project', 'person', 'topic', 'self'];
 
@@ -4750,9 +4750,9 @@ function _buildSlotGroupHtml(domain, grouped) {
   var showArchived = archived.length && !(typeof _isMobile !== 'undefined' && _isMobile);
 
   if (!active.length && !paused.length && !showArchived) {
-    return '<div class="slot-empty">\u8FD8\u6CA1\u6709 ' + _DOMAIN_LABELS[domain].label
-         + ' \u8BB0\u5FC6\u3002\u548C ' + escapeHtml(((window.CHARACTER && CHARACTER.name) || 'Miru'))
-         + ' \u591A\u804A\u804A\uFF0C\u4ED6\u4F1A\u81EA\u52A8\u6574\u7406\u3002</div>';
+    return '<div class="slot-empty">No ' + _DOMAIN_LABELS[domain].label
+         + ' memories yet. Chat more with ' + escapeHtml(((window.CHARACTER && CHARACTER.name) || 'Miru'))
+         + ', and they will organize them automatically.</div>';
   }
 
   var html = '';
@@ -4768,7 +4768,7 @@ function _buildSlotGroupHtml(domain, grouped) {
   // Archived (\u6298\u53E0)
   if (showArchived) {
     var archId = 'archGroup_' + domain;
-    html += '<details class="slot-archived"><summary>\u5DF2\u5F52\u6863 (' + archived.length + ')</summary>';
+    html += '<details class="slot-archived"><summary>Archived (' + archived.length + ')</summary>';
     html += '<div class="slot-grid">';
     archived.forEach(function(s) {
       html += _renderSlotCardHtml(domain, s);
@@ -4787,10 +4787,10 @@ function _renderSlotCardHtml(domain, s) {
   var lastActive = (s.last_active || '').slice(0, 10);
 
   var statusBadge = '';
-  if (pinned) statusBadge = '\uD83D\uDCCC';                                  // \uD83D\uDCCC
-  else if (status === 'paused')   statusBadge = '\u23F8';                     // \u23F8
-  else if (status === 'archived') statusBadge = '\uD83D\uDCE6';               // \uD83D\uDCE6
-  else if (status === 'active')   statusBadge = '<span class="dot-active"></span>';
+  if (pinned) statusBadge = '<span title="Pinned">\uD83D\uDCCC</span>';
+  else if (status === 'paused')   statusBadge = '<span title="Paused">\u23F8</span>';
+  else if (status === 'archived') statusBadge = '<span title="Archived">\uD83D\uDCE6</span>';
+  else if (status === 'active')   statusBadge = '<span class="dot-active" title="Active"></span>';
 
   var html = '<div class="slot-card" onclick="viewSlotDetail(\'' + domain + '\',\'' + escapeHtml(s.id) + '\')">';
   html += '<div class="slot-card-head">';
@@ -4802,7 +4802,7 @@ function _renderSlotCardHtml(domain, s) {
     html += '<div class="slot-card-summary">' + escapeHtml(summary) + '</div>';
   }
   html += '<div class="slot-card-meta">';
-  if (lastActive) html += '<span>\u6700\u8FD1: ' + escapeHtml(lastActive) + '</span>';
+  if (lastActive) html += '<span>Last active: ' + escapeHtml(lastActive) + '</span>';
   html += '</div>';
   html += '</div>';
   return html;
@@ -5127,22 +5127,22 @@ function buildMemoryBrowserHtml(tree, slots) {
   html += '<div class="memory-index-card" onclick="navCoreMemory(\'memoryBrowser\')">';
   html += '<div class="memory-index-icon">\uD83D\uDC9E</div>';
   html += '<div class="memory-index-text">';
-  html += '<div class="memory-index-title">\u6838\u5FC3\u753B\u50CF</div>';
-  html += '<div class="memory-index-desc">\u6211\u5BF9\u4F60\u7684\u7406\u89E3\uFF0C\u548C\u6211\u4EEC\u7684\u5173\u7CFB\u8BB0\u5FC6</div>';
+  html += '<div class="memory-index-title">Core Portrait</div>';
+  html += '<div class="memory-index-desc">My understanding of you, and our relationship memory</div>';
   html += '</div></div>';
 
   html += '<div class="memory-index-card" onclick="navMiruJournal(\'memoryBrowser\')">';
   html += '<div class="memory-index-icon">\uD83D\uDCD3</div>';
   html += '<div class="memory-index-text">';
-  html += '<div class="memory-index-title">' + escapeHtml(charName) + ' \u7684\u65E5\u8BB0</div>';
-  html += '<div class="memory-index-desc">\u6BCF\u5929\u665A\u4E0A\u7531 ' + escapeHtml(charName) + ' \u5199\u4E0B\u7684\u53D9\u4E8B</div>';
+  html += '<div class="memory-index-title">' + escapeHtml(charName) + '\'s Journal</div>';
+  html += '<div class="memory-index-desc">Narratives written each evening by ' + escapeHtml(charName) + '</div>';
   html += '</div></div>';
 
   html += '<div class="memory-index-card" onclick="navDDLTracker(\'memoryBrowser\')">';
   html += '<div class="memory-index-icon">\uD83D\uDCCB</div>';
   html += '<div class="memory-index-text">';
-  html += '<div class="memory-index-title">DDL \u4E0E\u627F\u8BFA</div>';
-  html += '<div class="memory-index-desc">\u6240\u6709\u5F85\u529E\u4E8B\u9879\u4E0E\u622A\u6B62\u65E5\u671F</div>';
+  html += '<div class="memory-index-title">DDLs & Commitments</div>';
+  html += '<div class="memory-index-desc">All to-dos and deadlines</div>';
   html += '</div></div>';
   html += '</div>';
 

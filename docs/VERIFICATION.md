@@ -105,3 +105,10 @@
   - Test suite check: 20/20 passed (`tests/test_first_run_wizard.py`, `tests/test_chat_error_copy.py`, `tests/test_onboarding_persistence.py`, `tests/test_onboarding_api_setup_skip.py`, `tests/test_onboarding_async.py`). Evidence under `docs/verification/phase_02B_10/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 778bf240ff626a40b66cf3137bff56ac10464233` (PASSED).
+
+- **Phase 2B.11 Verification (Memory Browser Overview Translation)**:
+  - `templates/index.html`: Translated Memory browser overview UI strings (domain tab labels Projects/People/Topics/Self, loading/error states, empty state message with dynamic character name and neutral pronouns, archived section heading, card last-active metadata, status badge tooltips, and quick-entry cards Core Portrait / Journal / DDLs & Commitments).
+  - Preservation checks: Domain keys (`project`, `person`, `topic`, `self`), item counts, icons, archive visibility rules, caching, routes, stored memory data, and 12,807-line template preserved exact.
+  - Test suite check: 13/13 passed (`tests/test_memory_browser_dom_render.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_11/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 5067d9db4f3d5beb7b8d7785968c133e9461d5f9` (PASSED).

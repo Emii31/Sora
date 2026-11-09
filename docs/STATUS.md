@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: 2B.10 (Onboarding Questionnaire Translation - Completed)
-- **Current Status**: Translated in-app onboarding questionnaire overlay (welcome heading, subtitle, skip/next/finish buttons, 5 questions, text placeholders, and option values like student, casual, night_owl), aligned `selfHostHome` default to `/opt/miru-host`, verified all onboarding and wizard tests (20/20 passed), history prefix integrity enforced.
+- **Phase**: 2B.11 (Memory Browser Overview Translation - Verified)
+- **Current Status**: Translated Memory browser overview in `templates/index.html` (domain tab labels Projects/People/Topics/Self, loading/error states, empty state message with dynamic character name and neutral pronouns, archived section heading, card last-active metadata, status badge tooltips, and quick-entry cards Core Portrait / Journal / DDLs & Commitments), verified all tests (13/13 passed), history prefix integrity enforced against baseline 5067d9d.
 - **Next Action**: None authorized.
