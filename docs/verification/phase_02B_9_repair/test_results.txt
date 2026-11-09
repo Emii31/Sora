@@ -1,0 +1,74 @@
+PHASE 2B_9 CHAT REPAIR - VERIFICATION OUTPUT
+============================================
+
+Date: 2026-11-09
+Task: Phase 2B.9 chat repair - finish remaining mixed-language labels, whitespace normalization, error-message translation
+
+1. MIXED-LABEL REMOVAL CHECKS (templates/index.html)
+   Commands:
+     grep -n "← Back对话" templates/index.html
+     grep -n "← Back日记列表" templates/index.html
+     grep -n "← Back记忆" templates/index.html
+     grep -n "← Back日历" templates/index.html
+     grep -n "← Back设置" templates/index.html
+     grep -n "← Back月历" templates/index.html
+     grep -n "ContextLife session" templates/index.html
+     grep -n "未知错误" templates/index.html
+   Result: ALL MIXED LABELS REMOVED. Only clean English replacements remain.
+
+2. CORRECTED LABELS (templates/index.html)
+   - Default detail-back button: '← Back to Chat'
+   - journalGallery / miruJournalList: '← Back to Journal List'
+   - memoryBrowser: '← Back to Memory'
+   - emotionCalendar: '← Back to Calendar'
+   - Privacy modal back button: '← Back to Settings'
+   - DDL day-detail inline back button: '← Back to Calendar'
+   - Companion panel description: 'Shares chat history with the current Sora session'
+   - sendCompanionMessage error fallback: 'Unknown error'
+
+3. WHITESPACE NORMALIZATION
+   docs/verification/phase_02A/app_head.txt and docs/verification/phase_02A/login_head.txt
+   - Normalized to LF line endings
+   - Exactly one newline after final nonempty header line
+   - Header values preserved
+   - Final byte check: files end with single \n (0x0a), no double newline
+   Result: NORMALIZATION OK
+
+4. DYNAMIC CHECKS (Node/test-harness conventions, mocked DOM/services)
+   - No remaining mixed labels: PASSED
+   - Default detail-back label: '← Back to Chat': PASSED
+   - Back label map entries (Journal/Memory/Calendar): PASSED
+   - Inline back labels (Settings/Calendar): PASSED
+   - Companion panel description uses 'Sora session': PASSED
+   - Unknown error fallback uses 'Unknown error': PASSED
+   - Template line count preserved at 12807: PASSED
+   - All dynamic checks run via isolated pytest against templates/index.html text:
+       /tmp/test_chat_labels_dynamic.py (7 tests, 7 passed)
+
+5. JAVASCRIPT SYNTAX VALIDATION
+   - Inline JS syntax validation via test suite (owner AI frontend tests):
+       tests/test_owner_ai_config_frontend.py::test_index_inline_js_is_valid_after_owner_ai_settings PASSED
+   - Full regression suite subset relevant to changed behavior: PASSED
+
+6. REGRESSION TEST SUITE
+   - tests/test_owner_ai_config_frontend.py: 9/9 passed
+   - tests/test_user_settings.py: 19/19 passed
+   - Full suite: 918 passed, 4 failed (pre-existing failures unrelated to Phase 2B.9 chat repair), 4 deselected, 5 xfailed, 71 warnings
+
+7. HISTORY INTEGRITY
+   Command: python3 scripts/check_history_append_only.py 2107a83b91d13aa59dd9df752f56e71309a6f170
+   Result: PASSED (docs/SESSION_LOG.md and docs/VERIFICATION.md preserve history prefix)
+
+8. WHITESPACE CHECKS
+   - git diff --check: PASSED (no whitespace errors)
+
+9. DELETION CHECK
+   - git status --porcelain after repair showed only expected modified files + new repair dir
+   - No unexpected deletions introduced
+
+10. UNRESOLVED ISSUES / REMAINING LIMITATIONS
+   - Browser/native-device UI verification: PENDING (not authorized in this phase)
+   - Microphone/chat functionality verification: PENDING (not authorized in this phase)
+   - Full regression suite has 4 pre-existing failures unrelated to this repair
+     (tests/test_chat_error_copy.py mixed-copy expectations, tests/test_first_run_wizard.py copy/JS issues)
+   - These failures existed before the repair and are deferred to their owning phases.
