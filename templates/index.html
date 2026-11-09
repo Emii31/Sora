@@ -5123,7 +5123,7 @@ function buildMemoryBrowserHtml(tree, slots) {
   // \u65E0\u9700\u53E6\u5F00\u4E00\u4E2A index.md \u5165\u53E3; \u2318K \u641C\u7D22\u53EF\u76F4\u63A5\u547D\u4E2D\u4EFB\u4F55\u6587\u4EF6)
   html += '<div class="memory-quick-entries">';
 
-  var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
+  var charName = (window.CHARACTER && CHARACTER.name) || 'Sora';
   html += '<div class="memory-index-card" onclick="navCoreMemory(\'memoryBrowser\')">';
   html += '<div class="memory-index-icon">\uD83D\uDC9E</div>';
   html += '<div class="memory-index-text">';
@@ -5522,7 +5522,7 @@ function wrapSystemContent(innerHTML) {
 // ===== Miru Journal =====
 
 function _journalFormatDate(dateStr) {
-  // "2026-03-31" → { day: "31", monthYear: "Nov 2026", weekday: "Tue" }
+  // "2026-03-31" → { day: "31", monthYear: "Mar 2026", weekday: "Tue" }
   const parts = dateStr.split('-');
   if (parts.length !== 3) return { day: dateStr, monthYear: '', weekday: '' };
   const y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
@@ -5537,7 +5537,7 @@ var _journalCurrentDate = null;
 var _journalEntriesCache = [];
 
 function buildJournalListHtml(entries) {
-  var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
+  var charName = (window.CHARACTER && CHARACTER.name) || 'Sora';
   let html = '<div class="query-result-header"><h2>' + escapeHtml(charName) + "'s Journal</h2>";
   html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Watching over your days silently and recording what matters</div>';
   html += '</div>';
@@ -5589,7 +5589,7 @@ function buildJournalListHtml(entries) {
 }
 
 function buildJournalBookHtml(journal) {
-  var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
+  var charName = (window.CHARACTER && CHARACTER.name) || 'Sora';
   var fd = _journalFormatDate(journal.date || '');
   var mood = journal.mood || {};
   var emoji = mood.emoji || '';
@@ -12138,7 +12138,7 @@ function _showClientScreenRecordingModal(alreadyEnabled, reason, platformName) {
   var overlay = document.createElement('div');
   overlay.id = 'permModalOverlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:4000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.25s ease;';
-  var charName = (window.CHARACTER && CHARACTER.name) || 'Miru';
+  var charName = (window.CHARACTER && CHARACTER.name) || 'Sora';
   var heading = usesCaptureProbe && isDisabled
     ? '屏幕观察暂时中断'
     : (isDisabled

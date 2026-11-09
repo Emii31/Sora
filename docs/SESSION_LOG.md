@@ -165,9 +165,9 @@
 - Updated `tests/test_memory_browser_dom.js` and `tests/test_memory_browser_dom_render.py`, and ran test suites (`tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_mobile_notification_memory_ui.py`) — all passed successfully. Evidence saved under `docs/verification/phase_02B_13/test_results.txt` and `EVIDENCE.md`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).
 
-## 2026-11-10 (Phase 2B.14: Commitments Overview and Journal Localization)
-- Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday) and escaped character name in Journal header (`templates/index.html`).
+## 2026-11-10 (Phase 2B.14: Commitments Overview and Journal Localization & Finalization)
+- Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday), corrected the March date example in `_journalFormatDate` to say "Mar 2026", and set configured fallback character name to `"Sora"` with HTML escaping in Journal list and book views (`templates/index.html`).
 - Translated Commitments (DDL) tracker overview and list (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`): headings ("Commitments"), view toggle buttons ("List", "Calendar"), add action button ("+ New"), stats badges ("Active", "Overdue", "Completed"), add form placeholders & buttons, urgency group labels ("Overdue", "Due Today", "Within 3 Days", "In Progress", "No Deadline"), completed items section & metadata ("Due", "Added"), and action button titles ("Mark complete", "Delete").
 - Preserved internal identifiers, status values, routes, payloads, caching, date logic, saved user content, and 12,807-line template exact.
-- Ran test suite (`tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py` — 19/19 passed). Evidence saved under `docs/verification/phase_02B_14/EVIDENCE.md`.
+- Updated test suite evidence under `docs/verification/phase_02B_14/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py c6fa892af815d5fcda928d6af776eb791e192732` (PASSED).
