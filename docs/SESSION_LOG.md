@@ -222,3 +222,13 @@
 - Verified via Node DOM harness (`tests/test_miru_emotion_dom.js`) executing the real renderers with synthetic empty and populated histories, day counts, stored mood text, numeric values, and hover tooltips.
 - Ran comprehensive test suite (37/37 passed across emotion-related and core UI suites). Evidence saved under `docs/verification/phase_02B_18/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).
+
+## 2026-11-10 (Phase 2B.19: Screen Observation Permission Guides Localization)
+- Translated screen-observation permission guides and modals in `templates/index.html` (`_showCaptureGuide`, `_showDesktopScreenshotGuide`, `_showClientScreenRecordingModal`, `_permModalEnableWindows`) to English with Sora conventions:
+  - First-time guidance toast & browser fallback toast: `"Enable screen observation?"`, description, `"Enable"`, `"Later"` / `"Maybe later"`.
+  - Client-mode modal (`_showClientScreenRecordingModal`): headings (`"Screen observation temporarily interrupted"`, `[Character] hasn't been able to see your screen`, `"Let [Character] accompany you"`), platform-specific explanations (macOS, Windows, Linux), privacy and lifecycle notes, and button labels (`"Test and Enable Screen Observation"`, `"Retest Screen Capture"`, `"Open System Settings → Screen Recording"`, `"I Have Authorized, Retry Now"`, `"Not Now"`, `"I Have Set This Up"`).
+  - Native bridge test flow (`_permModalEnableWindows`): loading state (`"Testing Screen Capture"`), success feedback (`"Screen Capture Test Successful, Enabled"`), error messages, and retry actions.
+- Preserved permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`).
+- Verified via Node DOM harness (`tests/test_capture_guide_dom.js`) exercising macOS, Windows, and Linux modal states.
+- Ran comprehensive pytest regression suite (55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher). Evidence saved under `docs/verification/phase_02B_19/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).

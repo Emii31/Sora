@@ -11955,9 +11955,9 @@ function _showCaptureGuide() {
   var toast = document.createElement('div');
   toast.id = 'captureGuideToast';
   toast.style.cssText = 'position:fixed;bottom:72px;left:12px;right:12px;background:var(--bg-surface);border:1px solid var(--border-default);border-radius:14px;padding:14px 16px;z-index:1500;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;animation:slideUp 0.3s ease;';
-  toast.innerHTML = '<div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">开启屏幕观察？</div><div style="font-size:12px;color:var(--text-muted);">Miru 可以像电脑端一样理解你在做什么</div></div>'
-    + '<button onclick="_acceptCaptureGuide()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">开启</button>'
-    + '<button onclick="_dismissCaptureGuide()" style="border:none;background:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px;">以后</button>';
+  toast.innerHTML = '<div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Enable screen observation?</div><div style="font-size:12px;color:var(--text-muted);">Sora can understand what you are doing, just like on desktop</div></div>'
+    + '<button onclick="_acceptCaptureGuide()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">Enable</button>'
+    + '<button onclick="_dismissCaptureGuide()" style="border:none;background:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px;">Later</button>';
   document.body.appendChild(toast);
 }
 function _acceptCaptureGuide() {
@@ -12107,9 +12107,9 @@ function _showDesktopScreenshotGuide() {
     var toast = document.createElement('div');
     toast.id = 'desktopScreenshotGuideToast';
     toast.style.cssText = 'position:fixed;bottom:72px;left:12px;right:12px;max-width:420px;margin:0 auto;background:var(--bg-surface);border:1px solid var(--border-default);border-radius:14px;padding:14px 16px;z-index:1500;box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;animation:slideUp 0.3s ease;';
-    toast.innerHTML = '<div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">开启屏幕观察？</div><div style="font-size:12px;color:var(--text-muted);">开启后 Miru 会定时截取屏幕内容，理解你在做什么并主动陪伴你</div></div>'
-      + '<button onclick="_acceptDesktopScreenshotGuide()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">开启</button>'
-      + '<button onclick="_dismissDesktopScreenshotGuide()" style="border:none;background:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px;">以后再说</button>';
+    toast.innerHTML = '<div style="flex:1;"><div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Enable screen observation?</div><div style="font-size:12px;color:var(--text-muted);">When enabled, Sora periodically takes screenshots to understand what you are doing and accompany you</div></div>'
+      + '<button onclick="_acceptDesktopScreenshotGuide()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">Enable</button>'
+      + '<button onclick="_dismissDesktopScreenshotGuide()" style="border:none;background:none;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px;">Maybe later</button>';
     document.body.appendChild(toast);
   }).catch(function(){});
 }
@@ -12140,57 +12140,57 @@ function _showClientScreenRecordingModal(alreadyEnabled, reason, platformName) {
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:4000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.25s ease;';
   var charName = (window.CHARACTER && CHARACTER.name) || 'Sora';
   var heading = usesCaptureProbe && isDisabled
-    ? '屏幕观察暂时中断'
+    ? 'Screen observation temporarily interrupted'
     : (isDisabled
-      ? (escapeHtml(charName) + ' 一直没能看到屏幕')
-      : ('让 ' + escapeHtml(charName) + ' 能陪在你身边'));
+      ? (escapeHtml(charName) + " hasn't been able to see your screen")
+      : ('Let ' + escapeHtml(charName) + ' accompany you'));
   var body;
   if (isLinux) {
-    body = 'Linux 预览版支持 X11 桌面。开启后会定时读取屏幕，并将内容发给你配置的视觉模型；点击测试成功后才会开启。Wayland 暂不支持。';
+    body = 'Linux preview supports X11 desktops. When enabled, it periodically reads the screen and sends it to your configured vision model; capture starts only after a successful test. Wayland is not supported yet.';
   } else if (resolvedPlatform === 'windows') {
     body = isDisabled
-      ? ('Windows 不需要单独授予屏幕录制权限。请回到正常桌面，离开锁屏、UAC 确认或远程桌面切换界面后重新测试。')
-      : (escapeHtml(charName) + ' 会定时看一眼鼠标所在的显示器，用来理解你正在做什么。Windows 不需要单独授予屏幕录制权限，测试成功后才会开启。');
+      ? ('Windows does not require separate screen recording permissions. Please return to the normal desktop, away from lock screen, UAC prompts, or remote desktop switching, and test again.')
+      : (escapeHtml(charName) + ' will periodically glance at the monitor with your mouse cursor to understand what you are doing. Windows does not require separate screen recording permissions, and capture will start after a successful test.');
   } else {
     body = isDisabled
       ? (
-          escapeHtml(charName) + ' 尝试了好几次截屏都失败了。<br>' +
-          '通常是因为 macOS <b>屏幕录制</b> 权限还没给。点下面的按钮直接打开系统设置，在列表里找到 <b>Miru</b> 并勾选。'
+          escapeHtml(charName) + ' failed to take screenshots several times.<br>' +
+          'This is usually because macOS <b>Screen Recording</b> permission hasn\'t been granted. Click the button below to open System Settings, find <b>Miru</b> in the list, and check it.'
         )
       : (
-          escapeHtml(charName) + ' 会定时看一眼屏幕，用来理解你正在做什么，在你忙或者累的时候陪陪你。<br>' +
-          '这需要 macOS 的 <b>屏幕录制</b> 权限。点下面的按钮会直接打开系统设置页面，勾选 <b>Miru</b> 即可。'
+          escapeHtml(charName) + ' will periodically glance at your screen to understand what you are doing and accompany you when you are busy or tired.<br>' +
+          'This requires macOS <b>Screen Recording</b> permission. Click the button below to open System Settings and check <b>Miru</b>.'
         );
   }
   var lifecycleText = usesCaptureProbe
-    ? '• 关闭主窗口会完全退出并停止截屏；最小化会继续运行'
-    : '• 完全退出 Miru 后会停止截屏';
+    ? '• Closing the main window will fully exit and stop screen capture; minimizing will keep it running'
+    : '• Fully exiting Sora will stop screen capture';
   overlay.innerHTML = (
     '<div style="background:var(--bg-surface);border-radius:18px;padding:28px 24px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.25);">' +
       '<div style="font-size:28px;margin-bottom:10px;">' + (isDisabled ? '🙈' : '🎬') + '</div>' +
       '<h2 style="font-size:1.25rem;font-weight:600;color:var(--text-primary);margin:0 0 10px;">' + heading + '</h2>' +
       '<p style="font-size:14px;color:var(--text-secondary);line-height:1.65;margin:0 0 14px;">' + body + '</p>' +
       '<div style="background:rgba(192,104,120,0.08);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-muted);line-height:1.6;margin:0 0 18px;">' +
-        '• 截图只用于 ' + escapeHtml(charName) + ' 理解当前场景，不会保存图片本身<br>' +
-        '• 你可以随时在设置里关闭屏幕观察<br>' +
+        '• Screenshots are only used for ' + escapeHtml(charName) + ' to understand the current context and are never saved to disk<br>' +
+        '• You can disable screen observation at any time in settings<br>' +
         lifecycleText +
       '</div>' +
       '<div id="permModalError" style="display:none;color:var(--fn-danger);font-size:12px;line-height:1.5;margin:-6px 0 12px;"></div>' +
       '<div style="display:flex;gap:10px;flex-direction:column;">' +
         (usesCaptureProbe
-          ? '<button id="permModalEnableBtn" onclick="_permModalEnableWindows()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;">' + (isDisabled ? '重新测试截屏' : '测试并开启屏幕观察') + '</button>'
-          : '<button onclick="_permModalOpenSettings()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;">打开系统设置 → 屏幕录制</button>') +
+          ? '<button id="permModalEnableBtn" onclick="_permModalEnableWindows()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;">' + (isDisabled ? 'Retest Screen Capture' : 'Test and Enable Screen Observation') + '</button>'
+          : '<button onclick="_permModalOpenSettings()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;">Open System Settings → Screen Recording</button>') +
         // "立即重试" only makes sense when sensor has backed off — otherwise
         // there's nothing to retry. Hide on the first-launch modal.
         (isDisabled && !usesCaptureProbe
-          ? '<button onclick="_permModalRetryNow()" style="border:none;background:rgba(192,104,120,0.12);color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;cursor:pointer;">我已授权，立即重试</button>'
+          ? '<button onclick="_permModalRetryNow()" style="border:none;background:rgba(192,104,120,0.12);color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;cursor:pointer;">I Have Authorized, Retry Now</button>'
           : '') +
         // "我已经设置好了" — latches the sticky flag so this modal
         // never appears again. Styled as a proper outline button (not a
         // muted link) so users actually see it as a real confirm action.
         (usesCaptureProbe
-          ? '<button onclick="_permModalDismissWithoutEnable()" style="border:1px solid var(--airi-pink);background:transparent;color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;">暂不开启</button>'
-          : '<button onclick="_permModalDismiss()" style="border:1px solid var(--airi-pink);background:transparent;color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;">我已经设置好了</button>') +
+          ? '<button onclick="_permModalDismissWithoutEnable()" style="border:1px solid var(--airi-pink);background:transparent;color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;">Not Now</button>'
+          : '<button onclick="_permModalDismiss()" style="border:1px solid var(--airi-pink);background:transparent;color:var(--airi-pink-deep,#C06878);border-radius:10px;padding:10px;font-size:13px;font-weight:500;cursor:pointer;">I Have Set This Up</button>') +
       '</div>' +
     '</div>'
   );
@@ -12202,21 +12202,21 @@ async function _permModalEnableWindows() {
   var error = document.getElementById('permModalError');
   if (button) {
     button.disabled = true;
-    button.textContent = '正在测试截屏';
+    button.textContent = 'Testing Screen Capture';
   }
   if (error) error.style.display = 'none';
   try {
     if (!window.MiruDesktop || typeof window.MiruDesktop.probeScreenCapture !== 'function') {
-      throw new Error('本机桥接尚未准备好，请稍后重试。');
+      throw new Error('Native bridge not ready yet, please try again later.');
     }
     var result = await window.MiruDesktop.probeScreenCapture();
-    if (!result || !result.ok) throw new Error((result && result.error) || '截屏测试失败。');
+    if (!result || !result.ok) throw new Error((result && result.error) || 'Screen capture test failed.');
     try { localStorage.setItem('miru_desktop_perm_guided', '1'); } catch(e) {}
     _persistScreenCaptureSettings({
       screenshot_enabled: true,
       screenshot_perm_guided: true,
     });
-    if (button) button.textContent = '截屏测试成功，已开启';
+    if (button) button.textContent = 'Screen Capture Test Successful, Enabled';
     var overlay = document.getElementById('permModalOverlay');
     setTimeout(function() {
       if (overlay) overlay.remove();
@@ -12224,12 +12224,12 @@ async function _permModalEnableWindows() {
     _startSensorHealthWatch();
   } catch (e) {
     if (error) {
-      error.textContent = (e && e.message) || '截屏测试失败，请检查后重试。';
+      error.textContent = (e && e.message) || 'Screen capture test failed, please check and try again.';
       error.style.display = 'block';
     }
     if (button) {
       button.disabled = false;
-      button.textContent = '重新测试截屏';
+      button.textContent = 'Retest Screen Capture';
     }
   }
 }

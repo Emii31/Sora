@@ -171,3 +171,11 @@
   - Test suite check: 37/37 passed across emotion-related and core UI suites. Evidence under `docs/verification/phase_02B_18/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).
+
+- **Phase 2B.19 Verification (Screen Observation Permission Guides Localization)**:
+  - `templates/index.html`: Translated screen observation permission guides and modals (`_showCaptureGuide`, `_showDesktopScreenshotGuide`, `_showClientScreenRecordingModal`, `_permModalEnableWindows`) to English with Sora conventions. Covers first-time guidance toast, fallback toast, client-mode observation modal across macOS, Windows, and Linux states, privacy and lifecycle notes, button labels (`Test and Enable Screen Observation`, `Retest Screen Capture`, `Open System Settings → Screen Recording`, `I Have Authorized, Retry Now`, `Not Now`, `I Have Set This Up`), native bridge test feedback, and error states.
+  - Preservation checks: Permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`) preserved.
+  - Node DOM harness (`tests/test_capture_guide_dom.js`): Exercised macOS, Windows, and Linux modal rendering and confirmation states.
+  - Test suite check: 55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher test suites. Evidence under `docs/verification/phase_02B_19/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12,807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).

@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: 2B.18 (My Mood Dashboard Translation - Completed)
-- **Current Status**: Translated My Mood dashboard UI strings (`navMiruEmotion`, `buildMiruEmotionHtml`, `buildMiruEmotionRiver`) to English with Sora conventions. Verified via Node DOM harness (`tests/test_miru_emotion_dom.js`) and 37/37 pytest regression suites. Line count 12,807 preserved exact.
+- **Phase**: 2B.19 (Screen Observation Permission Guides Localization - Completed)
+- **Current Status**: Translated screen observation permission guides and modals (`_showCaptureGuide`, `_showDesktopScreenshotGuide`, `_showClientScreenRecordingModal`, `_permModalEnableWindows`) to English with Sora conventions. Verified via Node DOM harness (`tests/test_capture_guide_dom.js`) and 55/55 pytest regression suites. Line count 12,807 preserved exact.
 - **Next Action**: None authorized.

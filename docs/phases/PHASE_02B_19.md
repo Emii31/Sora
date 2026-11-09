@@ -1,0 +1,12 @@
+## 2026-11-10 (Phase 2B.19: Screen Observation Permission Guides Localization)
+- Translated screen-observation permission guides and modals in `templates/index.html`:
+  - `_showCaptureGuide`: First-time guidance toast ("Enable screen observation?", description, Enable/Later buttons).
+  - `_showDesktopScreenshotGuide`: Plain browser fallback toast ("Enable screen observation?", description, Enable/Maybe later buttons).
+  - `_showClientScreenRecordingModal`: Client-mode modal (`_showClientScreenRecordingModal`) headings, platform-specific descriptions (macOS, Windows, Linux), privacy/lifecycle notices, and button labels ("Test and Enable Screen Observation", "Retest Screen Capture", "Open System Settings → Screen Recording", "I Have Authorized, Retry Now", "Not Now", "I Have Set This Up").
+  - `_permModalEnableWindows`: Native bridge error messages, loading status ("Testing Screen Capture"), and success feedback ("Screen Capture Test Successful, Enabled").
+- Preserved permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, and per-device state.
+- Maintained exact 12,807 line count (`templates/index.html`).
+- Verified via Node DOM harness (`tests/test_capture_guide_dom.js`):
+  - Validated English translation of macOS, Windows, and Linux modal states and buttons.
+- Ran comprehensive pytest regression suite (55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).

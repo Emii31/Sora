@@ -105,9 +105,9 @@ async function run() {
   _showClientScreenRecordingModal(false, 'disabled');
   let overlay = elements.permModalOverlay;
   assert(!!overlay, 'Windows recovery modal was not rendered');
-  assert(overlay.innerHTML.includes('Windows 不需要单独授予屏幕录制权限'), 'Windows explanation missing');
-  assert(overlay.innerHTML.includes('重新测试截屏'), 'Windows retry action missing');
-  assert(!overlay.innerHTML.includes('打开系统设置'), 'Windows modal exposed macOS settings action');
+  assert(overlay.innerHTML.includes('Windows does not require separate screen recording permissions'), 'Windows explanation missing');
+  assert(overlay.innerHTML.includes('Retest Screen Capture'), 'Windows retry action missing');
+  assert(!overlay.innerHTML.includes('Open System Settings'), 'Windows modal exposed macOS settings action');
   assert(!overlay.innerHTML.includes('macOS'), 'Windows modal exposed macOS copy');
 
   let button = { disabled: false, textContent: '', style: {} };
@@ -117,7 +117,7 @@ async function run() {
   elements.permModalError = error;
   elements.permModalOverlay = overlay;
   await _permModalEnableWindows();
-  assert(button.textContent === '截屏测试成功，已开启', 'success was not visible');
+  assert(button.textContent === 'Screen Capture Test Successful, Enabled', 'success was not visible');
   assert(scheduledDelay === 900 && overlay.removed, 'success modal did not close after confirmation');
   assert(persisted.length === 1 && persisted[0].screenshot_enabled === true, 'enabled state was not persisted');
   assert(healthWatchStarted, 'sensor health watch was not started');

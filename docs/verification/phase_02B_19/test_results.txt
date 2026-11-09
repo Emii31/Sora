@@ -1,0 +1,28 @@
+=== Node DOM Harness Test ===
+All Phase 2B.19 capture guide DOM assertions passed successfully.
+
+
+
+=== Pytest Regression Suite ===
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 55 items
+
+tests/test_windows_capture_recovery_frontend.py .                        [  1%]
+tests/test_linux_settings_frontend.py ........                           [ 16%]
+tests/test_user_settings.py ...................                          [ 50%]
+tests/test_windows_desktop_platform.py ......                            [ 61%]
+tests/test_linux_launcher.py .....................                       [100%]
+
+=============================== warnings summary ===============================
+tests/test_user_settings.py::test_sensor_account_switch_reloads_local_enabled
+tests/test_user_settings.py::test_sensor_enable_wakes_loop_and_resets_change_baseline
+  /mnt/data/Companion/Miru/sensor.py:356: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+    pixels = list(diff.getdata())
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 55 passed, 2 warnings in 2.48s ========================
+
