@@ -8,12 +8,12 @@ def test_chat_error_copy_hides_internal_ai_tier_wording():
     html = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
 
     assert "friendlyChatErrorMessage" in html
-    assert "Miru 还没有配置好模型" in html
-    assert "视觉、聊天、记忆三类 API Key" in html
+    assert "Sora is not configured with AI models yet" in html
+    assert "Vision, Chat, and Memory models" in html
     chat_send_block = html[html.index("async function sendCompanionMessage"):html.index("let _companionLastMsgId")]
     assert "friendlyChatErrorMessage" in chat_send_block
-    assert "出错了:" not in chat_send_block
-    assert "网络错误:" not in chat_send_block
+    assert "Error:" not in chat_send_block
+    assert "Network error:" not in chat_send_block
 
 
 def test_backend_missing_model_copy_does_not_use_admin_ui_language():
