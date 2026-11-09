@@ -1,0 +1,11 @@
+## 2026-11-10 (Phase 2B.17: Emotion River Day View Translation)
+- Translated frontend-owned UI strings in `buildEmotionCurveHtml` (`templates/index.html`):
+  - Heading ("Emotion River"), subtitles, empty-state messaging ("No emotion records for today/for [date]"), summary statistics ("Avg Valence", "Avg Intensity", "Peak", "Trough", "Records"), sources breakdown ("Sources"), and timeline log ("Emotion Log", "records", "Compressed X raw entries").
+- Updated `_EMO_SOURCE_GLYPHS` and canvas axis labels ("High", "Low") to English.
+- Preserved chart logic, mood codes, local date calculations, smoothing, and colors.
+- Ran Node harness (`tests/test_emotion_river_dom.js`) exercising the real `buildEmotionCurveHtml` renderer:
+  - Verified empty/populated today and past date views.
+  - Verified hover tooltip content (source labels, timestamps, valence/intensity).
+  - Verified singular record count ("1 record").
+- Ran project regression suites (26/26 passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).

@@ -155,3 +155,11 @@
   - Node & DOM verification (`tests/test_emotion_calendar_dom.js`): Verified English month displays, Monday-first weekday order (`Mon`-`Sun`), day handler integration, and tooltip counts.
   - Test suite check: 26/26 passed (`tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_16/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+
+- **Phase 2B.17 Verification (Emotion River Day View Translation)**:
+  - `templates/index.html`: Translated Emotion River day view UI strings (`buildEmotionCurveHtml`, `drawMoodRiver`, `_EMO_SOURCE_GLYPHS`) to English with Sora conventions. Covers title & subtitle, dynamic date headers (`Emotion River · Today` / `Emotion River · YYYY-MM-DD`), empty states, summary stats (`Avg Valence`, `Avg Intensity`, `Peak`, `Trough`, `Records` with singular/plural support), sources section, timeline log (`Emotion Log`, `1 record`, `N records`, `N records · Compressed M raw entries`, `Nx repeats`), canvas axis poles (`High`, `Low`), and hover tooltips.
+  - Preservation checks: Chart logic, smoothing, mood codes, colors, local date calculations (`_miruLocalDateKey`), and saved data preserved. Exact 12,807 lines maintained.
+  - Node harness verification (`tests/test_emotion_river_dom.js`): executed real `buildEmotionCurveHtml` parser with DOM/canvas mocks; verified empty/populated views for today and past dates, hover tooltips, and singular record count ("1 record").
+  - Test suite check: 26/26 passed (`tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_17/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).

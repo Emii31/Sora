@@ -198,3 +198,17 @@
 - Verified calendar renderer in Node with fixed month and synthetic mood data (`tests/test_emotion_calendar_dom.js`).
 - Ran test suite (26/26 passed: `tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_16/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 0b37a8a111a71192081ae53a972e37cb0f4deb97` (PASSED).
+
+## 2026-11-10 (Phase 2B.17: Emotion River Day View Translation)
+- Translated Emotion River day view UI strings in `templates/index.html` (`buildEmotionCurveHtml`, `drawMoodRiver`, `_EMO_SOURCE_GLYPHS`) to English with Sora conventions:
+  - Heading & Subtitle: `"Emotion River · Today"` / `"Emotion River · YYYY-MM-DD"`, explanation of light scale ribbon / valence gradient.
+  - Empty states: `"No emotion records for today"` / `"No emotion records for YYYY-MM-DD"`.
+  - Summary statistics: `"Avg Valence"`, `"Avg Intensity"`, `"Peak"`, `"Trough"`, `"Records"` (with singular `"1 record"` vs plural `"N entries"` / `"N records"`).
+  - Sources section: `"Sources"`, source glyph labels (`"Chat"`, `"Screenshot"`, `"Observation"`).
+  - Timeline log: `"Emotion Log"`, `1 record`, `N records`, `N records · Compressed M raw entries`, `Nx repeats`.
+  - Chart canvas axis poles: `"High"`, `"Low"`.
+  - Hover tooltips: source label, timestamp, valence, intensity.
+- Preserved chart logic, mood codes, local date calculations, smoothing, colors, and exact 12,807-line template integrity.
+- Verified via Node harness (`tests/test_emotion_river_dom.js`) loading and executing the real `buildEmotionCurveHtml` parser with DOM/canvas mocks.
+- Ran test suite (26/26 passed: `tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_17/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).

@@ -8261,12 +8261,11 @@ function _emotionDayDetail(dateStr) {
     detailContent.innerHTML = buildEmotionCurveHtml(entries, dateStr);
   });
 }
-
 // Source glyphs for the per-entry origin badge.
 const _EMO_SOURCE_GLYPHS = {
-  chat: { icon: '✎', label: '对话' },
-  auto_screenshot: { icon: '◉', label: '截屏' },
-  observation: { icon: '◉', label: '观察' },
+  chat: { icon: '✎', label: 'Chat' },
+  auto_screenshot: { icon: '◉', label: 'Screenshot' },
+  observation: { icon: '◉', label: 'Observation' },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -8333,7 +8332,7 @@ function drawMoodRiver(canvas, points, options) {
   const xMax = options.xMax !== undefined ? options.xMax : 1440;
   const showAxis = options.showAxis !== false;
   const ySign = options.ySign !== false;
-  const emptyText = options.emptyText || '暂无数据';
+  const emptyText = options.emptyText || 'No data';
 
   const dpr = window.devicePixelRatio || 1;
   const W = Math.max(1, canvas.clientWidth || canvas.offsetWidth || 600);
@@ -8360,9 +8359,9 @@ function drawMoodRiver(canvas, points, options) {
     ctx.font = '10px -apple-system, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText('愉悦', 4, PAD_T);
+    ctx.fillText('High', 4, PAD_T);
     ctx.textBaseline = 'bottom';
-    ctx.fillText('低落', 4, H - PAD_B + 2);
+    ctx.fillText('Low', 4, H - PAD_B + 2);
   }
 
   // neutral baseline
@@ -8850,10 +8849,13 @@ function _compactMiruEmotionEntries(history) {
   });
   return out;
 }
-
 function buildEmotionCurveHtml(entries, dateStr) {
   const rawEntryCount = Array.isArray(entries) ? entries.length : 0;
   entries = _compactEmotionEntries(entries);
+  const todayStr = _miruLocalDateKey();
+  const isToday = dateStr === todayStr;
+  const riverTitle = isToday ? 'Emotion River · Today' : 'Emotion River · ' + escapeHtml(dateStr);
+  const emptyTextMsg = isToday ? 'No emotion records for today' : 'No emotion records for ' + escapeHtml(dateStr);
   // ── v2: everything wrapped in one <div class="emo-panel"> ─────────
   // Calendar / day-detail / Miru relationship ALL share .emo-panel CSS class.
   // Inside the panel CSS vars get overridden so child elements pick up the
@@ -8861,19 +8863,17 @@ function buildEmotionCurveHtml(entries, dateStr) {
   if (!entries || entries.length === 0) {
     return '<div class="emo-panel">' +
       '<div class="emo-section-h">' +
-      '<span class="title">情绪河 · 今日</span>' +
+      '<span class="title">' + riverTitle + '</span>' +
       '<span class="spacer"></span>' +
       '<span class="meta">' + escapeHtml(dateStr) + '</span>' +
       '</div>' +
-      '<div style="padding:60px 0;text-align:center;color:rgba(255,255,255,0.5);font-size:14px">今天还没有情绪记录</div>' +
+      '<div style="padding:60px 0;text-align:center;color:rgba(255,255,255,0.5);font-size:14px">' + emptyTextMsg + '</div>' +
       '</div>';
   }
 
   let html = '<div class="emo-panel">';
 
   // ── Mood River header + canvas ────────────────────────────────────
-  const todayStr = _miruLocalDateKey();
-  const isToday = dateStr === todayStr;
   const times = entries.map(e => {
     const t = e.timestamp || '';
     const parts = t.split(' ')[1] || (t.includes('T') ? t.split('T')[1] : '12:00:00');
@@ -8914,11 +8914,11 @@ function buildEmotionCurveHtml(entries, dateStr) {
   }));
   const riverId = 'emoRiver' + Math.floor(Math.random() * 1000000);
   html += '<div class="emo-section-h">' +
-          '<span class="title">情绪河 · 今日</span>' +
+          '<span class="title">' + riverTitle + '</span>' +
           '<span class="spacer"></span>' +
           '<span class="meta">' + escapeHtml(dateStr) + '</span>' +
           '</div>';
-  html += '<div class="emo-subtitle">每条情绪记录是一片光鳞，按时间从左到右排列。色带厚度 = intensity，颜色由 valence 渐变（紫蓝→灰→粉）。像液态金属一样流动，能看出全天的情绪节奏。鼠标悬停可看到具体心情。</div>';
+  html += '<div class="emo-subtitle">Each emotion entry is a light scale, ordered chronologically. Ribbon thickness = intensity, color = valence (blue→gray→pink). Flows like liquid metal, revealing the rhythm of your day. Hover to see individual moods.</div>';
   html += '<canvas id="' + riverId + '" style="width:100%;display:block"></canvas>';
   // Defer rendering until canvas is in the DOM.
   setTimeout(() => {
@@ -8926,14 +8926,14 @@ function buildEmotionCurveHtml(entries, dateStr) {
     if (!cv) return;
     const draw = () => drawMoodRiver(cv, riverPoints, {
       xMin, xMax, height: 240, showAxis: true,
-      emptyText: '今天还没有情绪记录',
+      emptyText: 'No emotion records for this day',
     });
     draw();
     attachMoodRiverHover(cv, (raw) => {
       const ts = (raw.timestamp || '').split(/[ T]/)[1] || '';
       const sg = _EMO_SOURCE_GLYPHS[raw.source_type] || { icon: '•', label: raw.source_type || '' };
       const dev = raw.device_id ? ' · ' + escapeHtml(raw.device_id.slice(0, 16)) : '';
-      const rep = raw._repeatCount > 1 ? ' · 连续' + raw._repeatCount + '次已压缩' : '';
+      const rep = raw._repeatCount > 1 ? ' · Compressed ' + raw._repeatCount + ' repeats' : '';
       const trig = raw.trigger ? '<div style="opacity:0.85;margin-top:4px;font-size:11px">' + escapeHtml(String(raw.trigger).slice(0, 140)) + '</div>' : '';
       const moodColor = (MOOD_COLORS && raw.mood && MOOD_COLORS[raw.mood]) || raw.color || '#fff';
       const dispV = (raw.rawValence !== undefined ? raw.rawValence : raw.v) || 0;
@@ -8966,11 +8966,11 @@ function buildEmotionCurveHtml(entries, dateStr) {
     '<div class="label">' + label + '</div>' +
     '<div class="value" style="color:' + color + '">' + value + '</div>' +
     '</div>';
-  html += pill('平均愉悦', (avgV >= 0 ? '+' : '') + avgV.toFixed(2), '#FFB7C5');
-  html += pill('平均唤起', avgA.toFixed(2), '#6C9BD2');
-  html += pill('峰值', (peakV >= 0 ? '+' : '') + peakV.toFixed(2), '#FFD700');
-  html += pill('谷底', (troughV >= 0 ? '+' : '') + troughV.toFixed(2), '#7B9BA6');
-  html += pill('记录', rawEntryCount === total ? total + ' 条' : total + '/' + rawEntryCount + ' 条', '#DDA0DD');
+  html += pill('Avg Valence', (avgV >= 0 ? '+' : '') + avgV.toFixed(2), '#FFB7C5');
+  html += pill('Avg Intensity', avgA.toFixed(2), '#6C9BD2');
+  html += pill('Peak', (peakV >= 0 ? '+' : '') + peakV.toFixed(2), '#FFD700');
+  html += pill('Trough', (troughV >= 0 ? '+' : '') + troughV.toFixed(2), '#7B9BA6');
+  html += pill('Records', rawEntryCount === total ? (total === 1 ? '1 record' : total + ' entries') : total + '/' + rawEntryCount, '#DDA0DD');
   html += '</div>';
 
   // --- Mood distribution ---
@@ -9001,7 +9001,7 @@ function buildEmotionCurveHtml(entries, dateStr) {
   const deviceKeys = Object.keys(deviceCounts).sort((a, b) => deviceCounts[b] - deviceCounts[a]);
   if (Object.keys(sourceCounts).length + deviceKeys.length > 0) {
     html += '<div class="emo-section-divider"></div>';
-    html += '<div class="emo-section-h"><span class="title">输入来源</span></div>';
+    html += '<div class="emo-section-h"><span class="title">Sources</span></div>';
     html += '<div class="emo-chips" style="margin-top:10px">';
     Object.entries(sourceCounts).forEach(([s, c]) => {
       const g = _EMO_SOURCE_GLYPHS[s] || { icon: '•', label: s };
@@ -9019,9 +9019,9 @@ function buildEmotionCurveHtml(entries, dateStr) {
 
   // --- Timeline list ---
   html += '<div class="emo-section-divider"></div>';
-  html += '<div class="emo-section-h"><span class="title">情绪记录</span>' +
+  html += '<div class="emo-section-h"><span class="title">Emotion Log</span>' +
           '<span class="spacer"></span><span class="meta">' +
-          (rawEntryCount === entries.length ? entries.length + ' 条' : entries.length + ' 条 · 已压缩 ' + rawEntryCount + ' 条原始记录') +
+          (rawEntryCount === entries.length ? (entries.length === 1 ? '1 record' : entries.length + ' records') : entries.length + ' records · Compressed ' + rawEntryCount + ' raw entries') +
           '</span></div>';
   html += '<div class="emo-timeline" style="margin-top:6px">';
   entries.slice().reverse().forEach(e => {
@@ -9032,7 +9032,7 @@ function buildEmotionCurveHtml(entries, dateStr) {
     const srcGlyph = _EMO_SOURCE_GLYPHS[srcKey] || { icon: '•', label: srcKey };
     const devTxt = e.device_id ? '<span class="dev">· ' +
                    escapeHtml(e.device_id.length > 14 ? e.device_id.slice(0, 12) + '…' : e.device_id) + '</span>' : '';
-    const repeatTxt = e._repeatCount > 1 ? '<span class="dev">· 连续' + e._repeatCount + '次</span>' : '';
+    const repeatTxt = e._repeatCount > 1 ? '<span class="dev">· ' + e._repeatCount + 'x repeats</span>' : '';
     html += '<div class="emo-timeline-row">' +
             '<span class="dot" style="background:' + color + ';box-shadow:0 0 6px ' + color + '80"></span>' +
             '<span class="time">' + escapeHtml(timeStr) + '</span>' +
