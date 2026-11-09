@@ -21,7 +21,7 @@ def test_first_run_wizard_exposes_expected_paths():
     assert "Start Local Use" in html
     assert "/api/client/local/start" in html
     assert "view-api-setup" in html
-    assert "API Key" in html
+    assert "<h1>API Key</h1>" in html
     assert "Connect Sora's models" not in html
     assert "Configure API Key first" not in html
     assert "Sora needs three sets of models: vision, chat, and memory" in html
@@ -74,16 +74,20 @@ def test_first_run_wizard_exposes_expected_paths():
     assert "Re-check public access" in html
     assert "/api/client/provision/self-server/public-health/" in html
     assert "first available port" in html
+    assert "5001 to 5010" in html
     assert "pollFailures" in html
     assert "selfRetryJobId" in html
     assert "selfHealthRetryJobId" in html
     assert "do not recreate" in html
     assert "Re-check status" in html
     assert "e.status === 404" in html
+    assert "ports will not be occupied twice" in html
     assert "Creation task interrupted" in html
     assert "Auto-login" not in html
-    assert "sora/server:0.2.0" in html
-    assert "sora/server:0.1.0" not in html
+    assert "value=\"miru/server:0.2.0\"" in html
+    assert "miru/server:0.2.0" in html
+    assert "miru/server:0.1.0" not in html
+    assert "sora/server:0.2.0" not in html
     assert "ccr.ccs.tencentyun.com/contextlife/miru-server" not in html
     assert "Initial connection will trust this server's fingerprint" in html
     assert "Please enter SSH username matching server login" in html

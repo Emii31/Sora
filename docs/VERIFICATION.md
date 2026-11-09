@@ -91,3 +91,10 @@
   - History Prefix Integrity: Enforced by scripts/check_history_append_only.py 822ee379f993b8c5dda77eb97a83b84a577c1ae5.
   - Browser verification: Pending.
   - Backup: /mnt/data/Companion/recovery/phase_02B_9_backup/index.html.
+
+- **Phase 2B.9 Deployment Fix & Test Specificity Verification**:
+  - `templates/login.html`: Restored `miru/server:0.2.0` image identifier in `selfImage` input default and JS fallback.
+  - `tests/test_first_run_wizard.py`: Added explicit image default assertions (`miru/server:0.2.0`), restored scoped `<h1>API Key</h1>` assertion, port selection checks, and previous deployment task checks.
+  - Test suite check: 7/7 passed (`tests/test_first_run_wizard.py` and `tests/test_chat_error_copy.py`). Evidence under `docs/verification/phase_02B_9_deploy_fix/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py e40d2dbe88f00d794397d2186c7353995148789b` (PASSED).

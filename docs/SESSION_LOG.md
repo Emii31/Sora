@@ -116,3 +116,9 @@
 - Ran syntax validation and regression test suite (68 passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py`.
 - Documentation created/updated (`docs/phases/PHASE_02B_9.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/VERIFICATION.md`, `docs/SESSION_LOG.md`).
+
+## 2026-11-10 (Phase 2B.9: First-Run Deployment Regression Fix and Test Specificity)
+- Repaired first-run deployment regression by restoring the original `miru/server:0.2.0` image identifier in both the `selfImage` input default and the JavaScript fallback in `templates/login.html`.
+- Updated `tests/test_first_run_wizard.py` to explicitly verify both image defaults (`miru/server:0.2.0`), restore the scoped `<h1>API Key</h1>` assertion, and restore checks for opening the selected port and checking previous deployment tasks.
+- Ran first-run wizard and chat-error tests (`tests/test_first_run_wizard.py` and `tests/test_chat_error_copy.py`) via `PYTHONPATH=. .venv/bin/python -m pytest`, with 7/7 tests passed. Saved evidence under `docs/verification/phase_02B_9_deploy_fix/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py e40d2dbe88f00d794397d2186c7353995148789b` (PASSED).

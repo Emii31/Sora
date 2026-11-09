@@ -1058,7 +1058,7 @@ body[data-view="api-setup"] .note {
             </div>
             <div class="field">
               <label for="selfImage">Online Image Address</label>
-              <input id="selfImage" type="text" value="sora/server:0.2.0" autocomplete="off">
+              <input id="selfImage" type="text" value="miru/server:0.2.0" autocomplete="off">
               <div class="file-hint">Usually doesn't need changing if a service package is selected; if not, enter the image address downloadable by the server here.</div>
             </div>
           </div>
@@ -1789,7 +1789,7 @@ body[data-view="api-setup"] .note {
 		      host_home: valueOf('selfHostHome') || '/opt/sora-host',
 		      port_start: valueOf('selfPortStart') || 5001,
 	      port_end: valueOf('selfPortEnd') || 5010,
-	      image: valueOf('selfImage') || 'sora/server:0.2.0',
+	      image: valueOf('selfImage') || 'miru/server:0.2.0',
 	      allow_no_api: true
 	    };
 		    if (!payload.server_ip) {
