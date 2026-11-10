@@ -12375,12 +12375,12 @@ function _showBgKeepAliveGuide() {
   else if (dn.indexOf('samsung') !== -1) brand = 'samsung';
 
   var steps = {
-    vivo:    '1. 设置 → 电池 → 后台耗电管理 → 找到 Miru → 允许后台运行\n2. 最近任务列表 → 下拉 Miru 卡片 → 点击锁定',
-    oppo:    '1. 设置 → 电池 → 自启动管理 → 找到 Miru → 允许\n2. 最近任务列表 → 下拉 Miru 卡片 → 锁定',
-    xiaomi:  '1. 设置 → 应用设置 → 应用管理 → Miru → 省电策略 → 无限制\n2. 最近任务列表 → 长按 Miru → 锁定',
-    huawei:  '1. 设置 → 电池 → 启动管理 → Miru → 手动管理 → 全部允许\n2. 最近任务列表 → 下拉 Miru 卡片 → 锁定',
-    samsung: '1. 设置 → 电池 → 后台使用限制 → 从不休眠应用 → 添加 Miru',
-    other:   '1. 设置 → 电池/应用管理 → 找到 Miru → 允许后台运行\n2. 最近任务列表 → 锁定 Miru'
+    vivo:    '1. Settings → Battery → Background power management → find Miru → Allow background activity\n2. Recents → swipe down the Miru card → tap the lock',
+    oppo:    '1. Settings → Battery → Auto-start management → find Miru → Allow\n2. Recents → swipe down the Miru card → lock',
+    xiaomi:  '1. Settings → Apps → App management → Miru → Battery saver → Unrestricted\n2. Recents → long-press Miru → lock',
+    huawei:  '1. Settings → Battery → Launch management → Miru → Manual management → Allow all\n2. Recents → swipe down the Miru card → lock',
+    samsung: '1. Settings → Battery → Background usage restrictions → Never sleeping apps → Add Miru',
+    other:   '1. Settings → Battery/App management → find Miru → Allow background activity\n2. Recents → lock Miru'
   };
 
   var stepsText = steps[brand];
@@ -12392,11 +12392,11 @@ function _showBgKeepAliveGuide() {
   overlay.id = 'bgKeepAliveOverlay';
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.innerHTML = '<div style="background:var(--bg-surface);border-radius:16px;padding:20px;max-width:340px;width:100%;">'
-    + '<div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">后台保活设置</div>'
-    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">为确保 Miru 能持续观察屏幕，请完成以下设置：</div>'
+    + '<div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Background activity settings</div>'
+    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">To ensure Miru can continuously observe the screen, please complete the following settings:</div>'
     + stepsHtml
     + '<div style="margin-top:16px;display:flex;justify-content:flex-end;gap:12px;">'
-    + '<button onclick="document.getElementById(\'bgKeepAliveOverlay\').remove()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:8px 20px;font-size:14px;cursor:pointer;">我知道了</button>'
+    + '<button onclick="document.getElementById(\'bgKeepAliveOverlay\').remove()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:8px 20px;font-size:14px;cursor:pointer;">Got it</button>'
     + '</div></div>';
   document.body.appendChild(overlay);
 }

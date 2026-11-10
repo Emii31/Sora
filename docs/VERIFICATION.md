@@ -179,3 +179,10 @@
   - Test suite check: 55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher test suites. Evidence under `docs/verification/phase_02B_19/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12,807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).
+
+- **Phase 2B.20 Verification (Android Background Keep-Alive Guide Localization)**:
+  - `templates/index.html`: Translated the Android background keep-alive guide (`_showBgKeepAliveGuide`) in `templates/index.html` to English with Sora conventions. Covers heading (`"Background activity settings"`), explanation (`"To ensure Miru can continuously observe the screen, please complete the following settings:"`), acknowledgment button (`"Got it"`), and manufacturer-specific steps (vivo, OPPO/OnePlus/Realme, Xiaomi, Huawei/Honor, Samsung, generic fallback) translated to English with menu paths preserved, using `"Miru"` as the app identifier in Android settings. Added contextual note that menu names can vary by device.
+  - Preservation checks: Manufacturer detection logic, one-time display flag (`miru_bg_guide_shown`), dismiss behavior, exact 12,807 line count (`templates/index.html`) preserved, APK update text and native Android strings for later.
+  - Node DOM harness (`tests/test_bg_keep_alive_guide_dom.js`): Verified all 6 manufacturer branches (Samsung SM-G991B, Xiaomi 13, vivo X90, OnePlus 11, HONOR Magic5, Google Pixel 8) plus suppression behavior on a second call. Evidence under `docs/verification/phase_02B_20/test_results.txt`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 1b358aa6a55a52f831f756ac4f1aef6c6ff779fe` (PASSED).
