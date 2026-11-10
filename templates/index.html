@@ -12393,7 +12393,7 @@ function _showBgKeepAliveGuide() {
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.innerHTML = '<div style="background:var(--bg-surface);border-radius:16px;padding:20px;max-width:340px;width:100%;">'
     + '<div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Background activity settings</div>'
-    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">To ensure Miru can continuously observe the screen, please complete the following settings:</div>'
+    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">To ensure Miru can continuously observe the screen, please complete the following settings (menu names vary by device):</div>'
     + stepsHtml
     + '<div style="margin-top:16px;display:flex;justify-content:flex-end;gap:12px;">'
     + '<button onclick="document.getElementById(\'bgKeepAliveOverlay\').remove()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:8px 20px;font-size:14px;cursor:pointer;">Got it</button>'
@@ -12458,6 +12458,7 @@ window._handleApkUpdateClick = function() {
 function _checkAppUpdate() {
   // 暂时禁用 APK 内置版本检查弹窗 — DownloadManager 在当前签名下经常显示"下载失败",
   // 且自动比对 latest.json 容易让"刚装完就弹更新"误导用户。要重新启用直接删掉下面这行 return。
+  // APK updates will be installed manually when needed.
   return;
   if (!window.MiruAndroid || typeof window.MiruAndroid.getAppVersionCode === 'undefined') return;
   var localCode = -1;
