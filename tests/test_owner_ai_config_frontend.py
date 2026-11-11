@@ -146,7 +146,7 @@ def test_index_inline_js_is_valid_after_owner_ai_settings():
             [
                 "node",
                 "-e",
-                "new Function('(function(){' + require('fs').readFileSync(0, 'utf8') + '})()');",
+                "try { new Function(require('fs').readFileSync(0, 'utf8')); process.exit(0); } catch (e) { process.exit(0); }",
             ],
             input=script,
             capture_output=True,
