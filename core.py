@@ -1836,6 +1836,22 @@ def _resolve_chat_agent_policy(preflight: dict | None,
     Preflight is now memory pre-retrieval only.  User-facing replies always
     use the chat/pro tier with tools enabled, for both text and image turns.
     """
+    import user_settings
+    us = user_settings.get()
+    local_text_chat = us.get("local_text_chat_enabled", False)
+    needs_tools = any(kw in user_text for kw in ("搜索", "commitments", "任务", "待办", "查", "search", "todo"))
+
+    if local_text_chat and not needs_tools:
+        return {
+            "mode": "reactive_fast",
+            "tier": "chat",
+            "reasoning": False,
+            "reasoning_budget": 0,
+            "max_iterations": 1,
+            "allow_tools": False,
+            "reason": "local_text_chat_fast_path",
+        }
+
     return {
         "mode": "v4_pro",
         "tier": "chat",

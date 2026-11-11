@@ -509,3 +509,24 @@ def test_airi_base_url_dropped(monkeypatch, tmp_path):
         user_settings.update({"airi_base_url": "http://example.com"})
         cfg = user_settings.get()
         assert "airi_base_url" not in cfg
+
+
+def test_local_text_chat_enabled_setting_and_policy(monkeypatch, tmp_path):
+    import user_settings
+    import core
+    importlib.reload(user_settings)
+    user_dir = str(tmp_path / "u_test")
+    os.makedirs(user_dir, exist_ok=True)
+    with _user_ctx(user_dir):
+        assert user_settings.get()["local_text_chat_enabled"] is False
+        user_settings.update({"local_text_chat_enabled": True})
+        assert user_settings.get()["local_text_chat_enabled"] is True
+
+        policy_ordinary = core._resolve_chat_agent_policy(None, "Hello there")
+        assert policy_ordinary["mode"] == "reactive_fast"
+        assert policy_ordinary["max_iterations"] == 1
+        assert policy_ordinary["allow_tools"] is False
+
+        policy_tool = core._resolve_chat_agent_policy(None, "帮我搜索一下天气")
+        assert policy_tool["mode"] == "v4_pro"
+        assert policy_tool["allow_tools"] is True

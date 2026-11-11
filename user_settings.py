@@ -24,6 +24,7 @@ USER_FIELDS = {
     "auto_screenshot_interval",
     "pet_hotkey",
     "pet_collapse_delay",
+    "local_text_chat_enabled",
 }
 
 DEFAULT_SCREENSHOT_INTERVAL = 30
@@ -142,6 +143,7 @@ def get() -> dict:
         "auto_screenshot_interval": interval,
         "pet_hotkey": hotkey,
         "pet_collapse_delay": collapse,
+        "local_text_chat_enabled": bool(saved.get("local_text_chat_enabled", False)),
     }
 
 
@@ -158,6 +160,9 @@ def update(payload: dict) -> dict:
 
         if "screenshot_enabled" in payload:
             saved["screenshot_enabled"] = bool(payload["screenshot_enabled"])
+
+        if "local_text_chat_enabled" in payload:
+            saved["local_text_chat_enabled"] = bool(payload["local_text_chat_enabled"])
 
         if "screenshot_perm_guided" in payload:
             # One-way sticky flag — only allow setting to true (latching).
