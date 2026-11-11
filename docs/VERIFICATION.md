@@ -94,7 +94,7 @@
 
 - **Phase 2B.9 Deployment Fix & Test Specificity Verification**:
   - `templates/login.html`: Restored `miru/server:0.2.0` image identifier in `selfImage` input default and JS fallback.
-  - `tests/test_first_run_wizard.py`: Added explicit image default assertions (`miru/server:0.2.0`), restored scoped `<h1>API Key</h1>` assertion, port selection checks, and previous deployment tasks checks.
+  - `tests/test_first_run_wizard.py`: Added explicit image default assertions (`miru/server:0.2.0`), restored scoped `<h1>API Key</h1>` assertion, port selection checks, and previous deployment task checks.
   - Test suite check: 7/7 passed (`tests/test_first_run_wizard.py` and `tests/test_chat_error_copy.py`). Evidence under `docs/verification/phase_02B_9_deploy_fix/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py e40d2dbe88f00d794397d2186c7353995148789b` (PASSED).
@@ -129,7 +129,7 @@
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py a0e31fd458c00e765524281e872e04c8f83043ae` (PASSED).
 
 - **Phase 2B.14 Verification (Commitments Overview and Journal Localization)**:
-  - `templates/index.html`: Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday) and escaped character name in Journal header (`templates/index.html`). Translated Commitments tracker (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`) including headers, view toggle buttons, stats badges, add form, and list items.
+  - `templates/index.html`: Finalized Journal date formatting (`_journalFormatDate` returning English month and weekday) and escaped character name in Journal header. Translated Commitments tracker (`navDDLTracker`, `_loadDDLView`, `_buildDDLViewHTML`, `_buildDDLListView`, `_ddlItemCard`) including headers, view toggle buttons, stats badges, add form, and list items.
   - Preservation checks: Internal identifiers, status values, routes, payloads, caching, date logic, saved user content, and 12,807-line template preserved exact.
   - Test suite check: 19/19 passed (`tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_14/EVIDENCE.md`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
@@ -157,7 +157,7 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
 
 - **Phase 2B.17 Verification (Emotion River Day View Translation)**:
-  - `templates/index.html`: Translated Emotion River day view UI strings (`buildEmotionCurveHtml`, `drawMoodRiver`, `_EMO_SOURCE_GLYPHS`) to English with Sora conventions. Covers title & subtitle, dynamic date headers (`Emotion River · Today` / `Emotion River · YYYY-MM-DD`), empty states, summary stats (`Avg Valence`, `Avg Intensity`, `Peak`, `Trough`, `Records` with singular `"1 record"` vs plural `"N entries"` / `"N records"`).
+  - `templates/index.html`: Translated Emotion River day view UI strings (`buildEmotionCurveHtml`, `drawMoodRiver`, `_EMO_SOURCE_GLYPHS`) to English with Sora conventions. Covers title & subtitle, dynamic date headers (`Emotion River · Today` / `Emotion River · YYYY-MM-DD`), empty states, summary stats (`Avg Valence`, `Avg Intensity`, `Peak`, `Trough`, `Records` with singular/plural support), sources section, timeline log (`Emotion Log`, `1 record`, `N records`, `N records · Compressed M raw entries`, `Nx repeats`), canvas axis poles (`High`, `Low`), and hover tooltips.
   - Preservation checks: Chart logic, smoothing, mood codes, colors, local date calculations (`_miruLocalDateKey`), and saved data preserved. Exact 12,807 lines maintained.
   - Node harness verification (`tests/test_emotion_river_dom.js`): executed real `buildEmotionCurveHtml` parser with DOM/canvas mocks; verified empty/populated views for today and past dates, hover tooltips, and singular record count ("1 record").
   - Test suite check: 26/26 passed (`tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence under `docs/verification/phase_02B_17/test_results.txt`.
@@ -166,14 +166,14 @@
 
 - **Phase 2B.18 Verification (My Mood Dashboard Translation)**:
   - `templates/index.html`: Translated My Mood dashboard UI strings (`navMiruEmotion`, `buildMiruEmotionHtml`, `buildMiruEmotionRiver`) to English with Sora conventions. Covers headers (`Mood Dashboard`, `Mood River`, `Mood Log`), subtitles, hero relationship card (`Together for N days`, `📅 First met YYYY-MM-DD`), current mood display, stats, and timeline log with singular/plural support and empty state (`No mood records yet`).
-  - Preservation checks: Mood descriptions, character names, mood codes, relationship dates, numeric values, color interpolation (`_miruValenceColor`), chart behavior, and exact 12,807-line template integrity.
-  - Node DOM harness (`tests/test_miru_emotion_dom.js`): executed real renderers with synthetic empty and populated histories, day counts, stored mood text, numeric values, and hover tooltips.
+  - Preservation checks: Mood descriptions, character names, mood codes, relationship dates, numeric values, color interpolation (`_miruValenceColor`), and chart behavior preserved. Exact 12,807 lines maintained.
+  - Node DOM harness (`tests/test_miru_emotion_dom.js`): executed real renderer with synthetic empty/populated histories, day counts, stored mood text, numeric values, and hover tooltips.
   - Test suite check: 37/37 passed across emotion-related and core UI suites. Evidence under `docs/verification/phase_02B_18/test_results.txt`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 785be5045948c9c8153fc8e06416cdf77aaa62df` (PASSED).
 
 - **Phase 2B.19 Verification (Screen Observation Permission Guides Localization)**:
-  - `templates/index.html`: Translated screen observation permission guides and modals (`_showCaptureGuide`, `_showDesktopScreenshotGuide`, `_showClientScreenRecordingModal`, `_permModalEnableWindows`) to English with Sora conventions. Covers first-time guidance toast, fallback toast, client-mode observation modal across macOS, Windows, and Linux states, privacy and lifecycle notes, button labels (`Test and Enable Screen Observation`, `Retest Screen Capture`, `Open System Settings → Screen Recording`, `I Have Authorized, Retry Now`, `Not Now`, `I Have Set This Up`).
+  - `templates/index.html`: Translated screen observation permission guides and modals (`_showCaptureGuide`, `_showDesktopScreenshotGuide`, `_showClientScreenRecordingModal`, `_permModalEnableWindows`) to English with Sora conventions. Covers first-time guidance toast, fallback toast, client-mode observation modal across macOS, Windows, and Linux states, privacy and lifecycle notes, button labels (`Test and Enable Screen Observation`, `Retest Screen Capture`, `Open System Settings → Screen Recording`, `I Have Authorized, Retry Now`, `Not Now`, `I Have Set This Up`), native bridge test feedback, and error states.
   - Preservation checks: Permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`) preserved.
   - Node DOM harness (`tests/test_capture_guide_dom.js`): Exercised macOS, Windows, and Linux modal rendering and confirmation states.
   - Test suite check: 55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher test suites. Evidence under `docs/verification/phase_02B_19/test_results.txt`.
@@ -191,5 +191,12 @@
   - `templates/index.html`: APK update checking feature safely disabled by returning early in `_checkAppUpdate`. APK updates will be installed manually.
   - `miru-mobile/.../ApkUpdateManager.java`: Native Android UI strings translated to English.
   - Background keep-alive guide updated with note: `(menu names vary by device)`.
+  - Device installation: Pending.
   - Preservation checks: Exact 12,807 line count maintained. Logic flow verified: `_checkAppUpdate` returns early.
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
+
+- **Phase 2B.22 Verification (Native Android Notification UI Translation)**:
+  - `MiruConnectionService.java` & `NotificationReplyReceiver.java`: Translated connection status, notification channels, quick-reply action/label, and background-reply feedback messages to English.
+  - Verification harness: Mobile notification test suite (12/12 passed) and APK update harness executed in Node (all assertions passed).
+  - Android build/device check: Build not required; Java string resources validated.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).

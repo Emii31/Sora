@@ -148,10 +148,10 @@ public class MiruConnectionService extends Service {
         // dataSync has a six-hour background budget on Android 15+, so it is
         // not a valid type for Miru's persistent SSE channel.
         if (Build.VERSION.SDK_INT >= 29) {
-            startForeground(NOTIF_ONGOING, buildOngoingNotification("连接中..."),
+            startForeground(NOTIF_ONGOING, buildOngoingNotification("Connecting..."),
                     android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         } else {
-            startForeground(NOTIF_ONGOING, buildOngoingNotification("连接中..."));
+            startForeground(NOTIF_ONGOING, buildOngoingNotification("Connecting..."));
         }
 
         if (workerThread == null || !workerThread.isAlive()) {
@@ -214,7 +214,7 @@ public class MiruConnectionService extends Service {
             if (stopped) break;
             networkAlive = false;
             Log.i(TAG, "SSE reconnecting in " + (backoff / 1000) + "s");
-            updateOngoingNotification("重连中...");
+            updateOngoingNotification("Reconnecting...");
             long sleepEnd = System.currentTimeMillis() + backoff;
             while (!stopped && !networkJustChanged && System.currentTimeMillis() < sleepEnd) {
                 try { Thread.sleep(Math.min(1000, sleepEnd - System.currentTimeMillis())); }
@@ -253,7 +253,7 @@ public class MiruConnectionService extends Service {
         // Connected
         backoff = BACKOFF_INIT;
         networkAlive = true;
-        updateOngoingNotification("已连接");
+        updateOngoingNotification("Connected");
         Log.i(TAG, "SSE connected");
 
         BufferedReader reader = new BufferedReader(
@@ -348,15 +348,15 @@ public class MiruConnectionService extends Service {
 
         // Low-priority ongoing channel for connection status
         NotificationChannel conn = new NotificationChannel(
-                CHANNEL_CONN, "Miru 连接", NotificationManager.IMPORTANCE_LOW);
-        conn.setDescription("保持与 Miru 服务器的后台连接");
+                CHANNEL_CONN, "Miru Connection", NotificationManager.IMPORTANCE_LOW);
+        conn.setDescription("Maintain background connection to Miru server");
         conn.setShowBadge(false);
         nm.createNotificationChannel(conn);
 
         // Message channel (shared with NotificationPollWorker)
         NotificationChannel msg = new NotificationChannel(
-                CHANNEL_MSG, "Miru 消息", NotificationManager.IMPORTANCE_DEFAULT);
-        msg.setDescription("来自 Miru 的消息和关怀");
+                CHANNEL_MSG, "Miru Messages", NotificationManager.IMPORTANCE_DEFAULT);
+        msg.setDescription("Messages and care from Miru");
         msg.enableVibration(true);
         nm.createNotificationChannel(msg);
     }
@@ -400,7 +400,7 @@ public class MiruConnectionService extends Service {
 
         // Inline reply
         RemoteInput remoteInput = new RemoteInput.Builder(NotificationReplyReceiver.KEY_REPLY)
-                .setLabel("回复 Miru...")
+                .setLabel("Reply to Miru...")
                 .build();
         Intent replyIntent = new Intent(ctx, NotificationReplyReceiver.class);
         replyIntent.putExtra(NotificationReplyReceiver.EXTRA_NOTIF_ID, notifId);
@@ -408,7 +408,7 @@ public class MiruConnectionService extends Service {
                 ctx, notifId + 1000, replyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         Notification.Action replyAction = new Notification.Action.Builder(
-                R.mipmap.miru_launcher, "回复", replyPending)
+                R.mipmap.miru_launcher, "Reply", replyPending)
                 .addRemoteInput(remoteInput)
                 .setAllowGeneratedReplies(true)
                 .build();

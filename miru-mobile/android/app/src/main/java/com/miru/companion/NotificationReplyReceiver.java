@@ -47,7 +47,7 @@ public class NotificationReplyReceiver extends BroadcastReceiver {
         Log.e(TAG, "Reply received: " + replyText);
 
         // Update notification to "sending..."
-        updateNotification(context, notifId, "发送中...", null);
+        updateNotification(context, notifId, "Sending...", null);
 
         // Network call in background
         PendingResult pending = goAsync();
@@ -59,11 +59,11 @@ public class NotificationReplyReceiver extends BroadcastReceiver {
                     // Set wallpaper bubble with response
                     Live2DBridge.setPendingBubble(response);
                 } else {
-                    updateNotification(context, notifId, "发送失败，请稍后再试", null);
+                    updateNotification(context, notifId, "Failed to send, please try again later", null);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Reply error", e);
-                updateNotification(context, notifId, "发送失败: " + e.getMessage(), null);
+                updateNotification(context, notifId, "Failed to send: " + e.getMessage(), null);
             } finally {
                 pending.finish();
             }

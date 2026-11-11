@@ -250,3 +250,15 @@
 - Translated frontend UI strings in `templates/index.html`: APK update banner ("New version X available", "Update"), and `_handleApkUpdateClick` feedback messages ("Downloading new version…", "Native download failed, using browser instead", "Download link copied to clipboard"). `_checkAppUpdate` returns early to disable the feature safely; download URL and metadata request flow preserved.
 - Verified no mixed-language labels remain in either file. Exact 12,807-line template preserved.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
+
+## 2026-11-11 (Phase 2B.22: Native Android Notification UI Translation)
+- Translated user-visible UI strings in `MiruConnectionService.java`: ongoing connection status ("Connecting...", "Reconnecting...", "Connected"), notification channels ("Miru Connection", "Miru Messages"), and notification channel descriptions ("Maintain background connection to Miru server", "Messages and care from Miru").
+- Translated interactive UI strings in `MiruConnectionService.java` and `NotificationReplyReceiver.java`: quick-reply label ("Reply to Miru..."), notification action ("Reply"), and background-reply status messages ("Sending...", "Failed to send, please try again later", "Failed to send: ").
+- Verified all translations via existing test suites (`tests/test_mobile_notification_memory_ui.py` - 12/12 passed) and APK update harness. Android UI strings were verified in the Java source; no device build was required for text validation.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
+
+## 2026-11-11 (Phase 2B.22: Native Android Notification UI Translation)
+- Translated user-visible UI strings in `MiruConnectionService.java`: ongoing connection status ("Connecting...", "Reconnecting...", "Connected"), notification channels ("Miru Connection", "Miru Messages"), and notification channel descriptions ("Maintain background connection to Miru server", "Messages and care from Miru").
+- Translated interactive UI strings in `MiruConnectionService.java` and `NotificationReplyReceiver.java`: quick-reply label ("Reply to Miru..."), notification action ("Reply"), and background-reply status messages ("Sending...", "Failed to send, please try again later", "Failed to send: ").
+- Verified all translations via existing test suites (`tests/test_mobile_notification_memory_ui.py` - 12/12 passed) and APK update harness. Android UI strings were verified in the Java source; no device build was required for text validation.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
