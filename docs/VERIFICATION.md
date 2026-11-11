@@ -177,7 +177,7 @@
   - Preservation checks: Permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`) preserved.
   - Node DOM harness (`tests/test_capture_guide_dom.js`): Exercised macOS, Windows, and Linux modal rendering and confirmation states.
   - Test suite check: 55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher test suites. Evidence under `docs/verification/phase_02B_19/test_results.txt`.
-  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace, 12,807 lines exact).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).
 
 - **Phase 2B.20 Verification (Android Background Keep-Alive Guide Localization)**:
@@ -189,6 +189,7 @@
 
 - **Phase 2B.21 Verification (APK Update Handling)**:
   - `templates/index.html`: APK update checking feature safely disabled by returning early in `_checkAppUpdate`. APK updates will be installed manually.
+  - `miru-mobile/.../ApkUpdateManager.java`: Native Android UI strings translated to English.
   - Background keep-alive guide updated with note: `(menu names vary by device)`.
   - Preservation checks: Exact 12,807 line count maintained. Logic flow verified: `_checkAppUpdate` returns early.
-  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 1b358aa6a55a52f831f756ac4f1aef6c6ff779fe` (PASSED).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).

@@ -179,7 +179,7 @@
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 0e1cd05d7665984df558cd99aab49ec28dd941c6` (PASSED).
 
 ## 2026-11-10 (Phase 2B.15: Commitments Calendar Localization & Samsung String Restoration)
-- Translated day-detail heading in `_ddlShowDayDetail` from Chinese (`' 的承诺'`) to English (`'Commitments for ' + dateStr`), preserving date keys, Monday-first layout, navigation, status colors, and stored commitment text.
+- Translated Commitments day-detail heading in `_ddlShowDayDetail` from Chinese (`' 的承诺'`) to English (`'Commitments for ' + dateStr`), preserving date keys, Monday-first layout, navigation, status colors, and stored commitment text.
 - Restored the exact Samsung background instruction string in `_showBgKeepAliveGuide()` to `'1. 设置 → 电池 → 后台使用限制 → 从不休眠应用 → 添加 Miru'`.
 - Verified calendar rendering, Monday-first layout, English heading, and day-detail date passed to the handler via DOM/Node test.
 - Ran focused test suite (20/20 passed: `tests/test_memory_browser_dom_render.py`, `tests/test_journal_navigation_frontend.py`, `tests/test_commitment_dedup.py`, `tests/test_commitment_id_stability.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_15/test_results.txt`.
@@ -208,8 +208,8 @@
   - Timeline log: `"Emotion Log"`, `1 record`, `N records`, `N records · Compressed M raw entries`, `Nx repeats`.
   - Chart canvas axis poles: `"High"`, `"Low"`.
   - Hover tooltips: source label, timestamp, valence, intensity.
-- Preserved chart logic, smoothing, mood codes, colors, local date calculations (`_miruLocalDateKey`), and saved data preserved. Exact 12,807 lines maintained.
-- Verified via Node harness (`tests/test_emotion_river_dom.js`) loading and executing the real `buildEmotionCurveHtml` parser with DOM/canvas mocks; verified empty/populated views for today and past dates, hover tooltips, and singular record count ("1 record").
+- Preserved chart logic, mood codes, local date calculations, smoothing, colors, and exact 12,807-line template integrity.
+- Verified via Node harness (`tests/test_emotion_river_dom.js`) loading and executing the real `buildEmotionCurveHtml` parser with DOM/canvas mocks.
 - Ran test suite (26/26 passed: `tests/test_emotion_local_date_frontend.py`, `tests/test_miru_emotion_v2.py`, `tests/test_miru_emotion_api.py`, `tests/test_mobile_notification_memory_ui.py`). Evidence saved under `docs/verification/phase_02B_17/test_results.txt`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py fef04e781668d6e1607fdd54fa504aa9594d0081` (PASSED).
 
@@ -228,11 +228,10 @@
   - First-time guidance toast & browser fallback toast: `"Enable screen observation?"`, description, `"Enable"`, `"Later"` / `"Maybe later"`.
   - Client-mode modal (`_showClientScreenRecordingModal`): headings (`"Screen observation temporarily interrupted"`, `[Character] hasn't been able to see your screen`, `"Let [Character] accompany you"`), platform-specific explanations (macOS, Windows, Linux), privacy and lifecycle notes, and button labels (`"Test and Enable Screen Observation"`, `"Retest Screen Capture"`, `"Open System Settings → Screen Recording"`, `"I Have Authorized, Retry Now"`, `"Not Now"`, `"I Have Set This Up"`).
   - Native bridge test flow (`_permModalEnableWindows`): loading state (`"Testing Screen Capture"`), success feedback (`"Screen Capture Test Successful, Enabled"`), error messages, and retry actions.
-- Preserved permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`) preserved.
-- Node DOM harness (`tests/test_capture_guide_dom.js`): Exercised macOS, Windows, and Linux modal rendering and confirmation states.
-- Test suite check: 55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher test suites. Evidence under `docs/verification/phase_02B_19/test_results.txt`.
-- Git diff check: PASS (zero unexpected deletions, clean whitespace, 12,807 lines exact).
-- History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).
+- Preserved permission checks, capture defaults, native bridge calls, settings destinations, retry behavior, per-device state, and exact 12,807 line count (`templates/index.html`).
+- Verified via Node DOM harness (`tests/test_capture_guide_dom.js`) exercising macOS, Windows, and Linux modal states.
+- Ran comprehensive pytest regression suite (55/55 passed across capture recovery frontend, Linux settings, user settings, Windows platform, and Linux launcher). Evidence saved under `docs/verification/phase_02B_19/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 9f5e9c974627919d8ee626a453a7afdcb35e732f` (PASSED).
 
 ## 2026-11-10 (Phase 2B.20: Android Background Keep-Alive Guide Localization)
 - Translated the Android background keep-alive guide (`_showBgKeepAliveGuide`) in `templates/index.html` to English with Sora conventions:
@@ -241,14 +240,13 @@
   - Acknowledgment button: `"Got it"`.
   - Manufacturer-specific steps (vivo, OPPO/OnePlus/Realme, Xiaomi, Huawei/Honor, Samsung, generic fallback) translated to English with menu paths preserved, using `"Miru"` as the app identifier in Android settings.
   - Added contextual note that menu names can vary by device.
-- Preserved manufacturer detection logic, the one-time display flag (`miru_bg_guide_shown`), dismiss behavior, exact 12,807 line count (`templates/index.html`) preserved, APK update text and native Android strings for later.
-- Node DOM harness (`tests/test_bg_keep_alive_guide_dom.js`): Verified all 6 manufacturer branches (Samsung SM-G991B, Xiaomi 13, vivo X90, OnePlus 11, HONOR Magic5, Google Pixel 8) plus suppression behavior on a second call. Evidence under `docs/verification/phase_02B_20/test_results.txt`.
-- Git diff check: PASS (zero unexpected deletions, clean whitespace, 12807 lines exact).
-- History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 1b358aa6a55a52f831f756ac4f1aef6c6ff779fe` (PASSED).
+- Preserved manufacturer detection logic, the one-time display flag (`miru_bg_guide_shown`), dismiss behavior, APK update text, and native Android strings for later.
+- Maintained exact 12,807 line count (`templates/index.html`).
+- Created `tests/test_bg_keep_alive_guide_dom.js` and verified all 6 manufacturer branches (Samsung, Xiaomi, vivo, OPPO/OnePlus/Realme, Huawei/Honor, generic fallback) plus suppression behavior on a second call. Evidence saved under `docs/verification/phase_02B_20/test_results.txt`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 1b358aa6a55a52f831f756ac4f1aef6c6ff779fe` (PASSED).
 
 ## 2026-11-11 (Phase 2B.21: APK Update Handling Finalization)
-- Decided against in-app APK updates for Sora as a personal build; updates will be installed manually when needed.
-- Verified `_checkAppUpdate` logic returns before requesting update metadata to disable the feature safely.
-- Added note that Android settings menu names vary by device to the background keep-alive guide in `templates/index.html`.
-- Maintained exact 12,807 line count.
+- Translated visible text in `ApkUpdateManager.java`: install permission Toast, DownloadManager title/description, and failed-download Toast to English. APK updater code retained; installation remains manual.
+- Translated frontend UI strings in `templates/index.html`: APK update banner ("New version X available", "Update"), and `_handleApkUpdateClick` feedback messages ("Downloading new version…", "Native download failed, using browser instead", "Download link copied to clipboard"). `_checkAppUpdate` returns early to disable the feature safely; download URL and metadata request flow preserved.
+- Verified no mixed-language labels remain in either file. Exact 12,807-line template preserved.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).

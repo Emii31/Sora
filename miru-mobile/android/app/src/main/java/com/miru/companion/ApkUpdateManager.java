@@ -62,7 +62,7 @@ public class ApkUpdateManager {
             if (!appCtx.getPackageManager().canRequestPackageInstalls()) {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     Toast.makeText(appCtx,
-                            "请允许 Miru 安装应用（一次授权即可）",
+                            "Please allow Miru to install applications (one-time authorization)",
                             Toast.LENGTH_LONG).show();
                 });
                 Intent i = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
@@ -96,8 +96,8 @@ public class ApkUpdateManager {
         }
 
         DownloadManager.Request req = new DownloadManager.Request(Uri.parse(downloadUrl))
-                .setTitle("Miru 更新 " + (versionName != null ? versionName : ""))
-                .setDescription("正在下载新版本…")
+                .setTitle("Miru Update " + (versionName != null ? versionName : ""))
+                .setDescription("Downloading new version…")
                 .setMimeType("application/vnd.android.package-archive")
                 .setNotificationVisibility(
                         DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
@@ -183,7 +183,7 @@ public class ApkUpdateManager {
                 Log.w(TAG, "Download failed: status=" + status + " reason=" + reason);
                 notifyWeb(appCtx, "{\"state\":\"error\",\"reason\":" + reason + "}");
                 new Handler(Looper.getMainLooper()).post(() ->
-                        Toast.makeText(appCtx, "下载失败，请稍后重试",
+                        Toast.makeText(appCtx, "Download failed, please retry",
                                 Toast.LENGTH_LONG).show());
             }
         } finally {
