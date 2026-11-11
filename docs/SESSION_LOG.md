@@ -283,3 +283,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 
 ============================== 12 passed in 0.19s ==============================) — 12/12 passed.
 - Enforced history prefix integrity via  (PASSED).
+
+## 2026-11-12 (Sora Branding and UI Translation Milestone)
+- Completed full audit and rebranding across web app manifest, Android launcher and activity labels, desktop product name, wallpaper labels, notifications, settings, macOS permission instructions, Android battery guides, and administrative/landing/privacy pages.
+- Translated remaining first-party copy while keeping package IDs, storage keys, routes, invite formats, provisioning defaults, and upstream attribution intact.
+- Ran and passed all 933 regression and platform tests successfully.
+- Verified history prefix integrity via `scripts/check_history_append_only.py c10f39a` (PASSED).
+

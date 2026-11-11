@@ -369,7 +369,7 @@ public class MiruConnectionService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         return new Notification.Builder(this, CHANNEL_CONN)
-                .setContentTitle("Miru")
+                .setContentTitle("Sora")
                 .setContentText(status)
                 .setSmallIcon(R.mipmap.miru_launcher)
                 .setLargeIcon(getLauncherLargeIcon())
@@ -416,7 +416,7 @@ public class MiruConnectionService extends Service {
         String body = text.length() > 200 ? text.substring(0, 200) + "..." : text;
 
         Notification notification = new Notification.Builder(ctx, CHANNEL_MSG)
-                .setContentTitle("Miru")
+                .setContentTitle("Sora")
                 .setContentText(body)
                 .setStyle(new Notification.BigTextStyle().bigText(body))
                 .setSmallIcon(R.mipmap.miru_launcher)

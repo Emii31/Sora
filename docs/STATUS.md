@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: 2B.23 (Android Capture and Startup UI Translation - Completed)
-- **Current Status**: Translated native Android ScreenCaptureService notification channels, active and paused notifications, resume instructions, Stop action, and MainActivity local service startup failure fallback to English. Preserved notification IDs, channel IDs, permissions, capture lifecycle, and backend error messages. Verified mobile notification tests.
+- **Phase**: Sora Branding and English UI Milestone - Completed
+- **Current Status**: Completed full audit and rebranding across web app manifest, Android launcher/activity labels, desktop product name, wallpaper labels, notifications, settings, macOS permission instructions, Android battery guides, and administrative/landing/privacy pages. Translated remaining first-party copy while keeping package IDs, storage keys, routes, invite formats, provisioning defaults, and upstream attribution intact. Ran and passed all 933 regression and platform tests. Verified history prefix integrity.
 - **Next Action**: None authorized.

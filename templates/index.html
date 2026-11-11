@@ -7926,7 +7926,7 @@ async function settingsExportMyData() {
 
 async function settingsDeleteAccount() {
   // Two-stage confirmation — plain confirm + magic string
-  if (!await _confirm('确认删除账号？\n\n这会永久删除：\n• 所有聊天记录、证据卡、子卡片、记忆树\n• Miru 对你的所有情绪记录、人际关系数据\n• 你上传的所有图片和个性化 Live2D 模型\n• 你当前的邀请码会被吊销，无法再次登录\n\n删除后无法恢复。',
+  if (!await _confirm('确认删除账号？\n\n这会永久删除：\n• 所有聊天记录、证据卡、子卡片、记忆树\n• Sora 对你的所有情绪记录、人际关系数据\n• 你上传的所有图片和个性化 Live2D 模型\n• 你当前的邀请码会被吊销，无法再次登录\n\n删除后无法恢复。',
                       { danger: true, confirmText: '继续' })) {
     return;
   }
@@ -7955,7 +7955,7 @@ async function settingsDeleteAccount() {
         window.MiruAndroid.clearCredentials();
       }
     } catch(e) {}
-    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-muted);font-size:18px;flex-direction:column;gap:16px;text-align:center;padding:20px;"><div style="font-size:28px;">👋</div><div>你的账号已删除，所有数据已清空。</div><div style="font-size:13px;color:var(--text-muted);opacity:0.7;">感谢你曾让 Miru 陪伴过一段时间。</div></div>';
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--text-muted);font-size:18px;flex-direction:column;gap:16px;text-align:center;padding:20px;"><div style="font-size:28px;">👋</div><div>你的账号已删除，所有数据已清空。</div><div style="font-size:13px;color:var(--text-muted);opacity:0.7;">感谢你曾让 Sora 陪伴过一段时间。</div></div>';
     setTimeout(function() { window.location.href = '/'; }, 2500);
   } catch (err) {
     settingsShowFlash('删除失败: ' + err.message, 'error');
@@ -12155,11 +12155,11 @@ function _showClientScreenRecordingModal(alreadyEnabled, reason, platformName) {
     body = isDisabled
       ? (
           escapeHtml(charName) + ' failed to take screenshots several times.<br>' +
-          'This is usually because macOS <b>Screen Recording</b> permission hasn\'t been granted. Click the button below to open System Settings, find <b>Miru</b> in the list, and check it.'
+          'This is usually because macOS <b>Screen Recording</b> permission hasn\'t been granted. Click the button below to open System Settings, find <b>Sora</b> in the list, and check it.'
         )
       : (
           escapeHtml(charName) + ' will periodically glance at your screen to understand what you are doing and accompany you when you are busy or tired.<br>' +
-          'This requires macOS <b>Screen Recording</b> permission. Click the button below to open System Settings and check <b>Miru</b>.'
+          'This requires macOS <b>Screen Recording</b> permission. Click the button below to open System Settings and check <b>Sora</b>.'
         );
   }
   var lifecycleText = usesCaptureProbe
@@ -12375,12 +12375,12 @@ function _showBgKeepAliveGuide() {
   else if (dn.indexOf('samsung') !== -1) brand = 'samsung';
 
   var steps = {
-    vivo:    '1. Settings → Battery → Background power management → find Miru → Allow background activity\n2. Recents → swipe down the Miru card → tap the lock',
-    oppo:    '1. Settings → Battery → Auto-start management → find Miru → Allow\n2. Recents → swipe down the Miru card → lock',
-    xiaomi:  '1. Settings → Apps → App management → Miru → Battery saver → Unrestricted\n2. Recents → long-press Miru → lock',
-    huawei:  '1. Settings → Battery → Launch management → Miru → Manual management → Allow all\n2. Recents → swipe down the Miru card → lock',
-    samsung: '1. Settings → Battery → Background usage restrictions → Never sleeping apps → Add Miru',
-    other:   '1. Settings → Battery/App management → find Miru → Allow background activity\n2. Recents → lock Miru'
+    vivo:    '1. Settings → Battery → Background power management → find Sora → Allow background activity\n2. Recents → swipe down the Sora card → tap the lock',
+    oppo:    '1. Settings → Battery → Auto-start management → find Sora → Allow\n2. Recents → swipe down the Sora card → lock',
+    xiaomi:  '1. Settings → Apps → App management → Sora → Battery saver → Unrestricted\n2. Recents → long-press Sora → lock',
+    huawei:  '1. Settings → Battery → Launch management → Sora → Manual management → Allow all\n2. Recents → swipe down the Sora card → lock',
+    samsung: '1. Settings → Battery → Background usage restrictions → Never sleeping apps → Add Sora',
+    other:   '1. Settings → Battery/App management → find Sora → Allow background activity\n2. Recents → lock Sora'
   };
 
   var stepsText = steps[brand];
@@ -12393,7 +12393,7 @@ function _showBgKeepAliveGuide() {
   overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.innerHTML = '<div style="background:var(--bg-surface);border-radius:16px;padding:20px;max-width:340px;width:100%;">'
     + '<div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Background activity settings</div>'
-    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">To ensure Miru can continuously observe the screen, please complete the following settings (menu names vary by device):</div>'
+    + '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">To ensure Sora can continuously observe the screen, please complete the following settings (menu names vary by device):</div>'
     + stepsHtml
     + '<div style="margin-top:16px;display:flex;justify-content:flex-end;gap:12px;">'
     + '<button onclick="document.getElementById(\'bgKeepAliveOverlay\').remove()" style="border:none;background:var(--airi-pink);color:#fff;border-radius:10px;padding:8px 20px;font-size:14px;cursor:pointer;">Got it</button>'

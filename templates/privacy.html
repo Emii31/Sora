@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#FFF9F2">
-<title>隐私声明 — Miru</title>
-<meta name="description" content="Miru 的隐私声明：我们收集什么、为什么收集、如何保存、如何自助删除。">
+<title>Privacy Statement — Sora</title>
+<meta name="description" content="Sora privacy statement: What we collect, why we collect it, how it is stored, and how to delete your data.">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -160,79 +160,79 @@ code {
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand"><span class="nav-brand-dot"></span>Miru</a>
-    <a href="/" class="nav-back">← 返回首页</a>
+    <a href="/" class="nav-brand"><span class="nav-brand-dot"></span>Sora</a>
+    <a href="/" class="nav-back">← Back to Home</a>
   </div>
 </nav>
 
 <main>
-  <h1>隐私声明</h1>
-  <p class="subtitle">最近更新：2026-04-15</p>
+  <h1>Privacy Statement</h1>
+  <p class="subtitle">Last updated: 2026-11-12</p>
 
   <section>
-    <h2>我们收集什么</h2>
-    <p>Miru 是一只住在你电脑或手机里的 AI 陪伴。为了完成「记住你说过的话」「在你熬夜时担心你」这些功能，我们会在<strong>你主动授权</strong>的前提下收集：</p>
+    <h2>What We Collect</h2>
+    <p>Sora is your AI companion living on your device. To power features like "remembering what you said" and caring for you when you stay up late, we collect the following data <strong>only with your active consent</strong>:</p>
     <ul>
-      <li><strong>聊天记录</strong>：你和 Miru 的对话，连同时间戳。</li>
-      <li><strong>屏幕截图</strong>（仅当你开启自动截屏功能时）：截图<strong>不会</strong>上传到 VPS 保存，只会实时送给 VLM 提取一段文字描述，截图本身在读取后立即删除。</li>
-      <li><strong>你主动上传的图片</strong>：保存在 <code>data/users/&lt;你的 ID&gt;/uploads/</code>，仅用于对应卡片的展示。</li>
-      <li><strong>设备心跳</strong>：最近一次连接时间、设备名、平台（Mac/Windows/Android/iOS）。</li>
-      <li><strong>你的作息活动时间戳</strong>（不含内容）：仅来自截图时间戳与聊天时间戳，用于推断你的作息节律——决定 Miru 何时主动陪你、何时保持安静。</li>
+      <li><strong>Chat History</strong>: Conversations between you and Sora, along with timestamps.</li>
+      <li><strong>Screen Captures</strong> (only when auto-screenshot observation is enabled): Screenshots are <strong>never</strong> uploaded or stored on the server; they are processed in real-time by a VLM to extract a text description, and the image data is discarded immediately.</li>
+      <li><strong>User-Uploaded Images</strong>: Stored in <code>data/users/&lt;your_id&gt;/uploads/</code> exclusively for card display.</li>
+      <li><strong>Device Heartbeat</strong>: Last connected time, device name, and platform (macOS/Windows/Android/iOS).</li>
+      <li><strong>Activity Timestamps</strong> (content-free): Derived from screenshot and chat timestamps to infer daily rhythms and help Sora know when to accompany you or stay quiet.</li>
     </ul>
     <div class="callout">
-      我们<strong>不会</strong>收集你的位置、通讯录、通话记录、浏览器历史，也不会读取系统里其它应用的内容。
+      We <strong>never</strong> collect your location, contacts, call logs, browsing history, or the contents of other apps on your system.
     </div>
   </section>
 
   <section>
-    <h2>数据保存在哪里</h2>
-    <p>所有数据只保存在<strong>当前服务器的 per-user 目录</strong>：</p>
+    <h2>Where Data Is Stored</h2>
+    <p>All data is stored exclusively in your <strong>per-user directory</strong>:</p>
     <ul>
-      <li>Web/APK 用户：保存在 Miru 官方 VPS（位于境外）的你的专属目录内，路径以你的 user_id 命名，其他用户<strong>无权访问</strong>。</li>
-      <li>Mac DMG 用户（客户端模式）：保存在你本机 <code>~/Library/Application Support/Miru/data/</code>，<strong>只在你的设备里</strong>。</li>
+      <li>Web/APK Users: Stored in your dedicated directory on the official Sora VPS, indexed by your user ID and inaccessible to other users.</li>
+      <div></div>
+      <li>macOS DMG Users (Client Mode): Stored locally at <code>~/Library/Application Support/Miru/data/</code> on your machine.</li>
     </ul>
-    <p>我们不会把你的数据卖给任何第三方。我们也不在除了官方 VPS 之外的任何地方保存备份。</p>
+    <p>We do not sell your data to any third party and maintain no backups outside your server instance.</p>
   </section>
 
   <section>
-    <h2>我们会调用哪些第三方</h2>
-    <p>Miru 依赖少量外部 API 才能理解内容：</p>
+    <h2>Third-Party Services</h2>
+    <p>Sora relies on minimal external APIs to function:</p>
     <ul>
-      <li><strong>VLM 大模型</strong>（由后端运维配置的第三方 LLM 服务商）：用于分析聊天、截图、生成回复。每次调用是无状态的，模型服务商不保留我们的 prompt（据其隐私政策）。</li>
-      <li><strong>Web Push 服务</strong>（浏览器各自的 push 端点，如 FCM）：仅用于发送 Miru 给你的消息提醒，不会包含内容本身。</li>
+      <li><strong>VLM / LLM Provider</strong> (configured by your server admin): Stateless API calls to analyze text and screenshots. Providers do not retain prompts for training per their privacy policies.</li>
+      <li><strong>Web Push Services</strong> (such as FCM): Used solely to deliver notification alerts from Sora without content bodies.</li>
     </ul>
-    <p>我们<strong>不使用</strong>任何统计分析（Google Analytics 等）、崩溃追踪（Sentry 等）、或广告 SDK。</p>
+    <p>We use <strong>no</strong> analytics trackers (such as Google Analytics), crash reporters (such as Sentry), or advertising SDKs.</p>
   </section>
 
   <section>
-    <h2>你能做什么</h2>
-    <h3>导出你的全部数据</h3>
-    <p>在 App 设置 → 隐私中点击 <strong>「导出我的数据」</strong>，会下载一个 JSON 文件，包含你账号下全部文本记录（聊天、卡片、记忆、情绪日志、模型设置等）。</p>
+    <h2>Your Controls</h2>
+    <h3>Export Your Data</h3>
+    <p>Go to App Settings → Privacy and click <strong>"Export My Data"</strong> to download a JSON archive of all your chat records, memory cards, emotion logs, and configuration.</p>
 
-    <h3>删除你的账号</h3>
-    <p>在 App 设置 → 隐私中点击 <strong>「删除我的账号」</strong>，输入二次确认后：</p>
+    <h3>Delete Your Account</h3>
+    <p>Go to App Settings → Privacy and click <strong>"Delete My Account"</strong>. After confirmation:</p>
     <ul>
-      <li>你的 user_id 会立即从服务器用户表中移除。</li>
-      <li>你的 <code>data/users/&lt;你的 ID&gt;/</code> 目录会被递归删除，<strong>包括聊天、卡片、上传的图片、记忆、情绪日志、Live2D 个性化、全部本地缓存</strong>。</li>
-      <li>你当前使用的邀请码会被标记为「已吊销」，无法再次登录。</li>
-      <li>我们只保留一条审计日志（不含任何内容），用于排查滥用：<code>{user_id, invitation_code, created_at, deleted_at}</code>。</li>
+      <li>Your user ID is immediately removed from the server database.</li>
+      <li>Your <code>data/users/&lt;your_id&gt;/</code> directory is recursively deleted, including chats, cards, uploads, memory, emotion logs, and local caches.</li>
+      <li>Your invitation code is marked as revoked.</li>
+      <li>Only an audit record (content-free) is retained: <code>{user_id, invitation_code, created_at, deleted_at}</code>.</li>
     </ul>
     <div class="callout">
-      删除操作<strong>不可撤销</strong>。如果想保留数据副本，请先导出再删除。
+      Account deletion is <strong>irreversible</strong>. Export a backup before deleting if you wish to keep your data.
     </div>
 
-    <h3>撤回截屏权限</h3>
-    <p>随时在 App 设置 → 自动截屏处关闭开关；Mac DMG 还可在「系统设置 → 屏幕录制」里撤销权限，APK 则在「系统设置 → 应用 → Miru → 权限」处。</p>
+    <h3>Revoking Screen Permissions</h3>
+    <p>Disable auto-screenshots in App Settings at any time. On macOS, revoke Screen Recording permission in System Settings. On Android, revoke permissions in System Settings → Apps → Sora.</p>
   </section>
 
   <section>
-    <h2>联系</h2>
-    <p>如果你对隐私有任何疑问、或想请求手动协助删除：请通过 <a href="https://github.com/anthropics/claude-code/issues">GitHub Issue</a> 联系我们。</p>
-    <p>由于 Miru 目前仍以邀请制小范围使用，我们不设专用客服邮箱。</p>
+    <h2>Contact</h2>
+    <p>For privacy questions or assistance, reach out via <a href="https://github.com/Emii31/Sora">GitHub Repository</a>.</p>
   </section>
 
   <div class="footer">
-    Miru · 本页不会持续跟踪你的访问。
+    Sora · This page does not track your visits.
   </div>
 </main>
 

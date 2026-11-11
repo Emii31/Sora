@@ -47,7 +47,7 @@
             android:exported="false">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Keeps the user-enabled Miru companion message stream connected for timely replies and notifications" />
+                android:value="Keeps the user-enabled Sora companion message stream connected for timely replies and notifications" />
         </service>
 
         <receiver
@@ -56,7 +56,7 @@
 
         <service
             android:name=".MiruWallpaperService"
-            android:label="Miru Live2D"
+            android:label="Sora Live2D"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="true">
             <intent-filter>

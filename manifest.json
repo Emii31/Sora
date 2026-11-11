@@ -1,7 +1,7 @@
 {
-  "name": "Miru",
-  "short_name": "Miru",
-  "description": "生活记录助手 — Miru 帮你结构化每一天",
+  "name": "Sora",
+  "short_name": "Sora",
+  "description": "Life Journal Assistant — Sora helps you structure every day",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFF5E9",

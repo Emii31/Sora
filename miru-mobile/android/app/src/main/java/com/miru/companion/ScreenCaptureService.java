@@ -521,7 +521,7 @@ public class ScreenCaptureService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("Miru Observation Paused")
+                .setContentTitle("Sora Observation Paused")
                 .setContentText("Tap to resume screen observation")
                 .setSmallIcon(R.mipmap.miru_launcher)
                 .setColor(NOTIFICATION_COLOR)
@@ -563,7 +563,7 @@ public class ScreenCaptureService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         return new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("Miru")
+                .setContentTitle("Sora")
                 .setContentText("Observing screen content")
                 .setSmallIcon(R.mipmap.miru_launcher)
                 .setColor(NOTIFICATION_COLOR)
