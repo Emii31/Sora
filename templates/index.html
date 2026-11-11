@@ -12434,6 +12434,7 @@ window._handleApkUpdateClick = function() {
     } catch(e) {
       console.error('[ApkUpdate] bridge call failed', e);
       if (label) label.textContent = 'Native download failed, using browser instead';
+    }
   }
 
   // Fallback: copy download URL to clipboard (window.open is blocked in Capacitor WebView)

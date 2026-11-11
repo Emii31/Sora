@@ -326,8 +326,15 @@ def test_resolve_max_tokens_uses_config_when_requested_none(monkeypatch, tmp_pat
         "model": "m",
         "max_tokens": 12345,
     })
-
     assert ai_config.resolve_max_tokens("chat") == 12345
+
+
+def test_loopback_http_base_url(monkeypatch, tmp_path):
+    ai_config, _ = _setup(monkeypatch, tmp_path)
+    assert ai_config._openai_base_url_from_host("localhost:11434") == "http://localhost:11434/v1"
+    assert ai_config._openai_base_url_from_host("http://localhost:11434") == "http://localhost:11434/v1"
+    assert ai_config._openai_base_url_from_host("127.0.0.1:8000/v1") == "http://127.0.0.1:8000/v1"
+    assert ai_config._openai_base_url_from_host("api.openai.com") == "https://api.openai.com/v1"
 
 
 def test_resolve_max_tokens_clips_requested_to_config(monkeypatch, tmp_path):

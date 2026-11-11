@@ -208,3 +208,10 @@
   - Test suite check: 12/12 passed (`tests/test_mobile_notification_memory_ui.py`). Android build/device rendering checked via static analysis of Java source and passing test assertions.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 3ea036c` (PASSED).
+
+- **Sora Local Chat Checkpoint & Loopback HTTP Support Verification**:
+  - `templates/index.html`: Restored missing closing brace in `_handleApkUpdateClick` try/catch block.
+  - `tests/test_owner_ai_config_frontend.py`: Restored original inline JS syntax test assertion using `new Function('(function(){' + require('fs').readFileSync(0, 'utf8') + '})()');`, confirming it validates inline scripts and rejects invalid JS.
+  - `ai_config.py`: Added explicit HTTP support for loopback inference servers (`localhost`, `127.0.0.1`, `[::1]`) across configuration save, connection test (`ping_tier`), and runtime requests (`get_tier_client`), while preserving HTTPS handling for remote providers.
+  - Test suite check: All 34 `ai_config` tests passed, all 9 frontend tests passed (and regression suite of 933 tests verified).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).

@@ -141,9 +141,21 @@ def _normalize_host(value: str) -> str:
     return host
 
 
+def _is_loopback(host: str) -> bool:
+    lower = str(host).lower()
+    netloc = urlsplit(f"//{lower}").netloc or lower
+    hostname = netloc.split(":")[0].strip("[]")
+    return hostname in ("localhost", "127.0.0.1", "::1") or hostname.startswith("127.")
+
+
+def _base_url_scheme(host: str) -> str:
+    return "http" if _is_loopback(host) else "https"
+
+
 def _legacy_openai_base_url(normalized: str) -> str:
     """Apply Miru's historical `/v1` completion rule."""
-    base = f"https://{normalized}"
+    scheme = _base_url_scheme(normalized)
+    base = f"{scheme}://{normalized}"
     lower = normalized.lower().rstrip("/")
     if lower.endswith("/v1") or lower.endswith("/v1beta/openai"):
         return base
@@ -152,7 +164,8 @@ def _legacy_openai_base_url(normalized: str) -> str:
 
 def _prefer_legacy_base_url(normalized: str) -> bool:
     """Return whether the historical `/v1` form should be tried first."""
-    parsed = urlsplit(f"https://{normalized}")
+    scheme = _base_url_scheme(normalized)
+    parsed = urlsplit(f"{scheme}://{normalized}")
     path = (parsed.path or "").rstrip("/").lower()
     if not path:
         return True
@@ -174,7 +187,8 @@ def _openai_base_url_candidates(host: str) -> list[str]:
     normalized = _normalize_host(host)
     if not normalized:
         return []
-    exact = f"https://{normalized}"
+    scheme = _base_url_scheme(normalized)
+    exact = f"{scheme}://{normalized}"
     legacy = _legacy_openai_base_url(normalized)
     ordered = [legacy, exact] if _prefer_legacy_base_url(normalized) else [exact, legacy]
     return list(dict.fromkeys(ordered))

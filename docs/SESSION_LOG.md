@@ -290,3 +290,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Ran and passed all 933 regression and platform tests successfully.
 - Verified history prefix integrity via `scripts/check_history_append_only.py c10f39a` (PASSED).
 
+## 2026-11-12 (Sora Local Chat Checkpoint & Loopback HTTP Support)
+- Restored missing closing brace in `_handleApkUpdateClick` try/catch block in `templates/index.html`.
+- Restored original inline JS syntax test assertion in `tests/test_owner_ai_config_frontend.py`, confirming it validates inline scripts and rejects invalid JS.
+- Added loopback HTTP inference server support in `ai_config.py` for configuration save, connection test (`ping_tier`), and runtime requests (`get_tier_client`), while preserving HTTPS for remote providers.
+- Added comprehensive unit tests in `tests/test_ai_config.py` covering loopback HTTP base URL generation.
+- Ran test suite successfully (all targeted and regression tests passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).
+
+
