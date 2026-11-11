@@ -305,3 +305,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Ran focused tests (all 43 tests passed) and history prefix check against baseline `7387da60ae7e3f8d8ca66290b4c041d0e7066cbd` (PASSED).
 
 
+
+## 2026-11-12 (Sora Fast Local Text Chat Benchmark Verification)
+- Implemented and verified reactive_fast path for text-only turns in core.py, achieving ~10s faster response time (Send-to-History) compared to the full agent path (87.3s vs 78.4s) while bypassing preflight/tools for standard turns.
+- Verified fast mode skips preflight, makes one generation request, and delivers correct reply in history.
+- Benchmark timings for direct inference (Direct=5.61s for Fast vs 109.3s for Full, highly variable due to model loading/warmup) and end-to-end delivery confirmed.
+- Enforced history prefix integrity via scripts/check_history_append_only.py 5a07064607b328f60fbd7382753a974d03cf45f9 (PASSED).

@@ -222,3 +222,8 @@
   - Assistant reply: Successfully generated and appended to chat history.
   - Test suite check: All 43 focused tests passed.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7387da60ae7e3f8d8ca66290b4c041d0e7066cbd` (PASSED).
+
+### 2026-11-12 (Fast Mode Chat Verification)
+- Verified fast mode bypasses model-based preflight (reactive_fast policy).
+- Benchmark: Sora Total Time (Fast Path) = 78.45s, (Full Path) = 87.33s.
+- Verified reply persistence and history prefix integrity.
