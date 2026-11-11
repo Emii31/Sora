@@ -1,0 +1,18 @@
+Extracting _onApkUpdateProgress...
+Progress callback loaded
+
+--- Progress callback tests ---
+  state=running: label="Downloading… 50%" btn="Downloading" disabled=true
+  PASS: running
+  state=done: label="Download finished, preparing to install…" btn="Downloaded" disabled=false
+  PASS: done
+  state=error: label="Download failed, please retry" btn="Retry" disabled=false
+  PASS: error
+
+--- _checkAppUpdate no-metadata-request test ---
+PASS: _checkAppUpdate returns early, no fetch call
+
+--- Mixed-language label scan ---
+PASS: No Chinese characters in APK update region
+
+All Phase 2B.21 APK update DOM assertions passed successfully.
