@@ -521,8 +521,8 @@ public class ScreenCaptureService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("Miru 观察已暂停")
-                .setContentText("点击恢复屏幕观察")
+                .setContentTitle("Miru Observation Paused")
+                .setContentText("Tap to resume screen observation")
                 .setSmallIcon(R.mipmap.miru_launcher)
                 .setColor(NOTIFICATION_COLOR)
                 .setAutoCancel(true)
@@ -540,8 +540,8 @@ public class ScreenCaptureService extends Service {
 
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID, "屏幕观察", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("Miru 屏幕观察服务");
+                CHANNEL_ID, "Miru Screen Observation", NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("Miru screen observation service");
         channel.setShowBadge(false);
         NotificationManager nm = getSystemService(NotificationManager.class);
         nm.createNotificationChannel(channel);
@@ -563,14 +563,14 @@ public class ScreenCaptureService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         return new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("Miru 守护中")
-                .setContentText("正在观察屏幕内容")
+                .setContentTitle("Miru")
+                .setContentText("Observing screen content")
                 .setSmallIcon(R.mipmap.miru_launcher)
                 .setColor(NOTIFICATION_COLOR)
                 .setOngoing(true)
                 .setContentIntent(tapPending)
                 .addAction(new Notification.Action.Builder(
-                        null, "停止", stopPending).build())
+                        null, "Stop", stopPending).build())
                 .build();
     }
 }

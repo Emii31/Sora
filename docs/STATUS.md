@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: 2B.21 (APK Update Handling - Completed)
-- **Current Status**: Retained APK updater code but disabled automatic checks; updates will be installed manually. Verified early return in `_checkAppUpdate`. Translated all visible update UI strings to English. Added note that Android settings menu names vary by device to the background keep-alive guide.
+- **Phase**: 2B.23 (Android Capture and Startup UI Translation - Completed)
+- **Current Status**: Translated native Android ScreenCaptureService notification channels, active and paused notifications, resume instructions, Stop action, and MainActivity local service startup failure fallback to English. Preserved notification IDs, channel IDs, permissions, capture lifecycle, and backend error messages. Verified mobile notification tests.
 - **Next Action**: None authorized.

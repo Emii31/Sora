@@ -200,3 +200,11 @@
   - Verification harness: Mobile notification test suite (12/12 passed) and APK update harness executed in Node (all assertions passed).
   - Android build/device check: Build not required; Java string resources validated.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
+
+- **Phase 2B.23 Verification (Android Capture and Startup UI Translation)**:
+  - `ScreenCaptureService.java`: Translated notification channel name/description, paused notification, active notification, and Stop action to English.
+  - `MainActivity.java`: Translated local service startup failure error fallback message to English.
+  - Preservation checks: Notification IDs, channel IDs, foreground service types, MediaProjection flows, request codes, and backend error handling preserved intact.
+  - Test suite check: 12/12 passed (`tests/test_mobile_notification_memory_ui.py`). Android build/device rendering checked via static analysis of Java source and passing test assertions.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 3ea036c` (PASSED).

@@ -262,3 +262,24 @@
 - Translated interactive UI strings in `MiruConnectionService.java` and `NotificationReplyReceiver.java`: quick-reply label ("Reply to Miru..."), notification action ("Reply"), and background-reply status messages ("Sending...", "Failed to send, please try again later", "Failed to send: ").
 - Verified all translations via existing test suites (`tests/test_mobile_notification_memory_ui.py` - 12/12 passed) and APK update harness. Android UI strings were verified in the Java source; no device build was required for text validation.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 06293db9f52566094e985f0d3fafae71711c0dc3` (PASSED).
+
+## 2026-11-11 (Phase 2B.23: Android Capture and Startup UI Translation)
+- Translated native Android UI strings in  and  to English:
+  - :
+    - Notification channel: "Miru Screen Observation", description "Miru screen observation service"
+    - Paused notification: title "Miru Observation Paused", text "Tap to resume screen observation"
+    - Active notification: title "Miru", text "Observing screen content", action "Stop"
+  - :
+    - Local service failure fallback: "Miru local service failed to start"
+- Preserved notification IDs, channel IDs, permissions, capture lifecycle, and backend error messages.
+- Ran mobile notification test suite (============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0
+rootdir: /mnt/data/Companion/Miru
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 12 items
+
+tests/test_mobile_notification_memory_ui.py ............                 [100%]
+
+============================== 12 passed in 0.19s ==============================) — 12/12 passed.
+- Enforced history prefix integrity via  (PASSED).
