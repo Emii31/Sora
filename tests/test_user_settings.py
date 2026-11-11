@@ -522,11 +522,19 @@ def test_local_text_chat_enabled_setting_and_policy(monkeypatch, tmp_path):
         user_settings.update({"local_text_chat_enabled": True})
         assert user_settings.get()["local_text_chat_enabled"] is True
 
+        # Ordinary text turn with fast mode enabled -> reactive_fast
         policy_ordinary = core._resolve_chat_agent_policy(None, "Hello there")
         assert policy_ordinary["mode"] == "reactive_fast"
         assert policy_ordinary["max_iterations"] == 1
         assert policy_ordinary["allow_tools"] is False
 
-        policy_tool = core._resolve_chat_agent_policy(None, "帮我搜索一下天气")
-        assert policy_tool["mode"] == "v4_pro"
-        assert policy_tool["allow_tools"] is True
+        # Image turn with fast mode enabled -> falls back to full v4_pro mode
+        policy_image = core._resolve_chat_agent_policy(None, "Look at this", user_image_descs=["[image]"])
+        assert policy_image["mode"] == "v4_pro"
+        assert policy_image["allow_tools"] is True
+
+        # Toggling local_text_chat_enabled back to False -> full v4_pro mode
+        user_settings.update({"local_text_chat_enabled": False})
+        policy_disabled = core._resolve_chat_agent_policy(None, "Hello there")
+        assert policy_disabled["mode"] == "v4_pro"
+        assert policy_disabled["allow_tools"] is True

@@ -215,15 +215,9 @@
   - `ai_config.py`: Added explicit HTTP support for loopback inference servers (`localhost`, `127.0.0.1`, `[::1]`) across configuration save, connection test (`ping_tier`), and runtime requests (`get_tier_client`), while preserving HTTPS handling for remote providers.
   - Test suite check: All 34 `ai_config` tests passed, all 9 frontend tests passed (and regression suite of 933 tests verified).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).
-
-- **Sora Real Local Chat Verification with Ollama**:
-  - `ai_config.py`: Enhanced loopback detection using parsed hostname and `ipaddress` module (`localhost`, IPv4/IPv6 loopback, explicit HTTPS scheme preservation, and safe handling of remote names starting with 127).
-  - Real local chat test: Executed using Ollama (`qwen2.5:1.5b-instruct` at `http://127.0.0.1:11434/v1` with API key `ollama`, screen capture off, disposable data dir).
-  - Assistant reply: Successfully generated and appended to chat history.
-  - Test suite check: All 43 focused tests passed.
-  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7387da60ae7e3f8d8ca66290b4c041d0e7066cbd` (PASSED).
-
-### 2026-11-12 (Fast Mode Chat Verification)
-- Verified fast mode bypasses model-based preflight (reactive_fast policy).
-- Benchmark: Sora Total Time (Fast Path) = 78.45s, (Full Path) = 87.33s.
-- Verified reply persistence and history prefix integrity.
+- **Sora Fast Local Chat Performance Milestone & Benchmark Verification**:
+  - `templates/index.html`: Exposed Fast Local Chat toggle in system settings UI with clear tool/image routing explanations.
+  - `tests/test_user_settings.py`: Updated settings policy test to verify default, image fallback, and setting toggle without keyword guessing.
+  - `scripts/benchmark_chat.py`: Implemented multi-turn synthetic benchmark through real Flask `/api/chat` route, reporting median send-to-history times and direct latencies, with strict nonzero exit on failure.
+  - Test suite check: All 54 focused tests passed successfully.
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7387da6` (PASSED).

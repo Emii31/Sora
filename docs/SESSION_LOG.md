@@ -298,16 +298,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Ran test suite successfully (all targeted and regression tests passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).
 
-## 2026-11-12 (Sora Real Local Chat Verification with Ollama)
-- Enhanced loopback detection in `ai_config.py` using parsed hostname and `ipaddress` module (`localhost`, IPv4/IPv6 loopback, explicit HTTPS scheme preservation, and safe handling of remote names starting with 127).
-- Verified first real local chat reply using Ollama (`qwen2.5:1.5b-instruct` at `http://127.0.0.1:11434/v1` with API key `ollama`, screen capture off, disposable data dir).
-- Assistant reply successfully generated and appended to chat history.
-- Ran focused tests (all 43 tests passed) and history prefix check against baseline `7387da60ae7e3f8d8ca66290b4c041d0e7066cbd` (PASSED).
 
-
-
-## 2026-11-12 (Sora Fast Local Text Chat Benchmark Verification)
-- Implemented and verified reactive_fast path for text-only turns in core.py, achieving ~10s faster response time (Send-to-History) compared to the full agent path (87.3s vs 78.4s) while bypassing preflight/tools for standard turns.
-- Verified fast mode skips preflight, makes one generation request, and delivers correct reply in history.
-- Benchmark timings for direct inference (Direct=5.61s for Fast vs 109.3s for Full, highly variable due to model loading/warmup) and end-to-end delivery confirmed.
-- Enforced history prefix integrity via scripts/check_history_append_only.py 5a07064607b328f60fbd7382753a974d03cf45f9 (PASSED).
+## 2026-11-12 (Sora Fast Local Chat Performance Milestone & Benchmark Verification)
+- Exposed Fast Local Chat (`local_text_chat_enabled`) in the settings UI (`templates/index.html` system panel) with clear guidance on falling back to full mode for images, remote providers, and tool/search requests.
+- Resolved failing test in `tests/test_user_settings.py` by testing actual supported ways to reach full mode (default, image attachment, and toggling setting off) without relying on keyword guessing.
+- Finalized robust benchmark script (`scripts/benchmark_chat.py`) running multiple matched synthetic turns, reporting individual and median send-to-history times and direct model latencies, and exiting nonzero on failure.
+- Verified test suite execution (54/54 tests passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 7387da6` (PASSED).

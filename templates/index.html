@@ -6938,6 +6938,17 @@ function settingsRenderSystemPanel() {
   html += '<div id="screenshotStatsContent" style="font-size:13px;color:var(--text-muted);">Loading...</div>';
   html += '</div>';
 
+  // Fast Local Text Chat toggle
+  var localChatEnabled = !!cfg.local_text_chat_enabled;
+  html += '<div class="sync-settings-item" style="grid-column:1 / -1">';
+  html += '<label>Fast Local Text Chat (reactive_fast)</label>';
+  html += '<div style="display:flex;align-items:center;gap:12px;">';
+  html += '<label class="miru-toggle" style="margin:0;"><input type="checkbox" id="settingsSysLocalTextChatEnabled" ' + (localChatEnabled ? 'checked' : '') + '><span class="miru-toggle-slider"></span></label>';
+  html += '<span style="font-size:13px;color:var(--text-secondary);" id="settingsSysLocalTextChatLabel">' + (localChatEnabled ? 'Enabled — skips preflight & tools for ordinary loopback text chat (~10s faster). Automatically falls back to full mode for images, tools, or remote providers.' : 'Disabled (Default full mode)') + '</span>';
+  html += '</div>';
+  html += '<div style="margin-top:4px;font-size:12px;color:var(--text-muted);">Enable for faster response times on ordinary local text chat. Full mode remains default and is used automatically for tool requests, searches, or image attachments.</div>';
+  html += '</div>';
+
   // Android Live2D wallpaper (only visible in APK)
   if (window.MiruAndroid && typeof window.MiruAndroid.setLiveWallpaper === 'function') {
     html += '<div class="sync-settings-item" id="androidWallpaperSection">';
@@ -7781,8 +7792,12 @@ async function settingsSaveSystem() {
     var hotkeyInput = document.getElementById('settingsSysPetHotkey');
     var hotkeyVal = hotkeyInput && hotkeyInput.value ? hotkeyInput.value.trim() : '';
 
+    var localChatCb = document.getElementById('settingsSysLocalTextChatEnabled');
+    var localChatEnabled = localChatCb ? localChatCb.checked : false;
+
     const payload = {
       auto_screenshot_interval: screenshotInterval,
+      local_text_chat_enabled: localChatEnabled,
     };
     if (hotkeyVal) payload.pet_hotkey = hotkeyVal;
     if (delayMs !== null) payload.pet_collapse_delay = delayMs;

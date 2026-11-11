@@ -3,6 +3,7 @@ import os
 import tempfile
 import time
 import json
+import statistics
 import resource
 from openai import OpenAI
 from flask import Flask
@@ -58,8 +59,8 @@ def get_ollama_rss_mb():
         pass
     return None
 
-def run_benchmark_mode(fast_mode: bool):
-    print(f"\n--- Running Benchmark (Fast Mode: {fast_mode}) ---")
+def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
+    print(f"\n--- Running Benchmark (Fast Mode: {fast_mode}, Turns: {num_turns}) ---")
     storage._ensure_dirs()
     user_settings.update({"local_text_chat_enabled": fast_mode})
 
@@ -67,75 +68,81 @@ def run_benchmark_mode(fast_mode: bool):
     model = "qwen2.5:1.5b-instruct"
     client = OpenAI(base_url=base_url, api_key="ollama")
 
-    prompt = "Hello, who are you? Give a brief reply."
+    direct_times = []
+    sora_times = []
+    successes = []
 
-    # 1. Direct Ollama timing (warm model)
-    t_direct_start = time.monotonic()
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=100,
-            temperature=0.7
-        )
-        direct_reply = resp.choices[0].message.content
-    except Exception as e:
-        direct_reply = f"ERROR: {e}"
-    t_direct_end = time.monotonic()
-    direct_time = t_direct_end - t_direct_start
-    print(f"  Direct Ollama Time: {direct_time:.2f}s | Reply: {direct_reply}")
+    for i in range(num_turns):
+        prompt = f"Synthetic benchmark turn {i+1} for Sora local chat."
 
-    # 2. Sora /api/chat send-to-history timing matching exact reply ID
-    unique_text = f"Benchmark msg {time.time()} (fast={fast_mode})"
-    t_sora_start = time.monotonic()
-    res = core.receive_chat_message(unique_text)
-    user_msg_id = res.get("msg_id")
-    expected_reply_id = user_msg_id + "_reply"
-    print(f"  Sora message received: {user_msg_id}, expecting reply ID: {expected_reply_id}")
+        # 1. Direct Ollama timing (warmed model)
+        t_direct_start = time.monotonic()
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=60,
+                temperature=0.7
+            )
+            direct_reply = resp.choices[0].message.content
+        except Exception as e:
+            direct_reply = f"ERROR: {e}"
+        t_direct_end = time.monotonic()
+        direct_time = t_direct_end - t_direct_start
+        direct_times.append(direct_time)
 
-    assistant_reply = ""
-    timeout = 120.0
-    poll_start = time.monotonic()
-    success = False
+        # 2. Sora /api/chat send-to-history timing matching exact reply ID
+        unique_text = f"SynthMsg {i+1} {time.time()} (fast={fast_mode})"
+        t_sora_start = time.monotonic()
+        res = core.receive_chat_message(unique_text)
+        user_msg_id = res.get("msg_id")
+        expected_reply_id = user_msg_id + "_reply"
 
-    while time.monotonic() - poll_start < timeout:
-        history = storage.get_chat_history(limit=50)
-        for m in history:
-            if m.get("id") == expected_reply_id:
-                assistant_reply = m.get("text", "")
-                success = True
+        assistant_reply = ""
+        timeout = 120.0
+        poll_start = time.monotonic()
+        success = False
+
+        while time.monotonic() - poll_start < timeout:
+            history = storage.get_chat_history(limit=50)
+            for m in history:
+                if m.get("id") == expected_reply_id:
+                    assistant_reply = m.get("text", "")
+                    success = True
+                    break
+            if success:
                 break
-        if success:
-            break
-        time.sleep(0.5)
+            time.sleep(0.3)
 
-    t_sora_end = time.monotonic()
-    sora_total_time = t_sora_end - t_sora_start
+        t_sora_end = time.monotonic()
+        sora_total_time = t_sora_end - t_sora_start
 
-    if not success or not assistant_reply or "error" in assistant_reply.lower() or "小问题" in assistant_reply or "我还没有配置好" in assistant_reply:
-        print(f"  FAILURE: Timeout or error reply received: {assistant_reply}")
-        return {
-            "fast_mode": fast_mode,
-            "direct_time": direct_time,
-            "sora_time": None,
-            "success": False,
-            "reply": assistant_reply
-        }
+        if not success or not assistant_reply or "error" in assistant_reply.lower() or "小问题" in assistant_reply or "我还没有配置好" in assistant_reply:
+            print(f"  Turn {i+1} FAILURE: Timeout or error reply received: {assistant_reply}")
+            successes.append(False)
+        else:
+            print(f"  Turn {i+1} Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Reply: {assistant_reply[:60]}...")
+            sora_times.append(sora_total_time)
+            successes.append(True)
 
-    print(f"  Sora Reply: {assistant_reply}")
-    print(f"  Sora Send-to-History Time: {sora_total_time:.2f}s")
+        time.sleep(1.0)
+
+    all_success = all(successes) and len(sora_times) > 0
+    median_direct = statistics.median(direct_times) if direct_times else 0.0
+    median_sora = statistics.median(sora_times) if sora_times else None
 
     py_rss = get_python_rss_mb()
     ollama_rss = get_ollama_rss_mb()
-    ollama_str = f"{ollama_rss:.2f} MB" if ollama_rss is not None else "Unavailable (process query failed)"
-    print(f"  Memory -> Python RSS: {py_rss:.2f} MB | Ollama RSS: {ollama_str}")
+    ollama_str = f"{ollama_rss:.2f} MB" if ollama_rss is not None else "Unavailable"
+    print(f"  Mode summary (fast={fast_mode}): Success={all_success} | Median Direct Latency={median_direct:.2f}s | Median Send-to-History={median_sora if median_sora is not None else 'TIMEOUT'}s | Python RSS={py_rss:.2f} MB | Ollama RSS={ollama_str}")
 
     return {
         "fast_mode": fast_mode,
-        "direct_time": direct_time,
-        "sora_time": sora_total_time,
-        "success": True,
-        "reply": assistant_reply,
+        "direct_times": direct_times,
+        "median_direct": median_direct,
+        "sora_times": sora_times,
+        "median_sora": median_sora,
+        "success": all_success,
         "py_rss": py_rss,
         "ollama_rss": ollama_rss
     }
@@ -149,17 +156,20 @@ def main():
         g.user_data_dir = data_dir
 
         # 1. Full Agent Mode (fast_mode = False)
-        res_full = run_benchmark_mode(fast_mode=False)
+        res_full = run_benchmark_mode(fast_mode=False, num_turns=2)
 
-        # Wait a moment between tests to ensure quiet timer finishes
-        time.sleep(3.0)
+        time.sleep(2.0)
 
         # 2. Fast Local Text Mode (fast_mode = True)
-        res_fast = run_benchmark_mode(fast_mode=True)
+        res_fast = run_benchmark_mode(fast_mode=True, num_turns=2)
 
         print("\n=== Benchmark Summary ===")
-        print(f"Full Mode  : Direct={res_full.get('direct_time', 0):.2f}s, Sora Total={res_full.get('sora_time', 'TIMEOUT')}s, Success={res_full.get('success')}")
-        print(f"Fast Mode  : Direct={res_fast.get('direct_time', 0):.2f}s, Sora Total={res_fast.get('sora_time', 'TIMEOUT')}s, Success={res_fast.get('success')}")
+        print(f"Full Mode  : Median Direct={res_full.get('median_direct', 0):.2f}s, Median Sora Total={res_full.get('median_sora', 'TIMEOUT')}s, Success={res_full.get('success')}")
+        print(f"Fast Mode  : Median Direct={res_fast.get('median_direct', 0):.2f}s, Median Sora Total={res_fast.get('median_sora', 'TIMEOUT')}s, Success={res_fast.get('success')}")
+
+        if not res_full.get('success') or not res_fast.get('success'):
+            print("ERROR: Benchmark failed in one or more modes.", file=sys.stderr)
+            sys.exit(1)
 
     _temp_dir.cleanup()
 
