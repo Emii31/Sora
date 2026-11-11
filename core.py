@@ -1828,20 +1828,25 @@ def _format_memory_retrieval(result):
     return ""
 
 
-def _resolve_chat_agent_policy(preflight: dict | None,
-                               user_text: str,
+def _resolve_chat_agent_policy(preflight: dict | None = None,
+                               user_text: str = "",
                                user_image_descs: list[str] | None = None) -> dict:
     """Visible main-agent policy.
 
-    Preflight is now memory pre-retrieval only.  User-facing replies always
-    use the chat/pro tier with tools enabled, for both text and image turns.
+    Selects fast mode before model-based preflight for text-only turns using a loopback provider
+    when local_text_chat_enabled is True.
     """
     import user_settings
+    import ai_config
     us = user_settings.get()
     local_text_chat = us.get("local_text_chat_enabled", False)
-    needs_tools = any(kw in user_text for kw in ("搜索", "commitments", "任务", "待办", "查", "search", "todo"))
+    has_image = bool(user_image_descs)
 
-    if local_text_chat and not needs_tools:
+    chat_cfg = ai_config.get_tier_config("chat")
+    host = chat_cfg.get("host", "")
+    is_loop = ai_config._is_loopback(host)
+
+    if local_text_chat and not has_image and is_loop:
         return {
             "mode": "reactive_fast",
             "tier": "chat",
@@ -2617,25 +2622,35 @@ def _csm_do_full_reply(batch, user_id):
                         # an image was attached.
                         user_image_descs.append("(图片)")
 
+            chat_policy = _resolve_chat_agent_policy(
+                user_text=combined_text, user_image_descs=user_image_descs or None,
+            )
+
             preflight = {}
-
-            # Preflight is text-only memory pre-retrieval. Image content is
-            # folded in through image_desc; model policy stays fixed pro.
-            try:
-                from prompt import call_chat_preflight
-                preflight = call_chat_preflight(
-                    combined_text, user_image_descs=user_image_descs or None,
+            if chat_policy.get("mode") != "reactive_fast":
+                # Preflight is text-only memory pre-retrieval. Image content is
+                # folded in through image_desc; model policy stays fixed pro.
+                try:
+                    from prompt import call_chat_preflight
+                    preflight = call_chat_preflight(
+                        combined_text, user_image_descs=user_image_descs or None,
+                    )
+                    memory_context = _format_memory_retrieval(
+                        preflight.get("memory_context", "") if isinstance(preflight, dict) else preflight
+                    )
+                    if memory_context:
+                        context_text += "\n" + memory_context
+                except Exception as e:
+                    print(f"[Chat] Preflight failed (non-fatal): {e}")
+                    preflight = {}
+                chat_policy = _resolve_chat_agent_policy(
+                    preflight, combined_text, user_image_descs=user_image_descs or None,
                 )
-                memory_context = _format_memory_retrieval(
-                    preflight.get("memory_context", "") if isinstance(preflight, dict) else preflight
-                )
-                if memory_context:
-                    context_text += "\n" + memory_context
-            except Exception as e:
-                print(f"[Chat] Preflight failed (non-fatal): {e}")
-                preflight = {}
+            else:
+                print("[Chat] Fast mode active: skipped model-based preflight.")
 
-            history = storage.get_chat_history(limit=20)
+            history_limit = 5 if chat_policy.get("mode") == "reactive_fast" else 20
+            history = storage.get_chat_history(limit=history_limit)
             batch_ids = {m["id"] for m in batch}
             history = [m for m in history if m.get("id") not in batch_ids]
 
@@ -2645,12 +2660,9 @@ def _csm_do_full_reply(batch, user_id):
             tool_handlers = registry.get_handlers()
             provider = get_runtime_config().get("provider", "openai")
             tools_list = registry.to_tools(provider)
-            chat_policy = _resolve_chat_agent_policy(
-                preflight, combined_text, user_image_descs=user_image_descs or None,
-            )
             effective_tools = tools_list if chat_policy["allow_tools"] else []
             print(
-                f"[Chat] memory preflight -> fixed {chat_policy['mode']} tier={chat_policy['tier']} "
+                f"[Chat] policy -> mode={chat_policy['mode']} tier={chat_policy['tier']} "
                 f"reasoning={chat_policy['reasoning']} tools={len(effective_tools)} "
                 f"reason={chat_policy.get('reason', '')}"
             )
