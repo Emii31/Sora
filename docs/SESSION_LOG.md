@@ -298,4 +298,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Ran test suite successfully (all targeted and regression tests passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).
 
+## 2026-11-12 (Sora Real Local Chat Verification with Ollama)
+- Enhanced loopback detection in `ai_config.py` using parsed hostname and `ipaddress` module (`localhost`, IPv4/IPv6 loopback, explicit HTTPS scheme preservation, and safe handling of remote names starting with 127).
+- Verified first real local chat reply using Ollama (`qwen2.5:1.5b-instruct` at `http://127.0.0.1:11434/v1` with API key `ollama`, screen capture off, disposable data dir).
+- Assistant reply successfully generated and appended to chat history.
+- Ran focused tests (all 43 tests passed) and history prefix check against baseline `7387da60ae7e3f8d8ca66290b4c041d0e7066cbd` (PASSED).
+
 

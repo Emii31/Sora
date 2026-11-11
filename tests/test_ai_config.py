@@ -334,6 +334,10 @@ def test_loopback_http_base_url(monkeypatch, tmp_path):
     assert ai_config._openai_base_url_from_host("localhost:11434") == "http://localhost:11434/v1"
     assert ai_config._openai_base_url_from_host("http://localhost:11434") == "http://localhost:11434/v1"
     assert ai_config._openai_base_url_from_host("127.0.0.1:8000/v1") == "http://127.0.0.1:8000/v1"
+    assert ai_config._openai_base_url_from_host("[::1]:11434") == "http://[::1]:11434/v1"
+    assert ai_config._openai_base_url_from_host("https://localhost:11434") == "https://localhost:11434/v1"
+    assert ai_config._openai_base_url_from_host("127example.com") == "https://127example.com/v1"
+    assert ai_config._openai_base_url_from_host("127.example.com") == "https://127.example.com/v1"
     assert ai_config._openai_base_url_from_host("api.openai.com") == "https://api.openai.com/v1"
 
 

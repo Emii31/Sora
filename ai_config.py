@@ -24,6 +24,7 @@ LLM call picks up new credentials without restarting Flask.
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import threading
@@ -114,15 +115,14 @@ def _normalize_host(value: str) -> str:
     """Strip scheme/trailing slash and auto-correct common provider shortcuts.
 
     Returns "" for empty input. The stored value is effectively an
-    OpenAI-compatible base host/path without scheme. It may be a bare host
-    (``api.openai.com``), a prefix that needs ``/v1`` appended
-    (``openrouter.ai/api``), or a full compatibility base path whose provider
-    does not use ``/v1`` (``generativelanguage.googleapis.com/v1beta/openai``).
+    OpenAI-compatible base host/path without scheme (or with explicit https:// if loopback https requested).
     """
     raw = str(value or "").strip()
     if not raw:
         return ""
-    parsed = urlsplit(raw if "://" in raw else f"https://{raw}")
+    has_scheme = "://" in raw
+    parsed = urlsplit(raw if has_scheme else f"https://{raw}")
+    scheme = parsed.scheme.lower() if has_scheme else ""
     netloc = (parsed.netloc or "").strip().lower()
     path = (parsed.path or "").strip().rstrip("/")
     if netloc:
@@ -138,24 +138,53 @@ def _normalize_host(value: str) -> str:
         host = "openrouter.ai/api"
     elif host_key in _KNOWN_HOST_PREFIX:
         host = _KNOWN_HOST_PREFIX[host_key]
+
+    if _is_loopback(host) and scheme == "https":
+        return f"https://{host}"
     return host
 
 
-def _is_loopback(host: str) -> bool:
-    lower = str(host).lower()
-    netloc = urlsplit(f"//{lower}").netloc or lower
-    hostname = netloc.split(":")[0].strip("[]")
-    return hostname in ("localhost", "127.0.0.1", "::1") or hostname.startswith("127.")
+def _is_loopback(host_or_url: str) -> bool:
+    raw = str(host_or_url).strip()
+    if not raw:
+        return False
+    if not "://" in raw:
+        raw = f"//{raw}"
+    parsed = urlsplit(raw)
+    netloc = parsed.netloc or parsed.path
+    if "[" in netloc:
+        try:
+            end_idx = netloc.index("]")
+            hostname = netloc[1:end_idx].lower()
+        except ValueError:
+            hostname = netloc.strip("[]").lower()
+    else:
+        hostname = netloc.split(":")[0].lower()
+
+    if hostname == "localhost":
+        return True
+    try:
+        ip = ipaddress.ip_address(hostname)
+        return ip.is_loopback
+    except ValueError:
+        return False
 
 
 def _base_url_scheme(host: str) -> str:
-    return "http" if _is_loopback(host) else "https"
+    if str(host).lower().startswith("https://"):
+        return "https"
+    if _is_loopback(host):
+        return "http"
+    return "https"
 
 
 def _legacy_openai_base_url(normalized: str) -> str:
     """Apply Miru's historical `/v1` completion rule."""
-    scheme = _base_url_scheme(normalized)
-    base = f"{scheme}://{normalized}"
+    if "://" in normalized:
+        base = normalized
+    else:
+        scheme = _base_url_scheme(normalized)
+        base = f"{scheme}://{normalized}"
     lower = normalized.lower().rstrip("/")
     if lower.endswith("/v1") or lower.endswith("/v1beta/openai"):
         return base
@@ -164,8 +193,11 @@ def _legacy_openai_base_url(normalized: str) -> str:
 
 def _prefer_legacy_base_url(normalized: str) -> bool:
     """Return whether the historical `/v1` form should be tried first."""
-    scheme = _base_url_scheme(normalized)
-    parsed = urlsplit(f"{scheme}://{normalized}")
+    if "://" in normalized:
+        parsed = urlsplit(normalized)
+    else:
+        scheme = _base_url_scheme(normalized)
+        parsed = urlsplit(f"{scheme}://{normalized}")
     path = (parsed.path or "").rstrip("/").lower()
     if not path:
         return True
@@ -187,8 +219,11 @@ def _openai_base_url_candidates(host: str) -> list[str]:
     normalized = _normalize_host(host)
     if not normalized:
         return []
-    scheme = _base_url_scheme(normalized)
-    exact = f"{scheme}://{normalized}"
+    if "://" in normalized:
+        exact = normalized
+    else:
+        scheme = _base_url_scheme(normalized)
+        exact = f"{scheme}://{normalized}"
     legacy = _legacy_openai_base_url(normalized)
     ordered = [legacy, exact] if _prefer_legacy_base_url(normalized) else [exact, legacy]
     return list(dict.fromkeys(ordered))

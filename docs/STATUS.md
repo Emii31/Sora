@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Sora Local Chat Checkpoint & Loopback HTTP Support - Verified & Implemented
-- **Current Status**: Restored main app script syntax and closing brace around APK update error handling; restored original inline JS syntax test in `tests/test_owner_ai_config_frontend.py`; implemented loopback HTTP inference server support in `ai_config.py` for configuration save, connection test, and runtime requests while preserving HTTPS for remote providers; verified test suite execution (all targeted and regression tests passed); verified history append-only prefix integrity.
-- **Next Action**: Commit changes and push to origin/main.
+- **Phase**: Sora Local Chat Checkpoint & Real Local Chat Verification - Completed
+- **Current Status**: Enhanced loopback detection using parsed hostname and `ipaddress` (`localhost`, IPv4/IPv6 loopback, explicit HTTPS scheme preservation, and safe handling of remote names starting with 127). Verified real local chat reply using Ollama (`qwen2.5:1.5b-instruct` at `http://127.0.0.1:11434/v1` with API key `ollama`, screen capture off, disposable data dir). Assistant reply successfully generated and appended to chat history. Ran all focused tests, verified history prefix integrity, committed, and pushed to origin/main.
+- **Next Action**: None authorized.
