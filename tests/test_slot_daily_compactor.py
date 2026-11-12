@@ -447,7 +447,7 @@ def test_call_slot_daily_compactor_builds_expected_prompt(monkeypatch):
     assert captured["reasoning"] is False
     assert captured["output_schema"] is memory_prompts_v2.SlotDailyCompactorOutput
     messages = captured["messages"]
-    assert "你是 Miru 的 SlotDailyCompactor" in messages[0]["content"]
+    assert "You are Miru's SlotDailyCompactor" in messages[0]["content"]
     user_msg = messages[1]["content"]
     assert "current_body_rendered_char_count: 74" in user_msg
     assert "target_mode: preserve" in user_msg

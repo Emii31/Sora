@@ -132,10 +132,10 @@ def test_pass4_append_prompt_explains_miru_slot_and_new_path():
 
     system = captured["system"]
     user = captured["user"]
-    assert "Miru 是一个会陪用户生活" in system
-    assert "当前记忆卡(slot)" in system
-    assert "新建记忆卡(kind=new)不会调用你" in system
-    assert "append_entry 目标 10-60" in system
+    assert "Miru is an AI girl who accompanies the user" in system
+    assert "memory card (slot)" in system
+    assert "New memory cards (kind=new) do not call you" in system
+    assert "append_entry target 10-60" in system
     assert "- source: screenshot" in user
     assert "source_note" in user
 

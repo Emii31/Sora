@@ -397,3 +397,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified with focused curator unit test suites (`test_curator.py`, `test_curator_auto.py`, `test_curator_collision_override.py`, `test_curator_lifecycle.py`, `test_curator_v35_targeted.py`, `test_cost_routing.py`) with all 43 tests passing successfully, plus new custom `miru_name` test coverage.
 - Updated documentation (`docs/phases/PHASE_02B_31.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 9fd7136dc7eb4e99d3197e4138272e18853136b9` (PASSED).
+## 2026-11-13 (Phase 2B.32: English Memory Append, Compaction, and Merge Prompts)
+- Translated Pass 4 append prompts (`PASS4_APPEND_SYSTEM_PROMPT` and `PASS4_APPEND_USER_TEMPLATE`), daily compactor prompts (`SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT` and `SLOT_DAILY_COMPACTOR_USER_TEMPLATE`), and legacy slot merge rewrite prompts (`LEGACY_SLOT_MERGE_SYSTEM_PROMPT` and `LEGACY_SLOT_MERGE_USER_TEMPLATE`) in `memory_prompts_v2.py` to natural English.
+- Preserved all JSON fields, enums, limits, paths, retry behavior, file write contracts, and literal references to `## 近期记录`.
+- Parameterized all slots and compactor system prompts with `{MIRU_NAME}` and wired `miru_name` propagation in `memory_prompts_v2.py` via `_load_miru_name()`.
+- Updated test assertions in `tests/test_slot_daily_compactor.py` and `tests/test_pass4_summary_truncate.py`.
+- Verified execution with comprehensive unit test suites (85/85 passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 253579ed147462bd542f43c03bbe948bc417da79` (PASSED).

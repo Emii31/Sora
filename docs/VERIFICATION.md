@@ -317,3 +317,10 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 9fd7136dc7eb4e99d3197e4138272e18853136b9` (PASSED).
 
+- **Phase 2B.32 Verification (English Memory Append, Compaction, and Merge Prompts)**:
+  - `memory_prompts_v2.py`: Translated Pass 4 append prompts (`PASS4_APPEND_SYSTEM_PROMPT` and `PASS4_APPEND_USER_TEMPLATE`), daily compactor prompts (`SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT` and `SLOT_DAILY_COMPACTOR_USER_TEMPLATE`), and legacy slot merge rewrite prompts (`LEGACY_SLOT_MERGE_SYSTEM_PROMPT` and `LEGACY_SLOT_MERGE_USER_TEMPLATE`) to natural English.
+  - Configured character naming (`miru_name` / `{MIRU_NAME}`) integrated across Pass 4, daily compactor, and legacy merge prompts with `_load_miru_name()` helper.
+  - Preservation checks: All JSON schemas, enums, limits, paths, retry behavior, file write contracts, and literal references to `## 近期记录` preserved intact.
+  - Test suite check: 85/85 passed across curator, Pass 4, slot daily compactor, slot writing, and cost routing suites (`tests/test_curator*.py`, `tests/test_slot_daily_compactor.py`, `tests/test_pass4_summary_truncate.py`, `tests/test_route_with_slot_write.py`, `tests/test_cost_routing.py`).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 253579ed147462bd542f43c03bbe948bc417da79` (PASSED).

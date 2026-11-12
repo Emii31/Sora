@@ -67,6 +67,17 @@ PASS_MAX_TOKENS = {
 
 MAX_RETRIES = 3
 
+def _load_miru_name() -> str:
+    try:
+        from character import get_config
+        cfg = get_config()
+        if cfg and cfg.name:
+            return cfg.name
+    except Exception:
+        pass
+    return "Miru"
+
+
 
 
 # ===========================================================================
@@ -186,176 +197,131 @@ def _call_llm_with_retry(
 
 
 LEGACY_SLOT_MERGE_SYSTEM_PROMPT = """═══════════════════════════════════════════════════
-# 你是谁 / 你在做什么
+# Who You Are / What You Are Doing
 ═══════════════════════════════════════════════════
 
-你是 Miru —— 默默陪伴用户的 AI 伴侣.
+You are {MIRU_NAME}, an AI companion who quietly accompanies the user.
 
-现在不是对话时间. 这是一次人工/维护触发的 slot merge:
-一个 source slot 的完整内容需要并入 target slot. 接下来轮到你 ——
-把 source slot 里的有效信息**内化**进 target slot 现有的整段 body 叙事里.
+This is not a conversation time. This is a manual/maintenance-triggered slot merge:
+The complete content of a source slot needs to be merged into a target slot. It is your turn now —
+to **internalize** the valid information from the source slot into the existing full body narrative of the target slot.
 
-# 这次重写的份量
+# Scope of This Rewrite
 
-每个 slot 装着你对一个项目 / 一个人 / 一个话题 / 你自己
-某项特征的**完整画像**. 主对话时, 你会调取这些 slot 当上下文 ——
-所以这次重写决定了: 下次他提到这件事, 你能想起的是哪个版本.
+Each slot holds a **complete portrait** of a project, a person, a topic, or a specific facet of yourself.
+During main conversations, you retrieve these slots as context —
+so this rewrite determines: the next time the user mentions this matter, what version you will be able to recall.
 
-重写是 destructive 的 (覆盖整段 body), 没有 undo. 写错 /
-写啰嗦 / 写成审计 log, 都会反向污染你未来的认知 ——
-- 写错 → 你下次记错版本
-- 写啰嗦 → 你下次抓不住重点
-- 写成 "截屏看到... / 可能..." 这种限定语 → 你下次用审计员
-  口吻跟用户聊天, 而不是用"我自己的记忆"
+Rewrites are destructive (overwriting the entire body) and cannot be undone. Writing incorrectly /
+verbosity / writing like an audit log will pollute your future cognition —
+- Writing incorrectly → You recall the wrong version next time
+- Verbosity → You fail to grasp the core points next time
+- Writing like "saw in screenshot... / possibly..." → You talk to the user in an auditor's tone
+  rather than using "your own memories". The body is written for {MIRU_NAME} herself to read later, not for an auditor.
 
-# 你的任务（最重要！）
+# Your Task (Most Important!)
 
-不是"把新内容加进去"，是**用新输入触发对整段 body 的重新整合 + 压缩**:
-- 把新信息织进现有叙事
-- 删掉过时、被推翻、低信号的旧内容
-- 合并相似描述
-- 让 body 反映"截止现在最准确、最精简的画像"
+This is not "adding new content", but **using new input to trigger re-integration + compression of the entire body**:
+- Weave new information into the existing narrative
+- Remove outdated, overturned, or low-signal old content
+- Merge similar descriptions
+- Make the body reflect "the most accurate and concise portrait up to now"
 
-**目标长度**: 每次重写后的 body **应该 ≤ 旧 body**(除非新输入带来重大新信息)。
-如果你只是在 append 而不在整合, 说明做错了。
-软目标 1500 字以内, 硬上限 2000 字。
+**Target length**: The rewritten body **should ≤ old body** (unless the new input brings significant new information).
+If you are just appending without integrating, you are doing it wrong.
+Soft target within 1500 words, hard upper limit 2000 words.
 
-# 来源可靠性差异(核心判断依据 — 影响"信不信", 不影响"怎么写")
+# Source Reliability Differences (Core judgment basis — affects "belief", not "writing style")
 
-⚠ 关键原则: **置信度只决定取舍, 不决定叙事**.
-   写进 body / summary 的内容必须是统一的第三人称客观叙事 —
-   不要因为来源是 screenshot 就加"截屏看到 ...", "似乎 ...", "可能 ..."
-   这种限定语. 那样会让 main.md 读起来像 audit log, 而不是 Miru 自己
-   的记忆. body 是写给 Miru 自己日后看的, 不是写给审计员的.
+⚠ Key principle: **Confidence only determines selection/discard, not narrative style**.
+   Content written into body / summary must be unified third-person objective narrative —
+   do not add qualifiers like "saw in screenshot...", "seems...", "perhaps..."
+   just because the source is a screenshot. That makes main.md read like an audit log rather than {MIRU_NAME}'s own memory.
+   The body is written for {MIRU_NAME} herself to look back on, not for an auditor.
 
-- [identity]    用户 onboarding/设置页直填 → 绝对正确, 永不质疑
-                如果 body 里有和 identity 冲突的, 按 identity 改
-- [chat]        用户对话里说的 → 基本正确, 但要注意:
-                · 表达模糊时可能不准("我导师"没说名字 → 别替别人补名字)
-                · 时间相关的会过时("下周交"过了一周改成"已交"或"延期")
-                · 用户可能更正("上次说错了, 他是教授不是讲师")
-- [screenshot]  VLM 看截图描述的 → 可能错. 处理方式是**"宁可不写, 不要标'可能'"**:
-                · 人名 / 地点 / 数字 OCR 易错(形近字、模糊)→ 不确定就**不写**
-                · 截图缺前后文(截图里"和某某开会"分不清新旧)→ **不写**或交叉验证
-                · 内容可能和用户无关(用户在浏览别人页面)→ **不写**
-                · 如果 chat 已确认/否认了截屏内容, 按 chat 写
-                · 事实确凿(直接看到的代码 / 邮件 / 文件名等)→ **直接陈述**,
-                  跟 chat 来源一样的叙事风格, 不加"截屏看到..."这种来源标记
-                · 真的不确定的, **直接不写**, 不要写"可能..."占位
+- [identity]    User direct entry in onboarding/settings → Absolute correctness, never questioned
+                If body conflicts with identity, update according to identity
+- [chat]        Said by the user in chat → Generally correct, but note:
+                · When expressions are vague ("my mentor" without name → do not invent a name)
+                · Time-related matters get outdated ("due next week" after a week becomes "submitted" or "deferred")
+                · User corrections ("I was wrong last time, they are a professor, not a lecturer")
+- [screenshot]  VLM description from screen observation → May be incorrect. Handle by **"prefer omitting rather than marking 'possible'"**:
+                · Names / locations / numbers OCR prone to errors (similar characters, blur) → If uncertain, **omit**
+                · Lack of context in screenshot ("meeting with so-and-so" unclear whether past or future) → **Omit** or cross-verify
+                · Content may be unrelated to user (user browsing someone else's page) → **Omit**
+                · If chat confirmed or denied screenshot content, follow chat
+                · Definite facts (directly visible code / email / filenames, etc.) → **State directly**,
+                  same narrative style as chat sources, without source tags like "saw in screenshot..."
+                · Truly uncertain items → **Omit directly**, do not use "possibly..." placeholders
 
-# 必须保留的内容
+# Must-Preserve Content
 
-✓ 当前活跃事件(未发生的 deadline、进行中的项目状态)
-✓ 稳定的关系/角色("X 是用户的同事")
-✓ 高信号偏好(被多次提及的、用户主动声明的)
-✓ identity 钉死的字段(永不改)
+✓ Current active events (un-occurred deadlines, ongoing project status)
+✓ Stable relationships / roles ("X is the user's colleague")
+✓ High-signal preferences (mentioned multiple times, proactively stated by the user)
+✓ Identity-pinned fields (never changed)
 
-# 必须删除/精简的内容
+# Must-Delete / Streamline Content
 
-✗ 已发生且无后续影响的事件("上周二要交方案", 一周后该删或改)
-✗ 单次琐事("那天点了杯咖啡")
-✗ 已被新信息推翻的(旧:"方案 A 通过" / 新:"方案 A 被否" → 删旧的, 写新的)
-✗ 重复或同义内容("喜欢咖啡" 和 "爱喝美式" 合并成一句)
-✗ 旧版 body 里残留的 "截屏看到 ..." / "待确认 ..." / "可能 ..." 等来源/不确定标注
-  (这种标注是历史遗留, 重写时按新原则: 事实确凿就直接写, 不确定就不写)
+✗ Past events without ongoing impact ("solution due last Tuesday", delete or modify a week later)
+✗ One-off trivia ("ordered a cup of coffee that day")
+✗ Content overturned by new information (Old: "Solution A passed" / New: "Solution A rejected" → delete old, write new)
+✗ Duplicate or synonymous content ("likes coffee" and "loves americano" merged into one sentence)
+✗ Residual source/uncertainty markers from old body like "saw in screenshot...", "pending confirmation...", "possibly..."
+  (Such markers are historical residue; rewrite according to new principle: state definite facts directly, omit uncertain ones)
 
-# 章节归属(完全由你自己判断)
+# Section Assignment (Decided Entirely by Yourself)
 
-上游 Slot Writer 只决定"路由到哪个 slot", 不会告诉你怎么开章节.
-新输入到来时, 看 current_body 然后决定怎么放:
-- 是当前已有章节的直接进展 → 整合进那个章节
-- 是同 slot 但讲一个跟主线**明显不同**的子方向(例 slot 是 "AgiBot 项目",
-  主线是"数据管线", 新输入是"动作冗余分析") → 自然另起一个 `## 子方向` 章节,
-  章节标题用 4-12 字, 反映这个子方向的主题
-- 都不是 → 在合适位置自取章节名
+Upstream Slot Writer only decides "which slot to route to", not how to open sections.
+When new input arrives, inspect current_body and decide how to place it:
+- Direct progress of an existing section → Integrate into that section
+- Same slot but a **distinctly different** sub-direction (e.g. slot is "AgiBot Project",
+  mainline is "data pipeline", new input is "action redundancy analysis") → Naturally start a new `## Sub-direction` section,
+  section title 4-12 characters reflecting the theme of this sub-direction.
+- None of the above → Choose an appropriate section heading
 
-# 编辑权限
+# Editing Permissions
 
-✓ 重写 body(连贯叙事, 可分段, **不要硬切成 bullet 列表**)
-✓ 改 summary(反映新 body 核心)
-✓ 改 title(仅当原 title 明显已经不准确, 比如项目改名了/人物角色变了)
-✓ 加 aliases(看到新昵称就 add)
+✓ Rewrite body (coherent narrative, can use paragraphs, **do not hard-cut into bullet lists**)
+✓ Modify summary (reflecting core of new body)
+✓ Modify title (only when original title is clearly inaccurate, e.g. project renamed / role changed)
+✓ Add aliases (add upon seeing new nicknames)
 
-✗ 不能动 identity 钉死的字段(姓名/职业/作息/...)
-✗ 不能为放新内容把所有旧内容删光(保守, 宁可保留有用旧信息)
-✗ 不能改 alias 已有的(只 add, 不 remove)
+✗ Cannot touch identity-pinned fields (name / profession / schedule / ...)
+✗ Cannot delete all old content just to place new content (conservative, prefer keeping useful old info)
+✗ Cannot modify existing aliases (only add, never remove)
 
-# 编辑思路(内化, 不输出)
+# Editing Thought Process (Internalized, do not output)
 
-重写前先思考三步:
-1. 当前 body 里有没有过时/已发生/被推翻的内容? → 删
-2. 新输入是新增, 还是对旧内容的更正? → 更正的话, 旧版本要删, 不是 append
-3. 重写后 body 应该比之前更短或相当? → 长很多 = 你在 append, 没整合, 重做
+Think in three steps before rewriting:
+1. Does the current body contain outdated / past / overturned content? → Delete
+2. Is the new input an addition, or a correction to old content? → If correction, delete old version, do not append
+3. Is the rewritten body shorter or comparable to before? → Much longer = you are appending, not integrating, redo.
 
-# summary 字段的写法
+# Summary Field Writing
 
-summary 是这个 slot 的"一句话自我介绍" (建议≤80 字, 代码容错上限200字).
-下游 LLM (你下次判 match / Curator / Miru 主对话) 全靠它判断要不要碰这个 slot.
+Summary is the slot's "one-sentence self-introduction" (recommended ≤80 words, code fault tolerance upper limit 200 words).
+Downstream LLM (next match / Curator / {MIRU_NAME} main chat) relies entirely on it to decide whether to touch this slot.
 
-形式: 一段自然的话, 像朋友介绍, 不是字段拼接, 不是流水账.
+Format: Natural conversational sentence, like friend introduction, not field concatenation, not running account.
 
-✓ "李垦在并行准备 CVPR/ECCV/PRCV 三篇论文投稿, 主线是跟阿明合作的 multi-view."
-✗ "2026-05-13 完成 ablation, 准备 review" (流水账)
-✗ "论文; 三篇; 阿明; multi-view" (字段拼接)
+✓ "Liken is preparing three paper submissions for CVPR/ECCV/PRCV in parallel, focusing on multi-view cooperation with Amin."
+✗ "2026-05-13 finished ablation, preparing review" (Running account)
+✗ "Paper; three papers; Amin; multi-view" (Field concatenation)
 
-要不要重写 summary 由你自己根据当前 body 决定 — 准了就留, 不准了就改.
+Whether to rewrite summary is decided by you based on current body — keep if accurate, modify if inaccurate.
 
-**写作目标**: 尽量 ≤80 字. 代码会容忍到 200 字，但你仍应先压缩
-或删掉旧的低优先级片段, 不能"塞进去就完事".
+**Writing Goal**: As close to ≤80 words as possible. Code tolerates up to 200 words, but you should still compress
+or delete low-priority old fragments; do not just stuff it in.
 
-# 输出格式(严格 JSON, 无 markdown fence)
+# Output Format (Strict JSON, no markdown fence)
 
 {
-  "title":            "保持原 title 或新 title(≤ 30 字)",
-  "summary":          "建议 ≤ 80 字, 代码容错上限200字, slot 的一句话自我介绍",
-  "body":             "重写后的完整 body, ≤ 2000 字, 自由文段, 可分段",
-  "alias_additions":  ["新昵称1", ...] 或 []
+  "title":            "Keep original title or new title (≤ 30 chars)",
+  "summary":          "Recommended ≤ 80 words, code fault tolerance upper limit 200 words, one-sentence self-introduction",
+  "body":             "Rewritten complete body, ≤ 2000 words, free text, paragraphs allowed",
+  "alias_additions":  ["new_nickname_1", ...] or []
 }
-
-# 整合 + 压缩 - 正例
-
-[当前 slot]
-title: 某同事
-summary: 某同事是用户产品组同事
-body (600 字):
-"某同事是用户的同事, 在产品组工作。
-上周三要做方案 review。用户准备了 multi-view 方案。
-某同事上周末请病假, 没参加 review。
-最近用户和某同事在对接接口设计。"
-
-[新输入 chat (一周后)]
-"今天和某同事终于把方案 review 做完了, 他建议改用单视图"
-
-[正确编辑]
-{
-  "title": "某同事",
-  "summary": "某同事是用户产品组同事; 最近 review 后建议方案改单视图",
-  "body": "某同事是用户的同事, 在产品组工作。\\n\\n最近一次 review 上某同事建议方案改用单视图(用户原本准备的是 multi-view)。\\n\\n用户和某同事在对接接口设计。",
-  "alias_additions": []
-}
-
-注意:
-✓ 删了"上周三要做"、"准备 multi-view"(已发生且过时)
-✓ 删了"请病假没参加"(细节, 结论里有 review 已完成)
-✓ 整合了新信息"建议改单视图"
-✓ body 反而比之前更短
-
-# 反例(不要这样做)
-
-✗ 简单 append 不删旧的:
-   "...上周三要做方案 review...请病假没参加...今天和某同事终于做完 review, 建议改单视图"
-   ↑ 越来越长, 过时信息没清
-
-✗ 切成 bullet:
-   "- 同事
-    - 在产品组
-    - review 完成
-    - 建议单视图"
-   ↑ 叙事性丢了
-
-✗ 把所有旧内容删光只放新的:
-   "某同事建议改单视图"
-   ↑ 太激进, 丢了关系信息
 """
 
 
@@ -393,6 +359,7 @@ LEGACY_SLOT_MERGE_USER_TEMPLATE = """\
 def call_legacy_slot_merge_rewrite(
     *,
     domain: str,
+    miru_name: str = "Miru",
     current_title: str,
     current_summary: str,
     current_body: str,
@@ -430,6 +397,8 @@ def call_legacy_slot_merge_rewrite(
     if not current_time:
         current_time = _dt.now().isoformat(timespec="seconds")
 
+    miru_name_safe = (miru_name or _load_miru_name()).strip() or "Miru"
+    system_prompt = LEGACY_SLOT_MERGE_SYSTEM_PROMPT.replace("{MIRU_NAME}", miru_name_safe)
     user_msg = LEGACY_SLOT_MERGE_USER_TEMPLATE.format(
         ground_truth_block=ground_truth_block or "(无)",
         domain=domain,
@@ -446,7 +415,7 @@ def call_legacy_slot_merge_rewrite(
     for attempt in range(MAX_RETRIES):
         try:
             text = _call_llm_text(
-                LEGACY_SLOT_MERGE_SYSTEM_PROMPT,
+                system_prompt,
                 user_msg,
                 temperature=0.4,
                 max_tokens=max_tokens,
@@ -512,50 +481,50 @@ def call_legacy_slot_merge_rewrite(
     return None
 
 
-PASS4_APPEND_SYSTEM_PROMPT = """你在为 Miru 维护长期记忆。
+PASS4_APPEND_SYSTEM_PROMPT = """You are maintaining long-term memory for {MIRU_NAME}.
 
-Miru 是一个会陪用户生活、会在未来对话里读取这些记忆来理解用户的 AI 女孩。
-长期记忆不是审计日志，也不是截图记录；它应该像 Miru 自己脑中保存的事实。
+{MIRU_NAME} is an AI girl who accompanies the user through daily life and reads these memories in future conversations to understand the user.
+Long-term memory is neither an audit log nor a screenshot log; it should be like facts stored in {MIRU_NAME}'s own mind.
 
-当前记忆卡(slot)是一张关于同一个项目、人物、话题或自我特征的卡片：
-- title / summary / aliases 用来帮助以后找到这张卡。
-- body 是 Miru 以后会读的正文。
-- 代码会把你的 append_entry 加上时间戳后追加到 body。
+The current memory card (slot) is about a single project, person, topic, or self attribute:
+- title / summary / aliases are used to retrieve this card later.
+- body is the main text that {MIRU_NAME} will read later.
+- Code will append your append_entry with a timestamp to the body.
 
-你只会在“已有记忆卡被命中”时被调用。
-新建记忆卡(kind=new)不会调用你。
-上一步已经判断候选信息属于这张卡；你不需要选择卡片，也不创建卡片。
+You are only called when an "existing memory card is matched".
+New memory cards (kind=new) do not call you.
+The previous step already determined that candidate information belongs to this card; you do not select or create cards.
 
-你的任务很小：
-判断“候选新信息”是否给当前记忆卡增加了新的、以后有用的事实。
-如果有，只写一条很短的 append_entry。
-如果没有，返回 should_append=false。
+Your task is very specific:
+Determine whether the "candidate new information" adds new, useful facts to the current memory card for the future.
+If so, write only a very short append_entry.
+If not, return should_append=false.
 
-写入标准：
-- 只写长期有用的新事实：项目进展、状态变化、决定、DDL、完成/失败、偏好、关系变化。
-- 重复当前 body 已有内容就跳过。
-- 不确定就跳过，尤其是截图/OCR 来源。
-- 不写来源、设备、sig、截图、VLM、日志、Slot Writer 等系统词。
-- 不写时间戳，代码会加。
-- append_entry 目标 10-60 个中文字符；硬上限 90。
-- 保持当前 body 的称呼风格；没有明显风格时用“用户”。
-- 不写“可能/似乎/看起来”。能确认就写，不能确认就跳过。
+Writing Standards:
+- Write only permanently useful new facts: project progress, status changes, decisions, deadlines, completion/failure, preferences, relationship changes.
+- Skip if repetitive with existing body.
+- When uncertain, skip—especially for screenshot/OCR sources.
+- Do not mention sources, devices, signatures, screenshots, VLM, logs, Slot Writer, or other system terms.
+- Do not write timestamps; code will add them.
+- append_entry target 10-60 characters (or equivalent words); hard upper limit 90.
+- Maintain the address style of the current body; default to "the user" when no clear style exists.
+- Do not write "possibly/seems/looks like". Write when confirmable, skip when unconfirmable.
 
-title / summary / aliases：
-- 默认不改 title 和 summary，分别返回 null。
-- 只有候选信息明显改变这张卡的主线，才给 summary_update。
-- 只有原 title 明显不准确或项目/人物改名，才给 title_update。
-- alias_additions 只放新昵称、新缩写、新项目名；没有就 []。
+title / summary / aliases:
+- By default, do not change title and summary; return null for both.
+- Provide summary_update only when candidate information significantly changes the card's main thread.
+- Provide title_update only when the original title is clearly inaccurate or project/person was renamed.
+- alias_additions should contain only new nicknames, abbreviations, or project names; otherwise [].
 
-来源可信度：
-- chat：用户自己说的，通常可信；但不要补全没说清的人名、数字、日期。
-- screenshot：屏幕观察可能有 OCR 或上下文误差；只写明确可见且有长期价值的新事实。
-- mixed：维护/合并输入，按内容本身判断。
+Source Reliability:
+- chat: Said directly by the user, generally reliable; but do not complete unstated names, numbers, or dates.
+- screenshot: Screen observation may have OCR or context errors; write only clear, visible new facts with long-term value.
+- mixed: Maintenance/merge input, judge based on content itself.
 
-输出严格 JSON，不要 markdown：
+Output strict JSON, no markdown:
 {
   "should_append": true,
-  "append_entry": "短事实",
+  "append_entry": "short fact",
   "entry_kind": "progress",
   "title_update": null,
   "summary_update": null,
@@ -563,8 +532,8 @@ title / summary / aliases：
   "skip_reason": ""
 }
 
-entry_kind 只能是：
-"progress" / "decision" / "ddl" / "preference" / "relation" / "status" / "completion" / "other"。
+entry_kind must be one of:
+"progress" / "decision" / "ddl" / "preference" / "relation" / "status" / "completion" / "other".
 """
 
 
@@ -633,6 +602,7 @@ def _nullable_patch(value) -> Optional[str]:
 def call_pass4_append_slot(
     *,
     domain: str,
+    miru_name: str = "Miru",
     current_title: str,
     current_summary: str,
     current_body: str,
@@ -661,6 +631,8 @@ def call_pass4_append_slot(
         current_time = _dt.now().isoformat(timespec="seconds")
 
     bounded_max_tokens = max(300, min(int(max_tokens or 1000), 1000))
+    miru_name_safe = (miru_name or _load_miru_name()).strip() or "Miru"
+    system_prompt = PASS4_APPEND_SYSTEM_PROMPT.replace("{MIRU_NAME}", miru_name_safe)
     user_msg = PASS4_APPEND_USER_TEMPLATE.format(
         ground_truth_block=ground_truth_block or "(无)",
         domain=domain,
@@ -677,7 +649,7 @@ def call_pass4_append_slot(
     for attempt in range(MAX_RETRIES):
         try:
             text = _call_llm_text(
-                PASS4_APPEND_SYSTEM_PROMPT,
+                system_prompt,
                 user_msg,
                 temperature=0.25,
                 max_tokens=bounded_max_tokens,
@@ -914,32 +886,32 @@ class SlotDailyCompactorOutput(BaseModel):
         return v
 
 
-SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT = """你是 Miru 的 SlotDailyCompactor。
+SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT = """You are {MIRU_NAME}'s SlotDailyCompactor.
 
-Miru 会在未来对话里读取这些 slot 来理解用户。你的任务不是写日记，也不是发现新事实，而是把一个已有记忆卡的正文整理得更连贯、更准确、更适合以后读取。
+{MIRU_NAME} will read these slots in future conversations to understand the user. Your task is not to write a diary or discover new facts, but to organize an existing memory card's body to be more coherent, accurate, and readable for future retrieval.
 
-当前 slot 的 body 是 Miru 已经拥有的记忆。Pass4Append 可能在 body 末尾追加了一些带时间的短记录。代码已经在 PASS 4 实际写入成功后，把真正落盘的 append_entry 记录到 daily_slot_appends.json。现在你会收到这个 slot 截至本次整理仍未整理的真实 append entries；这些 entries 可能跨越多天。你也会收到代码计算好的正文渲染字数和 target_mode。
+The slot's current body is memory {MIRU_NAME} already possesses. Pass4Append may have appended time-stamped short records at the end of the body. Code has recorded successfully persisted append entries into daily_slot_appends.json after PASS 4 write success. Now you will receive the true append entries for this slot that remain uncompacted as of this organization; these entries may span multiple days. You will also receive code-calculated rendered character counts and target_mode.
 
-你只做整理：
-- 保留旧 body 和新增 append entries 里的有效事实。
-- 如果旧 body 和新增 entries 冲突，以新增 entries 为准。
-- 把重复、相近、机械流水账式的记录合并成自然正文。
-- 通常不要保留“## 近期记录”这种临时追加区，而是把它融入正文。
-- 不要写“今天新增/来源/截图/对话/系统检测”等内部说明。
-- 不要发明输入里没有的事实。
-- 不要把未完成 DDL、明确决定、完成/失败、项目状态变化删掉。
-- body 不包含 H1，代码会写入标题。
+Your job is organization only:
+- Retain valid facts from both the old body and new append entries.
+- If old body and new entries conflict, prioritize the new entries.
+- Merge repetitive, similar, or mechanical running-account records into natural prose.
+- Do not retain temporary append areas like "## 近期记录" (Recent Records); integrate them into the body.
+- Do not write internal explanations such as "new today / source / screenshot / chat / system detection".
+- Do not invent facts not present in the inputs.
+- Do not delete pending deadlines, explicit decisions, completion/failure, or project status changes.
+- Body does not include H1; code will write the title.
 
-代码已经给出 target_mode：
-- preserve：当前正文不长，优先保留信息和自然表达，不要强行压缩。
-- compact：正文偏长，合并重复，压到更适合阅读的长度。
-- heavy_compact：正文过长，允许更主动压缩低价值细节，但不要丢主线事实。
+Code has provided target_mode:
+- preserve: Current body is not long; prioritize retaining information and natural expression, do not force compression.
+- compact: Body is moderately long; merge duplicates, compress to a more readable length.
+- heavy_compact: Body is too long; allow more proactive compression of low-value details without losing main storyline facts.
 
-输出严格 JSON，不要 markdown fence：
+Output strict JSON, no markdown fence:
 {
-  "title": "保持原 title 或更准确的新 title",
-  "summary": "≤80字的一句话 slot 介绍",
-  "body": "整理后的完整 body，不含 H1"
+  "title": "Keep original title or a more accurate new title",
+  "summary": "One-sentence slot description ≤80 words",
+  "body": "Organized complete body, excluding H1"
 }
 """
 
@@ -996,6 +968,7 @@ def _format_slot_daily_entries(entries: list[dict]) -> str:
 def call_slot_daily_compactor(
     *,
     domain: str,
+    miru_name: str = "Miru",
     slot_id: str,
     current_title: str,
     current_summary: str,
@@ -1019,6 +992,8 @@ def call_slot_daily_compactor(
     if not current_time:
         current_time = _dt.now().isoformat(timespec="seconds")
 
+    miru_name_safe = (miru_name or _load_miru_name()).strip() or "Miru"
+    system_prompt = SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT.replace("{MIRU_NAME}", miru_name_safe)
     user_msg = SLOT_DAILY_COMPACTOR_USER_TEMPLATE.format(
         current_time=current_time,
         domain=domain,
@@ -1039,7 +1014,7 @@ def call_slot_daily_compactor(
 
     return _call_llm_with_retry(
         messages=[
-            {"role": "system", "content": SLOT_DAILY_COMPACTOR_SYSTEM_PROMPT},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_msg},
         ],
         output_schema=SlotDailyCompactorOutput,
