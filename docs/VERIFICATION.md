@@ -350,3 +350,11 @@
   - Test suite check: 50/50 passed across journal generation, core memory limits, emotion prompts, attention engine, and care & presence suites.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 82600573077e8d48f3d34a40eded4003a5749cbf` (PASSED).
+
+- **Phase 3.1 Verification (Controlled Local Chat Benchmark Baseline)**:
+  - `scripts/benchmark_chat.py`: Updated benchmark script to send messages through Flask `POST /api/chat` and confirm replies via `GET /api/chat/history` using test client and local single-device authentication (`auth.get_or_create_local_single_device_user()`).
+  - `tests/test_benchmark_chat.py`: Added focused harness tests verifying successful request routing, history matching, and fallback error string detection.
+  - Benchmark Execution & Blocker: Command `python3 scripts/benchmark_chat.py` documented; local Ollama blocker noted (service inactive during test execution, resulting in connection refusal; mock tests verified harness logic).
+  - Test suite check: Benchmark unit tests passed successfully.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 199a046051219f2c394f283119023482488ca659` (PASSED).

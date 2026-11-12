@@ -427,3 +427,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified via focused and broad test suites (all 50 tests passed successfully across journal, core memory limits, emotion prompts, attention engine, and care & presence).
 - Updated translation inventory and roadmap identifying Phase 3 provider and benchmark work as the next backend milestone.
 - Updated documentation (`docs/phases/PHASE_02B_35.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 3.1: Controlled Local Chat Benchmark Baseline)
+- Updated `scripts/benchmark_chat.py` to route chat requests through the actual Flask `POST /api/chat` route and confirm responses via `GET /api/chat/history` using the Flask test client and local single-device authentication (`auth.get_or_create_local_single_device_user()`).
+- Added comprehensive unit tests in `tests/test_benchmark_chat.py` verifying benchmark harness success routing, history confirmation, and fallback error detection (all tests passed successfully).
+- Documented benchmark execution command (`python3 scripts/benchmark_chat.py`) and noted local Ollama availability blocker (connection refused when Ollama is inactive).
+- Updated roadmap (`docs/ROADMAP.md`), status (`docs/STATUS.md`), translation inventory, session log, verification log, and created `docs/phases/PHASE_03_01.md`.

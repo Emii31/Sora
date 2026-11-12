@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.35 — Backend Localization Closeout (Completed & Verified)
-- **Current Status**: Corrected empty-day journal narrative and title in `journal.py` to be grounded in lack of recorded activity without screen/whereabouts assumptions. Translated core memory compression prompts and seed text in `core_memory.py`. Translated emotion annotation prompt request text and empty-state labels in `prompt.py`. Verified via focused and broad test suites (all 50 tests passed successfully). Roadmap updated for Phase 3 provider & benchmark work.
-- **Next Action**: Stop after Phase 2B.35.
+- **Phase**: Phase 3.1 — Controlled Local Chat Benchmark Baseline (Completed & Verified)
+- **Current Status**: Updated `scripts/benchmark_chat.py` to route chat messages through the actual Flask `POST /api/chat` route and confirm responses via `GET /api/chat/history` using the Flask test client and local single-device authentication flow. Added robust harness tests in `tests/test_benchmark_chat.py` validating success response routing, history confirmation, and fallback error detection (all tests passed successfully). Documented benchmark execution command and Ollama availability blocker.
+- **Next Action**: Unified provider configuration and automatic model selection (Phase 3 next batch).

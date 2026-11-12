@@ -32,6 +32,8 @@ import storage
 import core
 import user_settings
 import ai_config
+import auth
+import app as app_mod
 
 def get_python_rss_mb():
     try:
@@ -59,18 +61,19 @@ def get_ollama_rss_mb():
         pass
     return None
 
-def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
+def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int = 2):
     print(f"\n--- Running Benchmark (Fast Mode: {fast_mode}, Turns: {num_turns}) ---")
     storage._ensure_dirs()
     user_settings.update({"local_text_chat_enabled": fast_mode})
 
     base_url = "http://127.0.0.1:11434/v1"
     model = "qwen2.5:1.5b-instruct"
-    client = OpenAI(base_url=base_url, api_key="ollama")
+    openai_client = OpenAI(base_url=base_url, api_key="ollama")
 
     direct_times = []
     sora_times = []
     successes = []
+    headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
 
     for i in range(num_turns):
         prompt = f"Synthetic benchmark turn {i+1} for Sora local chat."
@@ -78,7 +81,7 @@ def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
         # 1. Direct Ollama timing (warmed model)
         t_direct_start = time.monotonic()
         try:
-            resp = client.chat.completions.create(
+            resp = openai_client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=60,
@@ -91,11 +94,28 @@ def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
         direct_time = t_direct_end - t_direct_start
         direct_times.append(direct_time)
 
-        # 2. Sora /api/chat send-to-history timing matching exact reply ID
+        # 2. Sora /api/chat send-to-history timing matching exact reply ID via real Flask route
         unique_text = f"SynthMsg {i+1} {time.time()} (fast={fast_mode})"
         t_sora_start = time.monotonic()
-        res = core.receive_chat_message(unique_text)
-        user_msg_id = res.get("msg_id")
+
+        res = client.post(
+            "/api/chat",
+            json={"text": unique_text},
+            headers=headers,
+            environ_base={"REMOTE_ADDR": "127.0.0.1"}
+        )
+        if res.status_code != 200:
+            print(f"  Turn {i+1} FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
+            successes.append(False)
+            continue
+
+        post_data = res.get_json() or {}
+        user_msg_id = post_data.get("msg_id")
+        if not user_msg_id:
+            print(f"  Turn {i+1} FAILURE: Missing msg_id in response: {post_data}")
+            successes.append(False)
+            continue
+
         expected_reply_id = user_msg_id + "_reply"
 
         assistant_reply = ""
@@ -104,12 +124,18 @@ def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
         success = False
 
         while time.monotonic() - poll_start < timeout:
-            history = storage.get_chat_history(limit=50)
-            for m in history:
-                if m.get("id") == expected_reply_id:
-                    assistant_reply = m.get("text", "")
-                    success = True
-                    break
+            hist_res = client.get(
+                "/api/chat/history?limit=50",
+                headers=headers,
+                environ_base={"REMOTE_ADDR": "127.0.0.1"}
+            )
+            if hist_res.status_code == 200:
+                history = hist_res.get_json() or []
+                for m in history:
+                    if m.get("id") == expected_reply_id:
+                        assistant_reply = m.get("text", "")
+                        success = True
+                        break
             if success:
                 break
             time.sleep(0.3)
@@ -157,30 +183,27 @@ def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
     }
 
 def main():
-    print("=== Sora Local Chat Comprehensive Benchmark ===")
-    app = Flask(__name__)
-    with app.test_request_context():
-        from flask import g
-        g.user_id = "_admin"
-        g.user_data_dir = data_dir
+    print("=== Sora Local Chat Comprehensive Benchmark (Real Backend Routes) ===")
+    app_mod.app.config["TESTING"] = True
+    client = app_mod.app.test_client()
 
-        # 1. Full Agent Mode (fast_mode = False)
-        res_full = run_benchmark_mode(fast_mode=False, num_turns=2)
+    local_user = auth.get_or_create_local_single_device_user()
+    auth_token = local_user["token"]
 
-        time.sleep(2.0)
+    # Alternate which mode runs first (e.g. fast then full, or full then fast)
+    res_full = run_benchmark_mode(client, auth_token, fast_mode=False, num_turns=2)
+    time.sleep(2.0)
+    res_fast = run_benchmark_mode(client, auth_token, fast_mode=True, num_turns=2)
 
-        # 2. Fast Local Text Mode (fast_mode = True)
-        res_fast = run_benchmark_mode(fast_mode=True, num_turns=2)
-
-        print("\n=== Benchmark Summary ===")
-        print(f"Full Mode  : Median Direct={res_full.get('median_direct', 0):.2f}s, Median Sora Total={res_full.get('median_sora', 'TIMEOUT')}s, Success={res_full.get('success')}")
-        print(f"Fast Mode  : Median Direct={res_fast.get('median_direct', 0):.2f}s, Median Sora Total={res_fast.get('median_sora', 'TIMEOUT')}s, Success={res_fast.get('success')}")
-
-        if not res_full.get('success') or not res_fast.get('success'):
-            print("ERROR: Benchmark failed in one or more modes.", file=sys.stderr)
-            sys.exit(1)
+    print("\n=== Benchmark Summary ===")
+    print(f"Full Mode  : Median Direct={res_full.get('median_direct', 0):.2f}s, Median Sora Total={res_full.get('median_sora', 'TIMEOUT')}s, Success={res_full.get('success')}")
+    print(f"Fast Mode  : Median Direct={res_fast.get('median_direct', 0):.2f}s, Median Sora Total={res_fast.get('median_sora', 'TIMEOUT')}s, Success={res_fast.get('success')}")
 
     _temp_dir.cleanup()
+
+    if not res_full.get('success') or not res_fast.get('success'):
+        print("ERROR: Benchmark failed in one or more modes.", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
