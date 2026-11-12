@@ -409,6 +409,18 @@ def ai_config_list():
     return jsonify(ai_config.get_public_config())
 
 
+@admin_bp.route("/ai-config/shared", methods=["PATCH"])
+@auth.require_admin
+def ai_config_update_shared():
+    """Update shared provider config. Hot-reloads."""
+    import ai_config
+    body = request.get_json(silent=True) or {}
+    result = ai_config.update_shared_config(body)
+    if not result.get("ok"):
+        return jsonify(result), 400
+    return jsonify(result)
+
+
 @admin_bp.route("/ai-config/<tier>", methods=["PATCH"])
 @auth.require_admin
 def ai_config_update(tier):

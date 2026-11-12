@@ -448,3 +448,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Added comprehensive automated unit test coverage in `tests/test_benchmark_chat.py` (`test_benchmark_runner_end_to_end_mocked`, `test_benchmark_failure_conditions`) verifying runner execution, mode orders, reply matching, and failure detection (wrong policy, HTTP errors, missing replies, fallback responses).
 - Verified all tests passed successfully (`python3 -m pytest tests/test_benchmark_chat.py`).
 - Updated documentation (`docs/phases/PHASE_03_01B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 3.2: Shared Provider Configuration and Automatic Model Selection)
+- Added top-level `shared` provider configuration support (`host`, `api_key`) in `ai_config.py` and `ai_config.json`.
+- Implemented robust resolution precedence: Per-Tier Override → Shared Provider (endpoint and credential resolved together) → Environment Variables → Defaults.
+- Implemented automatic model discovery (`discover_provider_models`) and auto-selection for chat, memory, and vision models, keeping discovery out of the per-message path and invalidating cache on connection changes (`invalidate_cache()`).
+- Added administrative and owner shared configuration PATCH endpoints (`/api/admin/ai-config/shared`, `/api/owner/ai-config/shared`).
+- Added comprehensive test suite in `tests/test_shared_provider.py` (all tests passed successfully).
+- Noted live benchmark status details (Phase 3.1B runner imports auth before setting disposable `DATA_DIR` and reuses history across turns; live benchmark runner timings remain pending).
+- Updated documentation (`docs/phases/PHASE_03_02.md`, `docs/STATUS.md`, `docs/ROADMAP.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.1B — Verify the Benchmark Runner End to End (Completed & Verified)
-- **Current Status**: Implemented in-worker policy observation (`core._last_resolved_chat_policy`), byte-identical matched benchmark pairs with alternating order (`full_first` and `fast_first`), model warming outside timed interval, and robust automated end-to-end tests in `tests/test_benchmark_chat.py`. All tests passed successfully.
-- **Next Action**: Phase 3.2 provider configuration and automatic model selection.
+- **Phase**: Phase 3.2 — Shared Provider Configuration and Automatic Model Selection (Completed & Verified)
+- **Current Status**: Implemented shared opt-in provider configuration (`shared` endpoint and credential in `ai_config.json`), precise resolution precedence (Tier Override > Shared Provider > Environment > Default), automatic model discovery and selection (`discover_provider_models`), secret masking, admin/owner patch endpoints (`/api/admin/ai-config/shared`, `/api/owner/ai-config/shared`), and comprehensive test coverage (`tests/test_shared_provider.py`). Note: Phase 3.1B benchmark runner imports auth before setting disposable DATA_DIR and reuses history across turns; live benchmark runner timings remain pending.
+- **Next Action**: Stop after Phase 3.2.

@@ -3,7 +3,7 @@
 - **Phase 0**: Workspace/Audit (Completed)
 - **Phase 1**: Reproducible Arch baseline (Completed)
 - **Phase 2**: English/Sora branding (Completed)
-- **Phase 3**: Unified provider and local-inference benchmark (Phase 3.1 Controlled Local Chat Benchmark Baseline Completed; Next batch: Unified provider configuration and automatic model selection)
+- **Phase 3**: Unified provider and local-inference benchmark (Phases 3.1, 3.1A, 3.1B, and 3.2 Shared Provider Configuration and Automatic Model Selection Completed & Verified)
 - **Phase 4**: Voice/personality/on-request camera (Deferred)
 - **Phase 5**: 3D avatar/island interface (Deferred)
 - **Phase 6**: Android/shared memory (Deferred)

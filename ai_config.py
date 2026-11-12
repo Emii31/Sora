@@ -46,7 +46,7 @@ _ENV_VARS = {
 }
 
 # Hard-coded fallback if neither saved config nor env vars are present.
-# Empty values cause callers to surface the user-facing "模型配置还没有完成" copy.
+# Empty values cause callers to surface the user-facing "模型配置还没有完成" copy
 # rather than silently failing.
 _DEFAULT_PER_TIER = {
     "vision": {"host": "", "api_key": "", "model": "", "supports_images": True},
@@ -55,11 +55,6 @@ _DEFAULT_PER_TIER = {
 }
 
 # Per-tier max_tokens defaults.
-# 2026-05-13 (Sleep Agent v3 A2): all tiers bumped to ≥ 50000 so reasoning
-# mode (DeepSeek thinking / OpenRouter reasoning) has enough budget without
-# starving the actual JSON output. Reasoning is OFF by default so callers
-# that don't opt in still use only the tokens they need — the cap just
-# raises the ceiling.
 _DEFAULT_MAX_TOKENS = {
     "vision": 50000,
     "chat":   50000,
@@ -93,11 +88,7 @@ def _ensure_dir() -> None:
 
 _KNOWN_HOST_PREFIX = {
     "openrouter.ai": "openrouter.ai/api",
-    # Zhipu's OpenAI-compatible API uses /api/paas/v4 directly. Appending
-    # another /v1 produces the invalid /v4/v1/chat/completions path.
     "open.bigmodel.cn": "open.bigmodel.cn/api/paas/v4",
-    # Google Gemini's OpenAI-compatible endpoint is not /v1. Users often
-    # paste only the domain from docs; store the usable compatibility base.
     "generativelanguage.googleapis.com": "generativelanguage.googleapis.com/v1beta/openai",
 }
 
@@ -112,11 +103,6 @@ def _strip_chat_completions_endpoint(host: str) -> str:
 
 
 def _normalize_host(value: str) -> str:
-    """Strip scheme/trailing slash and auto-correct common provider shortcuts.
-
-    Returns "" for empty input. The stored value is effectively an
-    OpenAI-compatible base host/path without scheme (or with explicit https:// if loopback https requested).
-    """
     raw = str(value or "").strip()
     if not raw:
         return ""
@@ -133,8 +119,6 @@ def _normalize_host(value: str) -> str:
     host = _strip_chat_completions_endpoint(host)
     host_key = host.lower()
     if host_key == "openrouter.ai/v1":
-        # OpenRouter's OpenAI-compatible base is /api/v1. Users sometimes
-        # paste openrouter.ai/v1 by analogy with OpenAI; keep correcting it.
         host = "openrouter.ai/api"
     elif host_key in _KNOWN_HOST_PREFIX:
         host = _KNOWN_HOST_PREFIX[host_key]
@@ -179,7 +163,6 @@ def _base_url_scheme(host: str) -> str:
 
 
 def _legacy_openai_base_url(normalized: str) -> str:
-    """Apply Miru's historical `/v1` completion rule."""
     if "://" in normalized:
         base = normalized
     else:
@@ -192,7 +175,6 @@ def _legacy_openai_base_url(normalized: str) -> str:
 
 
 def _prefer_legacy_base_url(normalized: str) -> bool:
-    """Return whether the historical `/v1` form should be tried first."""
     if "://" in normalized:
         parsed = urlsplit(normalized)
     else:
@@ -209,13 +191,6 @@ def _prefer_legacy_base_url(normalized: str) -> bool:
 
 
 def _openai_base_url_candidates(host: str) -> list[str]:
-    """Return ordered same-host base URLs for setup-time validation.
-
-    Explicit provider paths are authoritative and are tried unchanged first.
-    Bare hosts and known shortcuts retain Miru's historical `/v1` behavior.
-    The alternate form is only used by :func:`ping_tier` after a path-level
-    HTTP failure.
-    """
     normalized = _normalize_host(host)
     if not normalized:
         return []
@@ -230,11 +205,6 @@ def _openai_base_url_candidates(host: str) -> list[str]:
 
 
 def _openai_base_url_from_host(host: str) -> str:
-    """Return the preferred base_url passed to the OpenAI SDK.
-
-    A successful setup test persists the working candidate, so normal runtime
-    calls use that exact base without probing or retrying alternate paths.
-    """
     candidates = _openai_base_url_candidates(host)
     return candidates[0] if candidates else ""
 
@@ -264,7 +234,6 @@ def _safe_error_message(exc: Exception, api_key: str = "", limit: int = 300) -> 
 # ---------------------------------------------------------------------------
 
 def _load_saved() -> dict:
-    """Read ai_config.json, tolerating missing/corrupt files."""
     path = _config_path()
     if not os.path.exists(path):
         return {}
@@ -290,7 +259,6 @@ def _save_atomic(data: dict) -> None:
 
 
 def _persist_resolved_base_url(tier: str, base_url: str) -> None:
-    """Persist the setup-tested base URL so runtime calls use the same path."""
     normalized = _normalize_host(base_url)
     if tier not in TIERS or not normalized:
         return
@@ -318,27 +286,89 @@ def _persist_resolved_base_url(tier: str, base_url: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Resolution: saved → env → default
+# Automatic Model Discovery
+# ---------------------------------------------------------------------------
+
+def discover_provider_models(host: str, api_key: str) -> list[str]:
+    """Query provider model list via OpenAI-compatible endpoint."""
+    if not host or not api_key:
+        return []
+    import openai
+    candidates = _openai_base_url_candidates(host)
+    for base_url in candidates:
+        try:
+            client = openai.OpenAI(api_key=api_key, base_url=base_url, timeout=5.0)
+            models = client.models.list()
+            model_ids = []
+            for m in models:
+                mid = getattr(m, "id", str(m))
+                if mid:
+                    model_ids.append(mid)
+            if model_ids:
+                return model_ids
+        except Exception:
+            continue
+    return []
+
+
+# ---------------------------------------------------------------------------
+# Resolution: tier override → shared provider → env → default
 # ---------------------------------------------------------------------------
 
 def _resolve_tier(tier: str, saved: dict) -> dict:
-    """Resolve one tier's config from saved JSON → env vars → defaults."""
+    """Resolve one tier's config from saved JSON (tier → shared) → env vars → defaults."""
     if tier not in TIERS:
         raise ValueError(f"unknown tier: {tier}")
+
+    shared_saved = saved.get("shared", {}) or {}
+    shared_host = _normalize_host(shared_saved.get("host", ""))
+    shared_key = str(shared_saved.get("api_key", "")).strip()
 
     tier_saved = (saved.get("tiers", {}) or {}).get(tier, {}) or {}
     env_host_var, env_key_var, env_model_var = _ENV_VARS[tier]
     defaults = _DEFAULT_PER_TIER[tier]
 
-    host = tier_saved.get("host") or os.environ.get(env_host_var, "") or defaults["host"]
-    api_key = tier_saved.get("api_key") or os.environ.get(env_key_var, "") or defaults["api_key"]
-    model = tier_saved.get("model") or os.environ.get(env_model_var, "") or defaults["model"]
+    has_tier_host = bool(tier_saved.get("host"))
+    has_tier_key = bool(tier_saved.get("api_key"))
+
+    if has_tier_host or has_tier_key:
+        host = tier_saved.get("host", "") or os.environ.get(env_host_var, "") or defaults["host"]
+        api_key = tier_saved.get("api_key", "") or os.environ.get(env_key_var, "") or defaults["api_key"]
+    elif shared_host and shared_key:
+        # Resolve endpoint and credential together from shared provider
+        host = shared_host
+        api_key = shared_key
+    else:
+        host = os.environ.get(env_host_var, "") or os.environ.get("AI_HOST", "") or defaults["host"]
+        api_key = os.environ.get(env_key_var, "") or os.environ.get("AI_API_KEY", "") or defaults["api_key"]
+
+    model = tier_saved.get("model") or os.environ.get(env_model_var, "") or os.environ.get("AI_MODEL", "") or defaults["model"]
     supports_images = bool(tier_saved.get("supports_images", defaults["supports_images"]))
 
+    normalized_host = _normalize_host(host)
+    trimmed_key = str(api_key or "").strip()
+    trimmed_model = str(model or "").strip()
+
+    # Automatic model selection if model is empty and host+key are present
+    if not trimmed_model and normalized_host and trimmed_key:
+        discovered = discover_provider_models(normalized_host, trimmed_key)
+        if discovered:
+            if tier == "vision":
+                vision_models = [m for m in discovered if any(k in m.lower() for k in ("vision", "vl", "omni", "multimodal", "gpt-4o", "sonnet"))]
+                if vision_models:
+                    trimmed_model = vision_models[0]
+                    supports_images = True
+            else:
+                text_models = [m for m in discovered if any(k in m.lower() for k in ("instruct", "chat", "gpt", "claude", "qwen", "llama", "deepseek", "flash", "pro"))]
+                if text_models:
+                    trimmed_model = text_models[0]
+                else:
+                    trimmed_model = discovered[0]
+
     return {
-        "host": _normalize_host(host),
-        "api_key": str(api_key or "").strip(),
-        "model": str(model or "").strip(),
+        "host": normalized_host,
+        "api_key": trimmed_key,
+        "model": trimmed_model,
         "supports_images": supports_images,
         "max_tokens": int(tier_saved.get("max_tokens") or _DEFAULT_MAX_TOKENS[tier]),
     }
@@ -365,11 +395,6 @@ def invalidate_cache() -> None:
 # ---------------------------------------------------------------------------
 
 def get_tier_config(tier: str) -> dict:
-    """Return resolved {host, api_key, model, supports_images, max_tokens}.
-
-    Falls back chat→memory (and vice versa) only via env vars, NOT silently —
-    if a tier's api_key is empty, the caller's API call will fail clearly.
-    """
     if tier not in TIERS:
         raise ValueError(f"unknown tier: {tier}")
     with _lock:
@@ -378,12 +403,6 @@ def get_tier_config(tier: str) -> dict:
 
 
 def resolve_max_tokens(tier: str, requested: int | None = None) -> int:
-    """Resolve the final max_tokens for a tier-scoped LLM call.
-
-    The owner settings page is the upper bound. Call sites may still pass
-    smaller task-specific caps, but they cannot exceed the tier's configured
-    ceiling.
-    """
     cfg = get_tier_config(tier)
     configured = int(cfg.get("max_tokens") or _DEFAULT_MAX_TOKENS[tier])
     if requested is None:
@@ -396,12 +415,6 @@ def resolve_max_tokens(tier: str, requested: int | None = None) -> int:
 
 
 def get_tier_client(tier: str):
-    """Return a cached OpenAI client for the tier.
-
-    Raises RuntimeError with a user-facing setup message if the tier is
-    missing required model settings, instead of letting an obscure provider
-    error bubble up from inside an LLM call site.
-    """
     import openai
 
     with _lock:
@@ -429,10 +442,23 @@ def get_tier_client(tier: str):
 
 
 def get_public_config() -> dict:
-    """Return all tiers with masked api_key. For admin UI display."""
+    """Return shared config and all tiers with masked api_key. For admin UI display."""
     with _lock:
         _ensure_cache()
-        out = {"version": 2, "tiers": {}}
+        saved = _load_saved()
+        shared_saved = saved.get("shared", {}) or {}
+        shared_host = shared_saved.get("host", "")
+        shared_key = str(shared_saved.get("api_key", "")).strip()
+
+        out = {
+            "version": 2,
+            "shared": {
+                "host": shared_host,
+                "api_key_masked": _mask_secret(shared_key),
+                "has_api_key": bool(shared_key),
+            },
+            "tiers": {}
+        }
         for tier in TIERS:
             cfg = _cache[tier]
             out["tiers"][tier] = {
@@ -450,12 +476,41 @@ def get_public_config() -> dict:
 # Public write API
 # ---------------------------------------------------------------------------
 
-def update_tier_config(tier: str, payload: dict) -> dict:
-    """Update one tier. Returns {ok: bool, error?: str, config?: dict}.
+def update_shared_config(payload: dict) -> dict:
+    """Update shared provider configuration."""
+    if not isinstance(payload, dict):
+        return {"ok": False, "error": "payload must be an object"}
+    with _lock:
+        saved = _load_saved()
+        if "shared" not in saved or not isinstance(saved.get("shared"), dict):
+            saved["shared"] = {}
+        cur = saved["shared"]
 
-    Accepts: host, api_key (or clear_api_key=True), model,
-             supports_images, max_tokens. Missing fields are left unchanged.
-    """
+        if payload.get("clear_api_key"):
+            cur["api_key"] = ""
+        elif "api_key" in payload and payload["api_key"] is not None:
+            api_key = str(payload["api_key"]).strip()
+            if api_key:
+                cur["api_key"] = api_key
+
+        if "host" in payload and payload["host"] is not None:
+            host = _normalize_host(payload["host"])
+            if not host:
+                return {"ok": False, "error": "host cannot be empty"}
+            cur["host"] = host
+
+        saved["shared"] = cur
+        from datetime import datetime as _dt
+        saved["updated_at"] = _dt.now().isoformat(timespec="seconds")
+        saved["version"] = 2
+        _save_atomic(saved)
+
+    invalidate_cache()
+    return {"ok": True, "config": get_public_config()}
+
+
+def update_tier_config(tier: str, payload: dict) -> dict:
+    """Update one tier. Returns {ok: bool, error?: str, config?: dict}."""
     if tier not in TIERS:
         return {"ok": False, "error": f"unknown tier: {tier}"}
     if not isinstance(payload, dict):
@@ -475,7 +530,6 @@ def update_tier_config(tier: str, payload: dict) -> dict:
             api_key = str(payload["api_key"]).strip()
             if api_key:
                 cur["api_key"] = api_key
-            # Empty string in payload is a no-op (use clear_api_key for that)
 
         if "host" in payload and payload["host"] is not None:
             host = _normalize_host(payload["host"])
@@ -612,19 +666,11 @@ def ping_tier(tier: str, timeout_seconds: int = 15) -> dict:
 # ---------------------------------------------------------------------------
 # Backward-compat shims
 # ---------------------------------------------------------------------------
-# Old code paths that used `get_runtime_config()` / `get_public_config()` /
-# `update_public_config()` / `ping_provider()` against a single-config world.
-# They now route to the chat tier so existing callers keep working until
-# Phase A3 finishes migrating them.
 
 def get_runtime_config() -> dict:
-    """DEPRECATED: returns chat-tier config in the legacy single-config shape.
-
-    New code should use get_tier_config(tier).
-    """
     cfg = get_tier_config("chat")
     return {
-        "provider": "openai",  # always now
+        "provider": "openai",
         "api_key": cfg["api_key"],
         "host": cfg["host"],
         "model": cfg["model"],
@@ -632,15 +678,10 @@ def get_runtime_config() -> dict:
 
 
 def update_public_config(payload: dict) -> dict:
-    """DEPRECATED: legacy single-config update. Routes to chat tier.
-
-    Per-user AI config is removed; the only writer is the admin UI.
-    """
     if not isinstance(payload, dict):
         return {"ok": False, "error": "invalid payload"}
     return update_tier_config("chat", payload)
 
 
 def ping_provider(timeout_seconds: int = 12) -> dict:
-    """DEPRECATED: legacy single-config ping. Tests chat tier."""
     return ping_tier("chat", timeout_seconds)

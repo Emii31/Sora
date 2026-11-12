@@ -3105,6 +3105,19 @@ def api_owner_ai_config_get():
     })
 
 
+@app.route("/api/owner/ai-config/shared", methods=["PATCH"])
+def api_owner_ai_config_update_shared():
+    guard = _require_instance_owner()
+    if not guard.get("ok"):
+        return jsonify({"error": guard.get("error", "owner required")}), guard.get("status_code", 403)
+
+    body = request.get_json(silent=True) or {}
+    result = ai_config.update_shared_config(body)
+    if not result.get("ok"):
+        return jsonify(result), 400
+    return jsonify(result)
+
+
 @app.route("/api/owner/ai-config/<tier>", methods=["PATCH"])
 def api_owner_ai_config_update(tier):
     guard = _require_instance_owner()
