@@ -2672,7 +2672,7 @@ def api_companion_chat():
     body = request.get_json(silent=True) or {}
     text = body.get("text", "").strip()
     if not text:
-        return jsonify({"error": "请输入消息"}), 400
+        return jsonify({"error": "Please enter a message"}), 400
 
     history_limit = companion.coerce_limit(body.get("history_limit", 20), default=20, maximum=100)
     return jsonify(companion.send_chat(text, history_limit=history_limit))

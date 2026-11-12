@@ -2460,7 +2460,7 @@ def receive_chat_message(text, image=None, device_id=None):
                     user_msg["image_desc"] = desc
         except Exception as e:
             print(f"[csm] vision.describe_image failed: {e}")
-            user_msg["image_desc"] = "(图片识别失败)"
+            user_msg["image_desc"] = "(Image description failed)"
     # Phase 2: persist device_id on the user message itself, not just on the
     # transient SSE broadcast. The SSE broadcast already echoes it for live
     # de-dup, but historical re-renders (loadCompanionChatHistory after
@@ -3592,9 +3592,9 @@ def _evaluate_miru_emotion(trigger_kind: str, trigger_text: str,
         trigger_text_with_img = trigger_text or ""
         if trigger_image_desc:
             if trigger_text_with_img:
-                trigger_text_with_img = f"{trigger_text_with_img}\n[图片：{trigger_image_desc}]"
+                trigger_text_with_img = f"{trigger_text_with_img}\n[Image: {trigger_image_desc}]"
             else:
-                trigger_text_with_img = f"[图片：{trigger_image_desc}]"
+                trigger_text_with_img = f"[Image: {trigger_image_desc}]"
 
         result = call_miru_emotion_eval(
             trigger_kind=trigger_kind,

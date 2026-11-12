@@ -322,3 +322,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified all focused and regression unit tests passed successfully.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 1e3a76ea8237efb832dd876a23a754a17e873bfc` (PASSED).
 - Updated documentation (`docs/phases/PHASE_02B_22.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 2B.23: Backend Copy Cleanup and Benchmark Error Detection)
+- Translated blank-message response in `POST /api/companion/chat` (`"Please enter a message"`).
+- Updated internal vision/image description failure message (`"(Image description failed)"`) and proactive trigger image tag (`"[Image: ...]"`) in `core.py`.
+- Updated `scripts/benchmark_chat.py` failure detection to correctly count English fallback responses introduced in Phase 2B.22 as failed turns even when saved, while allowing valid replies containing the word "error" to pass.
+- Verified changes with focused companion, chat-error, and routing test suites (25 unit tests passed).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py`.
+- Updated documentation (`docs/phases/PHASE_02B_23.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

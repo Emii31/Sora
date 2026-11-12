@@ -117,7 +117,16 @@ def run_benchmark_mode(fast_mode: bool, num_turns: int = 2):
         t_sora_end = time.monotonic()
         sora_total_time = t_sora_end - t_sora_start
 
-        if not success or not assistant_reply or "error" in assistant_reply.lower() or "小问题" in assistant_reply or "我还没有配置好" in assistant_reply:
+        if (
+            not success
+            or not assistant_reply
+            or assistant_reply.lower().startswith("error:")
+            or "i haven't configured my models yet" in assistant_reply.lower()
+            or "i couldn't connect to the model service" in assistant_reply.lower()
+            or "i ran into a small issue" in assistant_reply.lower()
+            or "小问题" in assistant_reply
+            or "我还没有配置好" in assistant_reply
+        ):
             print(f"  Turn {i+1} FAILURE: Timeout or error reply received: {assistant_reply}")
             successes.append(False)
         else:

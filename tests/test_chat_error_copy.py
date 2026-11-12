@@ -53,3 +53,19 @@ def test_backend_friendly_chat_error_mapping_hides_internal_terms():
         assert "ai tier" not in lowered
         assert "admin ui" not in lowered
         assert "api timeout" not in lowered
+
+
+def test_api_companion_chat_blank_input_returns_400(monkeypatch):
+    import app as app_module
+    import auth
+
+    def _fake_check_request(req=None):
+        return None
+
+    monkeypatch.setattr(auth, "check_request", _fake_check_request)
+    client = app_module.app.test_client()
+    response = client.post("/api/companion/chat", json={"text": "   "})
+
+    assert response.status_code == 400
+    payload = response.get_json()
+    assert payload["error"] == "Please enter a message"

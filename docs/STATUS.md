@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.22 — Backend-Only English Translation and Sora Branding (Completed & Verified)
-- **Current Status**: Translated user-facing backend messages in `app.py`, `ai_config.py`, `core.py`, and `auth.py` (invite-code validation, login/session errors, setup errors, provisioning errors, journal errors, chat validation, and model-connection fallbacks) to natural English and Sora branding. Updated corresponding unit tests (`test_invitation_direct_login.py`, `test_ai_config.py`, `test_chat_error_copy.py`, `test_local_single_device_mode.py`, `test_client_provisioning.py`, `test_chat_preflight_routing.py`). Verified all focused unit tests passed. Enforced history append-only prefix integrity.
+- **Phase**: Phase 2B.23 — Backend Copy Cleanup and Benchmark Error Detection (Completed & Verified)
+- **Current Status**: Translated blank-message chat error in `app.py` (`"Please enter a message"`), updated image description failure copy (`"(Image description failed)"`) and proactive trigger image tag (`"[Image: ...]"`) in `core.py`, and updated benchmark chat failure detection in `scripts/benchmark_chat.py` to correctly flag English fallbacks while preserving valid error-containing replies. Verified 25 focused unit tests (`test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_chat_preflight_routing.py`) and benchmark logic.
 - **Next Action**: Commit changes and push to origin/main.

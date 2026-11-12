@@ -251,3 +251,9 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 1e3a76ea8237efb832dd876a23a754a17e873bfc` (PASSED).
 
+- **Phase 2B.23 Verification (Backend Copy Cleanup and Benchmark Error Detection)**:
+  - `app.py`, `core.py`, `scripts/benchmark_chat.py`: Translated blank-message chat error in `app.py` (`"Please enter a message"`), updated image description failure copy (`"(Image description failed)"`) and proactive trigger image tag (`"[Image: ...]"`) in `core.py`, and updated benchmark failure detection in `scripts/benchmark_chat.py` to correctly flag English fallbacks while preserving valid error-containing replies.
+  - Preservation checks: HTTP status codes, response fields, authentication, stored identifiers, and character config names preserved intact.
+  - Test suite check: 25 focused unit tests passed (`test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_chat_preflight_routing.py`). Synthetic tests for benchmark failure detection passed successfully.
+  - Git diff check: PASS (clean whitespace, exact diff statistics).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py ed994c453de159bfcbd4f9d8f5dfa09e1e7fb4f6` (PASSED).
