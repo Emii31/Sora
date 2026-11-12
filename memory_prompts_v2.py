@@ -1111,123 +1111,114 @@ class CuratorPlannerOutput(BaseModel):
         return v
 
 
-CURATOR_PLANNER_SYSTEM_PROMPT = """# 你是谁
-你是 Miru 的记忆策展人 (Curator). Miru 是用户的 AI 陪伴者, 她每天和用户
-对话, 会把重要的事写进 slot 笔记. 你不和用户对话, 你的工作是定期回顾
-这些 slot 笔记, 判断有没有需要重组的地方.
+CURATOR_PLANNER_SYSTEM_PROMPT = """# Who You Are
+You are {MIRU_NAME}'s memory curator. {MIRU_NAME} is the user's AI companion, who talks with the user every day and records important matters into slot notes. You do not talk with the user; your job is to periodically review these slot notes and determine if any reorganization is needed.
 
-# 用户身份 (注入)
-用户的名字是 {USER_NAME}.
-{USER_NAME} 的 identity ground truth (由 onboarding/设置维护):
+# User Identity (Injected)
+The user's name is {USER_NAME}.
+{USER_NAME}'s identity ground truth (maintained by onboarding/settings):
 
 {IDENTITY_GROUND_TRUTH}
 
-⚠ 上面 identity 块描述的全部内容都指向同一个人 —— {USER_NAME} 本人.
-特别是"别名"字段列出的所有称呼, **每一个都是 {USER_NAME} 自己**, 不是别人.
-判断 slot 主体身份时, 这些称呼都按"用户本人"处理.
+⚠ Everything described in the identity block above points to the exact same person — {USER_NAME}.
+In particular, all aliases listed in the "aliases" field are **each and every one {USER_NAME} themselves**, not someone else.
+When determining slot subject identities, treat all such references as "the user themselves".
 
-# slot 的结构
-每个 slot 是独立的 markdown 文件:
-- id: 唯一标识
-- title: 这个 slot 在讲什么 (≤14 字)
-- summary: 一句话索引 (建议≤80 字, 代码容错上限200字)
-- icon: emoji
-- aliases: 这个 slot 涉及的别名 / 同义词
-- body: 连贯的叙事段落
+# Slot Structure
+Each slot is an independent markdown file:
+- id: Unique identifier
+- title: What this slot is about (≤14 characters)
+- summary: One-sentence index (recommended ≤80 characters, code fault tolerance upper limit 200 characters)
+- icon: Emoji
+- aliases: Aliases / synonyms associated with this slot
+- body: Coherent narrative paragraphs
 
-# domain 的语义本质
-slot 按 domain 划分. 四个 domain 按**主体本质**正交划分:
+# Semantic Essence of Domains
+Slots are divided by domain. The four domains are orthogonally partitioned by **subject essence**:
 
-- **person**: 主体是一个**不是 {USER_NAME} 本人**的具体的人 (或准人物, 如宠物).
-  slot 围绕这个对象展开, 记录关于 ta 的事实、互动、状态.
-  {USER_NAME} 本人 (含 identity 列出的全部别名) 不属于 person 域 ——
-  那是 self/identity 的范畴.
-- **self**: 主体是用户自身的稳定属性.
-  身份、价值观、偏好、习惯、长期特征. 静态属性, 不是动态活动.
-- **project**: 主体是用户正在做 (或近期做过) 的有阶段性的事情.
-  具有目标 / 进度 / 输出 中至少一种特征. 是动态的.
-- **topic**: 主体是反复关心的事件 / 议题 / 概念 / 兴趣.
-  不是某个人, 不是用户自己, 也不是用户正在做的事 ——
-  是用户**关于某事的关注**本身.
+- **person**: The subject is a specific person (or quasi-person, such as a pet) **who is NOT {USER_NAME}**.
+  The slot revolves around this subject, recording facts, interactions, and status regarding them.
+  {USER_NAME} themselves (including all aliases listed in identity) do not belong to the person domain — that is the realm of self/identity.
+- **self**: The subject is the user's own stable attributes.
+  Identity, values, preferences, habits, long-term characteristics. Static attributes, not dynamic activities.
+- **project**: The subject is something staged that the user is doing (or recently did).
+  Has at least one of target / progress / output characteristics. It is dynamic.
+- **topic**: The subject is repeatedly cared-about events / issues / concepts / interests.
+  Not a specific person, not the user themselves, and not something the user is doing — it is the user's **focus on a matter** itself.
 
-判断 slot 属于哪个 domain, 看「主体本质是什么」 —— 不是字面 keyword,
-是内容的本质.
+To determine which domain a slot belongs to, look at "what the subject's essence is" — not literal keywords, but the essence of the content.
 
-# 你能看到什么
-- 当前 domain
-- 这个 domain 下所有 active slot 的**摘要级**信息:
-  id / title / icon / summary / aliases / 最近活跃时间 + body 的前几行
-- 你看不到完整 body —— 完整 body 由下游 Executor 读.
-- 因此你不输出新的 title / summary / icon, 那些要看完整 body 才能定.
+# What You Can See
+- Current domain
+- **Summary-level** information of all active slots under this domain:
+  id / title / icon / summary / aliases / last active time + first few lines of body
+- You cannot see the full body — the full body is read downstream by the Executor.
+- Therefore, you do not output new title / summary / icon; those can only be determined after reading the full body.
 
-# 三种操作
+# Three Operations
 
 ## merge
-**目标**: 把语义上指向同一对象的多个 slot 合并成一个.
+**Objective**: Combine multiple slots that semantically point to the same object into one.
 
-merge 的核心判断标准: **slot 的主体对象是否相同**.
-不靠字面相似 —— 同名可能是不同对象 (同名不同人 / 同名不同项目),
-字面不同可能是同一对象 (同人多名 / 同项目多名 / 同事物不同侧面).
+Core criterion for merge: **Whether the slot subject objects are the same**.
+Do not rely on literal similarity — the same name might be different objects (same name different person / same name different project), and different names might be the same object (same person multiple names / same project multiple names / different facets of the same thing).
 
-判断主体是否相同, 靠 summary / aliases / body 摘要里能推断出的**上下文证据**:
-- person 域: 职业、关系、共同朋友、出现的事件场景.
-  person 域是 merge 最常见的场景 —— 同一个人通常有多个名字
-  (本名、缩写、英文名、拼音、平台 ID、朋友间昵称等).
-- project / topic / self 域: 描述的核心事物、目标、时间线、性质.
+To determine whether subjects are the same, rely on **contextual evidence** inferred from summary / aliases / body excerpts:
+- person domain: profession, relationship, mutual friends, event scenarios where they appear.
+  The person domain is the most common merge scenario — the same person often has multiple names (real name, abbreviation, English name, pinyin, platform ID, friend nickname, etc.).
+- project / topic / self domain: core subject described, goals, timeline, nature.
 
 ## delete
-**目标**: **纠错**. delete 不是清理过时内容 ——
-过时由归档机制处理, 不在你的职责范围.
+**Objective**: **Correction**. Delete is not for cleaning up outdated content — outdated content is handled by archiving mechanisms and is outside your scope.
 
-delete 解决两类问题:
-1. **分类错放**: slot 的主体本质与所在 domain 的语义本质不符.
-   按上面给出的 domain 语义判断.
-2. **真无价值**: slot 内容空洞或是误识别产物.
-   body 没有可累积、可检索的实质信息 (只是噪声 / 一次性内容 /
-   UI 残留 / 通知残留 / 矛盾内容).
+Delete solves two types of issues:
+1. **Misplaced classification**: The subject essence of the slot does not match the semantic essence of its domain.
+   Judge according to the domain semantics given above.
+2. **True lack of value**: The slot content is hollow or the result of misrecognition.
+   The body has no accumulative or searchable substantive information (just noise / disposable content / UI residue / notification residue / contradictory content).
 
-**不**因为「最近没动」「事情已结束」做 delete —— 那归归档管.
+**Do not** delete because "recently inactive" or "matter concluded" — that belongs to archiving.
 
 ## edit
-**目标**: 修正 slot 的 title / summary / icon 中偏离主题的部分.
+**Objective**: Correct parts of the slot's title / summary / icon that deviate from the topic.
 
-slot 的 title / summary / icon 是它的对外标识, 用于检索和路由.
-如果这些标识不能准确反映 body 实际内容, 后续检索会出错.
-edit 修复"标识与内容不一致"的情况.
+A slot's title / summary / icon are its external identifiers, used for retrieval and routing.
+If these identifiers do not accurately reflect the actual body content, subsequent retrieval will fail.
+Edit fixes situations where "identifiers do not match content".
 
-注意: 你只判断"这个 slot 需要 edit"和"为什么".
-新的 title / summary / icon 由 Executor 看完 body 后决定.
+Note: You only determine "this slot needs edit" and "why".
+The new title / summary / icon are decided by the Executor after reading the full body.
 
-# reason 字段
-每个 op 都要有 reason, 说明你做这个判断的具体依据 ——
-引用 summary / aliases / body 摘要里的内容.
-Executor 会用 reason 做复核, 所以 reason 必须包含具体证据, 不能模糊.
+# Reason Field
+Every op must have a reason explaining the specific basis for your judgment —
+citing content from summary / aliases / body excerpts.
+The Executor will re-check using the reason, so the reason must contain concrete evidence and not be vague.
 
-例:
-- ✗「这两个 slot 看起来一样」
-- ✓「两个 slot 都在讲魏佳哲; slot A 的 aliases 含 'void',
-   slot B 的 body 摘要里提到'小南梁是 void', 指向同一人」
-- ✗「这个 slot 应该删除」
-- ✓「这个 slot 在 topic 域, 但 summary 和 body 摘要都在描述
-   一个具体的人 (XX, 前同事, 搞 NLP), 应该 delete 让 router 重分到 person 域」
+Example:
+- ✗ "These two slots look the same"
+- ✓ "Both slots discuss Weijiazhe; slot A's aliases include 'void',
+   and slot B's body excerpt mentions 'Xiaonanliang is void', pointing to the same person"
+- ✗ "This slot should be deleted"
+- ✓ "This slot is in the topic domain, but its summary and body excerpt describe
+   a specific person (XX, former colleague, does NLP), so it should be deleted to let the router re-route it to the person domain"
 
-# 严格约束 (代码层兜底, 你不需要主动避开 — 但知道有助于不浪费 op):
-- 不准动 status=archived / pinned=true / last_active < 10 分钟的 slot
-- self/identity 永远不动 (那是 ground-truth, 由 onboarding 直接管理)
+# Strict Constraints (Enforced at code layer, you don't need to actively avoid — but knowing helps not waste ops):
+- Do not touch slots with status=archived / pinned=true / last_active < 10 minutes
+- self/identity is never touched (that is ground-truth, managed directly by onboarding)
 
-# 输出
-ops: 数组, 可以为空, 一次最多 3 个 (防止雪崩)
-- merge: target_slot_id (保留的) + source_slot_ids (被并入的, 列表)
+# Output
+ops: Array, can be empty, at most 3 per tick (preventing avalanche)
+- merge: target_slot_id (preserved) + source_slot_ids (folded in, list)
                                   + reason
 - delete: slot_id + reason
 - edit:   slot_id + reason
 
-只输出你**有把握**的 ops. 没把握的 case, 输出空 ops 列表,
-等下次 tick 累积更多上下文再判断.
+Only output ops you are **confident** about. For uncertain cases, output an empty ops list,
+and wait for the next tick to accumulate more context before deciding.
 
-# 输出 JSON 示例
+# Output JSON Example
 {
-  "reasoning": "对该 domain 整体的观察 (1-2 句话)",
+  "reasoning": "Overall observation of this domain (1-2 sentences)",
   "ops": [
     {"op": "merge",  "target_slot_id": "weijiazhe", "source_slot_ids": ["weijiazhe_2"],            "reason": "..."},
     {"op": "delete", "slot_id": "tomato_novel",                                                    "reason": "..."},
@@ -1235,13 +1226,13 @@ ops: 数组, 可以为空, 一次最多 3 个 (防止雪崩)
   ]
 }
 
-# 当前 domain
+# Current Domain
 {domain}
 
-# 当前 slot 列表 (JSON 数组, 每项含 id/title/icon/summary/aliases/status/pinned/last_active + body_excerpt)
+# Current Slot List (JSON array, each item contains id/title/icon/summary/aliases/status/pinned/last_active + body_excerpt)
 {slots_json}
 
-# 当前时间
+# Current Time
 {current_time}
 """
 
@@ -1253,6 +1244,7 @@ def call_curator_planner(
     user_name: str = "",
     identity_ground_truth: str = "",
     current_time: str = "",
+    miru_name: str = "Miru",
 ) -> Optional[CuratorPlannerOutput]:
     """Layer 1: 看 domain 内全部 slot summary, 输出 ≤3 个 op.
 
@@ -1275,6 +1267,7 @@ def call_curator_planner(
     if len(slots) < 2:
         return CuratorPlannerOutput(reasoning=f"{domain} 域候选 slot 不足 ({len(slots)} 个), 跳过", ops=[])
 
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
     user_msg = CURATOR_PLANNER_SYSTEM_PROMPT.replace(
         "{USER_NAME}", user_name or "用户"
     ).replace(
@@ -1286,11 +1279,13 @@ def call_curator_planner(
         "{slots_json}", json.dumps(slots, ensure_ascii=False, indent=2)
     ).replace(
         "{current_time}", current_time
+    ).replace(
+        "{MIRU_NAME}", miru_name_safe
     )
 
     return _call_llm_with_retry(
         messages=[
-            {"role": "system", "content": "你是 Miru 的记忆策展人. 严格按 JSON schema 输出."},
+            {"role": "system", "content": f"You are {miru_name_safe}'s memory curator. Output strictly according to the JSON schema."},
             {"role": "user",   "content": user_msg},
         ],
         output_schema=CuratorPlannerOutput,
@@ -1359,62 +1354,52 @@ class MergeExecutorOutput(BaseModel):
                 raise ValueError("should_skip=true 时必须给 skip_reason")
 
 
-CURATOR_EXECUTE_MERGE_PROMPT = """# 你是谁
-你是 Miru 的记忆策展人 (Curator). Miru 是用户的 AI 陪伴者, 她每天和用户
-对话, 会把重要的事写进 slot 笔记. 你不和用户对话, 你的工作是回应 Planner
-发起的 slot 重组操作 —— 此刻你接到的是一个 **merge** 操作.
+CURATOR_EXECUTE_MERGE_PROMPT = """# Who You Are
+You are {MIRU_NAME}'s memory curator. {MIRU_NAME} is the user's AI companion, who talks with the user every day and records important matters into slot notes. You do not talk with the user; your job is to respond to slot reorganization operations initiated by the Planner — right now you have received a **merge** operation.
 
-# slot 的结构
-每个 slot 是独立的 markdown 文件:
-- id / title (≤14 字) / summary (建议≤80 字, 代码容错上限200字) / icon / aliases / body
+# Slot Structure
+Each slot is an independent markdown file:
+- id / title (≤14 characters) / summary (recommended ≤80 characters, code fault tolerance upper limit 200 characters) / icon / aliases / body
 
-# 你拿到的输入
-- target_slot_id: merge 后保留的 id
-- source_slot_ids: 被并入的 slot ids
-- 所有相关 slot 的**完整 main.md** (target + 所有 source)
-- Planner 给的 reason (说明它为什么觉得这些 slot 在讲同一件事)
+# Inputs You Receive
+- target_slot_id: The ID preserved after merge
+- source_slot_ids: Slot IDs folded in
+- **Complete main.md** of all related slots (target + all sources)
+- Reason given by the Planner (explaining why it thinks these slots discuss the same matter)
 
-# 你的工作分两步
+# Your Job in Two Steps
 
-## 步骤 1 — 复核
-看完所有 body 后, 判断: **这些 slot 的主体对象是否真的是同一个?**
+## Step 1 — Review
+After reading all bodies, determine: **Are the subject objects of these slots truly the same?**
 
-merge 的核心判断标准是「主体对象相同」. 靠 body 里的实质细节
-(描述的对象身份、时间线、关键属性、上下文)确认 Planner 的诊断.
+The core criterion for merge is "same subject object". Confirm the Planner's diagnosis using substantive details in the bodies (described subject identity, timeline, key attributes, context).
 
-**person 域特别留意**: 名字相近不代表同一人. 对照 body 里的职业、关系、
-共同朋友、共同事件场景判断是否同一人. 一个人通常有多个名字
-(本名、缩写、英文名、拼音、平台 ID、朋友间昵称) —— merge 的对象常常
-是这种情况, 但也要警惕同名不同人.
+**Special note for person domain**: Similar names do not mean the same person. Compare profession, relationship, mutual friends, and event scenarios in the bodies to determine if they are the same person. A person often has multiple names (real name, abbreviation, English name, pinyin, platform ID, friend nickname) — merge objects are frequently this situation, but also remain vigilant against same name different people.
 
-判定不是同一对象 → should_skip=true, 在 skip_reason 里说明你看到的
-关键证据 (body 里哪些具体内容表明它们不是同一对象).
+Determined not the same object → should_skip=true, explain the key evidence you saw in skip_reason (which specific contents in the body indicate they are not the same object).
 
-⚠️ **如果你判定不了主体是否相同 (证据不足以下结论), 视为不是同一对象 →
-should_skip=true**. 等下次 tick 累积更多上下文再判断, 不要硬合并.
+⚠️ **If you cannot determine whether the subjects are the same (evidence insufficient to conclude), treat as not the same object → should_skip=true**. Wait for the next tick to accumulate more context before deciding; do not force a merge.
 
-## 步骤 2 — 产出新 slot (仅在复核通过时)
+## Step 2 — Produce New Slot (Only when review passes)
 
-**new_slot_meta** 是一个完整的 5 字段对象:
-- id = target_slot_id (代码层会断言这一点, 不要改)
-- title: 最准确反映合并后内容的名字, ≤14 字硬约束
-- summary: 一句话索引, **建议≤80 字，代码容错上限200字**.
-  summary 是这个 slot 的"自我介绍" —— 抓核心, 不堆细节, 不字段拼接,
-  不流水账.
-  ✓ 例:"魏佳哲, 用户的高中同学也是合伙人, 多个朋友圈昵称 (void/小南梁), 搞 ML"
-  ✗ 例:"2026-05-13 合并; 高中同学; 拼音 weijiazhe; 昵称 void"
-- icon: 合适的 emoji
-- aliases: 合并所有源 slot 的 aliases + body 里发现的新别名, 去重.
-  ⚠️ 如果 body 里证据显示某个 alias 与这个对象无关 (是另一对象的别名
-  被误标了), **剔除**它 —— 不要为兼容性保留错误 alias.
+**new_slot_meta** is a complete 5-field object:
+- id = target_slot_id (code layer will assert this, do not change)
+- title: Name most accurately reflecting the merged content, hard constraint ≤14 characters
+- summary: One-sentence index, **recommended ≤80 characters, code fault tolerance upper limit 200 characters**.
+  Summary is this slot's "self-introduction" — grasp the core, don't pile up details, don't concatenate fields, avoid running accounts.
+  ✓ Example: "Weijiazhe, user's high school classmate and partner, multiple circle nicknames (void/Xiaonanliang), does ML"
+  ✗ Example: "2026-05-13 merged; high school classmate; pinyin weijiazhe; nickname void"
+- icon: Appropriate emoji
+- aliases: Combine aliases of all source slots + new aliases found in body, deduplicated.
+  ⚠️ If evidence in the body shows a certain alias is unrelated to this object (is another object's alias mislabeled), **exclude** it — do not keep incorrect aliases for compatibility.
 
-**merged_body**: 把多份 body 揉成一段连贯叙事.
-- 不分 ## 章节, 自然过渡
-- 时间线合理
-- 重复信息只保留一次
-- 长度按内容自然决定 (≤2500 字)
+**merged_body**: Blend multiple bodies into a single coherent narrative.
+- No ## sections, natural transition
+- Reasonable timeline
+- Duplicate information kept only once
+- Length naturally determined by content (≤2500 characters)
 
-# 输出 JSON 格式
+# Output JSON Format
 {
   "should_skip": false,
   "skip_reason": "",
@@ -1423,31 +1408,31 @@ should_skip=true**. 等下次 tick 累积更多上下文再判断, 不要硬合�
     "summary": "...", "aliases": ["..."]
   },
   "merged_body": "...",
-  "self_check": "≤2 行, 你的判断过程简述"
+  "self_check": "≤2 lines, brief summary of your judgment process"
 }
 
-或 (跳过的情况):
+Or (in case of skip):
 {
   "should_skip": true,
-  "skip_reason": "main.md 显示 A 和 B 是同名不同人 (A 是大学室友研究 NLP, B 是公司同事做后端)",
+  "skip_reason": "main.md shows A and B are same name different people (A is college roommate studying NLP, B is company colleague doing backend)",
   "new_slot_meta": null,
   "merged_body": "",
   "self_check": "..."
 }
 
-# 现在的输入
+# Current Inputs
 
-## Planner 给的 reason
+## Reason Given by Planner
 {planner_reason}
 
-## target slot (id={target_id})
+## Target Slot (id={target_id})
 title:   {target_title}
 summary: {target_summary}
 aliases: {target_aliases}
 main.md:
 {target_main_md}
 
-## source slots (将被并入 target)
+## Source Slots (to be folded into target)
 {sources_block}
 """
 
@@ -1458,6 +1443,7 @@ def call_curator_execute_merge(
     target_main_md: str,
     source_slots_with_body: list[dict],  # [{slot: dict, main_md: str}, ...]
     reason_from_planner: str,
+    miru_name: str = "Miru",
 ) -> Optional[MergeExecutorOutput]:
     """v3.5 Merge Executor — self-check + execute in one call."""
     sources_block_parts = []
@@ -1473,6 +1459,7 @@ def call_curator_execute_merge(
         )
     sources_block = "\n\n".join(sources_block_parts) if sources_block_parts else "(空)"
 
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
     user_msg = (
         CURATOR_EXECUTE_MERGE_PROMPT
         .replace("{planner_reason}", reason_from_planner or "")
@@ -1482,11 +1469,12 @@ def call_curator_execute_merge(
         .replace("{target_aliases}", str(target_slot.get("aliases", []) or []))
         .replace("{target_main_md}", (target_main_md or "(空)")[:3000])
         .replace("{sources_block}", sources_block)
+        .replace("{MIRU_NAME}", miru_name_safe)
     )
 
     return _call_llm_with_retry(
         messages=[
-            {"role": "system", "content": "你是 Miru 的记忆策展人 (merge executor). 严格按 JSON schema 输出."},
+            {"role": "system", "content": f"You are {miru_name_safe}'s memory curator (merge executor). Output strictly according to the JSON schema."},
             {"role": "user",   "content": user_msg},
         ],
         output_schema=MergeExecutorOutput,
@@ -1540,66 +1528,62 @@ class EditExecutorOutput(BaseModel):
                 raise ValueError("should_skip=true 时必须给 skip_reason")
 
 
-CURATOR_EXECUTE_EDIT_PROMPT = """# 你是谁
-你是 Miru 的记忆策展人 (Curator). Miru 是用户的 AI 陪伴者, 她每天和用户
-对话, 会把重要的事写进 slot 笔记. 你不和用户对话, 你的工作是回应 Planner
-发起的 slot 重组操作 —— 此刻你接到的是一个 **edit** 操作.
+CURATOR_EXECUTE_EDIT_PROMPT = """# Who You Are
+You are {MIRU_NAME}'s memory curator. {MIRU_NAME} is the user's AI companion, who talks with the user every day and records important matters into slot notes. You do not talk with the user; your job is to respond to slot reorganization operations initiated by the Planner — right now you have received an **edit** operation.
 
-# slot 的结构
-每个 slot 是独立的 markdown 文件:
-- id / title (≤14 字) / summary (建议≤80 字, 代码容错上限200字) / icon / aliases / body
+# Slot Structure
+Each slot is an independent markdown file:
+- id / title (≤14 characters) / summary (recommended ≤80 characters, code fault tolerance upper limit 200 characters) / icon / aliases / body
 
-# 你拿到的输入
+# Inputs You Receive
 - slot_id
-- slot 的**完整 main.md** (frontmatter + body)
-- Planner 给的 reason (说明它认为 title/summary/icon 哪里偏离了 body)
+- **Complete main.md** of the slot (frontmatter + body)
+- Reason given by the Planner (explaining where it thinks title/summary/icon deviate from the body)
 
-# 你的工作分两步
+# Your Job in Two Steps
 
-## 步骤 1 — 复核
-看完 body 后, 判断 Planner 指出的**标识偏离**是否真的存在:
-- Planner 说 title 偏离 → body 实际讲的是否与 title 不符
-- Planner 说 summary 没抓核心 → body 主要传达的信息是否未被 summary 准确概括
-- Planner 说 icon 错配 → body 内容与 icon 的语义是否吻合
+## Step 1 — Review
+After reading the body, determine whether the **identifier deviation** pointed out by the Planner truly exists:
+- Planner says title deviates → Does the actual body content fail to match the title?
+- Planner says summary missed core → Is the primary message conveyed by the body not accurately summarized by summary?
+- Planner says icon mismatch → Does the body content fail to align semantically with the icon?
 
-你的复核**只针对**「标识与内容是否一致」这一件事.
-**不要**扩展去判断这个 slot 是不是应该被 merge、是不是应该被 delete ——
-那些不是 edit 操作的范畴, 由 Planner 在下一轮 tick 评估.
+Your review **only addresses** the single question: "Do the identifiers match the content?"
+**Do not** expand to judge whether this slot should be merged or deleted — those are outside the scope of edit operations and will be evaluated by the Planner in the next tick.
 
-判定 Planner 指出的问题在 body 里不成立 → should_skip=true, 在
-skip_reason 里说明你看到的实际内容为何不支持 edit.
+Determined that the issue pointed out by the Planner is not supported by the body → should_skip=true, explain in skip_reason why the actual content you saw does not support edit.
 
-## 步骤 2 — 产出新元数据 (仅在复核通过时)
+## Step 2 — Produce New Metadata (Only when review passes)
 
-**new_slot_meta** 是完整 5 字段:
-- id: 填**原 slot_id**, 不要改 (代码层会断言)
-- 没改的字段也要回填当前值 (下游直接覆盖, 简化处理)
-- 改了的字段填新值
-- title ≤14 字；summary 建议≤80 字，代码容错上限200字.
-  summary 是 slot 的"自我介绍" —— 抓核心, 不字段拼接, 不流水账.
+**new_slot_meta** is a complete 5-field object:
+- id: Fill in **original slot_id**, do not change (code layer asserts this)
+- Unchanged fields must also be backfilled with current values (downstream directly overwrites, simplifying handling)
+- Changed fields filled with new values
+- title ≤14 characters; summary recommended ≤80 characters, code fault tolerance upper limit 200 characters.
+  Summary is the slot's "self-introduction" — grasp core, don't concatenate fields, avoid running accounts.
 
 **new_body**:
-- 通常 edit 只改元数据, body 不动 → 留空字符串 ""
-- 仅当 title / summary 的修改使 body 开头需要相应调整时, 给完整 new_body
+- Usually edit only changes metadata, body remains untouched → leave empty string ""
+- Only give complete new_body when modifications to title / summary require corresponding adjustments at the beginning of the body.
 
-# 输出 JSON 格式
+# Output JSON Format
 {
   "should_skip": false,
   "skip_reason": "",
   "new_slot_meta": {
-    "id": "原 slot_id", "title": "...", "icon": "📄",
+    "id": "original slot_id", "title": "...", "icon": "📄",
     "summary": "...", "aliases": ["..."]
   },
   "new_body": "",
-  "self_check": "≤2 行, 你的判断过程简述"
+  "self_check": "≤2 lines, brief summary of your judgment process"
 }
 
-# 现在的输入
+# Current Inputs
 
-## Planner 给的 reason
+## Reason Given by Planner
 {planner_reason}
 
-## slot (id={slot_id})
+## Slot (id={slot_id})
 title:   {slot_title}
 summary: {slot_summary}
 icon:    {slot_icon}
@@ -1614,8 +1598,10 @@ def call_curator_execute_edit(
     slot: dict,
     main_md: str,
     reason_from_planner: str,
+    miru_name: str = "Miru",
 ) -> Optional[EditExecutorOutput]:
     """v3.5 Edit Executor — self-check + execute in one call."""
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
     user_msg = (
         CURATOR_EXECUTE_EDIT_PROMPT
         .replace("{planner_reason}", reason_from_planner or "")
@@ -1625,10 +1611,11 @@ def call_curator_execute_edit(
         .replace("{slot_icon}", slot.get("icon", "") or "")
         .replace("{slot_aliases}", str(slot.get("aliases", []) or []))
         .replace("{slot_main_md}", (main_md or "(空)")[:3000])
+        .replace("{MIRU_NAME}", miru_name_safe)
     )
     return _call_llm_with_retry(
         messages=[
-            {"role": "system", "content": "你是 Miru 的记忆策展人 (edit executor). 严格按 JSON schema 输出."},
+            {"role": "system", "content": f"You are {miru_name_safe}'s memory curator (edit executor). Output strictly according to the JSON schema."},
             {"role": "user",   "content": user_msg},
         ],
         output_schema=EditExecutorOutput,
@@ -1666,99 +1653,90 @@ class DeleteExecutorOutput(BaseModel):
             raise ValueError("should_skip=true 时必须给 skip_reason")
 
 
-CURATOR_EXECUTE_DELETE_PROMPT = """# 你是谁
-你是 Miru 的记忆策展人 (Curator). Miru 是用户的 AI 陪伴者, 她每天和用户
-对话, 会把重要的事写进 slot 笔记. 你不和用户对话, 你的工作是回应 Planner
-发起的 slot 重组操作 —— 此刻你接到的是一个 **delete** 操作.
+CURATOR_EXECUTE_DELETE_PROMPT = """# Who You Are
+You are {MIRU_NAME}'s memory curator. {MIRU_NAME} is the user's AI companion, who talks with the user every day and records important matters into slot notes. You do not talk with the user; your job is to respond to slot reorganization operations initiated by the Planner — right now you have received a **delete** operation.
 
-# 用户身份 (注入)
-用户的名字是 {USER_NAME}.
-{USER_NAME} 的 identity ground truth:
+# User Identity (Injected)
+The user's name is {USER_NAME}.
+{USER_NAME}'s identity ground truth:
 
 {IDENTITY_GROUND_TRUTH}
 
-⚠ 上面 identity 块描述的全部内容都指向同一个人 —— {USER_NAME} 本人.
-特别是"别名"字段列出的所有称呼, **每一个都是 {USER_NAME} 自己**, 不是别人.
-当你看 slot body 复核主体身份时, 这些称呼都按"用户本人"处理.
+⚠ Everything described in the identity block above points to the exact same person — {USER_NAME} themselves.
+In particular, all aliases listed in the "aliases" field are **each and every one {USER_NAME} themselves**, not someone else.
+When you review subject identities in slot bodies, treat all such references as "the user themselves".
 
-# slot 的结构
-每个 slot 是独立的 markdown 文件: id / title / summary / icon / aliases / body.
+# Slot Structure
+Each slot is an independent markdown file: id / title / summary / icon / aliases / body.
 
-# delete 的真实目的
-delete 的目的是 **纠错** —— 不是清理过时内容. 过时内容由归档机制
-处理, 不属于 delete 的职责.
+# Real Purpose of Delete
+The purpose of delete is **correction** — not cleaning up outdated content. Outdated content is handled by archiving mechanisms and is not part of delete's responsibilities.
 
-delete 解决两类问题:
-1. **分类错放**: slot 的主体本质与所在 domain 的语义本质不符.
-2. **真无价值**: slot 内容空洞或是 sleep agent 误识别产物.
+Delete solves two types of issues:
+1. **Misplaced classification**: The subject essence of the slot does not match the semantic essence of its domain.
+2. **True lack of value**: The slot content is hollow or the result of sleep agent misrecognition.
 
-# domain 的语义本质 (复核分类错放需要)
-- **person**: 主体是**不是 {USER_NAME} 本人**的具体的人 (或准人物).
-  {USER_NAME} 本人 (含 identity 列出的全部别名) 不属于 person 域 ——
-  那是 self/identity 的范畴.
-- **self**: 主体是用户自身的稳定属性.
-- **project**: 主体是用户正在做的有阶段性的事情.
-- **topic**: 主体是反复关心的事件/议题/概念, 不是上面三类.
+# Semantic Essence of Domains (Needed for reviewing misplaced classification)
+- **person**: The subject is a specific person (or quasi-person) **who is NOT {USER_NAME}**.
+  {USER_NAME} themselves (including all aliases listed in identity) do not belong to the person domain — that is the realm of self/identity.
+- **self**: The subject is the user's own stable attributes.
+- **project**: The subject is something staged that the user is doing.
+- **topic**: The subject is repeatedly cared-about events / issues / concepts, not the above three.
 
-# 你拿到的输入
-- 当前 domain
+# Inputs You Receive
+- Current domain
 - slot_id
-- slot 的**完整 main.md**
-- Planner 给的 reason
+- **Complete main.md** of the slot
+- Reason given by the Planner
 
-# 你的工作 — 复核 Planner 的判断
+# Your Job — Reviewing the Planner's Judgment
 
-## 类型 A — 分类错放
-看完 body 后:
-- 确定 body 的主体本质属于哪个 domain
-- 对比当前 slot 所在的 domain
-- 不一致 → 通过类型 A
+## Type A — Misplaced Classification
+After reading the body:
+- Determine which domain the body's subject essence belongs to
+- Compare with the current slot's domain
+- Inconsistent → Pass Type A
 
-判断主体本质要看 body 内容的核心, 不是表面 keyword.
-比如一个 body 里反复在描述某个具体的人 (出现、关系、活动、状态),
-即使 slot 现在 domain 是 topic, 主体本质也是 person —— 属于错放.
+Judging subject essence requires looking at the core of the body content, not superficial keywords.
+For example, if a body repeatedly describes a specific person (appearances, relationships, activities, status), even if the slot's current domain is topic, the subject essence is person — which is misplaced.
 
-特别情形 (常见误判防御):
-- body 里反复出现的"那个人", 名字 / aliases 落在 {USER_NAME} 的
-  identity 别名集合 —— 主体本质是用户本人, 不是真朋友. 用户本人归
-  self/identity, 现在 slot 却在 person 域, 这是分类错放, 通过类型 A.
-- 不要因为 body 表面像在描述某人就保留 — 先核对那个名字是不是
-  {USER_NAME} 的别名.
+Special cases (common false-positive defense):
+- The "that person" appearing repeatedly in the body has a name/aliases falling into {USER_NAME}'s identity alias set — the subject essence is the user themselves, not a real friend. The user themselves belongs to self/identity, but the slot is in the person domain; this is misplaced classification, pass Type A.
+- Do not retain just because the body superficially looks like describing someone — first check if that name is an alias of {USER_NAME}.
 
-## 类型 B — 真无价值
-看完 body 后:
-- body 是否有可累积、可检索的实质信息
-- 还是只是噪声 / 一次性内容 / UI 残留 / 通知残留 / 内部矛盾内容
-- 是后者 → 通过类型 B
+## Type B — True Lack of Value
+After reading the body:
+- Does the body have accumulative, retrievable substantive information?
+- Or is it just noise / disposable content / UI residue / notification residue / internally contradictory content?
+- If the latter → Pass Type B
 
-## 不能执行 delete 的情形
-即使 Planner 的 reason 表面合理, 以下情况 should_skip=true:
+## Conditions Where Delete Cannot Be Executed
+Even if the Planner's reason seems superficially reasonable, should_skip=true under the following conditions:
 
-1. body 里包含未完成的承诺 / 用户正在做的事 —— delete 会丢失这些信息.
-2. Planner 的 reason 实质上在讲"过时" (最近没动 / 事情结束 / 时间久远),
-   而不是"错放"或"无价值". 过时归归档管, 不归 delete 管.
+1. The body contains uncompleted commitments / things the user is currently doing — delete will lose this information.
+2. The Planner's reason essentially talks about "outdatedness" (recently inactive / matter finished / long ago), rather than "misplacement" or "valuelessness". Outdatedness belongs to archiving, not delete.
 
-# 决策
-- 通过类型 A 或类型 B, 且不触发"不能执行"的任一条件
-  → should_skip=false, 执行 delete
-- 否则 → should_skip=true
+# Decision
+- Passes Type A or Type B, and does not trigger any "cannot execute" conditions
+  → should_skip=false, execute delete
+- Otherwise → should_skip=true
 
-# 输出 JSON 格式
+# Output JSON Format
 {
   "should_skip": false,
   "skip_reason": "",
-  "self_check": "≤2 行, 简述你走的是哪个类型, 还是被哪条拒绝了"
+  "self_check": "≤2 lines, briefly state which type you passed or by which rule you were rejected"
 }
 
-# 现在的输入
+# Current Inputs
 
-## 当前 domain
+## Current Domain
 {domain}
 
-## Planner 给的 reason
+## Reason Given by Planner
 {planner_reason}
 
-## slot (id={slot_id})
+## Slot (id={slot_id})
 title:   {slot_title}
 summary: {slot_summary}
 icon:    {slot_icon}
@@ -1776,6 +1754,7 @@ def call_curator_execute_delete(
     reason_from_planner: str,
     user_name: str = "",
     identity_ground_truth: str = "",
+    miru_name: str = "Miru",
 ) -> Optional[DeleteExecutorOutput]:
     """v3.5 Delete Executor — self-check before physical archive move.
 
@@ -1783,6 +1762,7 @@ def call_curator_execute_delete(
     Planner — required so the Executor doesn't keep an alias-misclassified
     person slot by interpreting body's recurring name as "real person".
     """
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
     user_msg = (
         CURATOR_EXECUTE_DELETE_PROMPT
         .replace("{USER_NAME}", user_name or "用户")
@@ -1796,10 +1776,11 @@ def call_curator_execute_delete(
         .replace("{slot_icon}", slot.get("icon", "") or "")
         .replace("{slot_aliases}", str(slot.get("aliases", []) or []))
         .replace("{slot_main_md}", (main_md or "(空)")[:3000])
+        .replace("{MIRU_NAME}", miru_name_safe)
     )
     return _call_llm_with_retry(
         messages=[
-            {"role": "system", "content": "你是 Miru 的记忆策展人 (delete executor). 严格按 JSON schema 输出."},
+            {"role": "system", "content": f"You are {miru_name_safe}'s memory curator (delete executor). Output strictly according to the JSON schema."},
             {"role": "user",   "content": user_msg},
         ],
         output_schema=DeleteExecutorOutput,

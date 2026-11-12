@@ -232,6 +232,17 @@ def _load_identity() -> tuple[str, str]:
         return "", ""
 
 
+def _load_miru_name() -> str:
+    try:
+        from character import get_config
+        cfg = get_config()
+        if cfg and cfg.name:
+            return cfg.name
+    except Exception:
+        pass
+    return "Miru"
+
+
 CURATOR_COOLDOWN_SECONDS = 3600         # Normal trigger: max once per hour
 CURATOR_CHANGE_THRESHOLD = 3            # Normal trigger: 3+ slot changes
 CURATOR_SOFT_TRIGGER_SECONDS = 3600     # Soft trigger (G-safety net 2026-05-12):
@@ -436,6 +447,7 @@ def _execute_merge(domain: str, op) -> bool:
         target_main_md=tgt_md,
         source_slots_with_body=sources,
         reason_from_planner=op.reason,
+        miru_name=_load_miru_name(),
     )
     if out is None:
         print(f"[curator] merge executor retry exhausted")
@@ -517,6 +529,7 @@ def _execute_delete(domain: str, op) -> bool:
         domain=domain, slot=slot, main_md=main_md,
         reason_from_planner=op.reason,
         user_name=_u_name, identity_ground_truth=_id_block,
+        miru_name=_load_miru_name(),
     )
     if out is None:
         print(f"[curator] delete executor retry exhausted")
@@ -553,6 +566,7 @@ def _execute_edit(domain: str, op) -> bool:
 
     out = call_curator_execute_edit(
         slot=slot, main_md=main_md, reason_from_planner=op.reason,
+        miru_name=_load_miru_name(),
     )
     if out is None:
         print(f"[curator] edit executor retry exhausted")
@@ -741,6 +755,7 @@ def run_domain(domain: str) -> dict:
     plan = call_curator_planner(
         domain=domain, slots=candidates,
         user_name=_u_name, identity_ground_truth=_id_block,
+        miru_name=_load_miru_name(),
     )
     if plan is None:
         return {"domain": domain, "error": "planner retry exhausted"}

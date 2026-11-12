@@ -389,3 +389,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified translation fidelity and character naming with new unit tests in `tests/test_screen_semantic_gate.py`.
 - Ran full focused test suite (17/17 passed) across screen semantic gate, care engine persona, and care engine v3.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 34f7d87a88cc3f3688653009448e0ae44b050d57` (PASSED).
+
+## 2026-11-13 (Phase 2B.31: English Memory Curator Prompts)
+- Translated curator planner (`CURATOR_PLANNER_SYSTEM_PROMPT`), merge executor prompt, edit executor prompt, and delete executor prompt in `memory_prompts_v2.py` from Chinese to natural English with Sora/Miru branding (`{MIRU_NAME}`).
+- Preserved all decision rules and contracts (planner merge/edit/delete/no-op criteria, executor self-checks, type A/B delete placement & value checks, strict constraints, JSON keys, enum values, slot IDs, limits).
+- Updated `curator.py` to dynamically load `miru_name` from character configuration and pass it to all curator calls (`call_curator_planner`, `call_curator_execute_merge`, `call_curator_execute_edit`, `call_curator_execute_delete`).
+- Verified with focused curator unit test suites (`test_curator.py`, `test_curator_auto.py`, `test_curator_collision_override.py`, `test_curator_lifecycle.py`, `test_curator_v35_targeted.py`, `test_cost_routing.py`) with all 43 tests passing successfully, plus new custom `miru_name` test coverage.
+- Updated documentation (`docs/phases/PHASE_02B_31.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 9fd7136dc7eb4e99d3197e4138272e18853136b9` (PASSED).

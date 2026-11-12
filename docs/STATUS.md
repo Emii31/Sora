@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.30 — Finish Memory Writer Translation and Configured Naming (Completed & Verified)
-- **Current Status**: Translated `SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT` and gate message builder strings to natural English with Sora/Miru branding, carried configured character name (`miru_name`) through slot writer, persona writer, screen semantic gate, and screen slot writer prompts with production call site wiring in `sleep_agent.py` and `core.py`, and added unit test coverage. Verified all focused unit tests passed successfully.
+- **Phase**: Phase 2B.31 — English Memory Curator Prompts (Completed & Verified)
+- **Current Status**: Translated curator planner (`CURATOR_PLANNER_SYSTEM_PROMPT`) and merge, edit, delete executor prompts in `memory_prompts_v2.py` to natural English with Sora/Miru branding (`{MIRU_NAME}` parameterization), wired `miru_name` propagation in `curator.py`, and verified with full curator unit test suites (43/43 passed).
 - **Next Action**: Commit and push to origin/main.

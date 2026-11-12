@@ -54,3 +54,29 @@ def test_curator_planner_keeps_chat_tier_but_disables_reasoning(monkeypatch):
 
 def test_curator_normal_cooldown_is_one_hour():
     assert curator.CURATOR_COOLDOWN_SECONDS == 3600
+
+
+def test_curator_planner_custom_miru_name(monkeypatch):
+    captured = {}
+
+    def fake_call(**kwargs):
+        captured.update(kwargs)
+        return memory_prompts_v2.CuratorPlannerOutput(
+            reasoning="ok",
+            ops=[],
+        )
+
+    monkeypatch.setattr(memory_prompts_v2, "_call_llm_with_retry", fake_call)
+
+    memory_prompts_v2.call_curator_planner(
+        domain="project",
+        slots=[
+            {"id": "a", "title": "A", "summary": "A", "aliases": [], "status": "active", "pinned": False, "last_active": "2026-05-17T10:00:00", "body_excerpt": "A"},
+            {"id": "b", "title": "B", "summary": "B", "aliases": [], "status": "active", "pinned": False, "last_active": "2026-05-17T10:00:00", "body_excerpt": "B"},
+        ],
+        miru_name="Sora",
+    )
+
+    messages = captured["messages"]
+    assert "Sora" in messages[0]["content"]
+    assert "Sora" in messages[1]["content"]

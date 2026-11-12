@@ -309,3 +309,11 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 34f7d87a88cc3f3688653009448e0ae44b050d57` (PASSED).
 
+- **Phase 2B.31 Verification (English Memory Curator Prompts)**:
+  - `memory_prompts_v2.py`: Translated `CURATOR_PLANNER_SYSTEM_PROMPT`, `CURATOR_EXECUTE_MERGE_PROMPT`, `CURATOR_EXECUTE_EDIT_PROMPT`, and `CURATOR_EXECUTE_DELETE_PROMPT` to natural English with Sora/Miru branding (`{MIRU_NAME}` parameterization).
+  - `curator.py`: Wired `miru_name` from character configuration into `call_curator_planner`, `call_curator_execute_merge`, `call_curator_execute_edit`, and `call_curator_execute_delete`.
+  - Preservation checks: Planner merge/edit/delete/no-op criteria, executor self-checks, type A/B delete placement & value checks, Pydantic validation schemas, JSON keys, enum values, slot IDs, limits, and file operations strictly preserved.
+  - Test suite check: Focused curator unit test suites (`test_curator.py`, `test_curator_auto.py`, `test_curator_collision_override.py`, `test_curator_lifecycle.py`, `test_curator_v35_targeted.py`, `test_cost_routing.py`) passed successfully (43/43 passed).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 9fd7136dc7eb4e99d3197e4138272e18853136b9` (PASSED).
+
