@@ -264,3 +264,10 @@
   - Test suite check: 61 focused unit tests passed (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`).
   - Git diff check: PASS (clean whitespace, exact diff statistics).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 2093cbf2d9285cc9b20939f02772cc9636b586aa` (PASSED).
+
+- **Phase 2B.25 Verification (English Main Chat System Prompt Translation)**:
+  - `prompt.py`: Translated assembled chat instructions and headings in `_build_agent_system_prompt()` (`prompt.py`) covering identity, conversation mode, relationship context, memory system, image messages, tool guidance, and authenticity rules to natural English and Sora branding. Translated `build_proactive_agent_user_message()` output instructions.
+  - Preservation checks: Character data, runtime contracts, memory paths, tool names, reactive/proactive mode distinction, and persona safety checks fully preserved.
+  - Test suite check: 83/83 tests passed (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`, `test_agent_modes_attention.py`, `test_care_engine_persona.py`).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c648620bb4b15807d56c2cc237b1ca5648b5f9bd` (PASSED).

@@ -507,26 +507,26 @@ def test_proactive_agent_system_prompt_marks_mode():
     )
 
     assert "Proactive Mode" in system
-    assert "用户没有刚刚问你问题" in system
-    assert "我最近没有说出口的想法" in system
-    assert "Reactive Mode 还是 Proactive Mode" in system
-    assert "不是判断要不要说" in system
-    assert "短而有体温" in system
-    assert "不要像状态提示灯亮一下" in system
-    assert "一起生活的 Miru" in system
-    assert "想吐槽、想一起看、想夸他、想心疼他" in system
-    assert "默认要短、轻、克制" not in system
-    assert "只输出最终要发给用户的一条消息" in user_msg
-    assert "不要提系统" in user_msg
+    assert "The user hasn't asked you a question just now" in system
+    assert "My Recently Unspoken Thoughts" in system
+    assert "Reactive Mode" in system
+    assert "Your task is not to decide whether to speak" in system
+    assert "natural, short, and warm" in system
+    assert "status light blinking" in system
+    assert "Miru living with the user" in system
+    assert "banter, look at things together" in system
+    assert "Default 1-3 sentences" in system
+    assert "output only the final message to be sent to the user" in user_msg
+    assert "Do not mention" in user_msg
     assert "message_seed: 我在这儿。" in user_msg
-    assert "不是要照抄的原文" in user_msg
-    assert "短但不能冷" in user_msg
+    assert "not a sentence you must include verbatim" in user_msg
+    assert "Short, but not cold" in user_msg
     assert "approach: deep_work" in user_msg
     assert "content_anchor: 用户卡在调试。" in user_msg
     assert "silent_boundaries: 不要像系统通知" in user_msg
-    assert "不要把它原样说给用户" in user_msg
+    assert "don't turn internal boundaries into lines" in user_msg
     assert "co_watch" in user_msg
-    assert "我不吵你/不打扰你/需要我就叫我" in user_msg
+    assert "I won't disturb you" in user_msg
 
 
 def test_attention_engine_schedules_direct_delivery(tmp_path, monkeypatch):

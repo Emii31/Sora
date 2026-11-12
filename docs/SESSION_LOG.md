@@ -339,3 +339,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified changes with 61 focused test cases (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py`.
 - Updated documentation (`docs/phases/PHASE_02B_24.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 2B.25: English Main Chat System Prompt Translation)
+- Translated `_build_agent_system_prompt()` in `prompt.py` (identity, conversation mode, relationship context, memory, image, and tool guidance).
+- Updated `tests/test_agent_modes_attention.py` and `tests/test_care_engine_persona.py` to match the translated English prompt text.
+- Verified 83/83 tests passed.
+- Git diff check: PASS (zero unexpected deletions, clean whitespace).
+- History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c648620bb4b15807d56c2cc237b1ca5648b5f9bd` (PASSED).

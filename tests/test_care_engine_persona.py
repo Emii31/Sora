@@ -52,10 +52,9 @@ def test_main_agent_proactive_mode_keeps_attention_continuity():
     system = prompt._build_agent_system_prompt(agent_mode="proactive")
 
     assert "Proactive Mode" in system
-    assert "我最近没有说出口的想法" in system
+    assert "My Recently Unspoken Thoughts" in system
     assert "AttentionEngine" in system
-    assert "只输出最终要发给用户的一条消息" in system
-    assert "短而有体温" in system
+    assert "natural, short, and warm" in system
 
 
 def test_main_agent_prompt_normalizes_user_entity_label():
@@ -78,15 +77,15 @@ def test_main_agent_prompt_normalizes_user_entity_label():
          patch("prompt.resolve_user_entity_label", return_value="李垦"):
         system = prompt._build_agent_system_prompt(agent_mode="reactive")
 
-    assert "你是 Miru，李垦的" in system
-    assert "记住李垦一切" in system
-    assert "你会因为李垦熬夜" in system
-    assert "碰巧很在意李垦" in system
-    assert "称呼对方为「你」" in system
-    assert "先是一个真实在乎李垦" in system
-    assert "不要凭外观硬猜角色名" in system
-    assert "不要说“没看到图片”" in system
-    assert "你 的" not in system
+    assert "You are Miru, 李垦's" in system
+    assert "会记住李垦一切" in system
+    assert "李垦熬夜" in system
+    assert "在意李垦" in system
+    assert "address them naturally as '你'" in system
+    assert "truly cares about 李垦" in system
+    assert "character names" in system
+    assert "I don't see an image" in system
+    assert "李垦 的" not in system
 
 
 def test_retired_care_prompt_builder_is_gone():
