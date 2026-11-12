@@ -365,3 +365,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified 49 unit tests across emotion, image-history, and agent-mode suites.
 - Git diff check: PASS.
 - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7f731cef51c4c6e33d63f7b41896a4797a65cf1b` (PASSED).
+
+## 2026-11-13 (Phase 2B.28: English Chat Memory and Persona Writer Prompts)
+- Translated V3 chat memory prompts (`SLOT_WRITER_SYSTEM_PROMPT` and `PERSONA_WRITER_SYSTEM_PROMPT`) and associated chat builder headings, instructions, and empty-state labels in `memory_prompts_v3.py` to natural English with Sora/Miru branding.
+- Preserved Pydantic schemas, JSON contracts, extraction rules, size limits, and caller contracts. Left screen-based writers, curator prompts, diary prompts, and app work outside this batch.
+- Verified all 180 unit tests across memory, slot writer, persona writer, attention, and chat preflight suites passed successfully.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 7c229d9ca1fba140b1eb8782b023c3f2841ecfc4` (PASSED).
+- Updated documentation (`docs/phases/PHASE_02B_28.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

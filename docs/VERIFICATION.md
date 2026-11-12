@@ -287,3 +287,9 @@
   - Test suite check: 49 unit tests passed across emotion, image-history, agent-mode, and attention suites.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7f731cef51c4c6e33d63f7b41896a4797a65cf1b` (PASSED).
+- **Phase 2B.28 Verification (English Chat Memory and Persona Writer Prompts)**:
+  - `memory_prompts_v3.py`: `SLOT_WRITER_SYSTEM_PROMPT`, `PERSONA_WRITER_SYSTEM_PROMPT`, and chat message builder headings/instructions/empty-state labels translated to English with Sora/Miru branding. Screen-based writers (`ScreenSlot Writer`, `ScreenSemanticGate`) preserved untouched.
+  - Preservation checks: Pydantic schemas, JSON keys, enum values, size limits, write/merge rules, and caller contracts preserved.
+  - `git diff --check`: PASS.
+  - Test suite check: 180/180 unit tests passed across slot writer, persona writer, attention, and chat preflight suites.
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7c229d9ca1fba140b1eb8782b023c3f2841ecfc4` (PASSED).

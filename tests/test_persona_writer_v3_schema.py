@@ -130,7 +130,7 @@ def test_persona_writer_output_parses_from_json():
 # ─────────────────────────────────────────────────────────────────────
 
 def test_format_slot_summaries_empty():
-    assert _format_slot_summaries_for_persona([]) == "(本期 slot 系统无新写入)"
+    assert _format_slot_summaries_for_persona([]) == "(No new writes in slot system this batch)"
 
 
 def test_format_slot_summaries_basic():
@@ -184,8 +184,8 @@ def test_persona_writer_messages_include_proactive_feedback_section():
         }],
     )
     user_prompt = messages[1]["content"]
-    assert "Miru 主动开口与用户回应" in user_prompt
-    assert "这不是事实记忆" in user_prompt
+    assert "Miru proactive speech and user response" in user_prompt
+    assert "This is not factual memory" in user_prompt
     assert "这样像真的陪着我" in user_prompt
 
 

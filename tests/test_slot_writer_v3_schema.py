@@ -319,7 +319,7 @@ def test_format_slot_index():
     out = _format_slot_index_for_prompt(idx)
     assert "## project" in out
     assert "papers_2026" in out
-    assert "## person (无)" in out
+    assert "## person (None)" in out
 
 
 def test_format_chat_messages():
@@ -339,7 +339,7 @@ def test_format_chat_messages_with_image():
          "image": "x.png", "image_desc": "一只白色英短猫"},
     ]
     out = _format_chat_messages_for_prompt(msgs, miru_name="Miru", user_name="李垦")
-    assert "[图片: 一只白色英短猫]" in out
+    assert "[Image: 一只白色英短猫]" in out
 
 
 if __name__ == "__main__":

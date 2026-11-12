@@ -290,8 +290,8 @@ def test_persona_writer_prompt_includes_proactive_feedback_without_slot_pollutio
     )
 
     user_prompt = messages[1]["content"]
-    assert "Miru 主动开口与用户回应" in user_prompt
-    assert "这不是事实记忆" in user_prompt
+    assert "Miru proactive speech and user response" in user_prompt
+    assert "This is not factual memory" in user_prompt
     assert "这句比较像真的陪着我" in user_prompt
     assert "我不想让他觉得我只是冷冰冰记录" in user_prompt
 
