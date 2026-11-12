@@ -346,3 +346,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified 83/83 tests passed.
 - Git diff check: PASS (zero unexpected deletions, clean whitespace).
 - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c648620bb4b15807d56c2cc237b1ca5648b5f9bd` (PASSED).
+
+## 2026-11-13 (Phase 2B.26: Proactive Backend Prompts and Chat Image Compatibility)
+- Translated `_PROACTIVE_RESOURCE_PLANNER_PROMPT` and `_PROACTIVE_DELIVERY_PREFLIGHT_PROMPT` in `prompt.py` to natural English with Sora branding, preserving JSON schemas, enums, tool policies, memory paths, and conditional routing logic.
+- Aligned chat prompt image message guidelines with actual emitted markers (`[图片：...]`, `[Image: ...]`, `[图片]`) and failure sentinels (`(图片识别失败)`, `(Image description failed)`, etc.).
+- Replaced hardcoded "Miru living with the user" with character-neutral/configured character phrasing (`{cfg.name} living with {user_label}`).
+- Added focused tests verifying image formatter/system prompt compatibility and proactive planner/gatekeeper output contracts.
+- Verified 85 tests across agent modes, attention, chat image history, preflight routing, and care engine persona suites.
+- Git diff check: PASS.
+- History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 21aab14a6373e31f63498b7638c5ba24ea3c104c` (PASSED).

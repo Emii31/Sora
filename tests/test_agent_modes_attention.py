@@ -513,7 +513,7 @@ def test_proactive_agent_system_prompt_marks_mode():
     assert "Your task is not to decide whether to speak" in system
     assert "natural, short, and warm" in system
     assert "status light blinking" in system
-    assert "Miru living with the user" in system
+    assert f"{prompt.get_config().name} living with" in system
     assert "banter, look at things together" in system
     assert "Default 1-3 sentences" in system
     assert "output only the final message to be sent to the user" in user_msg
@@ -596,3 +596,51 @@ def test_attention_engine_delivery_runner_can_be_forced_to_dryrun(tmp_path, monk
     engine._run_delivery("intent_dry")
 
     assert called == ["intent_dry"]
+
+
+def test_image_formatter_and_system_prompt_compatibility():
+    import prompt
+    cfg = prompt.get_config()
+    system = prompt._build_agent_system_prompt(agent_mode="proactive")
+    assert f"{cfg.name} living with" in system
+    assert "[图片：...]" in system or "[图片]" in system
+    assert "(图片识别失败)" in system
+    assert "(Image description failed)" in system
+
+    assert prompt._build_user_content("hello", image_desc="cat", has_image=True) == "hello\n[图片：cat]"
+    assert prompt._build_user_content("hello", image_desc="", has_image=True) == "hello\n[图片]"
+    assert prompt._build_user_content("hello", image_desc="(图片识别失败)", has_image=True) == "hello\n[图片：(图片识别失败)]"
+
+
+def test_proactive_planner_and_gatekeeper_contracts():
+    import prompt
+    plan = prompt._normalize_proactive_resource_plan({
+        "model_mode": "fast",
+        "confidence": 0.9,
+        "complexity": "simple",
+        "reasoning_need": "none",
+        "tool_policy": "none",
+        "memory_files": ["projects/test/main.md"],
+        "keywords": ["test"],
+        "context_brief": "short brief",
+        "routing_reason": "fast path",
+    })
+    assert plan["model_mode"] == "fast"
+    assert plan["confidence"] == 0.9
+
+    gate = prompt._normalize_proactive_delivery_preflight({
+        "decision": "send_now",
+        "confidence": 0.85,
+        "reason": "good timing",
+        "model_mode": "v4_pro",
+        "tool_policy": "none",
+        "cooldown_seconds": 1200,
+        "delivery_brief": {
+            "goal": "be warm",
+            "tone": "soft",
+            "context_summary": "working",
+        }
+    })
+    assert gate["decision"] == "send_now"
+    assert gate["cooldown_seconds"] == 1200
+    assert gate["delivery_brief"]["goal"] == "be warm"

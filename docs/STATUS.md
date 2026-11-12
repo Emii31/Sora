@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.25 — English Main Chat System Prompt (Completed & Verified)
-- **Current Status**: Translated assembled chat instructions and headings in `_build_agent_system_prompt()` (`prompt.py`) covering identity, conversation mode, relationship context, memory, images, and tool guidance to natural English and Sora branding. Preserved all character data, runtime contracts, memory paths, tool names, and reactive/proactive mode distinction. Verified 83 tests across unit suites including agent modes and care engine persona.
+- **Phase**: Phase 2B.26 — Proactive Backend Prompts and Chat Image Compatibility (Completed & Verified)
+- **Current Status**: Translated `_PROACTIVE_RESOURCE_PLANNER_PROMPT` and `_PROACTIVE_DELIVERY_PREFLIGHT_PROMPT` in `prompt.py` to natural English with Sora branding while preserving JSON contracts, enums, paths, and tool policies. Aligned system prompt image handling instructions with actual emitted markers (`[图片：...]`, `[Image: ...]`, `[图片]`) and failure sentinels (`(图片识别失败)`, `(Image description failed)`, etc.). Replaced hardcoded "Miru living with the user" with character-neutral/configured character phrasing. Added focused compatibility and structured output checks. Verified 85 tests across agent modes, attention, chat image history, preflight routing, and care engine persona suites.
 - **Next Action**: Commit changes and push to origin/main.
