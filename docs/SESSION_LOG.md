@@ -381,3 +381,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified behavior with synthetic multilingual data and mocked model calls. Focused test suite (slot writer, persona writer, screen gate, attention life scenarios, chat preflight) passed successfully (70/70 passed).
 - Updated project status and documentation (`docs/phases/PHASE_02B_29.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 6ff34c0081cc687b92de66d795b7860b148c3405` (PASSED).
+
+## 2026-11-13 (Phase 2B.30: Finish Memory Writer Translation and Configured Naming)
+- Finished translating `SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT` to English with Sora/Miru branding.
+- Parameterized all system prompts in `memory_prompts_v3.py` to use `miru_name` instead of hardcoded "Miru".
+- Updated `core.py` and `sleep_agent.py` to pass the configured `miru_name` when calling slot/persona/screen writers, ensuring consistent branding.
+- Verified translation fidelity and character naming with new unit tests in `tests/test_screen_semantic_gate.py`.
+- Ran full focused test suite (17/17 passed) across screen semantic gate, care engine persona, and care engine v3.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 34f7d87a88cc3f3688653009448e0ae44b050d57` (PASSED).

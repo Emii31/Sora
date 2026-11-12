@@ -300,3 +300,12 @@
   - Test suite check: Focused test suites (`tests/test_slot_writer_v3_schema.py`, `tests/test_persona_writer_v3_schema.py`, `tests/test_screen_semantic_gate.py`, `tests/test_attention_life_scenarios.py`, `tests/test_chat_preflight_routing.py`) passed successfully (70/70 passed).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 6ff34c0081cc687b92de66d795b7860b148c3405` (PASSED).
+
+- **Phase 2B.30 Verification (Finish Memory Writer Translation and Configured Naming)**:
+  - `memory_prompts_v3.py`: Translated `SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT` and gate message builder strings (`# Current Observation`, `# Recent Observation History`, `# Recent Post-Gate Writer Outcome Summary`, `# Current Uncompleted DDLs`, `(None)`) to natural English with Sora/Miru branding. Parameterized slot writer, persona writer, screen slot writer, and screen semantic gate system prompts with `{MIRU_NAME}`.
+  - `sleep_agent.py`, `core.py`: Wired `miru_name` from character config into `call_persona_writer`, `call_screen_semantic_gate`, and `call_screen_slot_writer`.
+  - Preservation checks: Pydantic schemas, JSON contracts, extraction rules, size limits, routing, capture behavior, and upstream extraction behavior strictly preserved.
+  - Test suite check: Focused test suites (`tests/test_screen_semantic_gate.py`, `tests/test_care_engine_v3.py`, `tests/test_care_engine_persona.py`) passed successfully (17/17 passed).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 34f7d87a88cc3f3688653009448e0ae44b050d57` (PASSED).
+

@@ -386,6 +386,15 @@ class SleepAgent:
                       f"{len(new_slot_summaries)} new slots, "
                       f"{len(meta.get('pending_proactive_outcomes', []) or [])} proactive events")
 
+                miru_name = "Miru"
+                try:
+                    from character import get_config
+                    cfg = get_config()
+                    if cfg and cfg.name:
+                        miru_name = cfg.name
+                except Exception:
+                    pass
+
                 result = call_persona_writer(
                     user_name=user_name,
                     identity_ground_truth=identity_gt,
@@ -395,6 +404,7 @@ class SleepAgent:
                     dialog_buffer=dialog_buffer,
                     proactive_outcomes=proactive_outcomes,
                     current_time=current_time,
+                    miru_name=miru_name,
                 )
 
                 if result is None:

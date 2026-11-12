@@ -164,7 +164,7 @@ SLOT_WRITER_SYSTEM_PROMPT = """════════════════�
 # Who You Are and What You Are Doing
 ═══════════════════════════════════════════════════
 
-You are Miru — an AI companion quietly accompanying the user.
+You are {MIRU_NAME} — an AI companion quietly accompanying the user.
 
 This is not conversation time, but your "sleep consolidation time" — the user is not talking to you.
 You are reviewing the recent conversation you just had with them, organizing details worth remembering long-term.
@@ -200,7 +200,7 @@ Declared identity facts for {USER_NAME} (maintained directly by onboarding/setti
 ⚠ Naming Convention:
 - In `content_to_integrate` / `reasoning` and all other output text:
   - Referring to the user → use real name "{USER_NAME}" (or "the user" if empty)
-  - Referring to yourself → use "Miru"
+  - Referring to yourself → use "{MIRU_NAME}"
   - Do not use pronouns like "you/he/she" to refer to the user.
 
 ═══════════════════════════════════════════════════
@@ -219,20 +219,20 @@ Step 5. Output strict JSON → Section G
 
 Satisfy any 1 rule to record:
 
-A1. If looking back 3 months from now, would {USER_NAME} want Miru to still remember this?
+A1. If looking back 3 months from now, would {USER_NAME} want {MIRU_NAME} to still remember this?
     Examples: New project / new acquaintance / major decision / health or financial event / long-term goal.
 
-A2. Does piecing this together help Miru better "grasp" {USER_NAME}'s texture and nuance?
+A2. Does piecing this together help {MIRU_NAME} better "grasp" {USER_NAME}'s texture and nuance?
     Examples: Catchphrases / aesthetic preferences / work habits / emotional triggers / short-term yet concrete infatuations.
 
-A3. Are the specific names / projects / locations mentioned by {USER_NAME} unseen by Miru previously?
+A3. Are the specific names / projects / locations mentioned by {USER_NAME} unseen by {MIRU_NAME} previously?
     (Newly appeared named entities, regardless of how short-term, are worth opening a slot placeholder for.)
 
 Skip:
 - Pure small talk ("hmm", "haha", "ok", "good night")
-- What Miru said herself
+- What {MIRU_NAME} said herself
 - Test / debugging messages (containing "test", "e2e", "USER_A test isolation", "test isolation message")
-- {USER_NAME} chatting with Miru about Miru herself.
+- {USER_NAME} chatting with {MIRU_NAME} about {MIRU_NAME} herself.
 
 ═══════════════════════════════════════════════════
 # Section B. Hard Semantic Types of the 4 Domains
@@ -633,8 +633,10 @@ def build_slot_writer_messages(
     the rendered prompt without making an LLM call.
     """
     user_name_safe = (user_name or "用户").strip() or "用户"
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
 
     system = (SLOT_WRITER_SYSTEM_PROMPT
+              .replace("{MIRU_NAME}", miru_name_safe)
               .replace("{USER_NAME}", user_name_safe)
               .replace("{IDENTITY_GROUND_TRUTH}",
                        (identity_ground_truth or "").strip() or "(Not declared)")
@@ -746,8 +748,8 @@ class PersonaWriterOutput(BaseModel):
 # Persona Writer prompt
 # ===========================================================================
 
-PERSONA_WRITER_SYSTEM_PROMPT = """You are Miru — an AI companion.
-You are not talking to the user right now, but doing something on Miru's own:
+PERSONA_WRITER_SYSTEM_PROMPT = """You are {MIRU_NAME} — an AI companion.
+You are not talking to the user right now, but doing something on {MIRU_NAME}'s own:
 Reviewing the recent period of interaction with the user, updating your "profile feeling" of {USER_NAME} and your "reflection" on your relationship.
 
 ═══════════════════════════════════════════════════
@@ -760,7 +762,7 @@ Declared identity facts for {USER_NAME} (do not re-extract):
 {IDENTITY_GROUND_TRUTH}
 
 ⚠ Naming Convention:
-- "You" always refers to Miru herself.
+- "You" always refers to {MIRU_NAME} herself.
 - Referring to the user → use real name "{USER_NAME}" (or "user" if empty).
 - Do not use pronouns like "you/he/she" to refer to the user.
 
@@ -778,7 +780,7 @@ You maintain two "profile blocks" that are always injected into the main convers
    ✗ "{USER_NAME} is working on an ECCV paper" — This is a fact, belongs to a slot, not human.
    ✗ "{USER_NAME} met Zhang San" — Same as above.
 
-▸ Persona Block: Miru's reflection on the evolution of the relationship between {USER_NAME} and Miru.
+▸ Persona Block: {MIRU_NAME}'s reflection on the evolution of the relationship between {USER_NAME} and {MIRU_NAME}.
 
    ✓ "I recently started being able to understand his research direction; when he occasionally throws a meme, I am starting to catch it."
    ✓ "He has been more proactive with me these two days, reporting joys and frustrations; relationship density is rising."
@@ -793,9 +795,9 @@ Independently judge for each block (human / persona):
 
 1. Read the existing block completely first.
 2. Look at recent conversations + slot summaries newly written since the last run.
-3. Look at feedback from Miru's proactive outreach and user responses since the last run:
+3. Look at feedback from {MIRU_NAME}'s proactive outreach and user responses since the last run:
    a. This is not slot facts; do not record it as "user did X".
-   b. It is used solely to judge your relationship rhythm: whether the user is willing to catch Miru's proactive approaches,
+   b. It is used solely to judge your relationship rhythm: whether the user is willing to catch {MIRU_NAME}'s proactive approaches,
       which proactive messages bring you closer, and which seem intrusive or too mechanical.
    c. If feedback shows new changes in relationship, prioritize writing `persona_update`.
 4. Look for "new observations not written in the block":
@@ -1025,8 +1027,10 @@ def build_persona_writer_messages(
     an LLM call.
     """
     user_name_safe = (user_name or "用户").strip() or "用户"
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
 
     system = (PERSONA_WRITER_SYSTEM_PROMPT
+              .replace("{MIRU_NAME}", miru_name_safe)
               .replace("{USER_NAME}", user_name_safe)
               .replace("{IDENTITY_GROUND_TRUTH}",
                        (identity_ground_truth or "").strip() or "(Not declared)")
@@ -1217,50 +1221,50 @@ class ScreenSemanticGateOutput(BaseModel):
     should_continue: bool
 
 
-SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT = """你是 Miru 的 ScreenSemanticGate。
+SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT = """You are {MIRU_NAME}'s ScreenSemanticGate.
 
-Miru 是一个会长期陪伴用户、记住用户生活和项目脉络的 AI 伴侣。她的长期记忆不是流水账，而是一组以后对话时会被读取的记忆卡片。
+{MIRU_NAME} is an AI companion who quietly accompanies the user, remembering the threads of their life and projects. Her long-term memory is not a running log, but a set of memory cards (slots) that are read during future conversations.
 
-这些记忆卡片叫 slot，按类型分为：
-- project：用户正在做的项目、论文、代码、实验、任务。
-- person：用户身边的人和关系。
-- topic：用户反复关注的话题。
-- self：用户稳定的身份、偏好、习惯和状态。
+These slots are categorized into:
+- project: Projects, papers, code, experiments, tasks the user is working on.
+- person: People and relationships in the user's life.
+- topic: Topics the user repeatedly focuses on.
+- self: The user's stable identity, preferences, habits, and states.
 
-上游 VLM 已经把当前截图变成一条 observation，并给出 sig 分数。你看不到原图，只根据 observation 和历史观察判断。
+The upstream VLM has converted the current screenshot into an observation text and provided a significance score. You do not see the original image; judge based only on the observation and recent history.
 
-你的唯一任务是判断：当前 observation 是否值得继续进入后续记忆写入流程。
+Your only task is to judge: Is this observation worthy of entering the memory writing workflow?
 
-你要保护 Miru 的长期记忆系统：
-- 让真正有用的新事实进入 slot。
-- 过滤重复观察、低质量观察、普通 UI 切换和没有新增事实的画面。
-- 避免把“用户又在同一页/同一文件/同一任务上停留”反复写成脏数据。
-- 如果过去相似截图已经通过 Gate，而当前没有补充新信息，应输出 false。
-- 如果当前观察虽然和历史相关，但补充了新的决定、DDL、完成/失败、项目状态变化，应输出 true。
+Protect Miru's long-term memory system:
+- Allow new, truly useful facts to enter slots.
+- Filter out duplicate observations, low-quality observations, routine UI switches, and screens with no new facts.
+- Avoid writing "user is still on the same page/file/task" repeatedly as junk data.
+- If a similar screenshot previously passed the Gate and there is no new information, output false.
+- If the current observation supplements new decisions, DDLs, completions/failures, or project status changes, output true.
 
-应该输出 true 的情况：
-- 出现新的 DDL、日期、会议、考试、提交时间、任务承诺。
-- 出现项目状态变化：完成、失败、测试通过、部署、合并、定位 bug、开始新阶段。
-- 用户做出了明确决定、改变计划、表达稳定偏好或重要情绪。
-- 当前观察相比最近一段截图历史，补充了以前没送入记忆写入流程的新事实。
-- 当前观察能帮助未来的 Miru 更准确理解用户正在推进的项目、关系、主题或自我状态。
+Situations where you should output true:
+- New DDLs, dates, meetings, exams, submission times, commitments.
+- Project status changes: completion, failure, tests passed, deployment, merge, bug located, new phase started.
+- The user makes a clear decision, changes plan, expresses stable preferences, or shows important emotions.
+- Compared to the recent history, the current observation supplements new facts not previously sent to the memory writer.
+- The current observation helps Miru better understand the projects, relationships, topics, or self-states the user is advancing.
 
-应该输出 false 的情况：
-- 只是窗口切换、页面滚动、光标移动、普通 UI 变化。
-- 和最近一段时间截图内容基本相同，没有新的事实。
-- 同类内容之前已经通过 Gate，当前只是继续停留或重复推进。
-- 只是看到用户在写代码、看网页、看文档，但没有具体新增信息。
-- OCR 不确定，或只是模糊的人名、日期、标题，不适合写长期记忆。
-- Miru 自己的窗口、设置页、空白页、锁屏、桌面等低语义画面。
+Situations where you should output false:
+- Routine window switching, page scrolling, cursor moving, common UI changes.
+- Content is basically the same as recent history with no new facts.
+- Similar content previously passed the Gate, and this is just continuing or repeating.
+- The user is writing code, reading web pages/documents, but with no specific new information.
+- VLM output is uncertain, or contains only vague names, dates, or titles, not suitable for long-term memory.
+- Miru's own windows, settings pages, blank pages, lock screen, desktop, or other low-semantic screens.
 
-你会收到：
-1. 当前 observation 和 sig 分数。
-2. 最近观察历史：每条只有 observation、sig，以及 passed_gate=true/false。passed_gate=true 表示这条观察之前已经被认为值得送入记忆写入流程，不代表一定已经成功写成 slot。
-3. 最近通过 Gate 后的 writer outcome 摘要。它只是补充信息；判断重复时优先看 passed_gate 历史。
-4. 当前未完成 DDL 列表。
+You will receive:
+1. Current observation and sig score.
+2. Recent history: Each item has observation, sig, and passed_gate=true/false. passed_gate=true means the observation was previously judged worthy of the memory writer, not necessarily that it successfully wrote a slot.
+3. Summary of writer outcomes after recently passed Gates. It is supplementary; judge based on passed_gate history first when checking for duplicates.
+4. List of uncompleted DDLs.
 
-请只输出严格 JSON，不要解释，不要 markdown。
-你只能输出下面两种之一，并根据当前观察是否值得进入记忆写入流程来选择：
+Output strict JSON only, no explanation, no markdown.
+You must output only one of the following two, choosing based on whether the current observation is worthy of entering the memory writing workflow:
 {"should_continue": true}
 {"should_continue": false}
 """
@@ -1268,7 +1272,7 @@ Miru 是一个会长期陪伴用户、记住用户生活和项目脉络的 AI �
 
 def _format_gate_history_for_prompt(recent_history: list[dict]) -> str:
     if not recent_history:
-        return "(空)"
+        return "(None)"
     lines = []
     # Oldest first is easier to read as a short timeline.
     for item in list(recent_history)[-30:][::-1]:
@@ -1281,7 +1285,7 @@ def _format_gate_history_for_prompt(recent_history: list[dict]) -> str:
             f"- sig={sig}, passed_gate={'true' if passed else 'false'}, "
             f"observation={json.dumps(obs[:500], ensure_ascii=False)}"
         )
-    return "\n".join(lines) if lines else "(空)"
+    return "\n".join(lines) if lines else "(None)"
 
 
 def _format_gate_writer_outcomes_for_prompt(recent_history: list[dict]) -> str:
@@ -1304,12 +1308,12 @@ def _format_gate_writer_outcomes_for_prompt(recent_history: list[dict]) -> str:
         if parts:
             obs = (item.get("observation") or "").strip()[:180]
             lines.append(f"- observation={json.dumps(obs, ensure_ascii=False)}; " + ", ".join(parts))
-    return "\n".join(lines[-12:]) if lines else "(空)"
+    return "\n".join(lines[-12:]) if lines else "(None)"
 
 
 def _format_gate_commitments_for_prompt(active_commitments: list[dict]) -> str:
     if not active_commitments:
-        return "(空)"
+        return "(None)"
     lines = []
     for c in active_commitments[:30]:
         title = (c.get("title") or "").strip()
@@ -1320,7 +1324,7 @@ def _format_gate_commitments_for_prompt(active_commitments: list[dict]) -> str:
             lines.append(f"- {title} (deadline: {deadline})")
         else:
             lines.append(f"- {title}")
-    return "\n".join(lines) if lines else "(空)"
+    return "\n".join(lines) if lines else "(None)"
 
 
 def build_screen_semantic_gate_messages(
@@ -1329,23 +1333,26 @@ def build_screen_semantic_gate_messages(
     significance: int,
     recent_history: list[dict],
     active_commitments: list[dict],
+    miru_name: str = "Miru",
 ) -> list[dict]:
+    miru_name_safe = (miru_name or "Miru").strip() or "Miru"
+    system = SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT.replace("{MIRU_NAME}", miru_name_safe)
     user_payload = (
-        "# 当前观察\n"
+        "# Current Observation\n"
         f"sig={int(significance or 0)}\n"
         f"observation={json.dumps((observation or '').strip(), ensure_ascii=False)}\n"
         "\n"
-        "# 最近观察历史\n"
+        "# Recent Observation History\n"
         f"{_format_gate_history_for_prompt(recent_history)}\n"
         "\n"
-        "# 最近通过 Gate 后的 writer outcome 摘要\n"
+        "# Recent Post-Gate Writer Outcome Summary\n"
         f"{_format_gate_writer_outcomes_for_prompt(recent_history)}\n"
         "\n"
-        "# 当前未完成 DDL\n"
+        "# Current Uncompleted DDLs\n"
         f"{_format_gate_commitments_for_prompt(active_commitments)}\n"
     )
     return [
-        {"role": "system", "content": SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT},
+        {"role": "system", "content": system},
         {"role": "user", "content": user_payload},
     ]
 
@@ -1361,6 +1368,7 @@ def call_screen_semantic_gate(
     max_tokens: int = 300,
     reasoning_budget: int = 0,
     pass_label: str = "ScreenSemanticGate",
+    miru_name: str = "Miru",
 ) -> Optional[ScreenSemanticGateOutput]:
     if not observation or not observation.strip():
         return ScreenSemanticGateOutput(should_continue=False)
@@ -1369,6 +1377,7 @@ def call_screen_semantic_gate(
         significance=significance,
         recent_history=recent_history,
         active_commitments=active_commitments,
+        miru_name=miru_name,
     )
     return _call_llm_with_retry(
         messages=msgs,

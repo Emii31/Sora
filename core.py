@@ -3118,6 +3118,14 @@ def _process_screen_observation_async(observation: str, significance: int,
         # later screenshots can see that this observation already passed Gate
         # even if the writer is still running.
         gate_error = ""
+        miru_name = "Miru"
+        try:
+            cfg = get_config()
+            if cfg and cfg.name:
+                miru_name = cfg.name
+        except Exception:
+            pass
+
         try:
             from memory_prompts_v3 import call_screen_semantic_gate
             recent_gate_history = storage.get_recent_screen_semantic_gate_entries(limit=30)
@@ -3131,6 +3139,7 @@ def _process_screen_observation_async(observation: str, significance: int,
                 max_tokens=300,
                 reasoning_budget=0,
                 pass_label="ScreenSemanticGate",
+                miru_name=miru_name,
             )
             should_continue = bool(getattr(gate, "should_continue", False)) if gate else False
             if gate is None:
@@ -3212,6 +3221,7 @@ def _process_screen_observation_async(observation: str, significance: int,
             max_tokens=llm_policy["max_tokens"],
             reasoning_budget=llm_policy["reasoning_budget"],
             pass_label=f"ScreenSlotWriterV3:{llm_policy['name']}",
+            miru_name=miru_name,
         )
 
         if result is None:

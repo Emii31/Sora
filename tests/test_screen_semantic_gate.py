@@ -220,3 +220,31 @@ def test_call_screen_slot_writer_empty_observation():
         assert isinstance(out, ScreenSlotWriterOutput)
         assert out.skipped_reason == "empty observation"
         assert not mock_llm.called
+
+
+def test_screen_prompt_custom_miru_name():
+    from memory_prompts_v3 import build_screen_semantic_gate_messages, build_screen_slot_writer_messages
+    gate_msgs = build_screen_semantic_gate_messages(
+        observation="test obs",
+        significance=3,
+        recent_history=[],
+        active_commitments=[],
+        miru_name="Sora",
+    )
+    assert "Sora" in gate_msgs[0]["content"]
+
+    slot_msgs = build_screen_slot_writer_messages(
+        user_name="李垦",
+        identity_ground_truth="",
+        slot_index={},
+        active_commitments=[],
+        observation="test obs",
+        significance=3,
+        device_name="MacBook",
+        captured_at="2026-05-20T20:00:00",
+        current_time="2026-05-20T20:00:00",
+        today_date="2026-05-20",
+        miru_name="Sora",
+    )
+    assert "Sora" in slot_msgs[0]["content"]
+
