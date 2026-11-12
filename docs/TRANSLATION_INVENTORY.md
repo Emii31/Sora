@@ -23,9 +23,11 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **Main Chat System Prompt** | `prompt.py` | Assembled system prompt (`_build_agent_system_prompt`), reactive/proactive modes, identity, memory, images, and tool guidance | **Implemented & Verified (Phase 2B.25)** |
 | **Proactive Backend Prompts & Image Compatibility** | `prompt.py` | `_PROACTIVE_RESOURCE_PLANNER_PROMPT`, `_PROACTIVE_DELIVERY_PREFLIGHT_PROMPT`, image tag markers (`[图片：...]`, `[Image: ...]`, `[图片]`), and failure sentinels | **Implemented & Verified (Phase 2B.26)** |
 | **Emotion Prompts & Image Guidance Correction** | `prompt.py`, `memory_prompts.py` | User emotion annotation prompts (`EMOTION_CHAT_PROMPT`, `EMOTION_SCREENSHOT_PROMPT`, rules) and companion emotion evaluation (`_build_miru_emotion_prompt()`) | **Implemented & Verified (Phase 2B.27)** |
+| **Memory Writers & Persona Stack** | `memory_prompts_v2.py`, `memory_prompts_v3.py` | Slot writers, persona writers, Pass 4 append, daily compactor, legacy merge, screen semantic gate | **Implemented & Verified (Phase 2B.28 - 2B.30)** |
+| **Memory Curator Stack** | `memory_prompts_v2.py`, `curator.py` | Curator planner and merge/edit/delete executors | **Implemented & Verified (Phase 2B.31)** |
+| **Journal, Diary Reformat & Bundled Persona** | `journal.py`, `prompt.py`, `soul.md` | Journal generation and empty-day fallback, diary reformat prompt, default bundled persona (Sora) | **Implemented & Verified (Phase 2B.33 - 2B.34)** |
 | **Landing & Privacy Pages** | `templates/landing.html`, `templates/privacy.html` | Marketing and legal pages | **Outstanding (Deferred)** |
 | **Admin Panel** | `templates/admin.html` | Administrator dashboard interface | **Outstanding (Deferred)** |
-| **Remaining Prompts/Persona** | `character.py`, `memory_prompts_v*.py` (summarizer, gatekeeper, sleep agent) | Diary reformat, memory summarizer, commitment gatekeeper, sleep agent | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |
 | **Character Config** | `data/personas/` | Persona definitions | Untouched |
 | **Branding Assets** | `assets/brand/` | Logos, avatars | Untouched |

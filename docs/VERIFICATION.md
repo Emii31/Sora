@@ -333,3 +333,11 @@
   - Test suite check: 61/61 passed across journal, slot daily compactor, Pass 4 memory append, summary truncation, and curator pipelines.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py f4428a4b306c65fb12d9d9f7d225c91d7deec31e` (PASSED).
+
+- **Phase 2B.34 Verification (English Bundled Persona and Journal Fallbacks)**:
+  - `soul.md`: Translated prose and prompt hint values into natural English with Sora as the default character name, preserving parser headings, hint keys, and relationship-stage lookup compatibility.
+  - `journal.py`: Translated empty-day journal title, mood label, narrative, and Markdown export labels (`Date`, `Mood`, `Journal`, `Highlights`, `Statistics`, stats labels).
+  - Preservation checks: Configured character loading, prompt rendering, journal schema, and backward compatibility with custom personas preserved intact.
+  - Test suite check: 34/34 passed across journal, emotion prompt, care engine persona, and persona writer test suites.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 61b5d7713d74c85196ad6f988f2a9b4d29933936` (PASSED).

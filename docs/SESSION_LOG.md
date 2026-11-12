@@ -412,3 +412,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified execution with comprehensive test suites covering journal generation, slot daily compactor, Pass 4 memory append, summary truncation, and curator pipelines (all 61 tests passed successfully).
 - Updated documentation (`docs/phases/PHASE_02B_33.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py f4428a4b306c65fb12d9d9f7d225c91d7deec31e` (PASSED).
+
+## 2026-11-13 (Phase 2B.34: English Bundled Persona and Journal Fallbacks)
+- Localized root `soul.md` into natural English with Sora as the default character name while preserving parser headings, hint keys, and relationship-stage lookup compatibility.
+- Translated journal empty-day deterministic fallback copy and Markdown export labels in `journal.py`.
+- Verified via character configuration loading, chat prompt rendering, journal generation, and test suites (all 34 tests passed successfully).
+- Updated documentation (`docs/phases/PHASE_02B_34.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`, `docs/TRANSLATION_INVENTORY.md`).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 61b5d7713d74c85196ad6f988f2a9b4d29933936` (PASSED).

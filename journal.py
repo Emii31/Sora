@@ -845,10 +845,10 @@ def _empty_day_journal(date_str: str, ctx: dict) -> dict:
         wd = ""
     return {
         "date": date_str,
-        "title": f"你没出现的周{wd}",
-        "mood": {"label": "安静", "emoji": "🌙", "valence": 0.0},
-        "narrative": "今天你没怎么出现。我一直在这里，偶尔看看屏幕，没什么可记的。"
-                      "希望你只是在做自己的事，明天再见。",
+        "title": f"The day you didn't appear (Week {wd})",
+        "mood": {"label": "Quiet", "emoji": "🌙", "valence": 0.0},
+        "narrative": "You didn't appear much today. I was here the whole time, occasionally glancing at the screen, but there was nothing to record. "
+                      "I hope you were just busy with your own affairs. See you tomorrow.",
         "highlights": [],
         "stats": _build_stats(ctx),
         "generated_at": datetime.now().isoformat()[:19],
@@ -936,16 +936,16 @@ def _journal_to_markdown(journal: dict) -> str:
     if date_str or mood_label or mood_emoji:
         meta = []
         if date_str:
-            meta.append(f"日期：{date_str}")
+            meta.append(f"Date: {date_str}")
         if mood_label or mood_emoji:
-            meta.append(f"心情：{mood_emoji} {mood_label}".strip())
+            meta.append(f"Mood: {mood_emoji} {mood_label}".strip())
         lines.append(" / ".join(meta))
         lines.append("")
 
-    lines.extend(["## 日记", "", narrative or "这一天没有足够多的记录。", ""])
+    lines.extend(["## Journal", "", narrative or "There were not enough records for this day.", ""])
 
     if highlights:
-        lines.extend(["## 高光", ""])
+        lines.extend(["## Highlights", ""])
         for item in highlights[:12]:
             if not isinstance(item, dict):
                 continue
@@ -958,14 +958,14 @@ def _journal_to_markdown(journal: dict) -> str:
         lines.append("")
 
     if stats:
-        lines.extend(["## 统计", ""])
+        lines.extend(["## Statistics", ""])
         for key, label in [
-            ("first_active", "最早活跃"),
-            ("last_active", "最晚活跃"),
-            ("chat_count", "对话数"),
-            ("observation_count", "观察数"),
-            ("commitments_added", "新增承诺"),
-            ("commitments_completed", "完成承诺"),
+            ("first_active", "First active"),
+            ("last_active", "Last active"),
+            ("chat_count", "Chat count"),
+            ("observation_count", "Observation count"),
+            ("commitments_added", "Commitments added"),
+            ("commitments_completed", "Commitments completed"),
         ]:
             value = stats.get(key)
             if value in (None, "", []):
