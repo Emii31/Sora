@@ -358,3 +358,11 @@
   - Test suite check: Benchmark unit tests passed successfully.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 199a046051219f2c394f283119023482488ca659` (PASSED).
+
+- **Phase 3.1A Verification (Verify Fast Mode and Match Benchmark Runs)**:
+  - `scripts/benchmark_chat.py`: Added explicit setting and read-back verification of `local_text_chat_enabled` through authenticated `/api/user-settings` route for the disposable benchmark user.
+  - `tests/test_benchmark_chat.py`: Added unit tests verifying setting persistence, policy mode resolution (`reactive_fast` vs `v4_pro`), and reply matching.
+  - Benchmark Execution & Blocker: Command `python3 scripts/benchmark_chat.py` documented; local Ollama connection error handling verified.
+  - Test suite check: 47/47 passed across benchmark, chat routing, companion bootstrap, and user settings test suites.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 9c943ebd063040469cc58213ec81cd7d7c182b93` (PASSED).

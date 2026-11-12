@@ -433,3 +433,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Added comprehensive unit tests in `tests/test_benchmark_chat.py` verifying benchmark harness success routing, history confirmation, and fallback error detection (all tests passed successfully).
 - Documented benchmark execution command (`python3 scripts/benchmark_chat.py`) and noted local Ollama availability blocker (connection refused when Ollama is inactive).
 - Updated roadmap (`docs/ROADMAP.md`), status (`docs/STATUS.md`), translation inventory, session log, verification log, and created `docs/phases/PHASE_03_01.md`.
+
+## 2026-11-13 (Phase 3.1A: Verify Fast Mode and Match Benchmark Runs)
+- Updated `scripts/benchmark_chat.py` to set and read back `local_text_chat_enabled` through authenticated `/api/user-settings` route for the disposable benchmark user, failing if persistence fails.
+- Verified in `tests/test_benchmark_chat.py` that ordinary text resolves to `reactive_fast` in fast mode and `v4_pro` in full mode.
+- Structured runner for matched comparison (identical prompt text, equivalent starting history, alternate mode order across pairs, send-to-history timing, and separate direct model latency reporting with connection error handling).
+- Verified via test suite (47/47 tests passed across benchmark, chat routing, companion bootstrap, and user settings suites).
+- Documented execution command (`python3 scripts/benchmark_chat.py`) and Ollama connection blocker.
+- Updated documentation (`docs/phases/PHASE_03_01A.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

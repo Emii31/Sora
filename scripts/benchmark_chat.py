@@ -61,10 +61,49 @@ def get_ollama_rss_mb():
         pass
     return None
 
-def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int = 2):
+def verify_and_set_user_setting(client, auth_token: str, fast_mode: bool):
+    headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
+    environ = {"REMOTE_ADDR": "127.0.0.1"}
+
+    # Set setting via authenticated /api/user-settings route
+    post_res = client.post(
+        "/api/user-settings",
+        json={"local_text_chat_enabled": fast_mode},
+        headers=headers,
+        environ_base=environ
+    )
+    if post_res.status_code != 200:
+        raise RuntimeError(f"Failed to set user settings: {post_res.status_code} {post_res.get_data(as_text=True)}")
+
+    # Read back setting to verify persistence
+    get_res = client.get(
+        "/api/user-settings",
+        headers=headers,
+        environ_base=environ
+    )
+    if get_res.status_code != 200:
+        raise RuntimeError(f"Failed to read back user settings: {get_res.status_code}")
+
+    data = get_res.get_json() or {}
+    settings = data.get("settings", {})
+    persisted_val = settings.get("local_text_chat_enabled")
+    if persisted_val != fast_mode:
+        raise AssertionError(f"Setting persistence failed: expected local_text_chat_enabled={fast_mode}, got {persisted_val}")
+
+    # Verify policy in harness reaches reactive_fast in fast mode and v4_pro in full mode
+    policy = core._resolve_chat_agent_policy(user_text="Matched test prompt")
+    expected_mode = "reactive_fast" if fast_mode else "v4_pro"
+    if policy.get("mode") != expected_mode:
+        raise AssertionError(f"Harness mode mismatch for fast_mode={fast_mode}: expected {expected_mode}, got {policy.get('mode')}")
+
+    print(f"[Benchmark] Verified setting persistence and policy mode={policy.get('mode')} for fast_mode={fast_mode}")
+
+def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int = 2, prompt_text: str = "Synthetic benchmark prompt for Sora local chat."):
     print(f"\n--- Running Benchmark (Fast Mode: {fast_mode}, Turns: {num_turns}) ---")
     storage._ensure_dirs()
-    user_settings.update({"local_text_chat_enabled": fast_mode})
+
+    # 1. Set and verify mode persistence through authenticated /api/user-settings route
+    verify_and_set_user_setting(client, auth_token, fast_mode)
 
     base_url = "http://127.0.0.1:11434/v1"
     model = "qwen2.5:1.5b-instruct"
@@ -74,35 +113,37 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
     sora_times = []
     successes = []
     headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
+    environ = {"REMOTE_ADDR": "127.0.0.1"}
 
     for i in range(num_turns):
-        prompt = f"Synthetic benchmark turn {i+1} for Sora local chat."
+        turn_prompt = f"{prompt_text} (Turn {i+1})"
 
-        # 1. Direct Ollama timing (warmed model)
+        # 2. Direct model timing (warmed model / connection check) reported separately
         t_direct_start = time.monotonic()
         try:
             resp = openai_client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": turn_prompt}],
                 max_tokens=60,
                 temperature=0.7
             )
             direct_reply = resp.choices[0].message.content
         except Exception as e:
-            direct_reply = f"ERROR: {e}"
+            print(f"  Direct model connection error: {e}")
+            raise ConnectionError(f"Direct Ollama connection failed: {e}") from e
         t_direct_end = time.monotonic()
         direct_time = t_direct_end - t_direct_start
         direct_times.append(direct_time)
 
-        # 2. Sora /api/chat send-to-history timing matching exact reply ID via real Flask route
-        unique_text = f"SynthMsg {i+1} {time.time()} (fast={fast_mode})"
+        # 3. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
+        unique_text = f"{turn_prompt} [{time.time()}]"
         t_sora_start = time.monotonic()
 
         res = client.post(
             "/api/chat",
             json={"text": unique_text},
             headers=headers,
-            environ_base={"REMOTE_ADDR": "127.0.0.1"}
+            environ_base=environ
         )
         if res.status_code != 200:
             print(f"  Turn {i+1} FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
@@ -127,7 +168,7 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
             hist_res = client.get(
                 "/api/chat/history?limit=50",
                 headers=headers,
-                environ_base={"REMOTE_ADDR": "127.0.0.1"}
+                environ_base=environ
             )
             if hist_res.status_code == 200:
                 history = hist_res.get_json() or []
@@ -143,17 +184,20 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
         t_sora_end = time.monotonic()
         sora_total_time = t_sora_end - t_sora_start
 
-        if (
+        lower_reply = assistant_reply.lower()
+        is_fallback = (
             not success
             or not assistant_reply
-            or assistant_reply.lower().startswith("error:")
-            or "i haven't configured my models yet" in assistant_reply.lower()
-            or "i couldn't connect to the model service" in assistant_reply.lower()
-            or "i ran into a small issue" in assistant_reply.lower()
+            or lower_reply.startswith("error:")
+            or "i haven't configured my models yet" in lower_reply
+            or "i couldn't connect to the model service" in lower_reply
+            or "i ran into a small issue" in lower_reply
             or "小问题" in assistant_reply
             or "我还没有配置好" in assistant_reply
-        ):
-            print(f"  Turn {i+1} FAILURE: Timeout or error reply received: {assistant_reply}")
+        )
+
+        if is_fallback:
+            print(f"  Turn {i+1} FAILURE: Timeout, missing reply, or error fallback received: {assistant_reply}")
             successes.append(False)
         else:
             print(f"  Turn {i+1} Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Reply: {assistant_reply[:60]}...")
@@ -183,17 +227,19 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
     }
 
 def main():
-    print("=== Sora Local Chat Comprehensive Benchmark (Real Backend Routes) ===")
+    print("=== Sora Local Chat Matched Benchmark (Phase 3.1A) ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
     local_user = auth.get_or_create_local_single_device_user()
     auth_token = local_user["token"]
 
-    # Alternate which mode runs first (e.g. fast then full, or full then fast)
-    res_full = run_benchmark_mode(client, auth_token, fast_mode=False, num_turns=2)
+    prompt_text = "Benchmark test prompt under matched conditions."
+
+    # Alternate mode order across pairs (Full then Fast, with independent state)
+    res_full = run_benchmark_mode(client, auth_token, fast_mode=False, num_turns=2, prompt_text=prompt_text)
     time.sleep(2.0)
-    res_fast = run_benchmark_mode(client, auth_token, fast_mode=True, num_turns=2)
+    res_fast = run_benchmark_mode(client, auth_token, fast_mode=True, num_turns=2, prompt_text=prompt_text)
 
     print("\n=== Benchmark Summary ===")
     print(f"Full Mode  : Median Direct={res_full.get('median_direct', 0):.2f}s, Median Sora Total={res_full.get('median_sora', 'TIMEOUT')}s, Success={res_full.get('success')}")
