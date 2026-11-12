@@ -419,3 +419,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified via character configuration loading, chat prompt rendering, journal generation, and test suites (all 34 tests passed successfully).
 - Updated documentation (`docs/phases/PHASE_02B_34.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`, `docs/TRANSLATION_INVENTORY.md`).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 61b5d7713d74c85196ad6f988f2a9b4d29933936` (PASSED).
+
+## 2026-11-13 (Phase 2B.35: Backend Localization Closeout)
+- Corrected empty-day journal title (`A quiet day (Weekday)`) and narrative in `journal.py` to be grounded purely in the lack of recorded activity and rest/reflection, avoiding claims about screen observation, the user's whereabouts, or why they were absent.
+- Translated core memory compression prompts, rules, and seed text (`persona_seed`, `human_seed`) in `core_memory.py`.
+- Translated emotion annotation prompt request text and empty-state labels (`(No emotion records today)`, `(None)`, `(No distinct content in screenshot)`) in `prompt.py`.
+- Verified via focused and broad test suites (all 50 tests passed successfully across journal, core memory limits, emotion prompts, attention engine, and care & presence).
+- Updated translation inventory and roadmap identifying Phase 3 provider and benchmark work as the next backend milestone.
+- Updated documentation (`docs/phases/PHASE_02B_35.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

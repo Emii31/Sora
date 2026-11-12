@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.34 — English Bundled Persona and Journal Fallbacks (Completed & Verified)
-- **Current Status**: Localized root `soul.md` into natural English with Sora as the default character name while preserving parser headings, hint keys, and relationship-stage lookup compatibility. Translated journal empty-day deterministic copy and Markdown export labels in `journal.py`. Verified via character loading, prompt rendering, journal generation, and unit tests (all 34 tests passed successfully).
-- **Next Action**: Commit and push to origin/main.
+- **Phase**: Phase 2B.35 — Backend Localization Closeout (Completed & Verified)
+- **Current Status**: Corrected empty-day journal narrative and title in `journal.py` to be grounded in lack of recorded activity without screen/whereabouts assumptions. Translated core memory compression prompts and seed text in `core_memory.py`. Translated emotion annotation prompt request text and empty-state labels in `prompt.py`. Verified via focused and broad test suites (all 50 tests passed successfully). Roadmap updated for Phase 3 provider & benchmark work.
+- **Next Action**: Stop after Phase 2B.35.

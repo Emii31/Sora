@@ -69,7 +69,7 @@ def test_empty_day_generates_short_placeholder(env):
     result = journal.generate_daily_journal("2026-04-18", force=True)
     assert result is not None
     assert result["is_empty_day"] is True
-    assert "appear" in result["narrative"].lower()
+    assert "quiet day" in result["narrative"].lower()
     assert result["source_version"] == journal.JOURNAL_SCHEMA_VERSION
     assert os.path.exists(journal._json_path("2026-04-18"))
     assert os.path.exists(journal._md_path("2026-04-18"))

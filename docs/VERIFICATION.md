@@ -341,3 +341,12 @@
   - Test suite check: 34/34 passed across journal, emotion prompt, care engine persona, and persona writer test suites.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 61b5d7713d74c85196ad6f988f2a9b4d29933936` (PASSED).
+
+- **Phase 2B.35 Verification (Backend Localization Closeout)**:
+  - `journal.py`: Corrected empty-day journal title (`A quiet day (Weekday)`) and narrative to be grounded purely in lack of recorded activity and rest/reflection, avoiding claims about screen observation, user whereabouts, or absence reasons.
+  - `core_memory.py`: Translated core memory compression prompts, rules, and seed text (`persona_seed`, `human_seed`).
+  - `prompt.py`: Translated emotion annotation prompt request text and empty-state labels (`(No emotion records today)`, `(None)`, `(No distinct content in screenshot)`).
+  - Preservation checks: Configured character names, existing memory, filenames, limits, initialization behavior, enum values, validation, and injected chat/screenshot summaries preserved intact.
+  - Test suite check: 50/50 passed across journal generation, core memory limits, emotion prompts, attention engine, and care & presence suites.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 82600573077e8d48f3d34a40eded4003a5749cbf` (PASSED).

@@ -2305,7 +2305,7 @@ def compute_valence(mood, intensity):
 def _format_emotion_log_for_prompt(entries, max_entries=15):
     """Format emotion log entries for inclusion in annotation prompts."""
     if not entries:
-        return "(今日暂无情绪记录)"
+        return "(No emotion records today)"
     lines = []
     for e in entries[-max_entries:]:
         ts = e.get("timestamp", "")[-8:]  # HH:MM:SS
@@ -2319,14 +2319,14 @@ def _format_emotion_log_for_prompt(entries, max_entries=15):
 def _format_messages_for_prompt(messages):
     """Format user messages for emotion annotation prompts."""
     if not messages:
-        return "(无)"
+        return "(None)"
     lines = []
     for m in messages:
         ts = m.get("time", "")[-8:]
         text = m.get("text", "")
         if text:
             lines.append(f"[{ts}] {text[:200]}")
-    return "\n".join(lines) if lines else "(无)"
+    return "\n".join(lines) if lines else "(None)"
 
 
 def call_emotion_annotation(current_messages, recent_messages, today_log):
@@ -2347,7 +2347,7 @@ def call_emotion_annotation(current_messages, recent_messages, today_log):
 
     try:
         result = _call_retrieval_llm(
-            prompt, "请分析用户当前情绪。", temperature=0.1, max_tokens=50000,
+            prompt, "Please analyze the user's current emotion.", temperature=0.1, max_tokens=50000,
             call_label="EmotionAnnotationChat",
         )
     except Exception as e:
@@ -2366,7 +2366,7 @@ def call_emotion_annotation_screenshot(screenshot_tldr, screenshot_time, recent_
     today_text = _format_emotion_log_for_prompt(today_log)
 
     prompt = EMOTION_SCREENSHOT_PROMPT.format(
-        screenshot_tldr=screenshot_tldr or "(截屏无明显内容)",
+        screenshot_tldr=screenshot_tldr or "(No distinct content in screenshot)",
         screenshot_time=screenshot_time or "",
         recent_30min_messages=recent_text,
         today_emotion_summary=today_text,
@@ -2374,7 +2374,7 @@ def call_emotion_annotation_screenshot(screenshot_tldr, screenshot_time, recent_
 
     try:
         result = _call_retrieval_llm(
-            prompt, "请根据截屏观测分析用户当前情绪。", temperature=0.1, max_tokens=50000,
+            prompt, "Please analyze the user's current emotion based on screenshot observations.", temperature=0.1, max_tokens=50000,
             call_label="EmotionAnnotationScreenshot",
         )
     except Exception as e:

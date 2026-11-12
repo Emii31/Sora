@@ -223,35 +223,37 @@ def consolidate(label: str, target_ratio: float = TARGET_RATIO) -> dict:
 
         if label == "human":
             extra_rule = (
-                "- 这是关于「用户」的画像。**不要**把姓名/职业/作息这种结构化字段"
-                "写在这里（这些已经在 identity 里另外保存了）；这里只保留**叙事性**"
-                "的动态画像（性格倾向、近况、关系网、偏好习惯等）。"
+                "- This is a profile of the user. **Do not** write structured fields like "
+                "name/occupation/schedule here (these are stored separately in identity); "
+                "keep only **narrative** dynamic profiles (personality tendencies, "
+                "recent situation, relationship network, preference habits, etc.)."
             )
         elif label == "persona":
             extra_rule = (
-                f"- 这是关于「{cfg.name}」（即你自己）的画像。保留你和用户共同经历过的事、"
-                "你对这段关系的感受演变。删除已经过时的瞬时情绪。"
+                f"- This is a profile of {cfg.name} (yourself). Preserve experiences "
+                "shared with the user and the evolution of your feelings about this "
+                "relationship. Remove outdated transient emotions."
             )
         else:
             extra_rule = ""
 
-        prompt = f"""你是 {cfg.name} 的记忆整理助手。以下是 {cfg.name} 核心记忆中的「{label}」块。
+        prompt = f"""You are {cfg.name}'s memory organization assistant. Below is the \"{label}\" block in {cfg.name}'s core memory.
 
-这个记忆块已经写到 {len(current)} 字符（软上限 {target_chars}，硬上限 {limit}）。
-请把它压缩到 {target_chars} 字符以内，保留所有重要信息，删除重复、过时、低信息量的内容。
+This memory block has reached {len(current)} characters (soft limit {target_chars}, hard limit {limit}).
+Please compress it to within {target_chars} characters while retaining all important information, removing duplicate, outdated, and low-information content.
 
-通用规则：
-- 合并重复条目
-- 删除已过时的临时状态（一两天前心情不好，现在已经过去）
-- 保持原有格式（每行一条信息）
-- 直接输出压缩后的文本，不要加任何说明文字
+General rules:
+- Merge duplicate entries
+- Remove outdated temporary states (e.g. bad mood a day or two ago that has passed)
+- Maintain original format (one entry per line)
+- Output the compressed text directly without any explanatory text
 {extra_rule}
 
-【当前内容】
+[Current Content]
 {current}"""
 
         compressed = _call_llm_text(
-            prompt, "请输出压缩后的文本。",
+            prompt, "Please output the compressed text.",
             temperature=0.1, max_tokens=10000, tier="memory",
             call_label=f"CoreMemoryConsolidate:{label}",
         )
@@ -309,9 +311,9 @@ def initialize_from_existing() -> dict:
         )
         if needs_reseed:
             persona_seed = (
-                f"我是{cfg.name}。\n"
-                f"刚认识用户，还不太了解对方，但很期待慢慢了解。\n"
-                f"我的角色：陪伴、记住重要的事、真心在意对方。\n"
+                f"I am {cfg.name}.\n"
+                f"Just met the user, still getting to know each other, but looking forward to it.\n"
+                f"My role: companionship, remembering important things, sincerely caring about each other.\n"
             )
             persona_block["value"] = persona_seed
             data["persona"] = persona_block
@@ -327,7 +329,7 @@ def initialize_from_existing() -> dict:
                 if content:
                     human_seed += content.strip() + "\n"
             if not human_seed:
-                human_seed = "（还不了解用户，等待通过对话了解）\n"
+                human_seed = "(Not yet familiar with the user, waiting to learn through conversation)\n"
             human_block["value"] = human_seed[:human_block.get("limit", 100000)]
             data["human"] = human_block
             actions.append("human seeded")

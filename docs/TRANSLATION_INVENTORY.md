@@ -25,7 +25,7 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **Emotion Prompts & Image Guidance Correction** | `prompt.py`, `memory_prompts.py` | User emotion annotation prompts (`EMOTION_CHAT_PROMPT`, `EMOTION_SCREENSHOT_PROMPT`, rules) and companion emotion evaluation (`_build_miru_emotion_prompt()`) | **Implemented & Verified (Phase 2B.27)** |
 | **Memory Writers & Persona Stack** | `memory_prompts_v2.py`, `memory_prompts_v3.py` | Slot writers, persona writers, Pass 4 append, daily compactor, legacy merge, screen semantic gate | **Implemented & Verified (Phase 2B.28 - 2B.30)** |
 | **Memory Curator Stack** | `memory_prompts_v2.py`, `curator.py` | Curator planner and merge/edit/delete executors | **Implemented & Verified (Phase 2B.31)** |
-| **Journal, Diary Reformat & Bundled Persona** | `journal.py`, `prompt.py`, `soul.md` | Journal generation and empty-day fallback, diary reformat prompt, default bundled persona (Sora) | **Implemented & Verified (Phase 2B.33 - 2B.34)** |
+| **Journal, Diary Reformat, Core Memory & Emotion Closeout** | `journal.py`, `prompt.py`, `soul.md`, `core_memory.py` | Journal generation and empty-day fallback, diary reformat prompt, default bundled persona (Sora), core memory compression/seeds, emotion annotation prompts & empty labels | **Implemented & Verified (Phase 2B.33 - 2B.35)** |
 | **Landing & Privacy Pages** | `templates/landing.html`, `templates/privacy.html` | Marketing and legal pages | **Outstanding (Deferred)** |
 | **Admin Panel** | `templates/admin.html` | Administrator dashboard interface | **Outstanding (Deferred)** |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |
@@ -35,4 +35,5 @@ This document tracks the translation of the Miru codebase to English for the Sor
 ## Notes
 - Phase 2A focused solely on the initial welcome/login interface in `templates/login.html`.
 - Phase 2B main template translation was rolled back due to destructive truncation.
+- Phase 3 provider and benchmark work is planned as the next backend milestone.
 - Full system translation is deferred to future phases.

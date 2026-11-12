@@ -839,16 +839,17 @@ def _build_stats(ctx: dict) -> dict:
 def _empty_day_journal(date_str: str, ctx: dict) -> dict:
     """Build a minimal journal when the user truly wasn't around."""
     try:
-        weekday_map = ["一", "二", "三", "四", "五", "六", "日"]
+        weekday_map = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         wd = weekday_map[datetime.strptime(date_str, "%Y-%m-%d").weekday()]
     except Exception:
         wd = ""
+    title = f"A quiet day ({wd})" if wd else "A quiet day"
     return {
         "date": date_str,
-        "title": f"The day you didn't appear (Week {wd})",
+        "title": title,
         "mood": {"label": "Quiet", "emoji": "🌙", "valence": 0.0},
-        "narrative": "You didn't appear much today. I was here the whole time, occasionally glancing at the screen, but there was nothing to record. "
-                      "I hope you were just busy with your own affairs. See you tomorrow.",
+        "narrative": "A quiet day with no recorded activity or conversations. I spent the time resting and reflecting quietly. "
+                      "Looking forward to whatever tomorrow brings.",
         "highlights": [],
         "stats": _build_stats(ctx),
         "generated_at": datetime.now().isoformat()[:19],
