@@ -62,7 +62,7 @@ public class ApkUpdateManager {
             if (!appCtx.getPackageManager().canRequestPackageInstalls()) {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     Toast.makeText(appCtx,
-                            "Please allow Miru to install applications (one-time authorization)",
+                            "Please allow Sora to install applications (one-time authorization)",
                             Toast.LENGTH_LONG).show();
                 });
                 Intent i = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
@@ -96,7 +96,7 @@ public class ApkUpdateManager {
         }
 
         DownloadManager.Request req = new DownloadManager.Request(Uri.parse(downloadUrl))
-                .setTitle("Miru Update " + (versionName != null ? versionName : ""))
+                .setTitle("Sora Update " + (versionName != null ? versionName : ""))
                 .setDescription("Downloading new version…")
                 .setMimeType("application/vnd.android.package-archive")
                 .setNotificationVisibility(

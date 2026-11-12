@@ -221,3 +221,17 @@
   - `scripts/benchmark_chat.py`: Implemented multi-turn synthetic benchmark through real Flask `/api/chat` route, reporting median send-to-history times and direct latencies, with strict nonzero exit on failure.
   - Test suite check: All 54 focused tests passed successfully.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7387da6` (PASSED).
+
+- **Phase 2B.20 Verification (Android Native & Desktop Pet Display Copy & Sora Branding Pass)**:
+  - `ApkUpdateManager.java`: Updated installation permission prompt and update download notification title to Sora.
+  - `MainActivity.java`: Updated local backend startup error fallback to Sora.
+  - `MiruPythonRuntime.java`: Updated local runtime error fallback message to Sora.
+  - `ScreenCaptureService.java`: Updated notification channel name and service description to Sora.
+  - `MiruConnectionService.java`: Updated connection and message notification channel names, descriptions, reply action labels, and fallback titles to Sora.
+  - `NotificationReplyReceiver.java`: Updated notification reply fallback and sender title to Sora.
+  - `templates/pet.html`: Updated default pet character fallback name (`_charName`) to Sora.
+  - Preservation checks: Package IDs (`com.miru.companion`), notification channel IDs (`miru_connection`, `miru_messages`, `miru_screen_observation`), storage keys/paths, API contracts, bridge names, and upstream attribution preserved. Internal `MiruProfileStore` exceptions verified as non-UI-facing.
+  - Test suite check: 54/54 focused platform and desktop pet tests passed successfully (`tests/test_android_embedded_shell.py`, `tests/test_linux_pet.py`, `tests/test_linux_launcher.py`, `tests/test_desktop_header_controls.py`, `tests/test_dmg_brand_assets.py`).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
+

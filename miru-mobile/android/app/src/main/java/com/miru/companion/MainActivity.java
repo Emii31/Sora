@@ -79,7 +79,7 @@ public class MainActivity extends BridgeActivity {
                     WebView current = getBridge().getWebView();
                     if (current != null) {
                         String safe = org.json.JSONObject.quote(
-                            message == null ? "Miru local service failed to start" : message);
+                            message == null ? "Sora local service failed to start" : message);
                         current.evaluateJavascript(
                             "if(typeof window._onEmbeddedBackendError==='function')"
                             + "window._onEmbeddedBackendError(" + safe + ");", null);

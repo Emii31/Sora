@@ -55,7 +55,7 @@ public class NotificationReplyReceiver extends BroadcastReceiver {
             try {
                 String response = postReply(context, replyText);
                 if (response != null) {
-                    updateNotification(context, notifId, response, "Miru");
+                    updateNotification(context, notifId, response, "Sora");
                     // Set wallpaper bubble with response
                     Live2DBridge.setPendingBubble(response);
                 } else {
@@ -126,7 +126,7 @@ public class NotificationReplyReceiver extends BroadcastReceiver {
 
     private void updateNotification(Context context, int notifId, String text, String title) {
         Notification.Builder builder = new Notification.Builder(context, "miru_messages")
-                .setContentTitle(title != null ? title : "Miru")
+                .setContentTitle(title != null ? title : "Sora")
                 .setContentText(text)
                 .setStyle(new Notification.BigTextStyle().bigText(text))
                 .setSmallIcon(R.mipmap.miru_launcher)

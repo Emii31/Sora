@@ -348,15 +348,15 @@ public class MiruConnectionService extends Service {
 
         // Low-priority ongoing channel for connection status
         NotificationChannel conn = new NotificationChannel(
-                CHANNEL_CONN, "Miru Connection", NotificationManager.IMPORTANCE_LOW);
-        conn.setDescription("Maintain background connection to Miru server");
+                CHANNEL_CONN, "Sora Connection", NotificationManager.IMPORTANCE_LOW);
+        conn.setDescription("Maintain background connection to Sora server");
         conn.setShowBadge(false);
         nm.createNotificationChannel(conn);
 
         // Message channel (shared with NotificationPollWorker)
         NotificationChannel msg = new NotificationChannel(
-                CHANNEL_MSG, "Miru Messages", NotificationManager.IMPORTANCE_DEFAULT);
-        msg.setDescription("Messages and care from Miru");
+                CHANNEL_MSG, "Sora Messages", NotificationManager.IMPORTANCE_DEFAULT);
+        msg.setDescription("Messages and care from Sora");
         msg.enableVibration(true);
         nm.createNotificationChannel(msg);
     }
@@ -400,7 +400,7 @@ public class MiruConnectionService extends Service {
 
         // Inline reply
         RemoteInput remoteInput = new RemoteInput.Builder(NotificationReplyReceiver.KEY_REPLY)
-                .setLabel("Reply to Miru...")
+                .setLabel("Reply to Sora...")
                 .build();
         Intent replyIntent = new Intent(ctx, NotificationReplyReceiver.class);
         replyIntent.putExtra(NotificationReplyReceiver.EXTRA_NOTIF_ID, notifId);

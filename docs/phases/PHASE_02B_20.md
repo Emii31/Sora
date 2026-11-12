@@ -1,0 +1,13 @@
+## 2026-11-13 (Phase 2B.20: Android Native & Desktop Pet Display Copy & Branding Pass)
+- Completed Android native Java and desktop pet display-copy and Sora branding pass:
+  - `ApkUpdateManager.java`: Updated installation permission prompt and update download notification title to Sora.
+  - `MainActivity.java`: Updated local backend startup error fallback to Sora.
+  - `MiruPythonRuntime.java`: Updated local runtime error fallback message to Sora.
+  - `ScreenCaptureService.java`: Updated notification channel name and service description to Sora.
+  - `MiruConnectionService.java`: Updated connection and message notification channel names, descriptions, reply action labels, and fallback titles to Sora.
+  - `NotificationReplyReceiver.java`: Updated notification reply fallback and sender title to Sora.
+  - `templates/pet.html`: Updated default pet character fallback name (`_charName`) to Sora.
+- Preserved package IDs (`com.miru.companion`), notification channel IDs (`miru_connection`, `miru_messages`, `miru_screen_observation`), storage keys/paths, API contracts, bridge names, and upstream attribution.
+- Confirmed internal `MiruProfileStore` persistence exceptions do not reach the UI directly.
+- Verified 54 focused tests passed successfully (Android embedded shell, Linux pet, Linux launcher, desktop header controls, DMG brand assets).
+- Updated `docs/TRANSLATION_INVENTORY.md`.

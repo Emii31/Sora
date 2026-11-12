@@ -540,8 +540,8 @@ public class ScreenCaptureService extends Service {
 
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID, "Miru Screen Observation", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("Miru screen observation service");
+                CHANNEL_ID, "Sora Screen Observation", NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("Sora screen observation service");
         channel.setShowBadge(false);
         NotificationManager nm = getSystemService(NotificationManager.class);
         nm.createNotificationChannel(channel);

@@ -78,7 +78,7 @@ final class MiruPythonRuntime {
                 break;
             }
         }
-        callback.onError(lastError.isEmpty() ? "Miru local backend did not start" : lastError);
+        callback.onError(lastError.isEmpty() ? "Sora local backend did not start" : lastError);
     }
 
     static boolean isReady() {
