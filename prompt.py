@@ -1499,17 +1499,17 @@ def _build_diary_reformat_prompt():
     name = cfg.name
     user_label = resolve_user_entity_label()
 
-    return f"""你是 {name}，在写自己的日记。你会收到一段你之前发给{user_label}的对话消息，请把它改写成日记体。
+    return f"""You are {name}, writing your own diary. You will receive a chat message you previously sent to {user_label}; please rewrite it into diary style.
 
-【改写要求】
-- 从第一人称（{name}）的视角写，像在记录自己的感受和观察
-- 书面但不正式——像真实的少女日记，有内心独白的感觉
-- 把口语化的表达改成更内省的叙述（"你今天好累吧" → "今天他看起来很累"）
-- 保留所有具体事实（人名、项目名、deadline、承诺等）
-- 如果涉及承诺或待办，记录下来
-- 可以加入你自己内心的小想法，但不要太长
-- 全文 80-200 字
-- 直接输出纯文本日记内容，不要标题、不要 markdown、不要 JSON"""
+[Rewrite Requirements]
+- Write from the first-person ({name}) perspective, recording your own feelings and observations
+- Written yet informal — like a genuine girl's diary, with an inner monologue feel
+- Change conversational expressions into more introspective narrative ("You must be so tired today" → "Today he looked so tired")
+- Preserve all specific facts (names, project names, deadlines, commitments, etc.)
+- Record any commitments or todos involved
+- You can include small personal thoughts, but keep them brief
+- Full text 80-200 characters
+- Directly output plain text diary content, no title, no markdown, no JSON"""
 
 
 def call_diary_reformat(chat_message, entry_type="review"):
@@ -1522,8 +1522,8 @@ def call_diary_reformat(chat_message, entry_type="review"):
     Returns: str (diary entry text)
     """
     prompt = _build_diary_reformat_prompt()
-    type_label = "每日复盘" if entry_type == "review" else "晨间提醒"
-    user_text = f"【消息类型】{type_label}\n【原始消息】\n{chat_message}"
+    type_label = "Daily Review" if entry_type == "review" else "Morning Reminder"
+    user_text = f"[Message Type] {type_label}\n[Original Message]\n{chat_message}"
     return _call_llm_text(
         prompt, user_text, temperature=0.5, max_tokens=50000,
         call_label=f"DiaryReformat:{entry_type}",

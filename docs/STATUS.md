@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.32 — English Memory Append, Compaction, and Merge Prompts (Completed & Verified)
-- **Current Status**: Translated Pass 4 append, daily compactor, and legacy slot merge rewrite prompts in `memory_prompts_v2.py` to natural English with `{MIRU_NAME}` parameterization, preserved all write contracts, JSON schemas, limits, and file writes, and verified with comprehensive unit test suites (85/85 passed).
+- **Phase**: Phase 2B.33 — English Journal Prompts and Memory Template Corrections (Completed & Verified)
+- **Current Status**: Translated remaining slot maintenance request templates (`LEGACY_SLOT_MERGE_USER_TEMPLATE`, `PASS4_APPEND_USER_TEMPLATE`, `SLOT_DAILY_COMPACTOR_USER_TEMPLATE`), restored character units, translated backend diary reformat prompts in `prompt.py` and journal generation instructions and context labels in `journal.py`, and verified with comprehensive unit test suites (all 61 tests passed successfully).
 - **Next Action**: Commit and push to origin/main.

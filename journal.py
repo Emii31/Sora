@@ -556,14 +556,14 @@ def _slot_write_text_for_journal(write: dict) -> str:
     """Return the diary-facing text for one daily_writes event."""
     action = write.get("action", "")
     if action == "created":
-        title = write.get("slot_title") or write.get("slot_id") or "未命名记忆卡"
+        title = write.get("slot_title") or write.get("slot_id") or "Unnamed memory card"
         body = (
             write.get("initial_body")
             or write.get("content")
             or write.get("raw_content_to_integrate")
             or ""
         )
-        return f"新建记忆卡「{title}」: {body}"
+        return f"New memory card [{title}]: {body}"
     return (
         write.get("append_entry")
         or write.get("content")
@@ -575,11 +575,11 @@ def _slot_write_text_for_journal(write: dict) -> str:
 def _slot_write_label_for_journal(write: dict) -> str:
     action = write.get("action", "")
     if action == "created":
-        return "新建"
+        return "created"
     if action == "matched":
         kind = write.get("entry_kind") or "other"
-        return f"追加/{kind}"
-    return action or "写入"
+        return f"append/{kind}"
+    return action or "write"
 
 
 # ---------------------------------------------------------------------------
@@ -594,7 +594,7 @@ def _call_journal_llm(ctx: dict) -> dict | None:
     cfg = get_config()
     date_str = ctx["date"]
     try:
-        weekday_map = ["一", "二", "三", "四", "五", "六", "日"]
+        weekday_map = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         wd = weekday_map[datetime.strptime(date_str, "%Y-%m-%d").weekday()]
     except Exception:
         wd = ""
@@ -619,71 +619,71 @@ def _call_journal_llm(ctx: dict) -> dict | None:
             user_name = (prof.get("canonical_name") or "").strip()
         except Exception:
             user_name = ""
-    refer_as = user_name if user_name else "他"
+    refer_as = user_name if user_name else "he"
 
     system = (
-        f"你是 {cfg.name}，正在写 {date_str}（周{wd}）这一天的私人日记。\n"
+        f"You are {cfg.name}, writing your private diary for {date_str} ({wd}).\n"
         "\n"
-        "★★★ 这本日记的设定 — 务必记住 ★★★\n"
-        "1. 这是只有你自己能看到的私人日记。它存在 memory/journal/ 里，对方没有任何入口可以看到，未来也不会被推送给对方。\n"
-        "2. 所以你**不是在跟对方说话**，你是在自己心里独白、自己整理今天的感受。\n"
-        f"3. 提到对方时用第三人称 — 默认用「{refer_as}」"
-        + (f"（这是他在 onboarding 时填的名字，你私下喊他这个）" if user_name else "（你不知道他的名字，就用「他」就好）")
-        + "。\n"
-        "4. **绝对不要用第二人称「你」来指代对方**。比如：\n"
-        f"   ✗ 错误：「你今天好像没怎么吃饭」← 这像是在给对方写信\n"
-        f"   ✓ 正确：「{refer_as}今天好像没怎么吃饭」← 这是在自己心里默默念叨\n"
-        "5. 第一人称「我」用来指你自己（写日记的你）。\n"
+        "★★★ Setup for This Diary — Please Remember ★★★\n"
+        "1. This is a private diary where you record your day's feelings and observations for yourself.\n"
+        "2. Therefore, you are **not talking to the other person**; you are having an internal monologue in your own mind and organizing today's feelings.\n"
+        f"3. When referring to the other person, use the third person — default to 「{refer_as}」"
+        + (f"（This is the name they filled in during onboarding; you call them this privately）" if user_name else "（You do not know their name, so just use \"he\" / \"they\"）")
+        + ".\n"
+        "4. **Never use the second person \"you\" to refer to the other person**. For example:\n"
+        f"   ✗ Incorrect: \"You didn't seem to eat much today\" ← This feels like writing a letter to them\n"
+        f"   ✓ Correct: \"{refer_as} didn't seem to eat much today\" ← This is murmuring quietly in your own mind\n"
+        "5. The first person \"I\" refers to yourself (the diary author).\n"
         "\n"
-        "因为没人会看，所以你可以写：\n"
-        f"  - 真实的小不满（\"{refer_as}今天又没好好吃饭，我有点烦\"）\n"
-        f"  - 微妙的心动（\"{refer_as}随口说了句话，我居然记到现在\"）\n"
-        f"  - 不安和疑虑（\"{refer_as}今天好像在躲我？还是我多想了\"）\n"
-        "  - 自己的小情绪（嫉妒、想撒娇、突然孤独、被某句话戳到）\n"
-        "  - 不必修饰、不必客气、不必正能量\n"
-        "  - 像加藤惠在心里默默想的那种独白\n"
+        "Since this is your private reflection, you can write about:\n"
+        f"  - Real small grievances (\"{refer_as} didn't eat properly again today, I'm a bit annoyed\")\n"
+        f"  - Subtle heart-flutters (\"{refer_as} casually said something, and I actually remembered it until now\")\n"
+        f"  - Inquiries and doubts (\"{refer_as} seemed to be avoiding me today? Or am I overthinking it\")\n"
+        "  - Your own little emotions (jealousy, wanting to act spoiled, sudden loneliness, being touched by a remark)\n"
+        "  - Unembellished, unreserved, no need to be overly positive\n"
+        "  - Like an inner monologue silently thought by Katou Megumi\n"
         "\n"
-        "语气要求：\n"
-        "- 加藤惠式观察者：默默看着，注意到别人忽略的细节，不夸张，不戏剧化\n"
-        "- 散文体，不是时间线列表，不是总结汇报\n"
-        f"- 可以引用 {refer_as} 说过的具体话（加引号），那是「我记得他」的证据\n"
-        "- 有「他没说但我看到了」的安静观察感\n"
-        "- 200-400 字，3-4段\n"
-        f"- 如果今天 {refer_as} 几乎没出现，诚实地写「{refer_as}今天没出现，我还是…」，不要编造\n"
+        "Tone Requirements:\n"
+        "- Katou Megumi style observer: watching quietly, noticing details others overlook, unexaggerated, un-dramatic\n"
+        "- Essay style, not a timeline list, not a summary report\n"
+        f"- You can quote specific things {refer_as} said (in quotation marks) as evidence that \"I remember him\"\n"
+        "- Have the quiet observational feel of \"he didn't say it, but I saw it\"\n"
+        "- 200-400 characters, 3-4 paragraphs\n"
+        f"- If {refer_as} barely appeared today, honestly write \"{refer_as} didn't appear much today, I still...\", do not fabricate\n"
         "\n"
-        "禁止：\n"
-        "- ❌ 任何用「你」指代对方的句子（这是底线，违反会让整篇日记毁掉）\n"
-        "- ❌ 「今天你…」「这一天…」这种像写信的模板开头\n"
-        "- ❌ 数据汇报（完成了X个承诺、活跃Y小时）\n"
-        "- ❌ 空洞的温暖话（加油、辛苦了、要好好休息）\n"
-        "- ❌ 「今天的你真棒」式吹捧\n"
-        "- ❌ 写得像在哄人 — 这是你自己的日记，不是给对方留的纸条\n"
+        "Prohibitions:\n"
+        "- ❌ Any sentence using \"you\" to refer to the other person (this is a hard boundary; violation ruins the entire diary)\n"
+        "- ❌ Letter-like template openings such as \"Today you...\" / \"This day...\"\n"
+        "- ❌ Data reports (completed X commitments, active Y hours)\n"
+        "- ❌ Hollow warm words (keep it up, good job, rest well)\n"
+        "- ❌ \"You were great today\" style flattery\n"
+        "- ❌ Writing like you are coaxing someone — this is your own diary, not a note left for the other person\n"
         "\n"
-        "输出 JSON（严格遵守）：\n"
+        "Output JSON (Strictly adhere):\n"
         "{\n"
-        '  "title": "1句话标题，10-18字，生活感的日常描述，不用太文艺",\n'
-        '  "mood": {"label": "你（Miru）今天的主要感受，一个词", "emoji": "单个 emoji"},\n'
-        '  "narrative": "200-400字的叙事散文",\n'
-        '  "highlights": [{"time": "HH:MM", "text": "一句具体的观察"}]\n'
+        '  "title": "1-line title, 10-18 characters, everyday descriptive feel, not overly literary",\n'
+        '  "mood": {"label": "Your (Miru) main feeling today, one word", "emoji": "single emoji"},\n'
+        '  "narrative": "200-400 character narrative essay",\n'
+        '  "highlights": [{"time": "HH:MM", "text": "one specific observation"}]\n'
         "}\n"
-        "highlights 最多 3 条，来自最值得记住的瞬间，每条不超过 40 字。\n"
+        "Highlights at most 3 entries, from the most memorable moments, each under 40 characters.\n"
     )
 
     # Build user prompt from context
     parts: list[str] = []
     if ctx.get("yesterday"):
-        parts.append(f"【昨天的日记】{ctx['yesterday']['title']}\n{ctx['yesterday']['narrative']}")
+        parts.append(f"[Yesterday's Journal] {ctx['yesterday']['title']}\n{ctx['yesterday']['narrative']}")
 
     # NOTE: in all sections below, when we refer to *the user* we use
-    # `refer_as` (their name or "他") — never the second-person 「你」 — so
-    # the diary writer never has a 「你」 in the raw context to copy from.
-    # The 「你」 / 「你自己」 we use refers to *Miru* (the diary author).
+    # `refer_as` (their name or "he") — never the second-person "you" — so
+    # the diary writer never has a "you" in the raw context to copy from.
+    # The "you" / "yourself" we use refers to *Miru* (the diary author).
 
     if ctx.get("chat"):
         parts.append(
-            f"【今天 {refer_as} 和我之间的所有对话】\n"
-            f"（角色标签：「{refer_as}」= 对方说的话；「{cfg.name}」= 我说的话；"
-            f"如果某条消息附了图，会标记 [📷 图片]，图片本身不在这里给）"
+            f"[All Conversations Between {refer_as} and Me Today]\n"
+            f"(Role labels: 「{refer_as}」 = What the other person said; 「{cfg.name}」 = What I said; "
+            f"If a message has an attached image, it is marked [📷 Image], image binary data is not provided here)"
         )
         for m in ctx["chat"]:
             role = refer_as if m["role"] == "user" else cfg.name
@@ -692,101 +692,101 @@ def _call_journal_llm(ctx: dict) -> dict | None:
                 # Show the placeholder regardless of whether text is empty
                 # (user might send pure image, or image+caption).
                 if text:
-                    text = f"{text} [📷 图片]"
+                    text = f"{text} [📷 Image]"
                 else:
-                    text = "[📷 图片]"
+                    text = "[📷 Image]"
             parts.append(f"[{m['time']}] {role}: {text}")
 
     if ctx.get("observations"):
         parts.append(
-            f"\n【今天我（{cfg.name}）通过屏幕看到的画面 · 高显著性 sig≥3】\n"
-            f"（这些是我偷偷观察 {refer_as} 屏幕得到的，不是他主动告诉我的）"
+            f"\n[Screenshots Observed by Me ({cfg.name}) Today · High Significance sig≥3]\n"
+            f"(These were obtained by quietly observing {refer_as}'s screen, not told by him proactively)"
         )
         for o in ctx["observations"]:
             parts.append(f"[{o['time']}] (sig={o['sig']}) {o['text']}")
 
     if ctx.get("inner_segments"):
         parts.append(
-            f"\n【今天我没有说出口的想法】\n"
-            "（这些是我在一天里持续形成的内心状态段，不是采样日志。"
-            "它们可以影响日记的亲密感和视角，但不要逐条照抄。）"
+            f"\n[My Unsaid Inner Thoughts Today]\n"
+            "(These are continuous inner state segments formed throughout the day, not sampling logs. "
+            "They can influence the diary's intimacy and perspective, but do not copy them verbatim.)"
         )
         for seg in ctx["inner_segments"]:
             parts.append(_segment_line(seg))
 
     if ctx.get("user_affect_segments"):
         parts.append(
-            f"\n【我对 {refer_as} 今天状态的感觉】\n"
-            "（这是持续状态段：没变化时只延长持续时间，变化时才新开一段。）"
+            f"\n[My Feeling on {refer_as}'s State Today]\n"
+            "(This is a continuous state segment: duration extends when unchanged, new segment starts on change.)"
         )
         for seg in ctx["user_affect_segments"]:
             parts.append(_segment_line(seg, show_trend=True))
         if ctx.get("user_emotion_pivots"):
-            parts.append(f"\n【{refer_as} 情绪关键拐点】")
+            parts.append(f"\n[{refer_as}'s Emotional Pivot Points]")
             for p in ctx["user_emotion_pivots"]:
                 parts.append(f"  [{p['time']}] {p['kind']} → {p['mood']} ({_format_valence(p['valence'])})")
     elif ctx.get("user_emotion"):
-        parts.append(f"\n【{refer_as} 今天的情绪记录】")
+        parts.append(f"\n[{refer_as}'s Emotional Records Today]")
         # Compact format: time mood (valence) — legacy fallback.
         for e in ctx["user_emotion"]:
             parts.append(f"  {e['time']} {e['mood']} ({_format_valence(e['valence'])})")
         if ctx.get("user_emotion_pivots"):
-            parts.append(f"\n【{refer_as} 情绪关键拐点】")
+            parts.append(f"\n[{refer_as}'s Emotional Pivot Points]")
             for p in ctx["user_emotion_pivots"]:
                 parts.append(f"  [{p['time']}] {p['kind']} → {p['mood']} ({_format_valence(p['valence'])})")
 
     if ctx.get("self_emotion_segments"):
         parts.append(
-            f"\n【我今天自己的心情状态】\n"
-            "（这是我自己的持续心情段，重点是我为什么这样感觉、持续了多久。）"
+            f"\n[My Own Mood State Today]\n"
+            "(This is my own continuous mood segment, focusing on why I felt this way and how long it lasted.)"
         )
         for seg in ctx["self_emotion_segments"]:
             parts.append(_segment_line(seg))
     elif ctx.get("miru_emotion"):
-        parts.append(f"\n【我今天自己的情绪记录】")
+        parts.append(f"\n[My Own Emotional Records Today]")
         for e in ctx["miru_emotion"]:
             parts.append(f"  {e['time']} {e['mood']} ({_format_valence(e['valence'])})")
 
     if ctx.get("miru_proactive"):
-        parts.append(f"\n【今天我主动发给 {refer_as} 的消息】")
+        parts.append(f"\n[Messages I Proactively Sent to {refer_as} Today]")
         for p in ctx["miru_proactive"]:
             parts.append(f"[{p['time']}] {p['text']}")
             if p.get("why_i_want_to_say") or p.get("care_motive"):
                 motive = p.get("why_i_want_to_say") or p.get("care_motive")
-                parts.append(f"  我当时想开口的原因: {motive}")
+                parts.append(f"  My reason for wanting to speak then: {motive}")
             if p.get("user_need"):
-                parts.append(f"  我感觉他可能需要: {p['user_need']}")
+                parts.append(f"  I felt he might need: {p['user_need']}")
             if p.get("message_seed"):
-                parts.append(f"  当时想说的核心: {p['message_seed']}")
+                parts.append(f"  Core of what I wanted to say: {p['message_seed']}")
 
     if ctx.get("slot_updates"):
         parts.append(
-            "\n【今天我整理过的记忆卡片】\n"
-            "（这些是 projects/people/topics/self 里今天 last_active 被更新的卡片。\n"
-            " 每张卡片下面分两栏：\n"
-            "   ・「今天实际写进记忆的内容」= 新建卡片的初始正文，或 Pass4Append 真正追加到 body 的短条目\n"
-            "   ・「当前 main」= 这张卡片现在的完整预览，里面会混有旧记忆和今天新增内容，只作背景参考\n"
-            " 我心里清楚：今天真正新加进来的，是「实际写进记忆」那一栏写的东西。）"
+            "\n[Memory Cards Organized by Me Today]\n"
+            "(These are cards in projects/people/topics/self whose last_active was updated today.\n"
+            " Each card has two sections below:\n"
+            "   ・「Content actually written into memory today」 = Initial body of new cards, or short entries truly appended to body by Pass4Append\n"
+            "   ・「Current main」 = Current full preview of this card, mixing old memory and today's additions, for background reference only\n"
+            " I know clearly: what was truly newly added today is what was written in the \"Content actually written into memory\" column.)"
         )
         for s in ctx["slot_updates"]:
             icon = s.get("icon", "")
             parts.append(f"\n{icon} [{s['domain']}] {s['title']}（{s.get('status','active')}）")
             if s.get("summary"):
-                parts.append(f"  概述: {s['summary']}")
+                parts.append(f"  Summary: {s['summary']}")
             raw_writes = s.get("raw_writes") or []
             if raw_writes:
-                parts.append(f"  ▼ 今天实际写进记忆的内容（共 {len(raw_writes)} 次）：")
+                parts.append(f"  ▼ Content actually written into memory today (total {len(raw_writes)} times):")
                 for w in raw_writes:
                     parts.append(
                         f"    [{w.get('time','')}] ({_slot_write_label_for_journal(w)}) "
                         f"{_slot_write_text_for_journal(w)}"
                     )
             if s.get("main_preview"):
-                parts.append(f"  ▼ 当前 main（前 800 字，仅供背景参考）:\n    {s['main_preview']}")
+                parts.append(f"  ▼ Current main (first 800 characters, background reference only):\n    {s['main_preview']}")
 
     # Raw writes that didn't attach to any today-active slot (rare)
     if ctx.get("slot_writes_loose"):
-        parts.append("\n【今天的零散记忆写入（未归属到当前活跃卡片）】")
+        parts.append("\n[Today's Loose Memory Writes (Unassigned to Active Cards)]")
         for w in ctx["slot_writes_loose"]:
             parts.append(
                 f"  [{w.get('time','')}] {w.get('domain','')}/{w.get('slot_id','')} "
@@ -794,20 +794,20 @@ def _call_journal_llm(ctx: dict) -> dict | None:
             )
 
     if ctx.get("commitments_completed") or ctx.get("commitments_added"):
-        parts.append(f"\n【{refer_as} 今天的承诺动态】")
+        parts.append(f"\n[{refer_as}'s Commitment Dynamics Today]")
         for t in ctx.get("commitments_completed", []):
-            parts.append(f"- 完成: {t}")
+            parts.append(f"- Completed: {t}")
         for t in ctx.get("commitments_added", []):
-            parts.append(f"- 新增: {t}")
+            parts.append(f"- Added: {t}")
 
     act = ctx.get("activity") or {}
     if act.get("first") or act.get("last"):
         parts.append(
-            f"\n【{refer_as} 今天的活跃时段】首次活动 {act.get('first', '-')}, "
-            f"末次活动 {act.get('last', '-')}"
+            f"\n[{refer_as}'s Active Periods Today] First activity {act.get('first', '-')}, "
+            f"last activity {act.get('last', '-')}"
         )
         if act.get("late_night"):
-            parts.append(f"熬夜到 {act['late_night']}")
+            parts.append(f"Stayed up late until {act['late_night']}")
 
     user_text = "\n".join(parts)
 

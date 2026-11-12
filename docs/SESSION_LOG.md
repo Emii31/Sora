@@ -404,3 +404,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Updated test assertions in `tests/test_slot_daily_compactor.py` and `tests/test_pass4_summary_truncate.py`.
 - Verified execution with comprehensive unit test suites (85/85 passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 253579ed147462bd542f43c03bbe948bc417da79` (PASSED).
+
+## 2026-11-13 (Phase 2B.33: English Journal Prompts and Memory Template Corrections)
+- Translated remaining slot maintenance request templates (`LEGACY_SLOT_MERGE_USER_TEMPLATE`, `PASS4_APPEND_USER_TEMPLATE`, `SLOT_DAILY_COMPACTOR_USER_TEMPLATE`) in `memory_prompts_v2.py` to natural English and restored character units (`characters`).
+- Translated backend diary reformat prompt in `prompt.py` (`_build_diary_reformat_prompt()`) and journal generation instructions and context labels in `journal.py`.
+- Described journal reflective voice without promising journal is inaccessible to the user (since backend exposes journal read routes); kept access control, storage, generation schedules, and existing journal entries unchanged.
+- Verified execution with comprehensive test suites covering journal generation, slot daily compactor, Pass 4 memory append, summary truncation, and curator pipelines (all 61 tests passed successfully).
+- Updated documentation (`docs/phases/PHASE_02B_33.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py f4428a4b306c65fb12d9d9f7d225c91d7deec31e` (PASSED).

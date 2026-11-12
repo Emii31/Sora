@@ -324,3 +324,12 @@
   - Test suite check: 85/85 passed across curator, Pass 4, slot daily compactor, slot writing, and cost routing suites (`tests/test_curator*.py`, `tests/test_slot_daily_compactor.py`, `tests/test_pass4_summary_truncate.py`, `tests/test_route_with_slot_write.py`, `tests/test_cost_routing.py`).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 253579ed147462bd542f43c03bbe948bc417da79` (PASSED).
+
+- **Phase 2B.33 Verification (English Journal Prompts and Memory Template Corrections)**:
+  - `memory_prompts_v2.py`: Translated remaining slot maintenance request templates (`LEGACY_SLOT_MERGE_USER_TEMPLATE`, `PASS4_APPEND_USER_TEMPLATE`, `SLOT_DAILY_COMPACTOR_USER_TEMPLATE`) to natural English and restored character units (`characters`).
+  - `prompt.py`: Translated `_build_diary_reformat_prompt()` and chat message type labels to natural English.
+  - `journal.py`: Translated journal generation system instructions and context section headers/labels, describing reflective voice without promising journal inaccessibility; kept storage, access control, schedules, and existing entries unchanged.
+  - Preservation checks: Configured names, source text, dates, output JSON schema fields, and journal narrative voice preserved intact.
+  - Test suite check: 61/61 passed across journal, slot daily compactor, Pass 4 memory append, summary truncation, and curator pipelines.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py f4428a4b306c65fb12d9d9f7d225c91d7deec31e` (PASSED).

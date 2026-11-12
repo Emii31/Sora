@@ -229,7 +229,7 @@ This is not "adding new content", but **using new input to trigger re-integratio
 
 **Target length**: The rewritten body **should ≤ old body** (unless the new input brings significant new information).
 If you are just appending without integrating, you are doing it wrong.
-Soft target within 1500 words, hard upper limit 2000 words.
+Soft target within 1500 characters, hard upper limit 2000 characters.
 
 # Source Reliability Differences (Core judgment basis — affects "belief", not "writing style")
 
@@ -300,7 +300,7 @@ Think in three steps before rewriting:
 
 # Summary Field Writing
 
-Summary is the slot's "one-sentence self-introduction" (recommended ≤80 words, code fault tolerance upper limit 200 words).
+Summary is the slot's "one-sentence self-introduction" (recommended ≤80 characters, code fault tolerance upper limit 200 characters).
 Downstream LLM (next match / Curator / {MIRU_NAME} main chat) relies entirely on it to decide whether to touch this slot.
 
 Format: Natural conversational sentence, like friend introduction, not field concatenation, not running account.
@@ -311,15 +311,15 @@ Format: Natural conversational sentence, like friend introduction, not field con
 
 Whether to rewrite summary is decided by you based on current body — keep if accurate, modify if inaccurate.
 
-**Writing Goal**: As close to ≤80 words as possible. Code tolerates up to 200 words, but you should still compress
+**Writing Goal**: As close to ≤80 characters as possible. Code tolerates up to 200 characters, but you should still compress
 or delete low-priority old fragments; do not just stuff it in.
 
 # Output Format (Strict JSON, no markdown fence)
 
 {
   "title":            "Keep original title or new title (≤ 30 chars)",
-  "summary":          "Recommended ≤ 80 words, code fault tolerance upper limit 200 words, one-sentence self-introduction",
-  "body":             "Rewritten complete body, ≤ 2000 words, free text, paragraphs allowed",
+  "summary":          "Recommended ≤ 80 characters, code fault tolerance upper limit 200 characters, one-sentence self-introduction",
+  "body":             "Rewritten complete body, ≤ 2000 characters, free text, paragraphs allowed",
   "alias_additions":  ["new_nickname_1", ...] or []
 }
 """
@@ -328,31 +328,31 @@ or delete low-priority old fragments; do not just stuff it in.
 LEGACY_SLOT_MERGE_USER_TEMPLATE = """\
 {ground_truth_block}
 
-# 当前 slot 内容
+# Current Slot Content
 - domain: {domain}
 - title: {title}
 - summary: {summary}
 - aliases: {aliases}
 
-# 当前 body (本次需要整合 + 压缩重写)
+# Current Body (Requires integration + compression rewrite)
 \"\"\"
 {body}
 \"\"\"
 
-# 新输入(标了 source 标签)
+# New Input (Tagged with source)
 
 [source: {source_type}]
 {new_content}
 
-# 来源元信息(仅用于追溯时间/设备, 不要写进 body)
+# Source Metadata (For tracing time/device only, do not write into body)
 
 {source_context}
 
-# 当前时间
+# Current Time
 {current_time}
 
 ---
-基于以上输入, 重写这个 slot。记住: 整合 + 压缩, 不是 append。
+Based on the above inputs, rewrite this slot. Remember: integrate + compress, do not append.
 """
 
 
@@ -540,30 +540,30 @@ entry_kind must be one of:
 PASS4_APPEND_USER_TEMPLATE = """\
 {ground_truth_block}
 
-# 当前记忆卡(slot)
+# Current Memory Card (Slot)
 - domain: {domain}
 - title: {title}
 - summary: {summary}
 - aliases: {aliases}
 
-# 当前 body 尾部
-只供判断重复与上下文；不要重写它。
+# Current Body Tail
+For duplication and context check only; do not rewrite it.
 \"\"\"
 {body_excerpt}
 \"\"\"
 
-# 候选新信息
+# Candidate New Information
 - source: {source_type}
 - source_note: {source_note}
 - content:
 {new_content}
 
-# 当前时间
-代码会加时间戳，你不要把时间写进 append_entry。
+# Current Time
+Code will add the timestamp; do not write time into append_entry.
 {current_time}
 
 ---
-基于以上输入，输出 JSON。
+Based on the above inputs, output JSON.
 """
 
 
@@ -916,10 +916,10 @@ Output strict JSON, no markdown fence:
 """
 
 
-SLOT_DAILY_COMPACTOR_USER_TEMPLATE = """# 当前时间
+SLOT_DAILY_COMPACTOR_USER_TEMPLATE = """# Current Time
 {current_time}
 
-# 当前 slot metadata
+# Current Slot Metadata
 - domain: {domain}
 - slot_id: {slot_id}
 - title: {title}
@@ -929,22 +929,22 @@ SLOT_DAILY_COMPACTOR_USER_TEMPLATE = """# 当前时间
 - append_count_since_compact: {append_count_since_compact}
 - last_appended_at: {last_appended_at}
 
-# 代码侧统计
+# Code-side Statistics
 - current_body_markdown_char_count: {markdown_char_count}
 - current_body_rendered_char_count: {rendered_char_count}
 - uncompacted_append_entries_count: {entry_count}
 - target_mode: {target_mode}
 
-# 当前 main.md body（不含 H1）
+# Current main.md Body (Excluding H1)
 \"\"\"
 {current_body}
 \"\"\"
 
-# daily_slot_appends.json 中尚未整理的真实 append entries
-这些 entries 是 PASS 4 append 写入 main.md 成功后才记录的，不是候选输入。
+# Uncompacted Real Append Entries in daily_slot_appends.json
+These entries were recorded after PASS 4 append successfully wrote to main.md; they are not candidate inputs.
 {entries_text}
 
-请整理这个 slot。
+Please organize and compact this slot.
 """
 
 
