@@ -603,9 +603,14 @@ def test_image_formatter_and_system_prompt_compatibility():
     cfg = prompt.get_config()
     system = prompt._build_agent_system_prompt(agent_mode="proactive")
     assert f"{cfg.name} living with" in system
-    assert "[图片：...]" in system or "[图片]" in system
+    assert "Usable Image Descriptions" in system
+    assert "Bare Tags & Failure Sentinels" in system
+    assert "[图片：...]" in system or "[Image: ...]" in system
+    assert "[图片]" in system or "[Image]" in system
     assert "(图片识别失败)" in system
     assert "(Image description failed)" in system
+    assert "user sent an image" in system
+    assert "reliable description" in system
 
     assert prompt._build_user_content("hello", image_desc="cat", has_image=True) == "hello\n[图片：cat]"
     assert prompt._build_user_content("hello", image_desc="", has_image=True) == "hello\n[图片]"

@@ -271,3 +271,19 @@
   - Test suite check: 83/83 tests passed (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`, `test_agent_modes_attention.py`, `test_care_engine_persona.py`).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c648620bb4b15807d56c2cc237b1ca5648b5f9bd` (PASSED).
+
+- **Phase 2B.26 Verification (Proactive Backend Prompts and Chat Image Compatibility)**:
+  - `prompt.py`: Translated `_PROACTIVE_RESOURCE_PLANNER_PROMPT` and `_PROACTIVE_DELIVERY_PREFLIGHT_PROMPT` to English while preserving JSON schemas, enums, tool policies, memory paths, and conditional routing logic.
+  - Image message handling: Aligned prompt instructions with actual emitted markers (`[图片：...]`, `[Image: ...]`, `[图片]`) and failure sentinels (`(图片识别失败)`, `(Image description failed)`, etc.).
+  - Character-neutral phrasing: Replaced hardcoded "Miru living with the user" with `{cfg.name} living with {user_label}`.
+  - Focused checks: Added unit tests verifying image formatter / system prompt compatibility and proactive planner / gatekeeper contracts.
+  - Test suite check: 85 tests passed across agent modes, attention, chat image history, preflight routing, and care engine persona suites.
+  - Git diff check: PASS.
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 21aab14a6373e31f63498b7638c5ba24ea3c104c` (PASSED).
+
+- **Phase 2B.27 Verification (English Emotion Prompts and Image Guidance Correction)**:
+  - `prompt.py`: Corrected chat image instructions to separately specify usable description tags (`[图片：...]`, `[Image: ...]`), bare tags (`[图片]`, `[Image]`), and failure sentinels (`(图片识别失败)`, `(Image description failed)`). Strengthened compatibility tests in `tests/test_agent_modes_attention.py`.
+  - `prompt.py`, `memory_prompts.py`: Translated user emotion annotation prompts (`EMOTION_CHAT_PROMPT`, `EMOTION_SCREENSHOT_PROMPT`, rules, judgment guidelines) and companion emotion evaluation prompt (`_build_miru_emotion_prompt()`) to natural English.
+  - Test suite check: 49 unit tests passed across emotion, image-history, agent-mode, and attention suites.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7f731cef51c4c6e33d63f7b41896a4797a65cf1b` (PASSED).

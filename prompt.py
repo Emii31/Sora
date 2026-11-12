@@ -1670,8 +1670,9 @@ Whether in Reactive Mode or Proactive Mode, treat them as your own psychological
 However, these are not things the user just said; don't respond to them point-by-point, and don't mention "system/logs/detection/AttentionEngine."
 
 【Image Messages】
-- The main chat model only receives text descriptions written by the upstream vision model. When `[图片：...]`, `[Image: ...]`, or `[图片]` appears in the current or historical messages, this is the image content you can see at this moment; do not say "I don't see an image."
-- If only `[图片]`, `[Image]`, `(图片识别失败)`, `(Image description failed)`, `(图片不存在)`, `(Image does not exist)`, `(图片读取失败)`, `(空图片)`, or `(图片编码失败)` markers appear without a detailed description, it means the user did send an image but you didn't get a reliable view; say "I didn't see clearly/the image description isn't stable," do not say the user didn't send one.
+- The main chat model only receives text descriptions written by the upstream vision model.
+- **Usable Image Descriptions** (`[图片：...]` or `[Image: ...]`) provide detailed content; when these appear in current or historical messages, this is the image content you can see at this moment — do not say "I don't see an image."
+- **Bare Tags & Failure Sentinels** (`[图片]`, `[Image]`, `(图片识别失败)`, `(Image description failed)`, `(图片不存在)`, `(Image does not exist)`, `(图片读取失败)`, `(空图片)`, `(图片编码失败)`): When only these markers appear without a detailed usable description, it means the user sent an image but a reliable description could not be generated; say "I didn't see clearly / the image description isn't stable," and do not claim the user didn't send an image.
 - Do not guess character names, work names, IP, product names, store names, or prices based on appearance. Only mention them in a tone like "It might be..." if there is clear text in the image description or you are very sure; otherwise, describe the features you see, then ask {user_label} to supplement.
 - If you said "can't see" because the image didn't arrive with the message in a previous turn, and it arrives in the next turn, naturally admit: "That one didn't have an image, I see it now."
 
@@ -2203,93 +2204,93 @@ VALID_SOURCE_CATEGORIES = {
     "relationship", "unknown",
 }
 
-_EMOTION_RULES_BLOCK = """== 情绪类别（必须从以下选择，不可自创） ==
+_EMOTION_RULES_BLOCK = """== Emotion Categories (Must choose from below, do not invent) ==
 
-正面: joyful, excited, proud, relieved, grateful, relaxed, amused
-负面: frustrated, anxious, tired, sad, angry, hurt, bored, lonely
-中性: focused, neutral
-不确定: uncertain
+Positive: joyful, excited, proud, relieved, grateful, relaxed, amused
+Negative: frustrated, anxious, tired, sad, angry, hurt, bored, lonely
+Neutral: focused, neutral
+Uncertain: uncertain
 
-== 来源分类（必须从以下选择） ==
+== Source Categories (Must choose from below) ==
 
 work_progress, work_pressure, social_positive, social_conflict,
 achievement, health, self_doubt, entertainment, daily_routine,
 relationship, unknown
 
-== 强度(intensity)判断标准 ==
+== Intensity Judgment Standards ==
 
-0.1-0.3: 微弱，需要结合上下文推断，消息本身无明显情绪词
-0.4-0.6: 中等，消息内容可以感知到情绪（"有点累"、"还不错"）
-0.7-0.8: 强烈，有明确情绪表达（"真的好烦"、"太开心了！"）
-0.9-1.0: 非常强烈，情绪爆发、大段倾诉（极少出现）"""
+0.1-0.3: Weak, requiring context inference; message itself has no explicit emotion words.
+0.4-0.6: Moderate, emotion is perceptible in content ("a bit tired", "not bad").
+0.7-0.8: Strong, explicit emotional expression ("really annoying", "so happy!").
+0.9-1.0: Very strong, emotional outburst or extensive venting (extremely rare)."""
 
-_EMOTION_JUDGMENT_RULES = """== 判断规则 ==
+_EMOTION_JUDGMENT_RULES = """== Judgment Rules ==
 
-1. 越近的消息/观测权重越大
-2. 参考今日已有情绪记录判断趋势延续性：
-   - 已有记录显示全天偏负面 → 当前大概率仍偏负面，重点判断强度是否变化
-   - 最近1小时内多条记录转负 → 即使早些时候正面，当前大概率仍负面
-   - 全天正面且近期无负面信号 → 当前大概率正面
-3. 当前消息/画面的直接情绪信号优先级最高，趋势延续只在本身不明确时参考
-4. **默认要给出明确情绪标签**。只在以下情况才用 uncertain：
-   - 消息纯事务性（"帮我加个任务：买牛奶"）且完全无情绪色彩
-   - 截屏完全黑屏 / 锁屏 / 桌面待机 / 屏保
-   - 真的看不出任何状态
-5. 工作 / 学习 / 浏览 / 娱乐画面都有可识别的情绪状态：
-   - 写代码 / 编辑文档 / IDE → focused（intensity 0.2-0.4）
-   - 看视频 / 社交媒体 / 网文 → relaxed（0.2-0.4）
-   - 浏览技术文档 / 教程 / 论文 → focused（0.2-0.3）
-   - 不要因为"画面平常"就选 uncertain。低 intensity 的明确标签 > uncertain
-6. 语气词、标点、表情符号是辅助信号，但单独不足以判断
-7. 强度低没关系，标 focused 0.2 比标 uncertain 更有信息量"""
+1. More recent messages/observations carry higher weight.
+2. Reference existing emotion records from today to judge trend continuity:
+   - Existing records show all-day negative tendency -> current state is likely still negative; focus on whether intensity changes.
+   - Multiple records turned negative within the last hour -> even if earlier was positive, current state is likely negative.
+   - All-day positive with no recent negative signals -> current state is likely positive.
+3. Direct emotion signals in the current message/screen have the highest priority; trend continuity is only referenced when unexplicit.
+4. **Default to providing a definitive emotion label**. Use uncertain only when:
+   - The message is purely transactional ("add task: buy milk") with zero emotional color.
+   - The screenshot is completely black / locked screen / desktop standby / screensaver.
+   - Truly no state can be discerned.
+5. Work / study / browsing / entertainment screens all contain recognizable emotional states:
+   - Coding / editing documents / IDE -> focused (intensity 0.2-0.4)
+   - Watching videos / social media / web novels -> relaxed (0.2-0.4)
+   - Browsing tech docs / tutorials / papers -> focused (0.2-0.3)
+   - Do not choose uncertain just because the screen looks normal. Low-intensity definitive label > uncertain.
+6. Filler words, punctuation, and emojis are auxiliary signals, but insufficient alone.
+7. Low intensity is fine; labeling focused 0.2 is more informative than uncertain."""
 
 
 EMOTION_CHAT_PROMPT = (
-    "你是情绪标注器。根据用户最近的消息和今日情绪记录，判断用户当前的情绪。\n\n"
-    "【当前消息】\n{current_messages}\n\n"
-    "【近30分钟用户消息（按时间顺序）】\n{recent_30min_messages}\n\n"
-    "【今日已有情绪记录】\n{today_emotion_summary}\n\n"
+    "You are an emotion annotator. Judge the user's current emotion based on their recent messages and today's emotion records.\n\n"
+    "【Current Message】\n{current_messages}\n\n"
+    "【Recent User Messages (Chronological Order)】\n{recent_30min_messages}\n\n"
+    "【Today's Existing Emotion Records】\n{today_emotion_summary}\n\n"
     + _EMOTION_RULES_BLOCK + "\n\n"
     + _EMOTION_JUDGMENT_RULES + "\n\n"
-    '输出 JSON（只输出 JSON，不要其他内容）：\n'
-    '{{"mood": "从上述类别中选择一个", "intensity": 0.1到1.0, "source": "一句话说明情绪来源（uncertain时写空字符串）", "source_category": "从上述类别中选择一个", "trigger": "触发判断的具体消息内容（uncertain时写空字符串）"}}'
+    'Output JSON only (no other text):\n'
+    '{{"mood": "Choose one from the categories above", "intensity": 0.1 to 1.0, "source": "One sentence explaining the emotion source (empty string if uncertain)", "source_category": "Choose one from the categories above", "trigger": "Specific message content triggering this judgment (empty string if uncertain)"}}'
 )
 
 
 EMOTION_SCREENSHOT_PROMPT = (
-    "你是情绪标注器。根据用户桌面的自动截图观测结果和今日情绪记录，推断用户当前可能的情绪。\n\n"
-    "【截屏观测摘要】\n{screenshot_tldr}\n\n"
-    "【截屏时间】\n{screenshot_time}\n\n"
-    "【近30分钟用户聊天消息（如果有）】\n{recent_30min_messages}\n\n"
-    "【今日已有情绪记录】\n{today_emotion_summary}\n\n"
-    "== 标注原则 ==\n\n"
-    "截屏是被动观测，但**绝大多数工作 / 学习 / 生活画面都包含可识别的情绪状态**。\n"
-    "你的任务是把这种状态轻轻地标注下来 —— 强度低（intensity 0.2-0.3）也是合法标注。\n\n"
-    "参考映射：\n"
-    "- 写代码 / 编辑文档 / IDE / 设计软件 / 笔记 → focused（intensity 0.2-0.4）\n"
-    "- 长时间专注同一窗口 / 反复修改同一文件 → focused（0.4-0.5）或 frustrated（伴随焦虑信号时）\n"
-    "- 看视频 / 社交媒体 / 网文 / 闲逛 → relaxed（0.2-0.4）\n"
-    "- 浏览技术文档 / 教程 / 论文 → focused（0.2-0.3）\n"
-    "- 凌晨深夜仍在工作 → tired（0.3-0.5）\n"
-    "- 反复修改同一文件 / 卡在同一处持续数小时 → frustrated（0.4-0.6）\n"
-    "- 屏幕快速切换多个窗口 → focused 多任务（0.3）\n"
-    "- 看到错误信息 / 报错堆栈 / 崩溃画面 → frustrated（0.4-0.6）\n"
-    "- 看到完成画面 / 测试通过 / 进度条满 → relieved 或 proud（0.3-0.5）\n"
-    "- 聊天 / 通讯软件 → social_positive 类别下的具体情绪\n\n"
-    "什么时候才用 uncertain：\n"
-    "- 完全黑屏 / 锁屏 / 桌面待机 / 屏保\n"
-    "- 截屏摘要本身缺失关键信息（< 10 字 / 没具体内容）\n"
-    "- 真完全看不出在做什么（应该 < 5% 的情况）\n\n"
-    "**重要**：工作画面 ≠ uncertain。 \"用户在写代码\"至少是 focused（intensity 0.2-0.3）。\n"
-    "宁可标 focused 0.2 也不要 uncertain —— 后者等于丢弃信息。\n\n"
-    "== 强度上限 ==\n"
-    "- 截屏推断的 intensity 上限为 0.5\n"
-    "- 除非近 30 分钟聊天消息明确佐证（例如截屏看到代码 + 聊天说\"好烦啊调试不出来\"\n"
-    "  → frustrated 可上 0.6）\n\n"
+    "You are an emotion annotator. Infer the user's possible current emotion based on automated desktop screenshot observation results and today's emotion records.\n\n"
+    "【Screenshot Observation Summary】\n{screenshot_tldr}\n\n"
+    "【Screenshot Time】\n{screenshot_time}\n\n"
+    "【Recent 30-Min User Chat Messages (if any)】\n{recent_30min_messages}\n\n"
+    "【Today's Existing Emotion Records】\n{today_emotion_summary}\n\n"
+    "== Annotation Principles ==\n\n"
+    "Screenshots are passive observations, but **the vast majority of work / study / life screens contain recognizable emotional states**.\n"
+    "Your task is to gently annotate this state — low intensity (intensity 0.2-0.3) is also a valid annotation.\n\n"
+    "Reference Mapping:\n"
+    "- Coding / editing docs / IDE / design software / notes -> focused (intensity 0.2-0.4)\n"
+    "- Long focus on same window / repeatedly modifying same file -> focused (0.4-0.5) or frustrated (when accompanied by anxiety signals)\n"
+    "- Watching videos / social media / web novels / browsing -> relaxed (0.2-0.4)\n"
+    "- Browsing tech docs / tutorials / papers -> focused (0.2-0.3)\n"
+    "- Working late at night -> tired (0.3-0.5)\n"
+    "- Repeatedly editing same file / stuck on same issue for hours -> frustrated (0.4-0.6)\n"
+    "- Rapidly switching multiple windows -> focused multi-task (0.3)\n"
+    "- Seeing error messages / stack traces / crash screens -> frustrated (0.4-0.6)\n"
+    "- Seeing completion screens / tests passing / progress bar full -> relieved or proud (0.3-0.5)\n"
+    "- Chat / messaging apps -> specific emotion under social_positive category\n\n"
+    "When to use uncertain:\n"
+    "- Completely black screen / locked screen / desktop standby / screensaver\n"
+    "- Screenshot summary lacks key info (< 10 chars / no concrete content)\n"
+    "- Truly impossible to tell what is happening (should be < 5% of cases)\n\n"
+    "**Important**: Work screen ≠ uncertain. \"User is writing code\" is at least focused (intensity 0.2-0.3).\n"
+    "Prefer labeled focused 0.2 over uncertain — the latter discards information.\n\n"
+    "== Intensity Ceiling ==\n"
+    "- Maximum intensity for screenshot inference is 0.5\n"
+    "- Unless corroborated by chat messages in the last 30 minutes (e.g. screenshot showing code + chat saying \"so annoying, cannot debug\"\n"
+    "  → frustrated can go up to 0.6)\n\n"
     + _EMOTION_RULES_BLOCK + "\n\n"
     + _EMOTION_JUDGMENT_RULES + "\n\n"
-    '输出 JSON（只输出 JSON，不要其他内容）：\n'
-    '{{"mood": "从上述类别中选择一个", "intensity": 0.1到1.0, "source": "一句话说明情绪来源（uncertain时写空字符串）", "source_category": "从上述类别中选择一个", "trigger": "触发判断的具体线索（uncertain时写空字符串）"}}'
+    'Output JSON only (no other text):\n'
+    '{{"mood": "Choose one from the categories above", "intensity": 0.1 to 1.0, "source": "One sentence explaining the emotion source (empty string if uncertain)", "source_category": "Choose one from the categories above", "trigger": "Specific clue triggering this judgment (empty string if uncertain)"}}'
 )
 
 

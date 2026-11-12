@@ -22,9 +22,10 @@ This document tracks the translation of the Miru codebase to English for the Sor
 | **Main Chat Prompts & Diagnostics** | `prompt.py`, `agent_behavior.md` | Chat memory retrieval preflight prompt, shared agent behavior rules, and provider setup/connection errors | **Implemented & Verified (Phase 2B.24)** |
 | **Main Chat System Prompt** | `prompt.py` | Assembled system prompt (`_build_agent_system_prompt`), reactive/proactive modes, identity, memory, images, and tool guidance | **Implemented & Verified (Phase 2B.25)** |
 | **Proactive Backend Prompts & Image Compatibility** | `prompt.py` | `_PROACTIVE_RESOURCE_PLANNER_PROMPT`, `_PROACTIVE_DELIVERY_PREFLIGHT_PROMPT`, image tag markers (`[图片：...]`, `[Image: ...]`, `[图片]`), and failure sentinels | **Implemented & Verified (Phase 2B.26)** |
+| **Emotion Prompts & Image Guidance Correction** | `prompt.py`, `memory_prompts.py` | User emotion annotation prompts (`EMOTION_CHAT_PROMPT`, `EMOTION_SCREENSHOT_PROMPT`, rules) and companion emotion evaluation (`_build_miru_emotion_prompt()`) | **Implemented & Verified (Phase 2B.27)** |
 | **Landing & Privacy Pages** | `templates/landing.html`, `templates/privacy.html` | Marketing and legal pages | **Outstanding (Deferred)** |
 | **Admin Panel** | `templates/admin.html` | Administrator dashboard interface | **Outstanding (Deferred)** |
-| **Remaining Prompts/Persona** | `character.py`, `memory_prompts_v*.py` | Proactive planning, emotion evaluation, diary reformat, memory prompts | Untouched |
+| **Remaining Prompts/Persona** | `character.py`, `memory_prompts_v*.py` (summarizer, gatekeeper, sleep agent) | Diary reformat, memory summarizer, commitment gatekeeper, sleep agent | Untouched |
 | **Comments/Docs** | Codebase-wide | Inline comments, docs | Untouched |
 | **Character Config** | `data/personas/` | Persona definitions | Untouched |
 | **Branding Assets** | `assets/brand/` | Logos, avatars | Untouched |

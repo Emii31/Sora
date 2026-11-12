@@ -355,3 +355,13 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified 85 tests across agent modes, attention, chat image history, preflight routing, and care engine persona suites.
 - Git diff check: PASS.
 - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 21aab14a6373e31f63498b7638c5ba24ea3c104c` (PASSED).
+
+## 2026-11-13 (Phase 2B.27: English Emotion Prompts and Image Guidance Correction)
+- Corrected chat image instructions in `prompt.py` to separately specify usable description tags (`[图片：...]`, `[Image: ...]`), bare tags (`[图片]`, `[Image]`), and failure sentinels (`(图片识别失败)`, `(Image description failed)`).
+- Strengthened compatibility tests in `tests/test_agent_modes_attention.py` to verify image guidelines and avoid contradictory instructions.
+- Translated backend user emotion annotation prompts (`EMOTION_CHAT_PROMPT`, `EMOTION_SCREENSHOT_PROMPT`, rules, and judgment guidelines) in `prompt.py` to English.
+- Translated companion emotion evaluation system prompt (`_build_miru_emotion_prompt()`) in `memory_prompts.py` to English.
+- Updated `tests/test_miru_emotion_prompt.py` to match the translated English prompt text.
+- Verified 49 unit tests across emotion, image-history, and agent-mode suites.
+- Git diff check: PASS.
+- History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7f731cef51c4c6e33d63f7b41896a4797a65cf1b` (PASSED).
