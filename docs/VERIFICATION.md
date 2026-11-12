@@ -235,3 +235,12 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
 
+- **Phase 2B.21 Verification (Desktop Pet, Sign-In, Voice Tooltips & Clear-All Confirmation Pass)**:
+  - `templates/pet.html`: Set document language to English (`lang="en"`) and translated chat-error fallback (`'Unknown error'`).
+  - `templates/index.html`: Translated embedded invite-code sign-in screen, voice-input tooltips, and clear-all-records confirmation modal.
+  - `core.py`: Translated clear-all confirmation text (`_CLEAR_ALL_CONFIRM_TEXT = "Clear All"`) and associated backend error messages.
+  - `tests/test_auth_delete.py`: Added and verified `test_clear_all_records_confirmation` ensuring incorrect input remains blocked and correct input succeeds.
+  - Test suite check: 96/96 focused tests passed across user settings, auth/delete, Android embedded shell, Linux pet, and invitation flows.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
+

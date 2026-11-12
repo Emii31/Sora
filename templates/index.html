@@ -3721,16 +3721,16 @@ if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWi
   <main class="login-card">
     <div class="login-brand">
       <span class="login-brand-dot"></span>
-      <span class="login-brand-name">Miru</span>
+      <span class="login-brand-name">Sora</span>
     </div>
-    <div class="login-eyebrow">初めまして</div>
-    <h1 class="login-title">初次见面</h1>
-    <p class="login-desc">那些你转身就散落的瞬间，<br>她替你一一拾起</p>
+    <div class="login-eyebrow">Nice to meet you</div>
+    <h1 class="login-title">First Meeting</h1>
+    <p class="login-desc">The moments you leave behind as you turn away,<br>she picks up one by one</p>
     <input id="loginCodeInput" type="text" placeholder="MIRU-XXXXXXXXXX-YYYYYY"
       maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false"
       onkeydown="if(event.key==='Enter')_doLogin()">
     <div id="loginError">&nbsp;</div>
-    <button class="login-btn" onclick="_doLogin()">进 入</button>
+    <button class="login-btn" onclick="_doLogin()">Enter</button>
   </main>
 </div>
 <script>
@@ -3802,13 +3802,13 @@ async function _doLogin() {
   var btn = document.querySelector('#loginOverlay button');
   errEl.textContent = '';
   if (!_looksLikeFullInvitationCode(code)) {
-    errEl.textContent = '请输入完整邀请码';
+    errEl.textContent = 'Please enter the complete invitation code';
     return;
   }
 
   // Loading state
   _loginInProgress = true;
-  if (btn) { btn.disabled = true; btn.textContent = '连接中'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Connecting...'; }
 
   // Login always goes to the current host.
   // - On VPS web (phone/browser): current host is already the correct server
@@ -3842,18 +3842,18 @@ async function _doLogin() {
       }
       return;
     } else {
-      errEl.textContent = data.error || '邀请码无效';
+      errEl.textContent = data.error || 'Invalid invitation code';
     }
   } catch(e) {
     if (e.name === 'AbortError') {
-      errEl.textContent = '连接超时，请检查网络';
+      errEl.textContent = 'Connection timeout, please check network';
     } else {
-      errEl.textContent = '网络错误，请重试';
+      errEl.textContent = 'Network error, please retry';
     }
   }
   // Reset button
   _loginInProgress = false;
-  if (btn) { btn.disabled = false; btn.textContent = '进 入'; }
+  if (btn) { btn.disabled = false; btn.textContent = 'Enter'; }
 }
 </script>
 
@@ -4070,17 +4070,17 @@ async function _doLogin() {
 
 <div class="confirm-modal-backdrop" id="clearAllConfirmModal" onclick="closeClearAllConfirmModal()">
   <div class="confirm-modal" onclick="event.stopPropagation()">
-    <div class="confirm-modal-title">确认清空所有记录</div>
+    <div class="confirm-modal-title">Confirm Clearing All Records</div>
     <div class="confirm-modal-text">
-      该操作将永久删除全部记录数据，无法恢复。<br>
-      为避免误触，请在下方输入框中填写：<b>清空全部</b>
+      This operation will permanently delete all record data and cannot be undone.<br>
+      To avoid accidental clicks, please type below: <b>Clear All</b>
     </div>
     <div style="margin-top:12px">
-      <input id="clearAllConfirmInput" class="edit-input" type="text" placeholder="请输入：清空全部" oninput="onClearAllConfirmInput()">
+      <input id="clearAllConfirmInput" class="edit-input" type="text" placeholder="Please type: Clear All" oninput="onClearAllConfirmInput()">
     </div>
     <div class="card-actions" style="margin-top:14px">
       <button class="btn btn-cancel" onclick="closeClearAllConfirmModal()">Cancel</button>
-      <button class="btn btn-danger" id="clearAllConfirmSubmitBtn" onclick="executeClearAllRecords()" disabled>确认清空</button>
+      <button class="btn btn-danger" id="clearAllConfirmSubmitBtn" onclick="executeClearAllRecords()" disabled>Confirm Clear</button>
     </div>
   </div>
 </div>
@@ -4489,14 +4489,14 @@ let voiceListening = false;
 
 if (!SpeechRecognition) {
   voiceBtn.classList.add('voice-unsupported');
-  voiceBtn.title = '浏览器不支持语音输入';
+  voiceBtn.title = 'Voice input not supported';
 }
 
 voiceBtn.addEventListener('click', () => {
   if (!SpeechRecognition) {
     // Flash the button to show it's unsupported
     voiceBtn.style.background = 'rgba(208,120,120,0.4)';
-    voiceBtn.title = '浏览器不支持语音输入';
+    voiceBtn.title = 'Voice input not supported';
     setTimeout(() => { voiceBtn.style.background = ''; }, 800);
     return;
   }
@@ -4505,7 +4505,7 @@ voiceBtn.addEventListener('click', () => {
   } else {
     // Immediate visual feedback before onstart fires
     voiceBtn.classList.add('voice-active');
-    voiceBtn.title = '正在启动语音识别…';
+    voiceBtn.title = 'Starting voice recognition...';
     startVoiceInput();
   }
 });
@@ -7864,7 +7864,7 @@ function onClearAllConfirmInput() {
   const input = document.getElementById('clearAllConfirmInput');
   const submit = document.getElementById('clearAllConfirmSubmitBtn');
   if (!input || !submit) return;
-  submit.disabled = (input.value.trim() !== '清空全部');
+  submit.disabled = (input.value.trim() !== 'Clear All');
 }
 
 function settingsClearAllRecords() {
@@ -7980,8 +7980,8 @@ async function settingsDeleteAccount() {
 async function executeClearAllRecords() {
   const input = document.getElementById('clearAllConfirmInput');
   const confirmText = (input && input.value ? input.value : '').trim();
-  if (confirmText !== '清空全部') {
-    settingsShowFlash('二次确认未通过，已取消操作。', 'error');
+  if (confirmText !== 'Clear All') {
+    settingsShowFlash('Verification failed, operation cancelled.', 'error');
     return;
   }
 
@@ -7989,7 +7989,7 @@ async function executeClearAllRecords() {
   const submitBtn = document.getElementById('clearAllConfirmSubmitBtn');
   if (settingsBtn) {
     settingsBtn.disabled = true;
-    settingsBtn.textContent = '清空中...';
+    settingsBtn.textContent = 'Clearing...';
   }
   if (submitBtn) submitBtn.disabled = true;
 
@@ -8001,26 +8001,26 @@ async function executeClearAllRecords() {
     });
     const data = await res.json();
     if (!res.ok || !data.ok) {
-      settingsShowFlash(data.error || '清空失败', 'error');
+      settingsShowFlash(data.error || 'Failed to clear', 'error');
       if (settingsBtn) {
         settingsBtn.disabled = false;
-        settingsBtn.textContent = '一键清空所有记录';
+        settingsBtn.textContent = 'Clear All Records';
       }
       if (submitBtn) submitBtn.disabled = false;
       return;
     }
 
     closeClearAllConfirmModal();
-    settingsShowFlash('所有记录已清空');
+    settingsShowFlash('All records cleared');
     await refreshAll();
     showCompanionChat();
     await settingsLoadAll();
     switchSettingsTab('system');
   } catch (err) {
-    settingsShowFlash('清空失败: ' + err.message, 'error');
+    settingsShowFlash('Failed to clear: ' + err.message, 'error');
     if (settingsBtn) {
       settingsBtn.disabled = false;
-      settingsBtn.textContent = '一键清空所有记录';
+      settingsBtn.textContent = 'Clear All Records';
     }
     if (submitBtn) submitBtn.disabled = false;
   }

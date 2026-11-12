@@ -555,7 +555,7 @@ def migrate_timestamps_utc_to_cst():
     print("[Migration] Done.")
 
 
-_CLEAR_ALL_CONFIRM_TEXT = "清空全部"
+_CLEAR_ALL_CONFIRM_TEXT = "Clear All"
 
 
 def migrate_reminders_to_chat_history():
@@ -1497,18 +1497,18 @@ def clear_all_records(confirm_text=""):
     user_settings.json so that preferences survive a reset.
     """
     if str(confirm_text or "").strip() != _CLEAR_ALL_CONFIRM_TEXT:
-        return {"ok": False, "error": u"二次确认未通过，请输入\u201c清空全部\u201d后重试。"}
+        return {"ok": False, "error": 'Secondary confirmation failed, please type "Clear All" and retry.'}
 
     import shutil
 
     data_dir = storage.get_data_dir()
     if not os.path.isdir(data_dir):
-        return {"ok": False, "error": "用户数据目录不存在"}
+        return {"ok": False, "error": "User data directory does not exist"}
 
     # Safety: data_dir must be under data/users/<uid>/ — refuse to wipe root data/
     norm = os.path.normpath(data_dir)
     if not ("users" in norm.split(os.sep)):
-        return {"ok": False, "error": "安全检查失败：数据目录不在用户隔离路径下"}
+        return {"ok": False, "error": "Security check failed: data directory is not under user isolation path"}
 
     # Files/dirs to preserve (settings survive a data reset)
     KEEP = {"user_settings.json"}
@@ -1533,7 +1533,7 @@ def clear_all_records(confirm_text=""):
 
     return {
         "ok": True,
-        "message": "所有记录已清空",
+        "message": "All records cleared",
         "summary": {
             "removed_files": removed_files,
             "removed_dirs": removed_dirs,

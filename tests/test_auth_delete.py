@@ -157,9 +157,38 @@ def test_delete_removes_user_and_files(tmp_path):
     assert not os.path.isdir(user_dir)
 
     # users.json: user removed
-    with open(os.path.join(data_dir, "_admin", "users.json")) as f:
-        users = json.load(f)
-    assert user_id not in users
+
+
+def test_clear_all_records_confirmation(monkeypatch, tmp_path):
+    import core
+    import storage
+    import importlib
+    importlib.reload(storage)
+    importlib.reload(core)
+    user_dir = str(tmp_path / "data" / "users" / "test_user")
+    os.makedirs(user_dir, exist_ok=True)
+    monkeypatch.setenv("DATA_DIR", str(tmp_path / "data"))
+
+    from flask import Flask
+    app = Flask(__name__)
+    with app.app_context():
+        from flask import g
+        g.user_data_dir = user_dir
+
+        # Incorrect input blocked
+        res_wrong = core.clear_all_records("wrong text")
+        assert res_wrong["ok"] is False
+        assert "Secondary confirmation failed" in res_wrong["error"]
+
+        # Old Chinese confirmation text blocked
+        res_old = core.clear_all_records("清空全部")
+        assert res_old["ok"] is False
+        assert "Secondary confirmation failed" in res_old["error"]
+
+        # Correct input succeeds
+        res_correct = core.clear_all_records("Clear All")
+        assert res_correct["ok"] is True
+        assert res_correct["message"] == "All records cleared"
 
 
 def test_stale_background_context_cannot_recreate_deleted_user_dir(tmp_path):

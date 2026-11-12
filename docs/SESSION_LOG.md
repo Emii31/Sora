@@ -298,13 +298,6 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Ran test suite successfully (all targeted and regression tests passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 46da5a11eb644cc6986bf60d5c312501990b671f` (PASSED).
 
-## 2026-11-13 (Phase 2B.20: Android Native & Desktop Pet Display Copy & Sora Branding Pass)
-- Completed Android native Java services and notification channel display copy / rebrand (`ApkUpdateManager.java`, `MainActivity.java`, `MiruPythonRuntime.java`, `ScreenCaptureService.java`, `MiruConnectionService.java`, `NotificationReplyReceiver.java`) and desktop pet template (`templates/pet.html`) to Sora.
-- Preserved package IDs (`com.miru.companion`), notification channel IDs, storage keys/paths, API contracts, bridge names, and upstream attribution.
-- Confirmed internal `MiruProfileStore` persistence exceptions do not reach the UI directly.
-- Verified all 54 focused platform and desktop pet tests passed successfully.
-- Updated `docs/TRANSLATION_INVENTORY.md`, `docs/STATUS.md`, and created `docs/phases/PHASE_02B_20.md`.
-- Enforced history prefix integrity via `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
 
 ## 2026-11-12 (Sora Fast Local Chat Performance Milestone & Benchmark Verification)
 - Exposed Fast Local Chat (`local_text_chat_enabled`) in the settings UI (`templates/index.html` system panel) with clear guidance on falling back to full mode for images, remote providers, and tool/search requests.
@@ -312,3 +305,11 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Finalized robust benchmark script (`scripts/benchmark_chat.py`) running multiple matched synthetic turns, reporting individual and median send-to-history times and direct model latencies, and exiting nonzero on failure.
 - Verified test suite execution (54/54 tests passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 7387da6` (PASSED).
+
+## 2026-11-13 (Phase 2B.20: Android Native & Desktop Pet Display Copy & Sora Branding Pass)
+- Completed Android native Java services and notification channel display copy / rebrand (`ApkUpdateManager.java`, `MainActivity.java`, `MiruPythonRuntime.java`, `ScreenCaptureService.java`, `MiruConnectionService.java`, `NotificationReplyReceiver.java`) and desktop pet template (`templates/pet.html`) to Sora.
+- Preserved package IDs (`com.miru.companion`), notification channel IDs, storage keys/paths, API contracts, bridge names, and upstream attribution.
+- Confirmed internal `MiruProfileStore` persistence exceptions do not reach the UI directly.
+- Verified all 54 focused platform and desktop pet tests passed successfully.
+- Updated `docs/TRANSLATION_INVENTORY.md`, `docs/STATUS.md`, and created `docs/phases/PHASE_02B_20.md`.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).

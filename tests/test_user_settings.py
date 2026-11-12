@@ -514,10 +514,12 @@ def test_airi_base_url_dropped(monkeypatch, tmp_path):
 def test_local_text_chat_enabled_setting_and_policy(monkeypatch, tmp_path):
     import user_settings
     import core
+    import ai_config
     importlib.reload(user_settings)
     user_dir = str(tmp_path / "u_test")
     os.makedirs(user_dir, exist_ok=True)
     with _user_ctx(user_dir):
+        ai_config.update_tier_config("chat", {"host": "http://localhost:11434", "api_key": "ollama", "model": "llama3"})
         assert user_settings.get()["local_text_chat_enabled"] is False
         user_settings.update({"local_text_chat_enabled": True})
         assert user_settings.get()["local_text_chat_enabled"] is True

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -926,7 +926,7 @@ async function petSend() {
       _backendTyping = false;  // request rejected — don't strand thinking dots
       _optimisticTypingDeadline = 0;  // close window so poll can take over
       var err = await res.json().catch(function() { return {}; });
-      _latestMessage = { role: 'assistant', text: 'Error: ' + (err.error || '未知错误') };
+      _latestMessage = { role: 'assistant', text: 'Error: ' + (err.error || 'Unknown error') };
       _updateCaption(); _scheduleAutoCollapse();
     }
   } catch(e) {
