@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 2B.23 — Backend Copy Cleanup and Benchmark Error Detection (Completed & Verified)
-- **Current Status**: Translated blank-message chat error in `app.py` (`"Please enter a message"`), updated image description failure copy (`"(Image description failed)"`) and proactive trigger image tag (`"[Image: ...]"`) in `core.py`, and updated benchmark chat failure detection in `scripts/benchmark_chat.py` to correctly flag English fallbacks while preserving valid error-containing replies. Verified 25 focused unit tests (`test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_chat_preflight_routing.py`) and benchmark logic.
+- **Phase**: Phase 2B.24 — English Main Chat Prompts and Provider Diagnostics (Completed & Verified)
+- **Current Status**: Translated main chat memory retrieval preflight (`_CHAT_PREFLIGHT_PROMPT`), shared agent behavior rules (`agent_behavior.md`), and provider setup/connection error diagnostics (`prompt.py`) to natural English and Sora branding while preserving all prompt contracts, JSON keys, tool names, memory paths, and routing logic. Verified 61 focused unit tests across chat preflight routing, error copy, companion bootstrap, AI config, and chat archive/consolidation.
 - **Next Action**: Commit changes and push to origin/main.

@@ -330,3 +330,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified changes with focused companion, chat-error, and routing test suites (25 unit tests passed).
 - Enforced history prefix integrity via `scripts/check_history_append_only.py`.
 - Updated documentation (`docs/phases/PHASE_02B_23.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 2B.24: English Main Chat Prompts and Provider Diagnostics)
+- Translated main chat memory retrieval preflight (`_CHAT_PREFLIGHT_PROMPT`), image placeholders, search headers, and JSON instructions in `prompt.py`.
+- Translated shared agent behavior rules in `agent_behavior.md`.
+- Translated provider setup diagnostics and error formatting in `_get_ai_runtime_or_raise` and `_format_ai_call_error`.
+- Preserved JSON keys, enum values, tool names, memory paths, retrieval limits, routing decisions, image markers, and Sora branding.
+- Verified changes with 61 focused test cases (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`).
+- Enforced history prefix integrity via `scripts/check_history_append_only.py`.
+- Updated documentation (`docs/phases/PHASE_02B_24.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

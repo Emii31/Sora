@@ -23,8 +23,8 @@ def test_backend_missing_model_copy_does_not_use_admin_ui_language():
     user_facing_blocks = prompt_py[prompt_py.index("def _get_ai_runtime_or_raise"):prompt_py.index("def _get_chat_model")]
     user_facing_blocks += "\n" + memory_prompts_py[memory_prompts_py.index("def call_screen_observation"):memory_prompts_py.index("model = runtime")]
 
-    assert "模型配置还没有完成" in user_facing_blocks
-    assert "Miru 设置" in user_facing_blocks
+    assert "Model configuration incomplete" in user_facing_blocks
+    assert "Model settings page in Sora" in user_facing_blocks
     assert "AI tier" not in user_facing_blocks
     assert "Admin UI" not in user_facing_blocks
     assert "Vision tier API key not set" not in user_facing_blocks

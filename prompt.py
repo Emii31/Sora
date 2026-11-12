@@ -367,18 +367,18 @@ def _get_ai_runtime_or_raise(tier: str = "chat"):
     tier_label = ai_config.TIER_LABELS.get(tier, tier)
     if not cfg["api_key"]:
         raise RuntimeError(
-            f"模型配置还没有完成：{tier_label} 缺少 API Key。"
-            "请在 Miru 设置里的「模型」页填写后再试。"
+            f"Model configuration incomplete: {tier_label} tier is missing an API Key. "
+            "Please fill it in the Model settings page in Sora."
         )
     if not cfg["host"]:
         raise RuntimeError(
-            f"模型配置还没有完成：{tier_label} 缺少服务地址。"
-            "请在 Miru 设置里的「模型」页填写后再试。"
+            f"Model configuration incomplete: {tier_label} tier is missing a service URL. "
+            "Please fill it in the Model settings page in Sora."
         )
     if not cfg["model"]:
         raise RuntimeError(
-            f"模型配置还没有完成：{tier_label} 缺少模型名称。"
-            "请在 Miru 设置里的「模型」页填写后再试。"
+            f"Model configuration incomplete: {tier_label} tier is missing a model name. "
+            "Please fill it in the Model settings page in Sora."
         )
     return cfg
 
@@ -391,9 +391,9 @@ def _format_ai_call_error(exc, host, model):
     msg = str(exc) or exc.__class__.__name__
     lower = msg.lower()
     if "hostname mismatch" in lower or "certificate verify failed" in lower:
-        msg += "；证书与域名不匹配，请在设置 > AI 检查 Host 配置"
+        msg += "; certificate/domain mismatch, please check Host settings under Settings > AI"
     elif "connection error" in lower:
-        msg += "；请检查网络、代理或 Host 配置"
+        msg += "; please check network, proxy, or Host configuration"
     return f"{msg} (host={host}, model={model})"
 
 
@@ -455,7 +455,7 @@ def _is_retryable_error(exc):
     if isinstance(exc, RuntimeError):
         msg = str(exc).lower()
         if (
-            "模型配置还没有完成" in str(exc)
+            "model configuration incomplete" in msg
             or "api key" in msg
             or "not set" in msg
         ):
@@ -761,64 +761,64 @@ def _call_retrieval_llm(system_prompt, user_text, temperature=0.1,
 # Memory Pre-Retrieval — enrich context BEFORE agent loop
 # ---------------------------------------------------------------------------
 
-_CHAT_PREFLIGHT_PROMPT = """你是 Miru 主对话前的 Memory Retriever。
+_CHAT_PREFLIGHT_PROMPT = """You are Miru's Memory Retriever before the main chat.
 
-你不是主对话 agent。
-你不替用户回答，不调用工具，不写记忆，不做情绪安慰。
-你的唯一任务：从全局长期记忆索引 memory/index.md 中选择主 agent 回答当前用户消息前应该预先加载的记忆文件。
+You are not the main agent.
+You do not answer for the user, call tools, write memory, or provide emotional comfort.
+Your only task: select the memory files the main agent should pre-load before answering the current user message, based on the global long-term memory index memory/index.md.
 
-主 agent 的模型档位由代码固定为 pro；你不要判断 fast / pro / reasoning，也不要输出模型建议。
+The main agent's model tier is fixed to 'pro' by code; do not judge between 'fast' / 'pro' / 'reasoning' and do not output model suggestions.
 
-【长期记忆检索范围】
+【Long-Term Memory Retrieval Scope】
 
-核心记忆 Core Memory（human / persona）已经始终在主 agent 上下文中，不需要你检索。
+Core Memory (human / persona) is always in the main agent's context and does not need retrieval.
 
-你收到的 memory/index.md 是“全局长期记忆索引”，不是只能查某个归档目录。
-查找范围包括：
-- slot 记忆：projects/、people/、topics/、self/ 下的 `<slot_id>/main.md`
-- 非 slot 长期记忆：commitments/、journal/、patterns/ 等 markdown 文件
-- 旧版 legacy 记忆：如 `people/name.md`、`projects/name.md` 这类直接 markdown 文件
+You received memory/index.md as the "Global Long-Term Memory Index", not just for one directory.
+Retrieval scope includes:
+- Slot memory: `main.md` files under projects/, people/, topics/, self/
+- Long-term memory: markdown files in commitments/, journal/, patterns/, etc.
+- Legacy memory: direct markdown files like `people/name.md` or `projects/name.md`
 
-只要索引里出现且和用户消息相关，都可以放进 files。
+Any file in the index relevant to the user's message can be added to 'files'.
 
-索引里的路径可能以两种形式出现：
-- 反引号：`projects/papers_2026/main.md`
-- markdown 链接：[papers](projects/papers_2026/main.md)
+Paths in the index may appear as:
+- Backticks: `projects/papers_2026/main.md`
+- Markdown links: [papers](projects/papers_2026/main.md)
 
-你输出的 files 必须使用索引里真实出现的相对路径。
+Your 'files' output must use the exact relative paths from the index.
 
-【检索策略】
+【Retrieval Strategy】
 
-1. 看每条索引的 title + summary，找语义相关文件。
-   - 用户说“压力大” → 匹配 self/ 或 patterns/ 中讲作息、压力、健康的文件
-   - 用户说“老王最近怎样” → 匹配 people/ 中对应人物文件
-   - 用户说“那个论文” → 匹配 projects/ 中对应项目文件
-   - 用户说“我那个任务” → 匹配 commitments/active.md
-2. 必要时提取 1-2 个关键词用于补充搜索索引未覆盖的内容。
-3. files 最多 5 个，优先级：直接提及 > 语义相关 > 最近活跃。
-4. keywords 最多 2 个，只在索引描述明显不够时才填。
-5. 纯闲聊如“嗯”“哈哈”“早”“晚安”可以 need_retrieval=false。
-6. 如果用户问到具体历史、人、项目、承诺、论文、bug、旅行、关系等，通常 need_retrieval=true。
-7. 宁可多匹配一点，也不要漏掉主 agent 必须知道的上下文。
+1. Look at the title + summary for each index entry to find semantically relevant files.
+   - User says "feeling stressed" -> match files in self/ or patterns/ about routine, stress, health
+   - User says "How is Xiao Zhang?" -> match the corresponding file in people/
+   - User says "the paper" -> match the corresponding project file in projects/
+   - User says "my task" -> match commitments/active.md
+2. Extract 1-2 keywords if necessary to supplement information not covered by the index summary.
+3. Max 5 files, priority: explicitly mentioned > semantically relevant > recently active.
+4. Max 2 keywords, only if index description is clearly insufficient.
+5. For casual chat like "mm", "haha", "morning", "goodnight", `need_retrieval=false` is acceptable.
+6. If the user asks about specific history, people, projects, commitments, papers, bugs, travel, relationships, etc., `need_retrieval=true` is typically required.
+7. Err on the side of over-retrieval; do not miss context the main agent must have.
 
-【输出 JSON】
+【Output JSON】
 
-你必须只输出合法 JSON，不要输出 markdown，不要解释。
+You must output valid JSON only. No markdown, no explanation.
 
 {
   "need_retrieval": true,
   "files": ["projects/example/main.md"],
-  "keywords": ["关键词"],
+  "keywords": ["keyword"],
   "confidence": 0.82,
-  "retrieval_reason": "用户提到具体项目，需要加载对应 slot"
+  "retrieval_reason": "User mentioned specific project, need to load corresponding slot"
 }
 
-字段要求：
+Field requirements:
 - need_retrieval: boolean
-- files: string[]，最多 5 个，只能使用索引中真实出现的路径
-- keywords: string[]，最多 2 个
-- confidence: 0 到 1，表示检索选择的确定程度
-- retrieval_reason: 20-80 字，说明为什么需要或不需要加载这些记忆"""
+- files: string[] (max 5, must use real paths from index)
+- keywords: string[] (max 2)
+- confidence: 0 to 1
+- retrieval_reason: 20-80 chars, explain why retrieval is needed/not needed"""
 
 # Backward-compatible name for older tests/imports. The prompt now performs
 # memory pre-retrieval only; main-agent model routing is fixed in core.py.
@@ -1382,12 +1382,12 @@ def call_chat_preflight(user_text, index_content=None, user_image_descs=None):
 
     # Splice image descriptions inline so retrieval LLM sees what the user
     # sent without us needing to upload the image bytes themselves.
-    msg_section = user_text or "(用户只发了图片)"
+    msg_section = user_text or "(User sent an image only)"
     if user_image_descs:
         for d in user_image_descs[:3]:  # cap at 3 to keep token cost bounded
             d = (d or "").strip()
             if d:
-                msg_section += f"\n[图片：{d}]"
+                msg_section += f"\n[Image: {d}]"
 
     base_text = (
         f"【记忆索引】\n{index_content}\n\n"
@@ -1451,7 +1451,7 @@ def call_chat_preflight(user_text, index_content=None, user_image_descs=None):
 
     if snippets:
         preflight["memory_context"] = (
-            "【相关长期记忆 — 自然引用即可,不要说\"我查到\"或\"根据记录\"】\n"
+            "【Relevant Long-term Memories — cite naturally, do not say \"I checked\" or \"according to records\"】\n"
             + "\n\n".join(snippets[:5])
         )
     else:
@@ -1487,7 +1487,7 @@ def _format_search_results(results):
             snippets.append(f"[{fpath}]\n{content}")
     if not snippets:
         return ""
-    return ("【相关长期记忆 — 自然引用即可,不要说\"我查到\"或\"根据记录\"】\n"
+    return ("【Relevant Long-term Memories — cite naturally, do not say \"I checked\" or \"according to records\"】\n"
             + "\n\n".join(snippets))
 
 

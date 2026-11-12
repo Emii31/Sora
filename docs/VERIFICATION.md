@@ -257,3 +257,10 @@
   - Test suite check: 25 focused unit tests passed (`test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_chat_preflight_routing.py`). Synthetic tests for benchmark failure detection passed successfully.
   - Git diff check: PASS (clean whitespace, exact diff statistics).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py ed994c453de159bfcbd4f9d8f5dfa09e1e7fb4f6` (PASSED).
+
+- **Phase 2B.24 Verification (English Main Chat Prompts and Provider Diagnostics)**:
+  - `prompt.py`, `agent_behavior.md`: Translated main chat memory retrieval preflight prompt (`_CHAT_PREFLIGHT_PROMPT`), shared agent behavior rules (`agent_behavior.md`), and provider setup/connection error diagnostics (`_get_ai_runtime_or_raise`, `_format_ai_call_error`) to natural English and Sora branding.
+  - Preservation checks: Prompt contracts, JSON keys, enum values, tool names, memory paths, retrieval limits, routing decisions, image markers, and Sora branding preserved intact.
+  - Test suite check: 61 focused unit tests passed (`test_chat_preflight_routing.py`, `test_chat_error_copy.py`, `test_companion_bootstrap.py`, `test_ai_config.py`, `test_chat_archive_and_consolidate.py`).
+  - Git diff check: PASS (clean whitespace, exact diff statistics).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 2093cbf2d9285cc9b20939f02772cc9636b586aa` (PASSED).

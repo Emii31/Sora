@@ -23,8 +23,8 @@ def test_chat_preflight_reads_slot_and_legacy_paths_from_index(monkeypatch):
     monkeypatch.setattr(memory, "search", lambda *args, **kwargs: [])
 
     def fake_llm(system_prompt, user_text, **kwargs):
-        assert "全局长期记忆索引" in system_prompt
-        assert "不要判断 fast / pro / reasoning" in system_prompt
+        assert "Global Long-Term Memory Index" in system_prompt
+        assert "do not judge between 'fast' / 'pro' / 'reasoning'" in system_prompt
         assert "projects/miru/main.md" in user_text
         return {
             "need_retrieval": True,
@@ -35,14 +35,14 @@ def test_chat_preflight_reads_slot_and_legacy_paths_from_index(monkeypatch):
             ],
             "keywords": [],
             "confidence": 0.88,
-            "retrieval_reason": "需要读相关长期记忆",
+            "retrieval_reason": "Need to read relevant long-term memory",
         }
 
     with patch("prompt._call_retrieval_llm", side_effect=fake_llm):
         result = prompt.call_chat_preflight("继续看 Miru 项目的模型成本")
 
     assert result["confidence"] == 0.88
-    assert result["retrieval_reason"] == "需要读相关长期记忆"
+    assert result["retrieval_reason"] == "Need to read relevant long-term memory"
     assert "正在做 agent 路由" in result["memory_context"]
     assert "一起讨论过模型成本" in result["memory_context"]
     assert "not_in_index" not in result["memory_context"]
