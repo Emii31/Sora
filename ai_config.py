@@ -33,9 +33,9 @@ from urllib.parse import urlsplit
 
 TIERS = ("vision", "chat", "memory")
 TIER_LABELS = {
-    "vision": "视觉模型",
-    "chat": "聊天模型",
-    "memory": "记忆模型",
+    "vision": "Vision model",
+    "chat": "Chat model",
+    "memory": "Memory model",
 }
 
 # Per-tier env-var fallback (read once on cache miss).
@@ -411,13 +411,13 @@ def get_tier_client(tier: str):
         tier_label = TIER_LABELS.get(tier, tier)
         if not cfg["api_key"]:
             raise RuntimeError(
-                f"模型配置还没有完成：{tier_label} 缺少 API Key。"
-                f"请在 Miru 设置里的「模型」页填写服务地址、模型名称和 API Key。"
+                f"Model configuration incomplete: {tier_label} missing API Key. "
+                f"Please fill in the service URL, model name, and API Key in the Model settings page in Sora."
             )
         if not cfg["host"]:
             raise RuntimeError(
-                f"模型配置还没有完成：{tier_label} 缺少服务地址。"
-                f"请在 Miru 设置里的「模型」页填写服务地址、模型名称和 API Key。"
+                f"Model configuration incomplete: {tier_label} missing service URL. "
+                f"Please fill in the service URL, model name, and API Key in the Model settings page in Sora."
             )
         client = openai.OpenAI(
             api_key=cfg["api_key"],
@@ -521,13 +521,13 @@ def ping_tier(tier: str, timeout_seconds: int = 15) -> dict:
 
     if not cfg["api_key"]:
         tier_label = TIER_LABELS.get(tier, tier)
-        return {"ok": False, "tier": tier, "error": f"{tier_label} 缺少 API Key"}
+        return {"ok": False, "tier": tier, "error": f"{tier_label} missing API Key"}
     if not cfg["host"]:
         tier_label = TIER_LABELS.get(tier, tier)
-        return {"ok": False, "tier": tier, "error": f"{tier_label} 缺少服务地址"}
+        return {"ok": False, "tier": tier, "error": f"{tier_label} missing service URL"}
     if not cfg["model"]:
         tier_label = TIER_LABELS.get(tier, tier)
-        return {"ok": False, "tier": tier, "error": f"{tier_label} 缺少模型名称"}
+        return {"ok": False, "tier": tier, "error": f"{tier_label} missing model name"}
 
     import time
     import openai
@@ -538,7 +538,7 @@ def ping_tier(tier: str, timeout_seconds: int = 15) -> dict:
             "tier": tier,
             "model": cfg["model"],
             "host": cfg["host"],
-            "error": "视觉模型必须支持图片输入，请开启图片能力或换用多模态模型。",
+            "error": "Vision model must support image input. Please enable image capabilities or switch to a multimodal model.",
         }
 
     messages = [{"role": "user", "content": "Reply with OK."}]
@@ -605,7 +605,7 @@ def ping_tier(tier: str, timeout_seconds: int = 15) -> dict:
         "tier": tier,
         "model": cfg["model"],
         "host": cfg["host"],
-        "error": "没有可用的 OpenAI-compatible Base URL",
+        "error": "No available OpenAI-compatible Base URL",
     }
 
 

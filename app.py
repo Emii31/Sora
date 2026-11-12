@@ -206,10 +206,10 @@ def _client_login_connection_error(exc: Exception) -> str:
     import requests as _req
 
     if isinstance(exc, _req.Timeout):
-        return "连接服务器超时，请检查服务器是否运行，以及端口、防火墙或安全组"
+        return "Connection to server timed out. Please check if the server is running, and verify ports, firewall, or security groups."
     if isinstance(exc, _req.ConnectionError):
-        return "无法连接邀请码对应的服务器，请检查服务器地址、端口、防火墙或安全组"
-    return "服务器暂时没有响应，请稍后重试"
+        return "Cannot connect to the server corresponding to this invitation code. Please check server address, ports, firewall, or security groups."
+    return "Server temporarily unresponsive, please try again later."
 
 
 @app.route("/api/auth/login", methods=["POST"])
@@ -224,7 +224,7 @@ def api_auth_login():
     body = request.get_json(silent=True) or {}
     code = body.get("code", "").strip()
     if not code:
-        return jsonify({"error": "请输入邀请码"}), 400
+        return jsonify({"error": "Please enter an invitation code"}), 400
 
     if _is_client_mode:
         # Full invitation codes carry the private server address. In client
@@ -233,7 +233,7 @@ def api_auth_login():
         import auth as _auth_mod
         server_url = _auth_mod.server_url_from_invitation_code(code)
         if not server_url:
-            return jsonify({"error": "请输入完整邀请码"}), 400
+            return jsonify({"error": "Please enter a complete invitation code"}), 400
 
         import requests as _req
         try:
@@ -246,14 +246,14 @@ def api_auth_login():
             return jsonify({"error": _client_login_connection_error(e)}), 502
         if resp.status_code != 200:
             try:
-                err = resp.json().get("error", "邀请码无效")
+                err = resp.json().get("error", "Invalid invitation code")
             except Exception:
-                err = "邀请码无效"
+                err = "Invalid invitation code"
             return jsonify({"error": err}), resp.status_code
         data = resp.json()
         token = data.get("token")
         if not token:
-            return jsonify({"error": "服务器未返回 token"}), 502
+            return jsonify({"error": "Server did not return a token"}), 502
         setup_complete = body.get("setup_complete")
         if setup_complete is None:
             setup_complete = True
@@ -273,7 +273,7 @@ def api_auth_login():
     import auth
     result = auth.login_with_code(code)
     if not result:
-        return jsonify({"error": "邀请码无效或已被停用"}), 401
+        return jsonify({"error": "Invalid or deactivated invitation code"}), 401
     return jsonify(result)
 
 
@@ -291,13 +291,13 @@ def api_auth_invitation():
     """Return the saved long invitation code for the logged-in user."""
     user_id = getattr(g, "user_id", None)
     if not user_id or user_id == "_admin" or getattr(g, "is_admin", False):
-        return jsonify({"ok": False, "error": "需要先登录"}), 401
+        return jsonify({"ok": False, "error": "Authentication required"}), 401
     import auth
     info = auth.get_user_invitation_info(user_id)
     if not info:
         return jsonify({
             "ok": False,
-            "error": "当前账号还没有保存完整邀请码，请用原邀请码重新登录一次后再查看",
+            "error": "The current account does not have a stored full invitation code. Please log in again with your original invitation code to view this.",
         }), 404
     return jsonify({"ok": True, **info})
 
@@ -933,15 +933,15 @@ def _complete_client_setup_and_start() -> dict:
     """Mark first-run setup complete, persist it, and activate local runtime."""
     cfg_path = _launcher_config_path()
     if not cfg_path.exists():
-        raise RuntimeError("没有找到本机登录配置，请重新开始")
+        raise RuntimeError("Local login configuration not found, please restart")
     try:
         cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
     except Exception as exc:
-        raise RuntimeError("本机登录配置读取失败，请重新开始") from exc
+        raise RuntimeError("Failed to read local login configuration, please restart") from exc
     server_url = str(cfg.get("server_url") or "").rstrip("/")
     token = str(cfg.get("auth_token") or "")
     if not server_url or not token:
-        raise RuntimeError("登录状态不完整，请重新开始")
+        raise RuntimeError("Incomplete login state, please restart")
 
     cfg["server_url"] = server_url
     cfg["setup_complete"] = True
@@ -1214,7 +1214,7 @@ def api_client_local_start():
         print(f"[Local Mode] post-start setup failed: {e}")
         return jsonify({
             "ok": False,
-            "error": "本地账号已创建，但本机配置保存失败。请重启 Miru 后再试。",
+            "error": "Local account created, but local configuration save failed. Please restart Sora and try again.",
             "mode": "local",
             "local_only": True,
             "user_id": result.get("user_id", ""),
@@ -1272,7 +1272,7 @@ def api_client_provision_self_server_create():
         and request.content_length
         > _cp.MAX_IMAGE_TAR_BYTES + _cp.MAX_SSH_PRIVATE_KEY_BYTES + 4 * 1024 * 1024
     ):
-        return jsonify({"ok": False, "error": "Miru 服务包过大，请确认下载的是正确的 Miru 服务包"}), 400
+        return jsonify({"ok": False, "error": "Sora service package is too large, please verify you downloaded the correct Sora service package"}), 400
     saved_image_tar = ""
     saved_ssh_private_key = ""
     try:
@@ -1288,7 +1288,7 @@ def api_client_provision_self_server_create():
             raw_name = os.path.basename(str(upload.filename).replace("\\", "/"))
             suffix = _cp.image_tar_suffix(raw_name)
             if not suffix:
-                raise _cp.ProvisioningError("Miru 镜像包必须是 .tar、.tar.gz 或 .tgz 文件")
+                raise _cp.ProvisioningError("Sora image package must be a .tar, .tar.gz, or .tgz file")
             safe_name = secure_filename(raw_name)
             if not safe_name or not _cp.is_allowed_image_tar_name(safe_name):
                 safe_name = f"miru-server-image{suffix}"
@@ -1298,7 +1298,7 @@ def api_client_provision_self_server_create():
                 upload.stream,
                 saved_image_tar,
                 _cp.MAX_IMAGE_TAR_BYTES,
-                "Miru 服务包过大，请确认下载的是正确的 Miru 服务包",
+                "Sora service package is too large, please verify you downloaded the correct Sora service package",
                 _cp.ProvisioningError,
             )
             payload["image_tar_path"] = saved_image_tar
@@ -1311,12 +1311,12 @@ def api_client_provision_self_server_create():
                 ssh_key_upload.stream,
                 saved_ssh_private_key,
                 _cp.MAX_SSH_PRIVATE_KEY_BYTES,
-                "SSH 私钥文件过大，请确认选择的是正确的私钥",
+                "SSH private key file is too large, please verify you selected the correct private key",
                 _cp.ProvisioningError,
             )
             os.chmod(saved_ssh_private_key, 0o600)
             payload["ssh_private_key_path"] = saved_ssh_private_key
-            payload["ssh_private_key_name"] = "SSH 私钥"
+            payload["ssh_private_key_name"] = "SSH private key"
             payload["ssh_private_key_size"] = os.path.getsize(saved_ssh_private_key)
         job = _cp.create_self_server_job(payload)
         if saved_image_tar and job.request.image_tar_path != saved_image_tar:
@@ -1375,7 +1375,7 @@ def api_client_provision_self_server_public_health(job_id):
     if not job:
         return jsonify({"ok": False, "error": "job not found"}), 404
     if job.status != "succeeded" or not job.server_url:
-        return jsonify({"ok": False, "error": "Miru 还没有完成创建，请稍后再检查。"}), 409
+        return jsonify({"ok": False, "error": "Sora setup is still in progress. Please check again shortly."}), 409
     try:
         result = _cp.check_self_server_public_health(job.server_url)
     except _cp.ProvisioningError as exc:
@@ -1611,7 +1611,7 @@ def api_journal_detail(date):
         j = _j.generate_daily_journal(date, force=False)
     if j:
         return _etag_json(j)
-    return jsonify({"error": "未找到该日期的日记"}), 404
+    return jsonify({"error": "Journal not found for this date"}), 404
 
 
 @app.route("/api/journal/<date>/regenerate", methods=["POST"])
@@ -1620,7 +1620,7 @@ def api_journal_regenerate(date):
     import journal as _j
     j = _j.generate_daily_journal(date, force=True)
     if not j:
-        return jsonify({"error": "生成失败"}), 500
+        return jsonify({"error": "Generation failed"}), 500
     return jsonify(j)
 
 
@@ -1707,7 +1707,7 @@ def api_chat():
         image_file = None
 
     if not text and not image_file:
-        return jsonify({"error": "请输入消息"}), 400
+        return jsonify({"error": "Please enter a message"}), 400
 
     # In remote client mode (DMG logged into a private server), forward chat to
     # the private server. In local single-device mode, the local Flask process
@@ -1746,7 +1746,7 @@ def _forward_chat_to_vps(text: str, image_file=None):
     server_url = (cfg.get("server_url") or "").rstrip("/")
     token = cfg.get("auth_token", "")
     if not server_url or not token:
-        return jsonify({"error": "未连接服务器,请重新登录"}), 502
+        return jsonify({"error": "Not connected to server, please log in again"}), 502
 
     headers = {"Authorization": f"Bearer {token}"}
     device_id = request.headers.get("X-Device-Id") or request.args.get("device_id") or ""
@@ -1763,12 +1763,12 @@ def _forward_chat_to_vps(text: str, image_file=None):
             resp = _req.post(f"{server_url}/api/chat", headers=headers,
                             json={"text": text}, timeout=30)
     except Exception as e:
-        return jsonify({"error": f"无法连接服务器 ({e})"}), 502
+        return jsonify({"error": f"Cannot connect to server ({e})"}), 502
 
     try:
         return jsonify(resp.json()), resp.status_code
     except Exception:
-        return jsonify({"error": "服务器响应异常"}), resp.status_code
+        return jsonify({"error": "Server response error"}), resp.status_code
 
 
 @app.route("/api/chat/typing")

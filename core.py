@@ -1878,15 +1878,16 @@ def _friendly_chat_generation_error(exc: Exception) -> str:
         or "not configured" in lower
         or "admin ui" in lower
         or "模型配置还没有完成" in raw
+        or "model configuration incomplete" in lower
     ):
         return (
-            "我还没有配置好模型，暂时没法认真回复你。"
-            "请先到设置里的「模型」页填写视觉、聊天、记忆三类 API Key，"
-            "保存后我就可以继续陪你聊天了。"
+            "I haven't configured my models yet, so I can't reply properly right now. "
+            "Please fill in the Vision, Chat, and Memory API Keys in the Model settings page in Sora, "
+            "and I'll be able to chat with you again."
         )
-    if "connection" in lower or "timeout" in lower or "无法连接" in raw:
-        return "我刚才没连上模型服务，可能是网络或服务器临时不稳定。等一下再试一次，好吗？"
-    return "我刚才处理消息时出了点小问题。等一下再发我一次，我会再认真看。"
+    if "connection" in lower or "timeout" in lower or "无法连接" in raw or "cannot connect" in lower:
+        return "I couldn't connect to the model service just now—it might be a temporary network or server instability. Let's try again in a moment, okay?"
+    return "I ran into a small issue processing your message. Send it to me again in a moment, and I'll take another careful look."
 
 
 _STYLE_MAP = {"casual": "随意轻松", "polite": "礼貌温和", "playful": "活泼俏皮"}
@@ -2584,7 +2585,7 @@ def _csm_do_full_reply(batch, user_id):
     reply_msg = {
         "id": last_msg_id + "_reply",
         "role": "assistant",
-        "text": "（出现了未预期的错误，请重新发送一遍。）",
+        "text": "(An unexpected error occurred. Please send your message again.)",
         "time": _user_now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     device_id_for_emotion = ""

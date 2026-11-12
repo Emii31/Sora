@@ -60,8 +60,8 @@ def test_get_tier_client_raises_when_no_key(monkeypatch, tmp_path):
     try:
         ai_config.get_tier_client("memory")
     except RuntimeError as e:
-        assert "记忆模型" in str(e)
-        assert "模型" in str(e)
+        assert "Memory model" in str(e)
+        assert "model" in str(e).lower()
         assert "AI tier" not in str(e)
         assert "Admin UI" not in str(e)
         return
@@ -74,7 +74,7 @@ def test_ping_tier_missing_config_uses_user_facing_copy(monkeypatch, tmp_path):
     result = ai_config.ping_tier("vision")
 
     assert result["ok"] is False
-    assert result["error"] == "视觉模型 缺少 API Key"
+    assert result["error"] == "Vision model missing API Key"
     assert "API key not set" not in result["error"]
     assert "tier" not in result["error"].lower()
 
@@ -83,9 +83,9 @@ def test_missing_model_settings_are_not_retryable():
     import prompt
 
     messages = [
-        "模型配置还没有完成：聊天模型 缺少 API Key。请在 Miru 设置里的「模型」页填写后再试。",
-        "模型配置还没有完成：聊天模型 缺少服务地址。请在 Miru 设置里的「模型」页填写后再试。",
-        "模型配置还没有完成：聊天模型 缺少模型名称。请在 Miru 设置里的「模型」页填写后再试。",
+        "Model configuration incomplete: Chat model missing API Key. Please fill in the service URL, model name, and API Key in the Model settings page in Sora.",
+        "Model configuration incomplete: Chat model missing service URL. Please fill in the service URL, model name, and API Key in the Model settings page in Sora.",
+        "Model configuration incomplete: Chat model missing model name. Please fill in the service URL, model name, and API Key in the Model settings page in Sora.",
     ]
 
     for message in messages:
@@ -615,4 +615,4 @@ def test_ping_vision_rejects_text_only_config(monkeypatch, tmp_path):
     result = ai_config.ping_tier("vision")
 
     assert result["ok"] is False
-    assert "图片输入" in result["error"]
+    assert "Vision model must support image input" in result["error"]

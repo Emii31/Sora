@@ -173,7 +173,7 @@ def test_local_single_device_start_reports_config_persist_failure(monkeypatch, t
     assert body["ok"] is False
     assert body["mode"] == "local"
     assert body["local_only"] is True
-    assert "配置保存失败" in body["error"]
+    assert "local configuration save failed" in body["error"]
     assert body["user_id"].startswith("u_")
 
 

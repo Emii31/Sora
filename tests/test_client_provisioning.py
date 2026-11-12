@@ -850,7 +850,7 @@ def test_client_provisioning_route_rejects_oversized_multipart_before_job(monkey
 
     assert resp.status_code == 400
     body = resp.get_json()
-    assert "过大" in body["error"]
+    assert "too large" in body["error"]
 
 
 def test_image_tar_stream_copy_has_hard_size_limit(tmp_path):

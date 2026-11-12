@@ -119,7 +119,7 @@ def test_client_mode_login_rejects_short_code_without_network(monkeypatch):
     resp = client.post("/api/auth/login", json={"code": "MIRU-ABCDEF"})
 
     assert resp.status_code == 400
-    assert "完整邀请码" in resp.get_json()["error"]
+    assert "complete invitation code" in resp.get_json()["error"]
     assert calls == []
 
 
@@ -135,13 +135,13 @@ def test_client_mode_login_hides_connection_library_details(monkeypatch):
     cases = [
         (
             requests.Timeout("HTTPConnectionPool(host='203.0.113.42') timed out"),
-            "连接服务器超时",
+            "Connection to server timed out",
         ),
         (
             requests.ConnectionError("Max retries exceeded with url: /api/auth/login"),
-            "无法连接邀请码对应的服务器",
+            "Cannot connect to the server",
         ),
-        (requests.RequestException("raw transport detail"), "服务器暂时没有响应"),
+        (requests.RequestException("raw transport detail"), "Server temporarily unresponsive"),
     ]
 
     client = app_mod.app.test_client()
@@ -172,7 +172,7 @@ def test_server_mode_invalid_invitation_message_is_unchanged(monkeypatch):
     )
 
     assert response.status_code == 401
-    assert response.get_json()["error"] == "邀请码无效或已被停用"
+    assert response.get_json()["error"] == "Invalid or deactivated invitation code"
 
 
 def test_client_mode_local_settings_accept_cached_private_server_user(monkeypatch, tmp_path):

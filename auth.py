@@ -1327,7 +1327,7 @@ def check_request(req=None):
                 pass
         # Reject admin token on data routes with a clear message
         if is_admin_token(provided_token):
-            abort(401, description="Admin token不能访问用户数据，请使用邀请码登录")
+            abort(401, description="Admin token cannot access user data, please log in with an invitation code")
         abort(401, description="Invalid token")
 
     # Local requests without token: client mode user or 401

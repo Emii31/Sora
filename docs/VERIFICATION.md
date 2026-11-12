@@ -244,3 +244,10 @@
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
 
+- **Phase 2B.22 Verification (Backend-Only English Translation and Sora Branding)**:
+  - `app.py`, `ai_config.py`, `core.py`, `auth.py`: Translated user-facing backend messages (invite-code validation, login/session errors, setup errors, provisioning errors, journal errors, chat validation, and model-connection fallbacks) to natural English and Sora branding.
+  - Preservation checks: Routes, JSON fields, status codes, authentication, stored identifiers, and Clear All confirmation behavior preserved intact.
+  - Test suite check: All focused unit tests (`test_invitation_direct_login.py`, `test_ai_config.py`, `test_chat_error_copy.py`, `test_local_single_device_mode.py`, `test_client_provisioning.py`, `test_chat_preflight_routing.py`) passed successfully.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 1e3a76ea8237efb832dd876a23a754a17e873bfc` (PASSED).
+

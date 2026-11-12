@@ -289,10 +289,10 @@ def test_chat_with_companion_model_config_error_is_user_facing(tmp_path, monkeyp
         fake_engine.return_value.record_signal.return_value = None
         result = core.chat_with_companion("你好")
 
-    assert "模型" in result["reply"]
-    assert "设置" in result["reply"]
-    assert "AI tier" not in result["reply"]
-    assert "Admin UI" not in result["reply"]
+    assert "models" in result["reply"].lower()
+    assert "settings" in result["reply"].lower()
+    assert "ai tier" not in result["reply"].lower()
+    assert "admin ui" not in result["reply"].lower()
 
 
 def test_csm_generation_error_is_user_facing(tmp_path, monkeypatch):
@@ -330,7 +330,7 @@ def test_csm_generation_error_is_user_facing(tmp_path, monkeypatch):
         }], "u_test")
 
     reply = delivered["reply_msg"]["text"]
-    assert "模型" in reply
-    assert "设置" in reply
-    assert "AI tier" not in reply
-    assert "Admin UI" not in reply
+    assert "models" in reply.lower()
+    assert "settings" in reply.lower()
+    assert "ai tier" not in reply.lower()
+    assert "admin ui" not in reply.lower()

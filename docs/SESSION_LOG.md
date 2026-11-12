@@ -313,3 +313,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified all 54 focused platform and desktop pet tests passed successfully.
 - Updated `docs/TRANSLATION_INVENTORY.md`, `docs/STATUS.md`, and created `docs/phases/PHASE_02B_20.md`.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 603176d8cad991232aab21db8e7355c9147cfe14` (PASSED).
+
+## 2026-11-13 (Phase 2B.22: Backend-Only English Translation and Sora Branding)
+- Translated user-facing backend messages in `app.py`, `ai_config.py`, `core.py`, and `auth.py` to English, covering invite-code validation, login/session errors, setup errors, provisioning errors, journal errors, chat validation, and model-connection fallbacks.
+- Ensured all translations preserve configured character names, user content, and upstream attribution.
+- Maintained backend behavior, including routes, JSON fields, status codes, authentication, and the Clear All confirmation mechanism.
+- Updated unit tests (`test_invitation_direct_login.py`, `test_ai_config.py`, `test_chat_error_copy.py`, `test_local_single_device_mode.py`, `test_client_provisioning.py`, `test_chat_preflight_routing.py`) to match English and Sora messaging.
+- Verified all focused and regression unit tests passed successfully.
+- Enforced history prefix integrity via `scripts/check_history_append_only.py 1e3a76ea8237efb832dd876a23a754a17e873bfc` (PASSED).
+- Updated documentation (`docs/phases/PHASE_02B_22.md`, `docs/STATUS.md`, `docs/TRANSLATION_INVENTORY.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

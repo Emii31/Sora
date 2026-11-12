@@ -34,7 +34,7 @@ def test_backend_friendly_chat_error_mapping_hides_internal_terms():
     import core
 
     samples = [
-        RuntimeError("模型配置还没有完成：聊天模型 缺少服务地址。请在 Miru 设置里的「模型」页填写后再试。"),
+        RuntimeError("Model configuration incomplete: Chat model missing service URL. Please fill in the service URL, model name, and API Key in the Model settings page in Sora."),
         RuntimeError("AI tier 'chat' API Key is not set. Configure via Admin UI > AI 配置."),
         TimeoutError("API timeout after 30s"),
         ConnectionError("connection refused"),
@@ -43,11 +43,11 @@ def test_backend_friendly_chat_error_mapping_hides_internal_terms():
 
     replies = [core._friendly_chat_generation_error(exc) for exc in samples]
 
-    assert "还没有配置好模型" in replies[0]
-    assert "还没有配置好模型" in replies[1]
-    assert "没连上模型服务" in replies[2]
-    assert "没连上模型服务" in replies[3]
-    assert "出了点小问题" in replies[4]
+    assert "I haven't configured my models yet" in replies[0]
+    assert "I haven't configured my models yet" in replies[1]
+    assert "couldn't connect to the model service" in replies[2]
+    assert "couldn't connect to the model service" in replies[3]
+    assert "small issue" in replies[4]
     for reply in replies:
         lowered = reply.lower()
         assert "ai tier" not in lowered
