@@ -25,6 +25,7 @@ from character import get_config
 import storage
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+_last_resolved_chat_policy = None
 
 
 def _user_now() -> datetime:
@@ -2626,6 +2627,8 @@ def _csm_do_full_reply(batch, user_id):
             chat_policy = _resolve_chat_agent_policy(
                 user_text=combined_text, user_image_descs=user_image_descs or None,
             )
+            global _last_resolved_chat_policy
+            _last_resolved_chat_policy = chat_policy
 
             preflight = {}
             if chat_policy.get("mode") != "reactive_fast":

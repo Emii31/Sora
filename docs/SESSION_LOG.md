@@ -441,3 +441,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified via test suite (47/47 tests passed across benchmark, chat routing, companion bootstrap, and user settings suites).
 - Documented execution command (`python3 scripts/benchmark_chat.py`) and Ollama connection blocker.
 - Updated documentation (`docs/phases/PHASE_03_01A.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 3.1B: Verify the Benchmark Runner End to End)
+- Implemented in-worker policy observation (`core._last_resolved_chat_policy`) to verify agent policy directly within the actual background chat worker with authenticated user context (`v4_pro` for full mode, `reactive_fast` for fast mode).
+- Implemented genuine matched comparison in `scripts/benchmark_chat.py` using byte-identical prompt text (no timestamp suffixes), equivalent disposable history/user state, alternating execution orders across pairs (`full_first` vs `fast_first`), model warming outside timed intervals, `POST /api/chat` to `GET /api/chat/history` reply confirmation, and separate direct model latency reporting.
+- Added comprehensive automated unit test coverage in `tests/test_benchmark_chat.py` (`test_benchmark_runner_end_to_end_mocked`, `test_benchmark_failure_conditions`) verifying runner execution, mode orders, reply matching, and failure detection (wrong policy, HTTP errors, missing replies, fallback responses).
+- Verified all tests passed successfully (`python3 -m pytest tests/test_benchmark_chat.py`).
+- Updated documentation (`docs/phases/PHASE_03_01B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

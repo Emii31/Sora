@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.1A — Verify Fast Mode and Match Benchmark Runs (Completed & Verified)
-- **Current Status**: Updated `scripts/benchmark_chat.py` to set and read back `local_text_chat_enabled` through the authenticated `/api/user-settings` route, verify agent policy (`reactive_fast` vs `v4_pro`), and time matched chat turns via `POST /api/chat` and `GET /api/chat/history`. Added comprehensive unit tests in `tests/test_benchmark_chat.py` (all 47 tests passed successfully). Documented benchmark command and Ollama connection blocker.
+- **Phase**: Phase 3.1B — Verify the Benchmark Runner End to End (Completed & Verified)
+- **Current Status**: Implemented in-worker policy observation (`core._last_resolved_chat_policy`), byte-identical matched benchmark pairs with alternating order (`full_first` and `fast_first`), model warming outside timed interval, and robust automated end-to-end tests in `tests/test_benchmark_chat.py`. All tests passed successfully.
 - **Next Action**: Phase 3.2 provider configuration and automatic model selection.

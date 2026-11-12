@@ -8,24 +8,6 @@ import resource
 from openai import OpenAI
 from flask import Flask
 
-# 1. Create disposable DATA_DIR BEFORE importing application modules
-_temp_dir = tempfile.TemporaryDirectory()
-data_dir = _temp_dir.name
-os.environ["DATA_DIR"] = data_dir
-
-# Seed ai_config.json so LLM calls work out of the box in disposable dir
-admin_dir = os.path.join(data_dir, "_admin")
-os.makedirs(admin_dir, exist_ok=True)
-config_path = os.path.join(admin_dir, "ai_config.json")
-with open(config_path, "w", encoding="utf-8") as f:
-    json.dump({
-        "tiers": {
-            "vision": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"},
-            "chat": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"},
-            "memory": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"}
-        }
-    }, f, indent=2)
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import storage
@@ -90,40 +72,33 @@ def verify_and_set_user_setting(client, auth_token: str, fast_mode: bool):
     if persisted_val != fast_mode:
         raise AssertionError(f"Setting persistence failed: expected local_text_chat_enabled={fast_mode}, got {persisted_val}")
 
-    # Verify policy in harness reaches reactive_fast in fast mode and v4_pro in full mode
-    policy = core._resolve_chat_agent_policy(user_text="Matched test prompt")
-    expected_mode = "reactive_fast" if fast_mode else "v4_pro"
-    if policy.get("mode") != expected_mode:
-        raise AssertionError(f"Harness mode mismatch for fast_mode={fast_mode}: expected {expected_mode}, got {policy.get('mode')}")
+    print(f"[Benchmark] Verified setting persistence local_text_chat_enabled={fast_mode}")
 
-    print(f"[Benchmark] Verified setting persistence and policy mode={policy.get('mode')} for fast_mode={fast_mode}")
+def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark test prompt under matched conditions.", order: str = "full_first"):
+    """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order."""
+    modes = [False, True] if order == "full_first" else [True, False]
+    results = {}
 
-def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int = 2, prompt_text: str = "Synthetic benchmark prompt for Sora local chat."):
-    print(f"\n--- Running Benchmark (Fast Mode: {fast_mode}, Turns: {num_turns}) ---")
-    storage._ensure_dirs()
+    for fast_mode in modes:
+        mode_label = "Fast Mode" if fast_mode else "Full Mode"
+        print(f"\n--- Running Benchmark Turn ({mode_label}, Order: {order}) ---")
 
-    # 1. Set and verify mode persistence through authenticated /api/user-settings route
-    verify_and_set_user_setting(client, auth_token, fast_mode)
+        # 1. Set and verify mode persistence through authenticated /api/user-settings route
+        verify_and_set_user_setting(client, auth_token, fast_mode)
 
-    base_url = "http://127.0.0.1:11434/v1"
-    model = "qwen2.5:1.5b-instruct"
-    openai_client = OpenAI(base_url=base_url, api_key="ollama")
+        base_url = "http://127.0.0.1:11434/v1"
+        model = "qwen2.5:1.5b-instruct"
+        openai_client = OpenAI(base_url=base_url, api_key="ollama")
 
-    direct_times = []
-    sora_times = []
-    successes = []
-    headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
-    environ = {"REMOTE_ADDR": "127.0.0.1"}
-
-    for i in range(num_turns):
-        turn_prompt = f"{prompt_text} (Turn {i+1})"
+        headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
+        environ = {"REMOTE_ADDR": "127.0.0.1"}
 
         # 2. Direct model timing (warmed model / connection check) reported separately
         t_direct_start = time.monotonic()
         try:
             resp = openai_client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": turn_prompt}],
+                messages=[{"role": "user", "content": prompt_text}],
                 max_tokens=60,
                 temperature=0.7
             )
@@ -133,28 +108,28 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
             raise ConnectionError(f"Direct Ollama connection failed: {e}") from e
         t_direct_end = time.monotonic()
         direct_time = t_direct_end - t_direct_start
-        direct_times.append(direct_time)
 
         # 3. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
-        unique_text = f"{turn_prompt} [{time.time()}]"
+        # Byte-identical prompt text with no timestamp suffix
+        core._last_resolved_chat_policy = None
         t_sora_start = time.monotonic()
 
         res = client.post(
             "/api/chat",
-            json={"text": unique_text},
+            json={"text": prompt_text},
             headers=headers,
             environ_base=environ
         )
         if res.status_code != 200:
-            print(f"  Turn {i+1} FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
-            successes.append(False)
+            print(f"  FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
+            results[fast_mode] = {"success": False, "error": f"HTTP {res.status_code}"}
             continue
 
         post_data = res.get_json() or {}
         user_msg_id = post_data.get("msg_id")
         if not user_msg_id:
-            print(f"  Turn {i+1} FAILURE: Missing msg_id in response: {post_data}")
-            successes.append(False)
+            print(f"  FAILURE: Missing msg_id in response: {post_data}")
+            results[fast_mode] = {"success": False, "error": "Missing msg_id"}
             continue
 
         expected_reply_id = user_msg_id + "_reply"
@@ -184,6 +159,15 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
         t_sora_end = time.monotonic()
         sora_total_time = t_sora_end - t_sora_start
 
+        # 4. Verify policy observed inside the actual chat worker context
+        observed_policy = getattr(core, "_last_resolved_chat_policy", None) or {}
+        expected_mode = "reactive_fast" if fast_mode else "v4_pro"
+        observed_mode = observed_policy.get("mode")
+        if observed_mode != expected_mode:
+            print(f"  FAILURE: Policy mismatch inside worker: expected {expected_mode}, got {observed_mode}")
+            results[fast_mode] = {"success": False, "error": f"Policy mismatch: expected {expected_mode}, got {observed_mode}"}
+            continue
+
         lower_reply = assistant_reply.lower()
         is_fallback = (
             not success
@@ -197,37 +181,24 @@ def run_benchmark_mode(client, auth_token: str, fast_mode: bool, num_turns: int 
         )
 
         if is_fallback:
-            print(f"  Turn {i+1} FAILURE: Timeout, missing reply, or error fallback received: {assistant_reply}")
-            successes.append(False)
+            print(f"  FAILURE: Timeout, missing reply, or error fallback received: {assistant_reply}")
+            results[fast_mode] = {"success": False, "error": f"Fallback/missing reply: {assistant_reply}"}
         else:
-            print(f"  Turn {i+1} Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Reply: {assistant_reply[:60]}...")
-            sora_times.append(sora_total_time)
-            successes.append(True)
+            print(f"  Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Policy: {observed_mode} | Reply: {assistant_reply[:60]}...")
+            results[fast_mode] = {
+                "success": True,
+                "direct_time": direct_time,
+                "sora_time": sora_total_time,
+                "policy_mode": observed_mode,
+                "reply": assistant_reply
+            }
 
         time.sleep(1.0)
 
-    all_success = all(successes) and len(sora_times) > 0
-    median_direct = statistics.median(direct_times) if direct_times else 0.0
-    median_sora = statistics.median(sora_times) if sora_times else None
+    return results
 
-    py_rss = get_python_rss_mb()
-    ollama_rss = get_ollama_rss_mb()
-    ollama_str = f"{ollama_rss:.2f} MB" if ollama_rss is not None else "Unavailable"
-    print(f"  Mode summary (fast={fast_mode}): Success={all_success} | Median Direct Latency={median_direct:.2f}s | Median Send-to-History={median_sora if median_sora is not None else 'TIMEOUT'}s | Python RSS={py_rss:.2f} MB | Ollama RSS={ollama_str}")
-
-    return {
-        "fast_mode": fast_mode,
-        "direct_times": direct_times,
-        "median_direct": median_direct,
-        "sora_times": sora_times,
-        "median_sora": median_sora,
-        "success": all_success,
-        "py_rss": py_rss,
-        "ollama_rss": ollama_rss
-    }
-
-def main():
-    print("=== Sora Local Chat Matched Benchmark (Phase 3.1A) ===")
+def run_benchmark():
+    print("=== Sora Local Chat Matched Benchmark (Phase 3.1B) ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
@@ -236,19 +207,51 @@ def main():
 
     prompt_text = "Benchmark test prompt under matched conditions."
 
-    # Alternate mode order across pairs (Full then Fast, with independent state)
-    res_full = run_benchmark_mode(client, auth_token, fast_mode=False, num_turns=2, prompt_text=prompt_text)
-    time.sleep(2.0)
-    res_fast = run_benchmark_mode(client, auth_token, fast_mode=True, num_turns=2, prompt_text=prompt_text)
+    # Run at least two pairs with alternating orders (Pair 1: full_first, Pair 2: fast_first)
+    print("\n--- Pair 1 (full_first) ---")
+    pair1 = run_benchmark_pair(client, auth_token, prompt_text=prompt_text, order="full_first")
+
+    print("\n--- Pair 2 (fast_first) ---")
+    pair2 = run_benchmark_pair(client, auth_token, prompt_text=prompt_text, order="fast_first")
 
     print("\n=== Benchmark Summary ===")
-    print(f"Full Mode  : Median Direct={res_full.get('median_direct', 0):.2f}s, Median Sora Total={res_full.get('median_sora', 'TIMEOUT')}s, Success={res_full.get('success')}")
-    print(f"Fast Mode  : Median Direct={res_fast.get('median_direct', 0):.2f}s, Median Sora Total={res_fast.get('median_sora', 'TIMEOUT')}s, Success={res_fast.get('success')}")
+    all_success = all(p.get("success", False) for p in list(pair1.values()) + list(pair2.values()))
+    print(f"Overall Success: {all_success}")
 
-    _temp_dir.cleanup()
+    return {
+        "pair1": pair1,
+        "pair2": pair2,
+        "success": all_success
+    }
 
-    if not res_full.get('success') or not res_fast.get('success'):
-        print("ERROR: Benchmark failed in one or more modes.", file=sys.stderr)
+def main():
+    _temp_dir = tempfile.TemporaryDirectory()
+    data_dir = _temp_dir.name
+    os.environ["DATA_DIR"] = data_dir
+    admin_dir = os.path.join(data_dir, "_admin")
+    os.makedirs(admin_dir, exist_ok=True)
+    config_path = os.path.join(admin_dir, "ai_config.json")
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "tiers": {
+                "vision": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"},
+                "chat": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"},
+                "memory": {"host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct"}
+            }
+        }, f, indent=2)
+
+    ai_config.invalidate_cache()
+    storage._ensure_dirs()
+
+    try:
+        res = run_benchmark()
+        _temp_dir.cleanup()
+        if not res.get("success"):
+            print("ERROR: Benchmark failed in one or more pairs.", file=sys.stderr)
+            sys.exit(1)
+    except Exception as e:
+        print(f"ERROR: Benchmark execution error: {e}", file=sys.stderr)
+        _temp_dir.cleanup()
         sys.exit(1)
 
 if __name__ == "__main__":

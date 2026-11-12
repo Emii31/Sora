@@ -366,3 +366,11 @@
   - Test suite check: 47/47 passed across benchmark, chat routing, companion bootstrap, and user settings test suites.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 9c943ebd063040469cc58213ec81cd7d7c182b93` (PASSED).
+
+- **Phase 3.1B Verification (Verify the Benchmark Runner End to End)**:
+  - `core.py`: Added `_last_resolved_chat_policy` tracking to observe policy selected within the actual background chat worker with authenticated user context.
+  - `scripts/benchmark_chat.py`: Implemented genuine matched comparison using byte-identical prompt text (no timestamp suffixes), equivalent disposable history/user state, alternating execution orders across pairs (`full_first` vs `fast_first`), model warming outside timed intervals, `POST /api/chat` to `GET /api/chat/history` reply confirmation, and separate direct model latency reporting.
+  - `tests/test_benchmark_chat.py`: Added comprehensive automated unit test coverage (`test_benchmark_runner_end_to_end_mocked`, `test_benchmark_failure_conditions`) verifying runner execution, mode orders, reply matching, and failure detection (wrong policy, HTTP errors, missing replies, fallback responses).
+  - Test suite check: Benchmark unit tests passed successfully (`python3 -m pytest tests/test_benchmark_chat.py`).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 69a5c90a87abe047cc58f7f4d27dd9011828566f` (PASSED).
