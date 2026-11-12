@@ -372,3 +372,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified all 180 unit tests across memory, slot writer, persona writer, attention, and chat preflight suites passed successfully.
 - Enforced history prefix integrity via `scripts/check_history_append_only.py 7c229d9ca1fba140b1eb8782b023c3f2841ecfc4` (PASSED).
 - Updated documentation (`docs/phases/PHASE_02B_28.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 2B.29: English Screen Memory Prompts and Writer Contract Repair)
+- Repaired screen slot writer’s empty observation input contract in `memory_prompts_v3.py`: restored returning `ScreenSlotWriterOutput(skipped_reason="empty observation")` for blank/empty observations instead of `None`, with zero model calls made on empty input.
+- Finished chat writer naming and translated screen memory prompts (`SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT`, `SCREEN_SLOT_WRITER_SYSTEM_PROMPT`) along with associated builder-sent text to natural English with Sora/Miru branding.
+- Wired chat and screen memory prompt builders and callers to use configured character name (`miru_name`).
+- Preserved observation text, stored memories in original language, JSON schemas, enums, thresholds, limits, routing, capture behavior, and write rules intact.
+- Verified behavior with synthetic multilingual data and mocked model calls. Focused test suite (slot writer, persona writer, screen gate, attention life scenarios, chat preflight) passed successfully (70/70 passed).
+- Updated project status and documentation (`docs/phases/PHASE_02B_29.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 6ff34c0081cc687b92de66d795b7860b148c3405` (PASSED).

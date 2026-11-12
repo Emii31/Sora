@@ -1,9 +1,12 @@
 import os
+import sys
 from datetime import datetime
 from types import SimpleNamespace
 from unittest.mock import patch
 
 from flask import Flask, g
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 
 _TODAY = datetime.now().strftime("%Y-%m-%d")
@@ -199,3 +202,21 @@ def test_screen_semantic_gate_log_is_per_user_isolated(tmp_path):
         assert storage.get_screenshot_stats()["dev_shared"]["total"] == 1
     finally:
         ctx1_again.pop()
+
+
+def test_call_screen_slot_writer_empty_observation():
+    from memory_prompts_v3 import call_screen_slot_writer, ScreenSlotWriterOutput
+    with patch("memory_prompts_v3._call_llm_with_retry") as mock_llm:
+        out = call_screen_slot_writer(
+            user_name="李垦",
+            identity_ground_truth="",
+            slot_index={},
+            active_commitments=[],
+            observation="   ",
+            significance=3,
+            device_name="MacBook",
+            captured_at="2026-05-20T20:00:00",
+        )
+        assert isinstance(out, ScreenSlotWriterOutput)
+        assert out.skipped_reason == "empty observation"
+        assert not mock_llm.called

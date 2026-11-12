@@ -293,3 +293,10 @@
   - `git diff --check`: PASS.
   - Test suite check: 180/180 unit tests passed across slot writer, persona writer, attention, and chat preflight suites.
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py 7c229d9ca1fba140b1eb8782b023c3f2841ecfc4` (PASSED).
+
+- **Phase 2B.29 Verification (English Screen Memory Prompts and Writer Contract Repair)**:
+  - `memory_prompts_v3.py`: Translated `SCREEN_SEMANTIC_GATE_SYSTEM_PROMPT`, `SCREEN_SLOT_WRITER_SYSTEM_PROMPT`, and builder-sent strings to English with Sora/Miru branding; supported `miru_name` character configuration in chat and screen memory writers; repaired empty-input contract for `call_screen_slot_writer()` returning `ScreenSlotWriterOutput(skipped_reason="empty observation")` without making LLM calls.
+  - Preservation checks: Observation text and stored memories in original language; Pydantic models (`NewSlotMeta`, `IntegrationSpec`, `SlotWrite`, `SlotWriterOutput`, `BlockUpdate`, `PersonaWriterOutput`, `NewCommitment`, `ScreenSlotWriterOutput`, `ScreenSemanticGateOutput`), JSON keys, sizes, enums, thresholds, limits, routing, capture behavior, and write rules strictly preserved.
+  - Test suite check: Focused test suites (`tests/test_slot_writer_v3_schema.py`, `tests/test_persona_writer_v3_schema.py`, `tests/test_screen_semantic_gate.py`, `tests/test_attention_life_scenarios.py`, `tests/test_chat_preflight_routing.py`) passed successfully (70/70 passed).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 6ff34c0081cc687b92de66d795b7860b148c3405` (PASSED).

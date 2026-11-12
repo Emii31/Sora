@@ -232,6 +232,15 @@ class SleepAgent:
             pass
 
         current_time = datetime.now().isoformat(timespec="seconds")
+        miru_name = "Miru"
+        try:
+            from character import get_config
+            cfg = get_config()
+            if cfg and cfg.name:
+                miru_name = cfg.name
+        except Exception:
+            pass
+
         print(f"[SleepAgent] Processing {len(messages)} messages...")
 
         # ─── Step 1: Slot Writer ───
@@ -242,6 +251,7 @@ class SleepAgent:
             active_commitments=active_commitments,
             messages=messages,
             current_time=current_time,
+            miru_name=miru_name,
         )
 
         slot_writes_dispatched = []
