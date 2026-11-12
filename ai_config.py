@@ -267,12 +267,13 @@ def _persist_resolved_base_url(tier: str, base_url: str) -> None:
         saved = _load_saved()
         tiers = saved.get("tiers")
         if not isinstance(tiers, dict):
-            tiers = {}
-            saved["tiers"] = tiers
+            return
         tier_saved = tiers.get(tier)
         if not isinstance(tier_saved, dict):
-            tier_saved = {}
-            tiers[tier] = tier_saved
+            return
+        # Only persist if tier already had a tier-specific host override
+        if not tier_saved.get("host"):
+            return
         if tier_saved.get("host") == normalized:
             return
 
@@ -286,7 +287,7 @@ def _persist_resolved_base_url(tier: str, base_url: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Automatic Model Discovery
+# Automatic Model Discovery & Capability Validation
 # ---------------------------------------------------------------------------
 
 def discover_provider_models(host: str, api_key: str) -> list[str]:
@@ -311,6 +312,33 @@ def discover_provider_models(host: str, api_key: str) -> list[str]:
     return []
 
 
+def _discover_and_select_model(host: str, api_key: str, tier: str) -> tuple[str, bool]:
+    """Discover models and select best match using capability evidence."""
+    if not host or not api_key:
+        return "", (tier == "vision" and False)
+    models = discover_provider_models(host, api_key)
+    if not models:
+        return "", (tier == "vision" and False)
+
+    if tier == "vision":
+        vision_matches = [m for m in models if any(k in m.lower() for k in ("vision", "vl", "omni", "multimodal", "gpt-4o", "sonnet"))]
+        if vision_matches:
+            return vision_matches[0], True
+        else:
+            return "", False
+    else:
+        text_matches = [m for m in models if any(k in m.lower() for k in ("instruct", "chat", "gpt", "claude", "qwen", "llama", "deepseek", "flash", "pro"))]
+        if text_matches:
+            return text_matches[0], False
+        elif len(models) == 1:
+            m = models[0]
+            if not any(k in m.lower() for k in ("embed", "embedding", "whisper", "tts", "stt", "rerank")):
+                return m, False
+            return "", False
+        else:
+            return "", False
+
+
 # ---------------------------------------------------------------------------
 # Resolution: tier override → shared provider → env → default
 # ---------------------------------------------------------------------------
@@ -329,18 +357,19 @@ def _resolve_tier(tier: str, saved: dict) -> dict:
     defaults = _DEFAULT_PER_TIER[tier]
 
     has_tier_host = bool(tier_saved.get("host"))
-    has_tier_key = bool(tier_saved.get("api_key"))
 
-    if has_tier_host or has_tier_key:
-        host = tier_saved.get("host", "") or os.environ.get(env_host_var, "") or defaults["host"]
-        api_key = tier_saved.get("api_key", "") or os.environ.get(env_key_var, "") or defaults["api_key"]
+    if has_tier_host:
+        host = tier_saved.get("host", "")
+        api_key = tier_saved.get("api_key", "")
     elif shared_host and shared_key:
-        # Resolve endpoint and credential together from shared provider
         host = shared_host
         api_key = shared_key
+    elif os.environ.get(env_host_var):
+        host = os.environ.get(env_host_var, "")
+        api_key = os.environ.get(env_key_var, "")
     else:
-        host = os.environ.get(env_host_var, "") or os.environ.get("AI_HOST", "") or defaults["host"]
-        api_key = os.environ.get(env_key_var, "") or os.environ.get("AI_API_KEY", "") or defaults["api_key"]
+        host = os.environ.get("AI_HOST", "") or defaults["host"]
+        api_key = os.environ.get("AI_API_KEY", "") or defaults["api_key"]
 
     model = tier_saved.get("model") or os.environ.get(env_model_var, "") or os.environ.get("AI_MODEL", "") or defaults["model"]
     supports_images = bool(tier_saved.get("supports_images", defaults["supports_images"]))
@@ -348,22 +377,6 @@ def _resolve_tier(tier: str, saved: dict) -> dict:
     normalized_host = _normalize_host(host)
     trimmed_key = str(api_key or "").strip()
     trimmed_model = str(model or "").strip()
-
-    # Automatic model selection if model is empty and host+key are present
-    if not trimmed_model and normalized_host and trimmed_key:
-        discovered = discover_provider_models(normalized_host, trimmed_key)
-        if discovered:
-            if tier == "vision":
-                vision_models = [m for m in discovered if any(k in m.lower() for k in ("vision", "vl", "omni", "multimodal", "gpt-4o", "sonnet"))]
-                if vision_models:
-                    trimmed_model = vision_models[0]
-                    supports_images = True
-            else:
-                text_models = [m for m in discovered if any(k in m.lower() for k in ("instruct", "chat", "gpt", "claude", "qwen", "llama", "deepseek", "flash", "pro"))]
-                if text_models:
-                    trimmed_model = text_models[0]
-                else:
-                    trimmed_model = discovered[0]
 
     return {
         "host": normalized_host,
@@ -497,9 +510,27 @@ def update_shared_config(payload: dict) -> dict:
             host = _normalize_host(payload["host"])
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
+            old_host = cur.get("host", "")
             cur["host"] = host
+            if old_host and old_host != host and "api_key" not in payload and not payload.get("clear_api_key"):
+                cur["api_key"] = ""
 
         saved["shared"] = cur
+        sh_host = cur.get("host", "")
+        sh_key = cur.get("api_key", "")
+        if sh_host and sh_key:
+            if "tiers" not in saved or not isinstance(saved["tiers"], dict):
+                saved["tiers"] = {}
+            for t in TIERS:
+                if t not in saved["tiers"]:
+                    saved["tiers"][t] = {}
+                if not saved["tiers"][t].get("model"):
+                    m, sup = _discover_and_select_model(sh_host, sh_key, t)
+                    if m:
+                        saved["tiers"][t]["model"] = m
+                        if t == "vision":
+                            saved["tiers"][t]["supports_images"] = sup
+
         from datetime import datetime as _dt
         saved["updated_at"] = _dt.now().isoformat(timespec="seconds")
         saved["version"] = 2
@@ -535,13 +566,25 @@ def update_tier_config(tier: str, payload: dict) -> dict:
             host = _normalize_host(payload["host"])
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
+            old_host = cur.get("host", "")
             cur["host"] = host
+            if old_host and old_host != host and "api_key" not in payload and not payload.get("clear_api_key"):
+                cur["api_key"] = ""
 
         if "model" in payload and payload["model"] is not None:
             model = str(payload["model"]).strip()
             if not model:
                 return {"ok": False, "error": "model cannot be empty"}
             cur["model"] = model
+
+        active_host = cur.get("host") or saved.get("shared", {}).get("host", "")
+        active_key = cur.get("api_key") or saved.get("shared", {}).get("api_key", "")
+        if not cur.get("model") and active_host and active_key:
+            m, sup = _discover_and_select_model(active_host, active_key, tier)
+            if m:
+                cur["model"] = m
+                if tier == "vision":
+                    cur["supports_images"] = sup
 
         if "supports_images" in payload:
             cur["supports_images"] = bool(payload["supports_images"])

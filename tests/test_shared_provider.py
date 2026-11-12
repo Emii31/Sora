@@ -103,3 +103,74 @@ def test_automatic_model_selection_mocked(tmp_path, monkeypatch):
     vision_cfg = ai_config.get_tier_config("vision")
     assert vision_cfg["model"] == "qwen2.5-vl:7b"
     assert vision_cfg["supports_images"] is True
+
+
+def test_host_only_update_clears_key(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    ai_config.update_shared_config({
+        "host": "provider-a.com",
+        "api_key": "secret-key-A"
+    })
+    pub1 = ai_config.get_public_config()
+    assert pub1["shared"]["has_api_key"] is True
+
+    # Host-only update to provider B without api_key
+    ai_config.update_shared_config({
+        "host": "provider-b.com"
+    })
+    pub2 = ai_config.get_public_config()
+    assert pub2["shared"]["host"] == "provider-b.com"
+    assert pub2["shared"]["has_api_key"] is False
+    assert pub2["shared"]["api_key_masked"] == ""
+
+
+def test_ping_tier_inheriting_does_not_create_override(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    admin_dir = os.path.join(data_dir, "_admin")
+    os.makedirs(admin_dir, exist_ok=True)
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    ai_config.invalidate_cache()
+
+    ai_config.update_shared_config({
+        "host": "shared-provider.com",
+        "api_key": "shared-key"
+    })
+    ai_config.update_tier_config("chat", {"model": "gpt-4o-mini"})
+
+    # Verify chat inherits shared host
+    assert ai_config.get_tier_config("chat")["host"] == "shared-provider.com"
+
+    # Mock OpenAI client for ping_tier
+    mock_client = MagicMock()
+    mock_client.chat.completions.create.return_value = MagicMock()
+    with patch("openai.OpenAI", return_value=mock_client):
+        res = ai_config.ping_tier("chat")
+        assert res["ok"] is True
+
+    # Verify that pinging chat did NOT create a tier override for host in saved json
+    saved = ai_config._load_saved()
+    assert "chat" not in saved.get("tiers", {}) or "host" not in saved["tiers"]["chat"]
+    assert ai_config.get_tier_config("chat")["host"] == "shared-provider.com"
+
+
+def test_capability_based_model_selection_ambiguous_and_vision(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    # Ambiguous / non-text models without text evidence
+    monkeypatch.setattr(ai_config, "discover_provider_models", lambda host, key: ["model-embedding", "model-rerank"])
+
+    ai_config.update_shared_config({
+        "host": "localhost:11434",
+        "api_key": "ollama"
+    })
+
+    chat_cfg = ai_config.get_tier_config("chat")
+    # Should leave model empty because capability is ambiguous / unknown for chat
+    assert chat_cfg["model"] == ""

@@ -457,3 +457,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Added comprehensive test suite in `tests/test_shared_provider.py` (all tests passed successfully).
 - Noted live benchmark status details (Phase 3.1B runner imports auth before setting disposable `DATA_DIR` and reuses history across turns; live benchmark runner timings remain pending).
 - Updated documentation (`docs/phases/PHASE_03_02.md`, `docs/STATUS.md`, `docs/ROADMAP.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 3.2A: Shared Provider Credential and Model Selection Fixes)
+- Bound credentials securely to their provider: host-only updates clear previous provider keys (`api_key = ""`) to prevent cross-provider credential leakage across shared settings, tier overrides, and environment fallbacks.
+- Preserved shared inheritance after connection tests: `_persist_resolved_base_url()` now only persists resolved base URLs if the tier already has an explicit tier-specific host override, ensuring `ping_tier()` on inheriting tiers does not create unwanted overrides.
+- Implemented capability-based model selection (`_discover_and_select_model`): removed discovery from ordinary config reads and chat requests, enforcing strict text and vision capability evidence checks.
+- Verified with comprehensive test suites (41 tests passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`).
+- Updated project documentation and status files.
