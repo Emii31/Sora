@@ -486,3 +486,12 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Test suite verification: 50/50 unit tests passed successfully across `tests/test_owner_ai_config.py`, `tests/test_shared_provider.py`, and `tests/test_ai_config.py`.
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py bc8d464616a46a90c0a926e96a30d0b189c8d9f4` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_02C.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-14 (Phase 3.2D: Prevent Credential Reuse After Endpoint Change)
+- Implemented effective API base URL endpoint comparison (`_is_same_endpoint`) in `ai_config.py` before provider operations (`update_shared_config`, `update_tier_config`).
+- Prevented credential reuse after an endpoint change: switching to a different endpoint without a replacement key clears saved credentials (`api_key = ""`), while same-endpoint updates (including equivalent URL spellings) preserve saved credentials.
+- Maintained `clear_api_key: true` as an explicit clearing mechanism.
+- Invalidated automatic model selections (`auto_model`, `auto_model_host`) when the connection changes.
+- Updated and verified test suites (`tests/test_shared_provider.py`, `tests/test_ai_config.py`, `tests/test_owner_ai_config.py` — 52/52 tests passed).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py c4b9f4e9e9e6dff11463a9739b4b50a1a79fac74` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_02D.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

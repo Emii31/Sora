@@ -105,7 +105,37 @@ def test_automatic_model_selection_mocked(tmp_path, monkeypatch):
     assert vision_cfg["supports_images"] is True
 
 
-def test_host_only_update_clears_key(tmp_path, monkeypatch):
+def test_endpoint_change_clears_key_and_prevents_credential_reuse(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    discovered_calls = []
+    def mock_discover(host, key):
+        discovered_calls.append((host, key))
+        return ["model:instruct"]
+
+    monkeypatch.setattr(ai_config, "discover_provider_models", mock_discover)
+
+    ai_config.update_shared_config({
+        "host": "provider-a.com",
+        "api_key": "secret-key-A"
+    })
+    assert ai_config.get_public_config()["shared"]["has_api_key"] is True
+    discovered_calls.clear()
+
+    # Update to a different endpoint without api_key should clear key and send no discovery request with old key
+    ai_config.update_shared_config({
+        "host": "provider-b.com"
+    })
+    pub = ai_config.get_public_config()
+    assert pub["shared"]["host"] == "provider-b.com"
+    assert pub["shared"]["has_api_key"] is False
+    assert len(discovered_calls) == 0
+
+
+def test_same_endpoint_blank_update_preserves_credential(tmp_path, monkeypatch):
     data_dir = str(tmp_path / "data")
     monkeypatch.setenv("DATA_DIR", data_dir)
     os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
@@ -115,17 +145,41 @@ def test_host_only_update_clears_key(tmp_path, monkeypatch):
         "host": "provider-a.com",
         "api_key": "secret-key-A"
     })
-    pub1 = ai_config.get_public_config()
-    assert pub1["shared"]["has_api_key"] is True
+    assert ai_config.get_public_config()["shared"]["has_api_key"] is True
 
-    # Host-only update to provider B without api_key preserves the key
+    # Same endpoint spelling update (e.g., adding /v1) without api_key preserves credential
     ai_config.update_shared_config({
-        "host": "provider-b.com"
+        "host": "provider-a.com/v1"
     })
-    pub2 = ai_config.get_public_config()
-    assert pub2["shared"]["host"] == "provider-b.com"
-    assert pub2["shared"]["has_api_key"] is True
-    assert pub2["shared"]["api_key_masked"] != ""
+    pub = ai_config.get_public_config()
+    assert pub["shared"]["has_api_key"] is True
+
+
+def test_explicit_clearing_and_replacement_key(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    ai_config.update_shared_config({
+        "host": "provider-a.com",
+        "api_key": "secret-key-A"
+    })
+
+    # Explicit clear
+    ai_config.update_shared_config({
+        "clear_api_key": True
+    })
+    assert ai_config.get_public_config()["shared"]["has_api_key"] is False
+
+    # New endpoint with replacement key
+    ai_config.update_shared_config({
+        "host": "provider-c.com",
+        "api_key": "secret-key-C"
+    })
+    pub = ai_config.get_public_config()
+    assert pub["shared"]["host"] == "provider-c.com"
+    assert pub["shared"]["has_api_key"] is True
 
 
 def test_ping_tier_inheriting_does_not_create_override(tmp_path, monkeypatch):

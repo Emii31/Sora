@@ -391,3 +391,11 @@
   - Test suite check: 50/50 passed across `tests/test_owner_ai_config.py`, `tests/test_shared_provider.py`, and `tests/test_ai_config.py`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py bc8d464616a46a90c0a926e96a30d0b189c8d9f4` (PASSED).
+
+- **Phase 3.2D Verification (Prevent Credential Reuse After Endpoint Change)**:
+  - `ai_config.py`: Implemented robust effective API base URL comparison (`_is_same_endpoint`) to detect endpoint changes vs same-endpoint updates (distinguishing different provider paths and preserving equivalent URL spellings).
+  - Credential Protection: Same-endpoint updates (blank/omitted/null keys) preserve saved credentials; different-endpoint updates without a new replacement key clear saved credentials (`api_key = ""`) to prevent credential reuse after an endpoint change. Explicit clearing supported via `clear_api_key: true`.
+  - Model Invalidation: Automatic model selections are invalidated when the connection changes.
+  - Test Suite Check: 52/52 tests passed successfully across `tests/test_shared_provider.py`, `tests/test_ai_config.py`, and `tests/test_owner_ai_config.py`.
+  - Git diff check: PASS (clean whitespace, zero unexpected deletions).
+  - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c4b9f4e9e9e6dff11463a9739b4b50a1a79fac74` (PASSED).

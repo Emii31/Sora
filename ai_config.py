@@ -126,6 +126,16 @@ def _normalize_host(value: str) -> str:
     return host
 
 
+def _is_same_endpoint(old_host: str, new_host: str) -> bool:
+    if not old_host and not new_host:
+        return True
+    if not old_host or not new_host:
+        return False
+    old_base = _openai_base_url_from_host(old_host)
+    new_base = _openai_base_url_from_host(new_host)
+    return old_base == new_base
+
+
 def _is_loopback(host_or_url: str) -> bool:
     raw = str(host_or_url).strip()
     if not raw:
@@ -513,6 +523,20 @@ def update_shared_config(payload: dict) -> dict:
         old_host = cur.get("host", "")
         old_key = cur.get("api_key", "")
 
+        has_host_field = "host" in payload
+        raw_host = payload.get("host")
+
+        if has_host_field and raw_host is not None:
+            new_host = _normalize_host(raw_host)
+            if not new_host:
+                return {"ok": False, "error": "host cannot be empty"}
+            cur["host"] = new_host
+        elif has_host_field and raw_host is None:
+            cur["host"] = ""
+            new_host = ""
+        else:
+            new_host = old_host
+
         clear_key = payload.get("clear_api_key")
         has_api_key_field = "api_key" in payload
         raw_api_key = payload.get("api_key")
@@ -521,22 +545,18 @@ def update_shared_config(payload: dict) -> dict:
             cur["api_key"] = ""
         elif has_api_key_field and raw_api_key is not None and str(raw_api_key).strip() != "":
             cur["api_key"] = str(raw_api_key).strip()
-
-        has_host_field = "host" in payload
-        raw_host = payload.get("host")
-
-        if has_host_field and raw_host is not None:
-            host = _normalize_host(raw_host)
-            if not host:
-                return {"ok": False, "error": "host cannot be empty"}
-            cur["host"] = host
-        elif has_host_field and raw_host is None:
-            cur["host"] = ""
+        else:
+            if _is_same_endpoint(old_host, new_host) or not old_host:
+                cur["api_key"] = old_key
+            else:
+                cur["api_key"] = ""
 
         sh_host = cur.get("host", "")
         sh_key = cur.get("api_key", "")
 
-        if old_host != sh_host or old_key != sh_key:
+        connection_changed = (old_host != sh_host) or (old_key != sh_key) or (not _is_same_endpoint(old_host, sh_host))
+
+        if connection_changed:
             if "tiers" in saved and isinstance(saved["tiers"], dict):
                 for t, t_saved in saved["tiers"].items():
                     if isinstance(t_saved, dict):
@@ -555,15 +575,16 @@ def update_shared_config(payload: dict) -> dict:
                 # Shared discovery must only update tiers that inherit that connection (no explicit host override)
                 if not t_saved.get("host"):
                     if not t_saved.get("model"):
-                        m, sup = _discover_and_select_model(sh_host, sh_key, t)
-                        if m:
-                            t_saved["auto_model"] = m
-                            t_saved["auto_model_host"] = sh_host
-                            if t == "vision":
-                                t_saved["supports_images"] = sup
-                        else:
-                            t_saved["auto_model"] = ""
-                            t_saved["auto_model_host"] = ""
+                        if connection_changed or not t_saved.get("auto_model"):
+                            m, sup = _discover_and_select_model(sh_host, sh_key, t)
+                            if m:
+                                t_saved["auto_model"] = m
+                                t_saved["auto_model_host"] = sh_host
+                                if t == "vision":
+                                    t_saved["supports_images"] = sup
+                            else:
+                                t_saved["auto_model"] = ""
+                                t_saved["auto_model_host"] = ""
         else:
             if "tiers" in saved and isinstance(saved["tiers"], dict):
                 for t, t_saved in saved["tiers"].items():
@@ -599,6 +620,20 @@ def update_tier_config(tier: str, payload: dict) -> dict:
         old_host = cur.get("host", "")
         old_key = cur.get("api_key", "")
 
+        has_host_field = "host" in payload
+        raw_host = payload.get("host")
+
+        if has_host_field and raw_host is not None:
+            new_host = _normalize_host(raw_host)
+            if not new_host:
+                return {"ok": False, "error": "host cannot be empty"}
+            cur["host"] = new_host
+        elif has_host_field and raw_host is None:
+            cur["host"] = ""
+            new_host = ""
+        else:
+            new_host = old_host
+
         clear_key = payload.get("clear_api_key")
         has_api_key_field = "api_key" in payload
         raw_api_key = payload.get("api_key")
@@ -607,17 +642,11 @@ def update_tier_config(tier: str, payload: dict) -> dict:
             cur["api_key"] = ""
         elif has_api_key_field and raw_api_key is not None and str(raw_api_key).strip() != "":
             cur["api_key"] = str(raw_api_key).strip()
-
-        has_host_field = "host" in payload
-        raw_host = payload.get("host")
-
-        if has_host_field and raw_host is not None:
-            host = _normalize_host(raw_host)
-            if not host:
-                return {"ok": False, "error": "host cannot be empty"}
-            cur["host"] = host
-        elif has_host_field and raw_host is None:
-            cur["host"] = ""
+        else:
+            if _is_same_endpoint(old_host, new_host) or not old_host:
+                cur["api_key"] = old_key
+            else:
+                cur["api_key"] = ""
 
         if "model" in payload and payload["model"] is not None:
             model = str(payload["model"]).strip()
@@ -628,13 +657,15 @@ def update_tier_config(tier: str, payload: dict) -> dict:
         active_host = cur.get("host", "")
         active_key = cur.get("api_key", "")
 
-        if old_host != active_host or old_key != active_key:
+        connection_changed = (old_host != active_host) or (old_key != active_key) or (not _is_same_endpoint(old_host, active_host))
+
+        if connection_changed:
             if cur.get("auto_model_host") and cur.get("auto_model_host") != active_host:
                 cur["auto_model"] = ""
                 cur["auto_model_host"] = ""
 
         if not cur.get("model") and active_host and active_key:
-            if cur.get("auto_model_host") != active_host:
+            if connection_changed or cur.get("auto_model_host") != active_host:
                 m, sup = _discover_and_select_model(active_host, active_key, tier)
                 if m:
                     cur["auto_model"] = m
