@@ -476,3 +476,13 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified test suite: 43/43 passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`.
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 5735c90f90e579274e3ff8bcb39b051172c0a8ab` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_02B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-13 (Phase 3.2C: Provider Credential Binding and Owner API Regression)
+- Unified connection resolution in `ai_config.py`: setup-time discovery, connection tests (`ping_tier`), and inference (`get_tier_client`) all share exact resolution rules via `_resolve_tier()`.
+- Removed independent shared-key fallback in `update_tier_config()`. Explicit tier endpoints now use their own credentials exclusively without falling back to shared keys.
+- Restored owner PATCH compatibility: existing clients sending blank/omitted fields preserve saved keys. Explicit key clearing is handled via `clear_api_key: true`. Omitted, blank, and null fields are treated consistently.
+- Limited shared discovery (`update_shared_config()`) to update only inheriting tiers (tiers without explicit tier-specific host overrides).
+- Added regression test `test_discovery_exact_endpoint_and_key` verifying exact endpoint and key passed to discovery.
+- Test suite verification: 50/50 unit tests passed successfully across `tests/test_owner_ai_config.py`, `tests/test_shared_provider.py`, and `tests/test_ai_config.py`.
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py bc8d464616a46a90c0a926e96a30d0b189c8d9f4` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_02C.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

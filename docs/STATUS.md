@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.2B — Keep Provider Credentials and Model Selections Together (Completed & Verified)
-- **Current Status**: Bound automatic model selections to their connection: discovered model IDs are tracked separately from explicit overrides (`auto_model`/`auto_model_host`), invalidated when the endpoint or credential changes, and re-discovered only at setup time. Discovery stays out of config reads and chat requests. Omitted, blank, and null credentials are treated consistently. Verified with mocked clients that no request carries a credential belonging to a different endpoint (43 tests passed across tests/test_ai_config.py and tests/test_shared_provider.py).
-- **Next Action**: Stop after Phase 3.2B.
+- **Phase**: Phase 3.2C — Provider Credential Binding and Owner API Regression (Completed & Verified)
+- **Current Status**: Unified connection resolution across setup, discovery, ping, and inference (`_resolve_tier`); removed shared-key fallback for tier overrides; restored owner PATCH compatibility (preserving saved keys on blank/omitted updates while supporting explicit clearing); limited shared discovery to inheriting tiers; added regression testing for exact discovery endpoint/key passing (50/50 tests passed across `tests/test_owner_ai_config.py`, `tests/test_shared_provider.py`, and `tests/test_ai_config.py`).
+- **Next Action**: Stop after Phase 3.2C.

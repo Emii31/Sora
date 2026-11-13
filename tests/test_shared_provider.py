@@ -118,14 +118,14 @@ def test_host_only_update_clears_key(tmp_path, monkeypatch):
     pub1 = ai_config.get_public_config()
     assert pub1["shared"]["has_api_key"] is True
 
-    # Host-only update to provider B without api_key
+    # Host-only update to provider B without api_key preserves the key
     ai_config.update_shared_config({
         "host": "provider-b.com"
     })
     pub2 = ai_config.get_public_config()
     assert pub2["shared"]["host"] == "provider-b.com"
-    assert pub2["shared"]["has_api_key"] is False
-    assert pub2["shared"]["api_key_masked"] == ""
+    assert pub2["shared"]["has_api_key"] is True
+    assert pub2["shared"]["api_key_masked"] != ""
 
 
 def test_ping_tier_inheriting_does_not_create_override(tmp_path, monkeypatch):
@@ -217,3 +217,25 @@ def test_explicit_override_preserved(tmp_path, monkeypatch):
         "api_key": "key-b"
     })
     assert ai_config.get_tier_config("chat")["model"] == "my-explicit-model"
+
+
+def test_discovery_exact_endpoint_and_key(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    passed_args = []
+    def mock_discover(host, key):
+        passed_args.append((host, key))
+        return ["chat-model:instruct"]
+
+    monkeypatch.setattr(ai_config, "discover_provider_models", mock_discover)
+
+    ai_config.update_shared_config({
+        "host": "custom-endpoint.test/v1",
+        "api_key": "custom-secret-key"
+    })
+
+    assert len(passed_args) > 0
+    assert any(h == "custom-endpoint.test/v1" and k == "custom-secret-key" for h, k in passed_args)

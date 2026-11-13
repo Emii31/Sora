@@ -384,3 +384,10 @@
   - Test suite check: 43/43 passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 5735c90f90e579274e3ff8bcb39b051172c0a8ab` (PASSED).
+
+- **Phase 3.2C Verification (Provider Credential Binding and Owner API Regression)**:
+  - `ai_config.py`: Unified endpoint and credential resolution using `_resolve_tier()`; removed shared-key fallback for tier overrides; restored owner PATCH compatibility (preserving saved keys on blank/omitted updates, supporting explicit `clear_api_key`); limited shared discovery to inheriting tiers.
+  - Added regression test `test_discovery_exact_endpoint_and_key` verifying exact endpoint and credential passed to discovery.
+  - Test suite check: 50/50 passed across `tests/test_owner_ai_config.py`, `tests/test_shared_provider.py`, and `tests/test_ai_config.py`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py bc8d464616a46a90c0a926e96a30d0b189c8d9f4` (PASSED).

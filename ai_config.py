@@ -46,8 +46,6 @@ _ENV_VARS = {
 }
 
 # Hard-coded fallback if neither saved config nor env vars are present.
-# Empty values cause callers to surface the user-facing "模型配置还没有完成" copy
-# rather than silently failing.
 _DEFAULT_PER_TIER = {
     "vision": {"host": "", "api_key": "", "model": "", "supports_images": True},
     "chat":   {"host": "", "api_key": "", "model": "", "supports_images": True},
@@ -61,9 +59,9 @@ _DEFAULT_MAX_TOKENS = {
     "memory": 65536,
 }
 
-_lock = threading.RLock()  # RLock — get_tier_client calls get_tier_config inside the lock
-_cache: dict[str, dict] | None = None  # tier → resolved config
-_client_cache: dict[str, object] = {}  # tier → openai.OpenAI
+_lock = threading.RLock()
+_cache: dict[str, dict] | None = None
+_client_cache: dict[str, object] = {}
 
 
 # ---------------------------------------------------------------------------
@@ -271,7 +269,6 @@ def _persist_resolved_base_url(tier: str, base_url: str) -> None:
         tier_saved = tiers.get(tier)
         if not isinstance(tier_saved, dict):
             return
-        # Only persist if tier already had a tier-specific host override
         if not tier_saved.get("host"):
             return
         if tier_saved.get("host") == normalized:
@@ -360,6 +357,7 @@ def _resolve_tier(tier: str, saved: dict) -> dict:
 
     if has_tier_host:
         host = tier_saved.get("host", "")
+        # Tier override uses its own api_key exclusively (no shared-key fallback)
         api_key = tier_saved.get("api_key", "")
     elif shared_host and shared_key:
         host = shared_host
@@ -519,11 +517,10 @@ def update_shared_config(payload: dict) -> dict:
         has_api_key_field = "api_key" in payload
         raw_api_key = payload.get("api_key")
 
-        if clear_key or (has_api_key_field and raw_api_key is None):
+        if clear_key:
             cur["api_key"] = ""
-        elif has_api_key_field:
-            api_key = str(raw_api_key).strip()
-            cur["api_key"] = api_key
+        elif has_api_key_field and raw_api_key is not None and str(raw_api_key).strip() != "":
+            cur["api_key"] = str(raw_api_key).strip()
 
         has_host_field = "host" in payload
         raw_host = payload.get("host")
@@ -533,12 +530,8 @@ def update_shared_config(payload: dict) -> dict:
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
             cur["host"] = host
-            if old_host and old_host != host:
-                if not has_api_key_field or raw_api_key is None or str(raw_api_key).strip() == "":
-                    cur["api_key"] = ""
         elif has_host_field and raw_host is None:
             cur["host"] = ""
-            cur["api_key"] = ""
 
         sh_host = cur.get("host", "")
         sh_key = cur.get("api_key", "")
@@ -547,8 +540,10 @@ def update_shared_config(payload: dict) -> dict:
             if "tiers" in saved and isinstance(saved["tiers"], dict):
                 for t, t_saved in saved["tiers"].items():
                     if isinstance(t_saved, dict):
-                        t_saved["auto_model"] = ""
-                        t_saved["auto_model_host"] = ""
+                        # Only invalidate auto models for inheriting tiers (no explicit host override)
+                        if not t_saved.get("host"):
+                            t_saved["auto_model"] = ""
+                            t_saved["auto_model_host"] = ""
 
         if sh_host and sh_key:
             if "tiers" not in saved or not isinstance(saved["tiers"], dict):
@@ -557,22 +552,25 @@ def update_shared_config(payload: dict) -> dict:
                 if t not in saved["tiers"]:
                     saved["tiers"][t] = {}
                 t_saved = saved["tiers"][t]
-                if not t_saved.get("model"):
-                    m, sup = _discover_and_select_model(sh_host, sh_key, t)
-                    if m:
-                        t_saved["auto_model"] = m
-                        t_saved["auto_model_host"] = sh_host
-                        if t == "vision":
-                            t_saved["supports_images"] = sup
-                    else:
-                        t_saved["auto_model"] = ""
-                        t_saved["auto_model_host"] = ""
+                # Shared discovery must only update tiers that inherit that connection (no explicit host override)
+                if not t_saved.get("host"):
+                    if not t_saved.get("model"):
+                        m, sup = _discover_and_select_model(sh_host, sh_key, t)
+                        if m:
+                            t_saved["auto_model"] = m
+                            t_saved["auto_model_host"] = sh_host
+                            if t == "vision":
+                                t_saved["supports_images"] = sup
+                        else:
+                            t_saved["auto_model"] = ""
+                            t_saved["auto_model_host"] = ""
         else:
             if "tiers" in saved and isinstance(saved["tiers"], dict):
                 for t, t_saved in saved["tiers"].items():
                     if isinstance(t_saved, dict):
-                        t_saved["auto_model"] = ""
-                        t_saved["auto_model_host"] = ""
+                        if not t_saved.get("host"):
+                            t_saved["auto_model"] = ""
+                            t_saved["auto_model_host"] = ""
 
         from datetime import datetime as _dt
         saved["updated_at"] = _dt.now().isoformat(timespec="seconds")
@@ -605,11 +603,10 @@ def update_tier_config(tier: str, payload: dict) -> dict:
         has_api_key_field = "api_key" in payload
         raw_api_key = payload.get("api_key")
 
-        if clear_key or (has_api_key_field and raw_api_key is None):
+        if clear_key:
             cur["api_key"] = ""
-        elif has_api_key_field:
-            api_key = str(raw_api_key).strip()
-            cur["api_key"] = api_key
+        elif has_api_key_field and raw_api_key is not None and str(raw_api_key).strip() != "":
+            cur["api_key"] = str(raw_api_key).strip()
 
         has_host_field = "host" in payload
         raw_host = payload.get("host")
@@ -619,12 +616,8 @@ def update_tier_config(tier: str, payload: dict) -> dict:
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
             cur["host"] = host
-            if old_host and old_host != host:
-                if not has_api_key_field or raw_api_key is None or str(raw_api_key).strip() == "":
-                    cur["api_key"] = ""
         elif has_host_field and raw_host is None:
             cur["host"] = ""
-            cur["api_key"] = ""
 
         if "model" in payload and payload["model"] is not None:
             model = str(payload["model"]).strip()
@@ -632,8 +625,8 @@ def update_tier_config(tier: str, payload: dict) -> dict:
                 return {"ok": False, "error": "model cannot be empty"}
             cur["model"] = model
 
-        active_host = cur.get("host") or saved.get("shared", {}).get("host", "")
-        active_key = cur.get("api_key") or saved.get("shared", {}).get("api_key", "")
+        active_host = cur.get("host", "")
+        active_key = cur.get("api_key", "")
 
         if old_host != active_host or old_key != active_key:
             if cur.get("auto_model_host") and cur.get("auto_model_host") != active_host:

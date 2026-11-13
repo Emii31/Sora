@@ -119,11 +119,14 @@ def test_update_invalidates_cache_for_hot_reload(monkeypatch, tmp_path):
         "host": "host1", "api_key": "key1", "model": "model1"
     })
     assert ai_config.get_tier_config("memory")["host"] == "host1"
-    # Host-only update clears old key to prevent cross-provider key leakage
+    # Host-only update preserves existing key unless clear_api_key is requested
     ai_config.update_tier_config("memory", {"host": "host2"})
     cfg2 = ai_config.get_tier_config("memory")
     assert cfg2["host"] == "host2"
-    assert cfg2["api_key"] == ""
+    assert cfg2["api_key"] == "key1"
+    # Clearing api_key explicitly
+    ai_config.update_tier_config("memory", {"clear_api_key": True})
+    assert ai_config.get_tier_config("memory")["api_key"] == ""
     # Updating with explicit key and model updates both
     ai_config.update_tier_config("memory", {"host": "host3", "api_key": "key3", "model": "model3"})
     cfg3 = ai_config.get_tier_config("memory")
