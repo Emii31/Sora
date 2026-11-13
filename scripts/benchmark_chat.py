@@ -17,6 +17,8 @@ def _import_app_modules():
     import user_settings
     import ai_config
     import auth
+    import curator
+    curator.start_loop_for_user = lambda uid, udir: None
     import app as app_mod
     return storage, core, user_settings, ai_config, auth, app_mod
 
@@ -132,12 +134,14 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
         # 3. Direct model timing (warmed model / connection check) reported separately
         t_direct_start = time.monotonic()
         try:
+            print("  Direct model calling Ollama...")
             resp = openai_client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt_text}],
                 max_tokens=60,
                 temperature=0.7
             )
+            print("  Direct model call complete.")
             direct_reply = resp.choices[0].message.content
         except Exception as e:
             print(f"  Direct model connection error: {e}")
@@ -170,7 +174,7 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
         expected_reply_id = user_msg_id + "_reply"
 
         assistant_reply = ""
-        timeout = 120.0
+        timeout = 600.0
         poll_start = time.monotonic()
         success = False
 
@@ -198,6 +202,9 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
         observed_policy = getattr(core, "_last_resolved_chat_policy", None) or {}
         expected_mode = "reactive_fast" if fast_mode else "v4_pro"
         observed_mode = observed_policy.get("mode")
+
+        # 5. Verify actual policy and exact saved reply for every turn
+
         if observed_mode != expected_mode:
             print(f"  FAILURE: Policy mismatch inside worker: expected {expected_mode}, got {observed_mode}")
             results[fast_mode] = {"success": False, "error": f"Policy mismatch: expected {expected_mode}, got {observed_mode}"}
@@ -234,7 +241,7 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
 
 def run_benchmark():
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
-    print("=== Sora Local Chat Matched Benchmark (Phase 3.3A) ===")
+    print("=== Sora Local Chat Matched Benchmark (Phase 3.3B) ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 

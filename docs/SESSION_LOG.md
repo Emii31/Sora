@@ -516,3 +516,16 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Live benchmark execution attempted via `.venv/bin/python scripts/benchmark_chat.py`; recorded blocker: Ollama server not running in test container (`ConnectionError` at `127.0.0.1:11434/v1`).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 18c26403bf25d2fae3d2e9a972bb949c53b9a2d7` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_03A.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-14 (Phase 3.3B — Measure Live Local Chat)
+- Confirmed `ollama list` and active Ollama service availability for `qwen2.5:1.5b-instruct`.
+- Executed `.venv/bin/python scripts/benchmark_chat.py` under matched conditions (identical prompt, disposable user state per turn, alternating execution order across pairs).
+- Verified both Full Mode (`v4_pro`) and Fast Mode (`reactive_fast`) completed successfully with correct policies and exact saved replies verified via `/api/chat/history`.
+- Recorded live benchmark timings and separate medians:
+  - Full Mode Direct — Individual: `[5.54s, 106.90s]` | Median: `56.22s`
+  - Full Mode Sora Send-to-History — Individual: `[39.45s, 450.80s]` | Median: `245.12s`
+  - Fast Mode Direct — Individual: `[97.83s, 128.39s]` | Median: `113.11s`
+  - Fast Mode Sora Send-to-History — Individual: `[55.21s, 120.39s]` | Median: `87.80s`
+- Overall Success: True (4/4 turns passed).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 5dd707a0084833bf6c0d6c0bb247c23b485ed9f1` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_03B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

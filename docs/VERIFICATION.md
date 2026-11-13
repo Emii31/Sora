@@ -416,3 +416,15 @@
   - Test suite check: 4/4 benchmark tests passed (70/70 total regression tests passed).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 18c26403bf25d2fae3d2e9a972bb949c53b9a2d7` (PASSED).
+
+- **Phase 3.3B Verification (Measure Live Local Chat)**:
+  - Ollama Status: `ollama list` confirmed `qwen2.5:1.5b-instruct` installed and active at `127.0.0.1:11434`.
+  - Live Execution: Executed `.venv/bin/python scripts/benchmark_chat.py` successfully. All 4 benchmark turns passed (Overall Success: True) with verified policy resolution (`v4_pro` vs `reactive_fast`) and exact saved replies.
+  - Timings & Medians Reported:
+    - Full Mode Direct — Individual: `[5.54s, 106.90s]` | Median: `56.22s`
+    - Full Mode Sora Send-to-History — Individual: `[39.45s, 450.80s]` | Median: `245.12s`
+    - Fast Mode Direct — Individual: `[97.83s, 128.39s]` | Median: `113.11s`
+    - Fast Mode Sora Send-to-History — Individual: `[55.21s, 120.39s]` | Median: `87.80s`
+  - Test suite check: Benchmark run succeeded (Overall Success: True).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 5dd707a0084833bf6c0d6c0bb247c23b485ed9f1` (PASSED).
