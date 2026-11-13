@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.2D — Prevent Credential Reuse After an Endpoint Change (Completed & Verified)
-- **Current Status**: Implemented effective API base URL endpoint comparison (`_is_same_endpoint`) in `ai_config.py` before provider operations; endpoint changes without a replacement key now clear saved credentials to prevent post-change reuse, while same-endpoint updates preserve credentials; invalidated automatic model selections upon connection changes; updated and verified test suites (52/52 tests passed across `tests/test_shared_provider.py`, `tests/test_ai_config.py`, and `tests/test_owner_ai_config.py`).
-- **Next Action**: Stop after Phase 3.2D.
+- **Phase**: Phase 3.3 — Isolated Local Chat Benchmark and Ollama Baseline (Completed & Verified)
+- **Current Status**: Refactored `scripts/benchmark_chat.py` to lazy-import app modules before setting disposable `DATA_DIR`; ensured authentication, settings, chat history, and background writes stay under the disposable directory; added equivalent starting history and state for measured turns; added `try...finally` cleanup after success and failure; added unit test coverage (`test_benchmark_data_isolation_and_disposable_dir`); verified test suite (70/70 tests passed across benchmark, user settings, ai config, and shared provider suites). Live Ollama comparison recorded as blocked by inactive Ollama service (`ConnectionError` at `127.0.0.1:11434`).
+- **Next Action**: Stop after Phase 3.3.

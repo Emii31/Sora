@@ -6,16 +6,17 @@ import json
 import statistics
 import resource
 from openai import OpenAI
-from flask import Flask
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import storage
-import core
-import user_settings
-import ai_config
-import auth
-import app as app_mod
+def _import_app_modules():
+    import storage
+    import core
+    import user_settings
+    import ai_config
+    import auth
+    import app as app_mod
+    return storage, core, user_settings, ai_config, auth, app_mod
 
 def get_python_rss_mb():
     try:
@@ -76,6 +77,7 @@ def verify_and_set_user_setting(client, auth_token: str, fast_mode: bool):
 
 def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark test prompt under matched conditions.", order: str = "full_first"):
     """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order."""
+    storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
     modes = [False, True] if order == "full_first" else [True, False]
     results = {}
 
@@ -83,7 +85,8 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
         mode_label = "Fast Mode" if fast_mode else "Full Mode"
         print(f"\n--- Running Benchmark Turn ({mode_label}, Order: {order}) ---")
 
-        # 1. Set and verify mode persistence through authenticated /api/user-settings route
+        # 1. Give each measured turn an equivalent starting history and user state
+        storage.write_json(storage.chat_history_path(), [])
         verify_and_set_user_setting(client, auth_token, fast_mode)
 
         base_url = "http://127.0.0.1:11434/v1"
@@ -198,7 +201,8 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
     return results
 
 def run_benchmark():
-    print("=== Sora Local Chat Matched Benchmark (Phase 3.1B) ===")
+    storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
+    print("=== Sora Local Chat Matched Benchmark (Phase 3.3) ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
@@ -217,6 +221,14 @@ def run_benchmark():
     print("\n=== Benchmark Summary ===")
     all_success = all(p.get("success", False) for p in list(pair1.values()) + list(pair2.values()))
     print(f"Overall Success: {all_success}")
+
+    direct_times = [p["direct_time"] for p in list(pair1.values()) + list(pair2.values()) if p.get("success") and "direct_time" in p]
+    sora_times = [p["sora_time"] for p in list(pair1.values()) + list(pair2.values()) if p.get("success") and "sora_time" in p]
+
+    if direct_times:
+        print(f"Direct Model Latency — Individual: {[f'{t:.2f}s' for t in direct_times]} | Median: {statistics.median(direct_times):.2f}s")
+    if sora_times:
+        print(f"Sora Send-to-History Latency — Individual: {[f'{t:.2f}s' for t in sora_times]} | Median: {statistics.median(sora_times):.2f}s")
 
     return {
         "pair1": pair1,
@@ -240,19 +252,25 @@ def main():
             }
         }, f, indent=2)
 
-    ai_config.invalidate_cache()
-    storage._ensure_dirs()
-
     try:
+        storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
+        ai_config.invalidate_cache()
+        storage._ensure_dirs()
+
         res = run_benchmark()
-        _temp_dir.cleanup()
         if not res.get("success"):
             print("ERROR: Benchmark failed in one or more pairs.", file=sys.stderr)
+            _temp_dir.cleanup()
             sys.exit(1)
     except Exception as e:
         print(f"ERROR: Benchmark execution error: {e}", file=sys.stderr)
         _temp_dir.cleanup()
         sys.exit(1)
+    finally:
+        try:
+            _temp_dir.cleanup()
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     main()

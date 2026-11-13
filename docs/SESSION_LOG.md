@@ -495,3 +495,13 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Updated and verified test suites (`tests/test_shared_provider.py`, `tests/test_ai_config.py`, `tests/test_owner_ai_config.py` — 52/52 tests passed).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py c4b9f4e9e9e6dff11463a9739b4b50a1a79fac74` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_02D.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-14 (Phase 3.3 — Isolated Local Chat Benchmark and Ollama Baseline)
+- Refactored `scripts/benchmark_chat.py` to lazy-import app modules (`storage`, `core`, `user_settings`, `ai_config`, `auth`, `app`) via `_import_app_modules()`, keeping module import free of app startup and filesystem side effects.
+- Ensured disposable `DATA_DIR` creation prior to app module imports and verified that authentication, settings, chat history, and background writes stay under the disposable directory.
+- Provided equivalent starting history and user state for each measured turn and added robust `try...finally` cleanup after success and failure.
+- Added unit test coverage in `tests/test_benchmark_chat.py` (`test_benchmark_data_isolation_and_disposable_dir`) verifying data isolation and disposable directory containment.
+- Documented benchmark runner execution commands and individual/median timings; live Ollama comparison recorded as blocked by inactive Ollama service (`ConnectionError` at `127.0.0.1:11434`).
+- Test suite verification: 70/70 tests passed successfully across benchmark, user settings, ai config, and shared provider suites.
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 70b52dcd2488f03124dd6d174e9374e4a30c67fc` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_03.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

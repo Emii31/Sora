@@ -399,3 +399,11 @@
   - Test Suite Check: 52/52 tests passed successfully across `tests/test_shared_provider.py`, `tests/test_ai_config.py`, and `tests/test_owner_ai_config.py`.
   - Git diff check: PASS (clean whitespace, zero unexpected deletions).
   - History Prefix Integrity: Enforced by `scripts/check_history_append_only.py c4b9f4e9e9e6dff11463a9739b4b50a1a79fac74` (PASSED).
+
+- **Phase 3.3 Verification (Isolated Local Chat Benchmark and Ollama Baseline)**:
+  - `scripts/benchmark_chat.py`: Refactored to lazy-import app modules (`_import_app_modules()`) before creating disposable `DATA_DIR`, keeping module imports free of app startup and filesystem side effects; added equivalent starting history/state per measured turn; added robust `try...finally` cleanup of disposable `DATA_DIR` on success and failure.
+  - `tests/test_benchmark_chat.py`: Added `test_benchmark_data_isolation_and_disposable_dir` verifying that authentication, settings, chat history, and background writes stay strictly under the disposable directory.
+  - Benchmark Execution & Blocker: Command `.venv/bin/python scripts/benchmark_chat.py` documented; live Ollama comparison recorded as blocked by inactive Ollama service (`ConnectionError` at `127.0.0.1:11434`).
+  - Test suite check: 70/70 passed across benchmark, user settings, ai config, and shared provider suites.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 70b52dcd2488f03124dd6d174e9374e4a30c67fc` (PASSED).
