@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.2A — Shared Provider Credential and Model Selection Fixes (Completed & Verified)
-- **Current Status**: Bound credentials securely to their provider (host-only updates clear old keys to prevent cross-provider key leakage); preserved shared inheritance after connection tests (`ping_tier` testing an inheriting tier does not create unwanted tier overrides); implemented capability-based model selection (`_discover_and_select_model` verifying text/vision capability evidence and keeping discovery out of config reads/chat requests); added comprehensive unit tests (`tests/test_shared_provider.py` and updated `tests/test_ai_config.py`). Note: Live benchmark runner timings remain pending.
-- **Next Action**: Stop after Phase 3.2A.
+- **Phase**: Phase 3.2B — Keep Provider Credentials and Model Selections Together (Completed & Verified)
+- **Current Status**: Bound automatic model selections to their connection: discovered model IDs are tracked separately from explicit overrides (`auto_model`/`auto_model_host`), invalidated when the endpoint or credential changes, and re-discovered only at setup time. Discovery stays out of config reads and chat requests. Omitted, blank, and null credentials are treated consistently. Verified with mocked clients that no request carries a credential belonging to a different endpoint (43 tests passed across tests/test_ai_config.py and tests/test_shared_provider.py).
+- **Next Action**: Stop after Phase 3.2B.

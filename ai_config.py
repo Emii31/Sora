@@ -371,11 +371,21 @@ def _resolve_tier(tier: str, saved: dict) -> dict:
         host = os.environ.get("AI_HOST", "") or defaults["host"]
         api_key = os.environ.get("AI_API_KEY", "") or defaults["api_key"]
 
-    model = tier_saved.get("model") or os.environ.get(env_model_var, "") or os.environ.get("AI_MODEL", "") or defaults["model"]
-    supports_images = bool(tier_saved.get("supports_images", defaults["supports_images"]))
-
     normalized_host = _normalize_host(host)
     trimmed_key = str(api_key or "").strip()
+
+    explicit_model = str(tier_saved.get("model", "")).strip()
+    auto_model = str(tier_saved.get("auto_model", "")).strip()
+    auto_model_host = str(tier_saved.get("auto_model_host", "")).strip()
+
+    if explicit_model:
+        model = explicit_model
+    elif auto_model and auto_model_host and auto_model_host == normalized_host:
+        model = auto_model
+    else:
+        model = os.environ.get(env_model_var, "") or os.environ.get("AI_MODEL", "") or defaults["model"]
+
+    supports_images = bool(tier_saved.get("supports_images", defaults["supports_images"]))
     trimmed_model = str(model or "").strip()
 
     return {
@@ -474,11 +484,14 @@ def get_public_config() -> dict:
         }
         for tier in TIERS:
             cfg = _cache[tier]
+            saved_tier = (saved.get("tiers", {}) or {}).get(tier, {}) or {}
             out["tiers"][tier] = {
                 "host": cfg["host"],
                 "api_key_masked": _mask_secret(cfg["api_key"]),
                 "has_api_key": bool(cfg["api_key"]),
                 "model": cfg["model"],
+                "explicit_model": saved_tier.get("model", ""),
+                "auto_model": saved_tier.get("auto_model", ""),
                 "supports_images": cfg["supports_images"],
                 "max_tokens": cfg["max_tokens"],
             }
@@ -499,37 +512,67 @@ def update_shared_config(payload: dict) -> dict:
             saved["shared"] = {}
         cur = saved["shared"]
 
-        if payload.get("clear_api_key"):
-            cur["api_key"] = ""
-        elif "api_key" in payload and payload["api_key"] is not None:
-            api_key = str(payload["api_key"]).strip()
-            if api_key:
-                cur["api_key"] = api_key
+        old_host = cur.get("host", "")
+        old_key = cur.get("api_key", "")
 
-        if "host" in payload and payload["host"] is not None:
-            host = _normalize_host(payload["host"])
+        clear_key = payload.get("clear_api_key")
+        has_api_key_field = "api_key" in payload
+        raw_api_key = payload.get("api_key")
+
+        if clear_key or (has_api_key_field and raw_api_key is None):
+            cur["api_key"] = ""
+        elif has_api_key_field:
+            api_key = str(raw_api_key).strip()
+            cur["api_key"] = api_key
+
+        has_host_field = "host" in payload
+        raw_host = payload.get("host")
+
+        if has_host_field and raw_host is not None:
+            host = _normalize_host(raw_host)
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
-            old_host = cur.get("host", "")
             cur["host"] = host
-            if old_host and old_host != host and "api_key" not in payload and not payload.get("clear_api_key"):
-                cur["api_key"] = ""
+            if old_host and old_host != host:
+                if not has_api_key_field or raw_api_key is None or str(raw_api_key).strip() == "":
+                    cur["api_key"] = ""
+        elif has_host_field and raw_host is None:
+            cur["host"] = ""
+            cur["api_key"] = ""
 
-        saved["shared"] = cur
         sh_host = cur.get("host", "")
         sh_key = cur.get("api_key", "")
+
+        if old_host != sh_host or old_key != sh_key:
+            if "tiers" in saved and isinstance(saved["tiers"], dict):
+                for t, t_saved in saved["tiers"].items():
+                    if isinstance(t_saved, dict):
+                        t_saved["auto_model"] = ""
+                        t_saved["auto_model_host"] = ""
+
         if sh_host and sh_key:
             if "tiers" not in saved or not isinstance(saved["tiers"], dict):
                 saved["tiers"] = {}
             for t in TIERS:
                 if t not in saved["tiers"]:
                     saved["tiers"][t] = {}
-                if not saved["tiers"][t].get("model"):
+                t_saved = saved["tiers"][t]
+                if not t_saved.get("model"):
                     m, sup = _discover_and_select_model(sh_host, sh_key, t)
                     if m:
-                        saved["tiers"][t]["model"] = m
+                        t_saved["auto_model"] = m
+                        t_saved["auto_model_host"] = sh_host
                         if t == "vision":
-                            saved["tiers"][t]["supports_images"] = sup
+                            t_saved["supports_images"] = sup
+                    else:
+                        t_saved["auto_model"] = ""
+                        t_saved["auto_model_host"] = ""
+        else:
+            if "tiers" in saved and isinstance(saved["tiers"], dict):
+                for t, t_saved in saved["tiers"].items():
+                    if isinstance(t_saved, dict):
+                        t_saved["auto_model"] = ""
+                        t_saved["auto_model_host"] = ""
 
         from datetime import datetime as _dt
         saved["updated_at"] = _dt.now().isoformat(timespec="seconds")
@@ -555,21 +598,33 @@ def update_tier_config(tier: str, payload: dict) -> dict:
             saved["tiers"][tier] = {}
         cur = saved["tiers"][tier]
 
-        if payload.get("clear_api_key"):
-            cur["api_key"] = ""
-        elif "api_key" in payload and payload["api_key"] is not None:
-            api_key = str(payload["api_key"]).strip()
-            if api_key:
-                cur["api_key"] = api_key
+        old_host = cur.get("host", "")
+        old_key = cur.get("api_key", "")
 
-        if "host" in payload and payload["host"] is not None:
-            host = _normalize_host(payload["host"])
+        clear_key = payload.get("clear_api_key")
+        has_api_key_field = "api_key" in payload
+        raw_api_key = payload.get("api_key")
+
+        if clear_key or (has_api_key_field and raw_api_key is None):
+            cur["api_key"] = ""
+        elif has_api_key_field:
+            api_key = str(raw_api_key).strip()
+            cur["api_key"] = api_key
+
+        has_host_field = "host" in payload
+        raw_host = payload.get("host")
+
+        if has_host_field and raw_host is not None:
+            host = _normalize_host(raw_host)
             if not host:
                 return {"ok": False, "error": "host cannot be empty"}
-            old_host = cur.get("host", "")
             cur["host"] = host
-            if old_host and old_host != host and "api_key" not in payload and not payload.get("clear_api_key"):
-                cur["api_key"] = ""
+            if old_host and old_host != host:
+                if not has_api_key_field or raw_api_key is None or str(raw_api_key).strip() == "":
+                    cur["api_key"] = ""
+        elif has_host_field and raw_host is None:
+            cur["host"] = ""
+            cur["api_key"] = ""
 
         if "model" in payload and payload["model"] is not None:
             model = str(payload["model"]).strip()
@@ -579,12 +634,26 @@ def update_tier_config(tier: str, payload: dict) -> dict:
 
         active_host = cur.get("host") or saved.get("shared", {}).get("host", "")
         active_key = cur.get("api_key") or saved.get("shared", {}).get("api_key", "")
+
+        if old_host != active_host or old_key != active_key:
+            if cur.get("auto_model_host") and cur.get("auto_model_host") != active_host:
+                cur["auto_model"] = ""
+                cur["auto_model_host"] = ""
+
         if not cur.get("model") and active_host and active_key:
-            m, sup = _discover_and_select_model(active_host, active_key, tier)
-            if m:
-                cur["model"] = m
-                if tier == "vision":
-                    cur["supports_images"] = sup
+            if cur.get("auto_model_host") != active_host:
+                m, sup = _discover_and_select_model(active_host, active_key, tier)
+                if m:
+                    cur["auto_model"] = m
+                    cur["auto_model_host"] = active_host
+                    if tier == "vision":
+                        cur["supports_images"] = sup
+                else:
+                    cur["auto_model"] = ""
+                    cur["auto_model_host"] = ""
+        elif not active_host or not active_key:
+            cur["auto_model"] = ""
+            cur["auto_model_host"] = ""
 
         if "supports_images" in payload:
             cur["supports_images"] = bool(payload["supports_images"])

@@ -464,3 +464,15 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Implemented capability-based model selection (`_discover_and_select_model`): removed discovery from ordinary config reads and chat requests, enforcing strict text and vision capability evidence checks.
 - Verified with comprehensive test suites (41 tests passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`).
 - Updated project documentation and status files.
+
+## 2026-11-13 (Phase 3.2B: Keep Provider Credentials and Model Selections Together)
+- Bound automatic model selections to their connection: discovered model IDs are now tracked separately from explicit overrides (`auto_model`/`auto_model_host`) in `ai_config.py`, and invalidated when the endpoint or credential changes.
+- Same provider resolution for setup and runtime: `_resolve_tier()` resolves endpoint and credential as one pair for discovery, connection tests (`ping_tier`), and inference (`get_tier_client`); when the endpoint changes, the connection is left in a setup-required state unless a valid replacement credential is supplied.
+- Treated omitted, blank, and null credentials consistently: `update_shared_config()` and `update_tier_config()` now accept `clear_api_key`, explicit `api_key`, and `api_key: null`/missing with the same semantics, clearing the credential on host-only updates.
+- Preserved valid existing configurations, loopback HTTP, remote HTTPS, and owner authorization: loopback HTTP base URLs, remote HTTPS base URLs, and owner shared-config PATCH endpoints all keep their behavior; explicit tier overrides and ping-persisted base URLs are untouched.
+- Verified with mocked clients that no request carries a credential belonging to a different endpoint: `tests/test_shared_provider.py` and `tests/test_ai_config.py` cover cross-provider key leakage, connection-change invalidation, and explicit-override preservation.
+- Kept discovery out of config reads and chat requests: `discover_provider_models()` and `_discover_and_select_model()` run only during setup writes (`update_shared_config`/`update_tier_config`), never on `get_tier_config()`/`get_tier_client()`/chat requests.
+- Verified that a working alternate base URL is reused by runtime calls without creating a tier override for shared settings: `ping_tier()` persists the resolved base URL only when the tier already has an explicit tier-specific host override.
+- Verified test suite: 43/43 passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`.
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 5735c90f90e579274e3ff8bcb39b051172c0a8ab` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_02B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

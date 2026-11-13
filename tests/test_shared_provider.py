@@ -174,3 +174,46 @@ def test_capability_based_model_selection_ambiguous_and_vision(tmp_path, monkeyp
     chat_cfg = ai_config.get_tier_config("chat")
     # Should leave model empty because capability is ambiguous / unknown for chat
     assert chat_cfg["model"] == ""
+
+
+def test_auto_model_invalidated_on_connection_change(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    monkeypatch.setattr(ai_config, "discover_provider_models", lambda host, key: ["model-a:instruct"] if "provider-a" in host else ["model-b:instruct"])
+
+    ai_config.update_shared_config({
+        "host": "provider-a.com",
+        "api_key": "key-a"
+    })
+    assert ai_config.get_tier_config("chat")["model"] == "model-a:instruct"
+
+    ai_config.update_shared_config({
+        "host": "provider-b.com",
+        "api_key": "key-b"
+    })
+    assert ai_config.get_tier_config("chat")["model"] == "model-b:instruct"
+
+
+def test_explicit_override_preserved(tmp_path, monkeypatch):
+    data_dir = str(tmp_path / "data")
+    monkeypatch.setenv("DATA_DIR", data_dir)
+    os.makedirs(os.path.join(data_dir, "_admin"), exist_ok=True)
+    ai_config.invalidate_cache()
+
+    monkeypatch.setattr(ai_config, "discover_provider_models", lambda host, key: ["auto-model:instruct"])
+
+    ai_config.update_shared_config({
+        "host": "provider-a.com",
+        "api_key": "key-a"
+    })
+    ai_config.update_tier_config("chat", {"model": "my-explicit-model"})
+    assert ai_config.get_tier_config("chat")["model"] == "my-explicit-model"
+
+    ai_config.update_shared_config({
+        "host": "provider-b.com",
+        "api_key": "key-b"
+    })
+    assert ai_config.get_tier_config("chat")["model"] == "my-explicit-model"

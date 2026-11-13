@@ -374,3 +374,13 @@
   - Test suite check: Benchmark unit tests passed successfully (`python3 -m pytest tests/test_benchmark_chat.py`).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 69a5c90a87abe047cc58f7f4d27dd9011828566f` (PASSED).
+
+- **Phase 3.2B Verification (Keep Provider Credentials and Model Selections Together)**:
+  - `ai_config.py`: Bound automatic model selections to their connection — discovered models tracked separately from explicit overrides (`auto_model`/`auto_model_host`), invalidated on connection change.
+  - Same provider resolution for setup and runtime: `_resolve_tier()` resolves endpoint and credential as one pair; host-only updates clear stale credentials unless a replacement is supplied.
+  - Treated omitted, blank, and null credentials consistently across `update_shared_config()` and `update_tier_config()`.
+  - Kept discovery out of config reads and chat requests; discovery only runs during setup writes.
+  - Ping persists resolved base URLs only when the tier already has an explicit tier-specific host override — no tier override created for shared settings.
+  - Test suite check: 43/43 passed across `tests/test_ai_config.py` and `tests/test_shared_provider.py`.
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 5735c90f90e579274e3ff8bcb39b051172c0a8ab` (PASSED).
