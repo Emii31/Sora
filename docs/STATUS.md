@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 3.3 — Isolated Local Chat Benchmark and Ollama Baseline (Completed & Verified)
-- **Current Status**: Refactored `scripts/benchmark_chat.py` to lazy-import app modules before setting disposable `DATA_DIR`; ensured authentication, settings, chat history, and background writes stay under the disposable directory; added equivalent starting history and state for measured turns; added `try...finally` cleanup after success and failure; added unit test coverage (`test_benchmark_data_isolation_and_disposable_dir`); verified test suite (70/70 tests passed across benchmark, user settings, ai config, and shared provider suites). Live Ollama comparison recorded as blocked by inactive Ollama service (`ConnectionError` at `127.0.0.1:11434`).
-- **Next Action**: Stop after Phase 3.3.
+- **Phase**: Phase 3.3A — Finish Benchmark Isolation and Run Ollama (Completed & Verified)
+- **Current Status**: Updated `scripts/benchmark_chat.py` so each measured turn starts with a fresh disposable user state (`create_fresh_disposable_user`); verified isolation through authenticated history route (`GET /api/chat/history`) before each turn; configured separate full-mode and fast-mode median and individual timing reporting; ensured all test and benchmark writes stay in temporary directories; verified unit tests (4/4 benchmark tests passed, 70/70 total regression tests passed); live benchmark runner execution attempted (`.venv/bin/python scripts/benchmark_chat.py`), recorded blocker (Ollama server offline at `127.0.0.1:11434`).
+- **Next Action**: Stop after Phase 3.3A.

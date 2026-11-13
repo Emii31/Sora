@@ -505,3 +505,14 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Test suite verification: 70/70 tests passed successfully across benchmark, user settings, ai config, and shared provider suites.
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 70b52dcd2488f03124dd6d174e9374e4a30c67fc` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_03.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-14 (Phase 3.3A — Finish Benchmark Isolation and Run Ollama)
+- Updated `scripts/benchmark_chat.py` so each measured turn starts with fresh disposable user state (`create_fresh_disposable_user`), ensuring isolated user data directories and pristine chat histories per turn.
+- Verified isolation through authenticated history route (`GET /api/chat/history`) before each turn to guarantee empty starting history.
+- Fixed test suites and setting tests (`tests/test_benchmark_chat.py`) to ensure all test writes stay strictly in temporary directories (`storage.DATA_DIR`, `auth._BASE_DATA_DIR`).
+- Configured separate reporting for full-mode and fast-mode medians and individual timings (`direct_full`, `sora_full`, `direct_fast`, `sora_fast`).
+- Verified actual policy and exact saved reply for every turn.
+- Executed benchmark runner test suite: 4/4 benchmark unit tests passed successfully.
+- Live benchmark execution attempted via `.venv/bin/python scripts/benchmark_chat.py`; recorded blocker: Ollama server not running in test container (`ConnectionError` at `127.0.0.1:11434/v1`).
+- Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 18c26403bf25d2fae3d2e9a972bb949c53b9a2d7` (PASSED).
+- Updated documentation (`docs/phases/PHASE_03_03A.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).

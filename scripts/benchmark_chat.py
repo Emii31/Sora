@@ -5,6 +5,8 @@ import time
 import json
 import statistics
 import resource
+import secrets
+from datetime import datetime
 from openai import OpenAI
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -75,8 +77,30 @@ def verify_and_set_user_setting(client, auth_token: str, fast_mode: bool):
 
     print(f"[Benchmark] Verified setting persistence local_text_chat_enabled={fast_mode}")
 
-def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark test prompt under matched conditions.", order: str = "full_first"):
-    """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order."""
+def create_fresh_disposable_user(auth) -> dict:
+    """Create a fresh disposable local user with an isolated data directory."""
+    with auth._lock:
+        users = auth._load_json(auth._users_path())
+        user_id = auth._new_user_id(users)
+        token = secrets.token_urlsafe(32)
+        created_at = datetime.now().isoformat()
+        users[user_id] = {
+            "token": token,
+            "invitation_code": "",
+            "full_invitation_code": "",
+            "created_at": created_at,
+            "status": "active",
+            "account_type": getattr(auth, "LOCAL_SINGLE_DEVICE_ACCOUNT_TYPE", "local_single_device"),
+        }
+        user_dir = os.path.join(auth._BASE_DATA_DIR, "users", user_id)
+        os.makedirs(user_dir, exist_ok=True)
+        os.makedirs(os.path.join(user_dir, "uploads"), exist_ok=True)
+        auth._write_account_manifest(user_id, users[user_id])
+        auth._save_json(auth._users_path(), users)
+    return {"token": token, "user_id": user_id, "is_new": True}
+
+def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under matched conditions.", order: str = "full_first"):
+    """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order with fresh disposable user state."""
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
     modes = [False, True] if order == "full_first" else [True, False]
     results = {}
@@ -85,18 +109,27 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
         mode_label = "Fast Mode" if fast_mode else "Full Mode"
         print(f"\n--- Running Benchmark Turn ({mode_label}, Order: {order}) ---")
 
-        # 1. Give each measured turn an equivalent starting history and user state
-        storage.write_json(storage.chat_history_path(), [])
+        # 1. Start each measured turn with fresh disposable user state
+        local_user = create_fresh_disposable_user(auth)
+        auth_token = local_user["token"]
+        headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
+        environ = {"REMOTE_ADDR": "127.0.0.1"}
+
+        # 2. Verify isolation through the authenticated history route before each turn (must be empty)
+        hist_check = client.get("/api/chat/history?limit=10", headers=headers, environ_base=environ)
+        if hist_check.status_code != 200:
+            raise RuntimeError(f"Failed to verify history isolation: {hist_check.status_code}")
+        history_data = hist_check.get_json() or []
+        if history_data:
+            raise AssertionError(f"History isolation failure: expected empty history, got {len(history_data)} items")
+
         verify_and_set_user_setting(client, auth_token, fast_mode)
 
         base_url = "http://127.0.0.1:11434/v1"
         model = "qwen2.5:1.5b-instruct"
         openai_client = OpenAI(base_url=base_url, api_key="ollama")
 
-        headers = {"Authorization": f"Bearer {auth_token}", "Content-Type": "application/json"}
-        environ = {"REMOTE_ADDR": "127.0.0.1"}
-
-        # 2. Direct model timing (warmed model / connection check) reported separately
+        # 3. Direct model timing (warmed model / connection check) reported separately
         t_direct_start = time.monotonic()
         try:
             resp = openai_client.chat.completions.create(
@@ -112,8 +145,7 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
         t_direct_end = time.monotonic()
         direct_time = t_direct_end - t_direct_start
 
-        # 3. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
-        # Byte-identical prompt text with no timestamp suffix
+        # 4. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
         core._last_resolved_chat_policy = None
         t_sora_start = time.monotonic()
 
@@ -162,7 +194,7 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
         t_sora_end = time.monotonic()
         sora_total_time = t_sora_end - t_sora_start
 
-        # 4. Verify policy observed inside the actual chat worker context
+        # 5. Verify actual policy and exact saved reply for every turn
         observed_policy = getattr(core, "_last_resolved_chat_policy", None) or {}
         expected_mode = "reactive_fast" if fast_mode else "v4_pro"
         observed_mode = observed_policy.get("mode")
@@ -202,33 +234,37 @@ def run_benchmark_pair(client, auth_token: str, prompt_text: str = "Benchmark te
 
 def run_benchmark():
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
-    print("=== Sora Local Chat Matched Benchmark (Phase 3.3) ===")
+    print("=== Sora Local Chat Matched Benchmark (Phase 3.3A) ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
-
-    local_user = auth.get_or_create_local_single_device_user()
-    auth_token = local_user["token"]
 
     prompt_text = "Benchmark test prompt under matched conditions."
 
     # Run at least two pairs with alternating orders (Pair 1: full_first, Pair 2: fast_first)
     print("\n--- Pair 1 (full_first) ---")
-    pair1 = run_benchmark_pair(client, auth_token, prompt_text=prompt_text, order="full_first")
+    pair1 = run_benchmark_pair(client, prompt_text=prompt_text, order="full_first")
 
     print("\n--- Pair 2 (fast_first) ---")
-    pair2 = run_benchmark_pair(client, auth_token, prompt_text=prompt_text, order="fast_first")
+    pair2 = run_benchmark_pair(client, prompt_text=prompt_text, order="fast_first")
 
     print("\n=== Benchmark Summary ===")
     all_success = all(p.get("success", False) for p in list(pair1.values()) + list(pair2.values()))
     print(f"Overall Success: {all_success}")
 
-    direct_times = [p["direct_time"] for p in list(pair1.values()) + list(pair2.values()) if p.get("success") and "direct_time" in p]
-    sora_times = [p["sora_time"] for p in list(pair1.values()) + list(pair2.values()) if p.get("success") and "sora_time" in p]
+    all_turns = list(pair1.items()) + list(pair2.items())
+    direct_full = [p["direct_time"] for mode, p in all_turns if not mode and p.get("success") and "direct_time" in p]
+    sora_full = [p["sora_time"] for mode, p in all_turns if not mode and p.get("success") and "sora_time" in p]
+    direct_fast = [p["direct_time"] for mode, p in all_turns if mode and p.get("success") and "direct_time" in p]
+    sora_fast = [p["sora_time"] for mode, p in all_turns if mode and p.get("success") and "sora_time" in p]
 
-    if direct_times:
-        print(f"Direct Model Latency — Individual: {[f'{t:.2f}s' for t in direct_times]} | Median: {statistics.median(direct_times):.2f}s")
-    if sora_times:
-        print(f"Sora Send-to-History Latency — Individual: {[f'{t:.2f}s' for t in sora_times]} | Median: {statistics.median(sora_times):.2f}s")
+    if direct_full:
+        print(f"Full Mode Direct Latency — Individual: {[f'{t:.2f}s' for t in direct_full]} | Median: {statistics.median(direct_full):.2f}s")
+    if sora_full:
+        print(f"Full Mode Sora Latency — Individual: {[f'{t:.2f}s' for t in sora_full]} | Median: {statistics.median(sora_full):.2f}s")
+    if direct_fast:
+        print(f"Fast Mode Direct Latency — Individual: {[f'{t:.2f}s' for t in direct_fast]} | Median: {statistics.median(direct_fast):.2f}s")
+    if sora_fast:
+        print(f"Fast Mode Sora Latency — Individual: {[f'{t:.2f}s' for t in sora_fast]} | Median: {statistics.median(sora_fast):.2f}s")
 
     return {
         "pair1": pair1,
@@ -254,6 +290,13 @@ def main():
 
     try:
         storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
+        storage.DATA_DIR = data_dir
+        import importlib
+        importlib.reload(storage)
+        storage.DATA_DIR = data_dir
+        auth._BASE_DATA_DIR = data_dir
+        auth._ADMIN_DIR = admin_dir
+
         ai_config.invalidate_cache()
         storage._ensure_dirs()
 

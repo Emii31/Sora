@@ -19,6 +19,11 @@ def test_benchmark_user_settings_persistence_and_policy(tmp_path, monkeypatch):
     auth._BASE_DATA_DIR = data_dir
     auth._ADMIN_DIR = admin_dir
 
+    import storage
+    storage.DATA_DIR = data_dir
+    importlib.reload(storage)
+    storage.DATA_DIR = data_dir
+
     # Seed ai_config.json with a loopback host so local fast text chat policy triggers
     config_path = os.path.join(admin_dir, "ai_config.json")
     with open(config_path, "w", encoding="utf-8") as f:
@@ -84,6 +89,11 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
     auth._BASE_DATA_DIR = data_dir
     auth._ADMIN_DIR = admin_dir
 
+    import storage
+    storage.DATA_DIR = data_dir
+    importlib.reload(storage)
+    storage.DATA_DIR = data_dir
+
     config_path = os.path.join(admin_dir, "ai_config.json")
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump({
@@ -95,7 +105,6 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
     import ai_config
     import user_settings
     ai_config.invalidate_cache()
-    import storage
     import core
 
     storage._ensure_dirs()
@@ -144,18 +153,15 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
-    local = auth.get_or_create_local_single_device_user()
-    token = local["token"]
-
     # Run benchmark pair test
-    pair_result = bench.run_benchmark_pair(client, token, prompt_text="Benchmark test prompt under matched conditions.", order="full_first")
+    pair_result = bench.run_benchmark_pair(client, prompt_text="Benchmark test prompt under matched conditions.", order="full_first")
     assert pair_result[False]["success"] is True
     assert pair_result[False]["policy_mode"] == "v4_pro"
     assert pair_result[True]["success"] is True
     assert pair_result[True]["policy_mode"] == "reactive_fast"
 
     # Test fast_first order pair
-    pair_result_fast_first = bench.run_benchmark_pair(client, token, prompt_text="Benchmark test prompt under matched conditions.", order="fast_first")
+    pair_result_fast_first = bench.run_benchmark_pair(client, prompt_text="Benchmark test prompt under matched conditions.", order="fast_first")
     assert pair_result_fast_first[True]["success"] is True
     assert pair_result_fast_first[False]["success"] is True
 
@@ -170,6 +176,11 @@ def test_benchmark_failure_conditions(tmp_path, monkeypatch):
     auth._BASE_DATA_DIR = data_dir
     auth._ADMIN_DIR = admin_dir
 
+    import storage
+    storage.DATA_DIR = data_dir
+    importlib.reload(storage)
+    storage.DATA_DIR = data_dir
+
     config_path = os.path.join(admin_dir, "ai_config.json")
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump({
@@ -180,7 +191,6 @@ def test_benchmark_failure_conditions(tmp_path, monkeypatch):
 
     import ai_config
     ai_config.invalidate_cache()
-    import storage
     import core
     storage._ensure_dirs()
 
@@ -212,11 +222,9 @@ def test_benchmark_failure_conditions(tmp_path, monkeypatch):
     import scripts.benchmark_chat as bench
     app_mod = sys.modules["app"]
     client = app_mod.app.test_client()
-    local = auth.get_or_create_local_single_device_user()
-    token = local["token"]
 
     # When fast mode is requested (True), but worker returns v4_pro, test that success is False
-    pair_res = bench.run_benchmark_pair(client, token, prompt_text="Prompt", order="fast_first")
+    pair_res = bench.run_benchmark_pair(client, prompt_text="Prompt", order="fast_first")
     assert pair_res[True]["success"] is False
 
 
@@ -232,7 +240,6 @@ def test_benchmark_data_isolation_and_disposable_dir(tmp_path, monkeypatch):
 
     storage, core, user_settings, ai_config, auth, app_mod = bench._import_app_modules()
     storage.DATA_DIR = data_dir
-    import importlib
     importlib.reload(storage)
     storage.DATA_DIR = data_dir
     auth._BASE_DATA_DIR = data_dir

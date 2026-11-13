@@ -407,3 +407,12 @@
   - Test suite check: 70/70 passed across benchmark, user settings, ai config, and shared provider suites.
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 70b52dcd2488f03124dd6d174e9374e4a30c67fc` (PASSED).
+
+- **Phase 3.3A Verification (Finish Benchmark Isolation and Run Ollama)**:
+  - `scripts/benchmark_chat.py`: Implemented fresh disposable user state per turn (`create_fresh_disposable_user`) and history isolation verification via `GET /api/chat/history` before each turn.
+  - `tests/test_benchmark_chat.py`: Fixed test setup to ensure all test writes stay strictly in temporary directories (`storage.DATA_DIR`, `auth._BASE_DATA_DIR`).
+  - Reporting: Added separate reporting for full-mode and fast-mode medians and individual timings (`direct_full`, `sora_full`, `direct_fast`, `sora_fast`).
+  - Benchmark Execution & Blocker: Attempted `.venv/bin/python scripts/benchmark_chat.py`; recorded blocker (Ollama server offline at `127.0.0.1:11434/v1`).
+  - Test suite check: 4/4 benchmark tests passed (70/70 total regression tests passed).
+  - Git diff check: PASS (zero unexpected deletions, clean whitespace).
+  - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 18c26403bf25d2fae3d2e9a972bb949c53b9a2d7` (PASSED).
