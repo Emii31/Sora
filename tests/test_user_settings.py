@@ -515,6 +515,9 @@ def test_local_text_chat_enabled_setting_and_policy(monkeypatch, tmp_path):
     import user_settings
     import core
     import ai_config
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    monkeypatch.setattr(ai_config, "_cache", None)
+    monkeypatch.setattr(ai_config, "_client_cache", {})
     importlib.reload(user_settings)
     user_dir = str(tmp_path / "u_test")
     os.makedirs(user_dir, exist_ok=True)
@@ -529,6 +532,18 @@ def test_local_text_chat_enabled_setting_and_policy(monkeypatch, tmp_path):
         assert policy_ordinary["mode"] == "reactive_fast"
         assert policy_ordinary["max_iterations"] == 1
         assert policy_ordinary["allow_tools"] is False
+
+        # Large messages go through the full path with their original text.
+        long_text = "你" * 683
+        assert core._resolve_chat_agent_policy(None, long_text)["mode"] == "v4_pro"
+
+        ai_config.update_tier_config("chat", {
+            "host": "https://example.test", "api_key": "test-only", "model": "test-model",
+        })
+        assert core._resolve_chat_agent_policy(None, "Hello there")["mode"] == "v4_pro"
+        ai_config.update_tier_config("chat", {
+            "host": "http://localhost:11434", "api_key": "ollama", "model": "llama3",
+        })
 
         # Image turn with fast mode enabled -> falls back to full v4_pro mode
         policy_image = core._resolve_chat_agent_policy(None, "Look at this", user_image_descs=["[image]"])

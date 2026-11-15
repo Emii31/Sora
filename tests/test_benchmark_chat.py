@@ -130,7 +130,11 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
     import attention_engine
     import sleep_agent
 
+    provider_requests = []
+    request_options = []
+
     def complete(**kwargs):
+        provider_requests.append(kwargs)
         system_prompt = kwargs["messages"][0]["content"]
         content = (
             '{"need_retrieval": false, "files": [], "keywords": []}'
@@ -143,7 +147,16 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
             usage=None,
         )
 
-    provider = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=complete)))
+    provider = SimpleNamespace(
+        base_url="http://127.0.0.1:11434/v1",
+        chat=SimpleNamespace(completions=SimpleNamespace(create=complete)),
+    )
+
+    def with_options(**kwargs):
+        request_options.append(kwargs)
+        return provider
+
+    provider.with_options = with_options
     monkeypatch.setattr(ai_config, "get_tier_client", lambda tier: provider)
     monkeypatch.setattr(core, "_QUIET_PERIOD", 0.01)
     monkeypatch.setattr(attention_engine, "get_attention_engine", lambda: SimpleNamespace(record_signal=lambda *a: None))
@@ -175,6 +188,18 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
             assert kinds == (["agent"] if fast_mode else ["retrieval", "agent"])
             assert "Synthetic benchmark text" not in json.dumps(trace)
             assert result["reply"] not in json.dumps(trace)
+
+    assert request_options == [{"max_retries": 0}] * 2
+    compact_requests = [request for request in provider_requests if request["max_tokens"] == 96]
+    assert len(compact_requests) == 2
+    for request in compact_requests:
+        assert "tools" not in request
+        assert len(request["messages"][0]["content"].encode("utf-8")) < 1200
+        assert request["messages"][-1]["content"] == "Synthetic benchmark text"
+
+    fast_sample = bench.run_benchmark_pair(client, timing=True, fast_only=True)
+    assert list(fast_sample) == [True]
+    assert fast_sample[True]["success"]
 
 
 def test_timing_records_attempts_and_backoff_only_for_registered_turn(monkeypatch):

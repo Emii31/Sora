@@ -536,3 +536,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - The project volume was unavailable. Used a temporary checkout from the verified Phase 3.3B commit `e69d08b67dd35e76d0457821e0b041e82a4cbf84` and a temporary virtual environment.
 - All four warmed local Ollama turns completed. The main agent call dominated both modes, and Ollama logged input truncation and request timeouts. The [Phase 3.4 record](phases/PHASE_03_04.md) contains the per-turn durations and retry evidence.
 - Handoff: the checkpoint was validated and committed locally. HTTPS push lacked GitHub credentials, and the connected GitHub integration returned HTTP 403 on the first blob write. Publish this commit from an authenticated checkout. The next experiment is a compact fast-mode prompt with an explicit output-token cap, retaining the configured persona and recent conversation context.
+
+## 2026-11-16 — Phase 3.5 compact fast local chat
+
+- Replaced the opt-in loopback text turn's full agent prompt with a bounded persona and recent-history prompt. Kept the default full mode and existing reply delivery.
+- Verified 61 focused tests and two successful live Ollama turns. Each took one inference request. Send-to-history median was 3.12 s.
+- Publishing remains pending. Use the cumulative Phase 3.5 bundle, which includes the local Phase 3.4 commit and both phase records. See [Phase 3.5](phases/PHASE_03_05.md).

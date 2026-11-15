@@ -16,7 +16,13 @@ import chat_timing
 import server_config
 import user_settings
 import self_profile
-from prompt import call_chat_agent
+from prompt import (
+    FAST_LOCAL_HISTORY_MESSAGES,
+    FAST_LOCAL_INPUT_BYTES,
+    build_fast_local_chat_messages,
+    call_chat_agent,
+    call_fast_local_chat,
+)
 from prompt_identity import (
     normalize_character_section,
     resolve_user_entity_label,
@@ -1848,7 +1854,8 @@ def _resolve_chat_agent_policy(preflight: dict | None = None,
     host = chat_cfg.get("host", "")
     is_loop = ai_config._is_loopback(host)
 
-    if local_text_chat and not has_image and is_loop:
+    if (local_text_chat and not has_image and is_loop
+            and len((user_text or "").encode("utf-8", errors="replace")) <= FAST_LOCAL_INPUT_BYTES):
         return {
             "mode": "reactive_fast",
             "tier": "chat",
@@ -1887,7 +1894,7 @@ def _friendly_chat_generation_error(exc: Exception) -> str:
             "Please fill in the Vision, Chat, and Memory API Keys in the Model settings page in Sora, "
             "and I'll be able to chat with you again."
         )
-    if "connection" in lower or "timeout" in lower or "无法连接" in raw or "cannot connect" in lower:
+    if any(clue in lower for clue in ("connection", "timeout", "timed out", "cannot connect")) or "无法连接" in raw:
         return "I couldn't connect to the model service just now—it might be a temporary network or server instability. Let's try again in a moment, okay?"
     return "I ran into a small issue processing your message. Send it to me again in a moment, and I'll take another careful look."
 
@@ -2603,14 +2610,6 @@ def _csm_do_full_reply(batch, user_id):
         except Exception:
             pass
         try:
-            with chat_timing.span("context_assembly"):
-                context_text = _build_chat_context()
-
-                # Daily greeting / late-night care injection
-                greeting_ctx = _get_greeting_context()
-                if greeting_ctx:
-                    context_text += "\n" + greeting_ctx
-
             # Collect image *descriptions* from batch. The chat tier is
             # pure-text (DeepSeek V4-flash), so vision.describe_image()
             # has already converted each upload into 120-180 字 Chinese
@@ -2634,8 +2633,16 @@ def _csm_do_full_reply(batch, user_id):
             global _last_resolved_chat_policy
             _last_resolved_chat_policy = chat_policy
 
-            preflight = {}
-            if chat_policy.get("mode") != "reactive_fast":
+            fast_local = chat_policy["mode"] == "reactive_fast"
+            if not fast_local:
+                with chat_timing.span("context_assembly"):
+                    context_text = _build_chat_context()
+
+                    # Daily greeting / late-night care injection
+                    greeting_ctx = _get_greeting_context()
+                    if greeting_ctx:
+                        context_text += "\n" + greeting_ctx
+
                 # Preflight is text-only memory pre-retrieval. Image content is
                 # folded in through image_desc; model policy stays fixed pro.
                 with chat_timing.span("memory_preflight"):
@@ -2651,42 +2658,46 @@ def _csm_do_full_reply(batch, user_id):
                             context_text += "\n" + memory_context
                     except Exception as e:
                         print(f"[Chat] Preflight failed (non-fatal): {e}")
-                        preflight = {}
-                chat_policy = _resolve_chat_agent_policy(
-                    preflight, combined_text, user_image_descs=user_image_descs or None,
-                )
             else:
                 print("[Chat] Fast mode active: skipped model-based preflight.")
 
             chat_timing.selected_policy(chat_policy["mode"])
             with chat_timing.span("history_and_tools"):
-                history_limit = 5 if chat_policy.get("mode") == "reactive_fast" else 20
+                history_limit = FAST_LOCAL_HISTORY_MESSAGES + len(batch) if fast_local else 20
                 history = storage.get_chat_history(limit=history_limit)
                 batch_ids = {m["id"] for m in batch}
                 history = [m for m in history if m.get("id") not in batch_ids]
 
-                from tools import get_registry
-                from ai_config import get_runtime_config
-                registry = get_registry()
-                tool_handlers = registry.get_handlers()
-                provider = get_runtime_config().get("provider", "openai")
-                tools_list = registry.to_tools(provider)
-                effective_tools = tools_list if chat_policy["allow_tools"] else []
+                effective_tools = []
+                if not fast_local:
+                    from tools import get_registry
+                    from ai_config import get_runtime_config
+                    registry = get_registry()
+                    tool_handlers = registry.get_handlers()
+                    provider = get_runtime_config().get("provider", "openai")
+                    tools_list = registry.to_tools(provider)
+                    effective_tools = tools_list if chat_policy["allow_tools"] else []
             print(
                 f"[Chat] policy -> mode={chat_policy['mode']} tier={chat_policy['tier']} "
                 f"reasoning={chat_policy['reasoning']} tools={len(effective_tools)} "
                 f"reason={chat_policy.get('reason', '')}"
             )
 
-            with chat_timing.span("chat_agent"):
-                result = call_chat_agent(
-                    context_text, history, combined_text, tool_handlers,
-                    tools_list=effective_tools, user_image_descs=user_image_descs or None,
-                    max_iterations=chat_policy["max_iterations"],
-                    tier=chat_policy["tier"],
-                    reasoning=chat_policy["reasoning"],
-                    reasoning_budget=chat_policy["reasoning_budget"],
-                )
+            if fast_local:
+                with chat_timing.span("context_assembly"):
+                    messages = build_fast_local_chat_messages(history, combined_text)
+                with chat_timing.span("chat_agent"):
+                    result = {"reply": call_fast_local_chat(messages)}
+            else:
+                with chat_timing.span("chat_agent"):
+                    result = call_chat_agent(
+                        context_text, history, combined_text, tool_handlers,
+                        tools_list=effective_tools, user_image_descs=user_image_descs or None,
+                        max_iterations=chat_policy["max_iterations"],
+                        tier=chat_policy["tier"],
+                        reasoning=chat_policy["reasoning"],
+                        reasoning_budget=chat_policy["reasoning_budget"],
+                    )
 
             reply_msg = {
                 "id": last_msg_id + "_reply",

@@ -433,3 +433,8 @@
   - Focused tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q tests/test_benchmark_chat.py tests/test_chat_preflight_routing.py tests/test_chat_error_copy.py tests/test_agent_modes_attention.py`. Exit 0, 38 passed.
   - Live run: `PYTHONDONTWRITEBYTECODE=1 MIRU_CLIENT_CONFIG_PATH=/tmp/sora-phase-34-unused-launcher.json /tmp/sora-phase-34-venv/bin/python -B -u scripts/benchmark_chat.py --timing`. Exit 0, all 4 turns passed with recorded worker policies and exact saved replies.
   - Send-to-history medians: full mode 337.85 s, fast mode 339.99 s. Direct Ollama medians: 56.03 s and 91.74 s. See the [Phase 3.4 record](phases/PHASE_03_04.md) for the matched turns and measurement limits.
+
+- **Phase 3.5 — Compact Fast Local Chat**
+  - Focused tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q tests/test_fast_local_chat.py tests/test_benchmark_chat.py tests/test_chat_preflight_routing.py tests/test_chat_error_copy.py tests/test_agent_modes_attention.py tests/test_user_settings.py`. Exit 0, 61 passed, two pre-existing Pillow warnings.
+  - Live fast samples: `PYTHONDONTWRITEBYTECODE=1 MIRU_CLIENT_CONFIG_PATH=/tmp/sora-phase-34-unused-launcher.json /tmp/sora-phase-34-venv/bin/python -B -u scripts/benchmark_chat.py --timing --fast-only`. Exit 0, 2/2 replies saved. Individual times 3.18 s and 3.06 s, median 3.12 s. Both made one model request.
+  - The live samples did not remeasure full mode. See the [Phase 3.5 record](phases/PHASE_03_05.md) for the pilot timeout and comparison limits.

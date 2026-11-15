@@ -104,12 +104,14 @@ def create_fresh_disposable_user(auth) -> dict:
     return {"token": token, "user_id": user_id, "is_new": True}
 
 def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under matched conditions.",
-                       order: str = "full_first", *, timing: bool = False):
-    """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order with fresh disposable user state."""
+                       order: str = "full_first", *, timing: bool = False, fast_only: bool = False):
+    """Run each selected mode with fresh disposable user state."""
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
     import chat_timing
 
-    modes = [False, True] if order == "full_first" else [True, False]
+    modes = (False, True) if order == "full_first" else (True, False)
+    if fast_only:
+        modes = (True,)
     results = {}
 
     for fast_mode in modes:
@@ -265,7 +267,7 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
 
     return results
 
-def run_benchmark(*, timing=False):
+def run_benchmark(*, timing=False, fast_only=False):
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
     print("=== Sora Local Chat Matched Benchmark ===")
     app_mod.app.config["TESTING"] = True
@@ -283,12 +285,11 @@ def run_benchmark(*, timing=False):
         )
     print("Untimed Ollama warm-up complete.", flush=True)
 
-    # Run at least two pairs with alternating orders (Pair 1: full_first, Pair 2: fast_first)
-    print("\n--- Pair 1 (full_first) ---")
-    pair1 = run_benchmark_pair(client, prompt_text=prompt_text, order="full_first", timing=timing)
+    print("\n--- Sample 1 ---" if fast_only else "\n--- Pair 1 (full_first) ---")
+    pair1 = run_benchmark_pair(client, prompt_text=prompt_text, order="full_first", timing=timing, fast_only=fast_only)
 
-    print("\n--- Pair 2 (fast_first) ---")
-    pair2 = run_benchmark_pair(client, prompt_text=prompt_text, order="fast_first", timing=timing)
+    print("\n--- Sample 2 ---" if fast_only else "\n--- Pair 2 (fast_first) ---")
+    pair2 = run_benchmark_pair(client, prompt_text=prompt_text, order="fast_first", timing=timing, fast_only=fast_only)
 
     print("\n=== Benchmark Summary ===")
     all_success = all(p.get("success", False) for p in list(pair1.values()) + list(pair2.values()))
@@ -318,6 +319,7 @@ def run_benchmark(*, timing=False):
 def main():
     parser = argparse.ArgumentParser(description="Benchmark Sora against a local Ollama model.")
     parser.add_argument("--timing", action="store_true", help="Report timings for each chat stage.")
+    parser.add_argument("--fast-only", action="store_true", help="Measure two fast-mode turns without rerunning full mode.")
     args = parser.parse_args()
 
     _temp_dir = tempfile.TemporaryDirectory()
@@ -347,7 +349,7 @@ def main():
         ai_config.invalidate_cache()
         storage._ensure_dirs()
 
-        res = run_benchmark(timing=args.timing)
+        res = run_benchmark(timing=args.timing, fast_only=args.fast_only)
         if not res.get("success"):
             print("ERROR: Benchmark failed in one or more pairs.", file=sys.stderr)
             _temp_dir.cleanup()

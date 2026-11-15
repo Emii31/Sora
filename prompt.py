@@ -1946,6 +1946,70 @@ def build_proactive_agent_user_message(intent: dict, delivery_preflight: dict | 
     ])
 
 
+FAST_LOCAL_INPUT_BYTES = 2048
+FAST_LOCAL_HISTORY_MESSAGES = 5
+_FAST_LOCAL_OUTPUT_TOKENS = 96
+
+
+def _fast_chat_excerpt(text, limit):
+    """Clip UTF-8 context without splitting a character."""
+    return (text or "").strip().encode("utf-8", errors="replace")[:limit].decode("utf-8", errors="ignore")
+
+
+def build_fast_local_chat_messages(history, user_text):
+    """Build a compact text-only conversation while retaining the current message."""
+    cfg = get_config()
+    user_label = resolve_user_entity_label()
+    instructions = [
+        f"You are {_fast_chat_excerpt(cfg.name, 96)}, a personal AI companion.",
+        f"Address the user naturally as {_fast_chat_excerpt(_safe_user_address(cfg.user_address), 96)}.",
+        "Reply in the user's language. Keep it conversational and concise. "
+        "Use the recent chat for continuity. Be honest about what you know and can do. "
+        "Never claim to have performed an action outside this chat.",
+    ]
+    for label, text, limit in (
+        ("Role", cfg.hint("role_summary"), 160),
+        ("Personality", cfg.personality, 320),
+        ("Speech", cfg.hint("tone_chat") or cfg.speech_patterns, 240),
+    ):
+        excerpt = _fast_chat_excerpt(
+            normalize_character_section(text, user_label=user_label, miru_name=cfg.name), limit,
+        )
+        if excerpt:
+            instructions.append(f"{label}: {excerpt}")
+
+    recent = []
+    for message in history[-FAST_LOCAL_HISTORY_MESSAGES:]:
+        role = message.get("role")
+        text = _fast_chat_excerpt(message.get("text"), 240)
+        if role in ("user", "assistant") and text:
+            recent.append({"role": role, "text": text})
+    return [
+        {"role": "system", "content": "\n".join(instructions)},
+        *_build_chat_messages(recent, user_text),
+    ]
+
+
+def call_fast_local_chat(messages):
+    """Make one provider request for the opt-in loopback text path."""
+    runtime = _get_ai_runtime_or_raise("chat")
+    client = ai_config.get_tier_client("chat")
+    if not ai_config._is_loopback(str(client.base_url)):
+        raise RuntimeError("Fast local chat requires a loopback provider")
+    client = client.with_options(max_retries=0)
+    model = runtime["model"]
+    max_tokens = ai_config.resolve_max_tokens("chat", _FAST_LOCAL_OUTPUT_TOKENS)
+    with chat_timing.model_attempt("agent", 1):
+        response = client.chat.completions.create(
+            model=model, messages=messages, max_tokens=max_tokens, temperature=0.3,
+        )
+        _log_llm_usage("chat", model, response, call_label="fast_local_chat", max_tokens=max_tokens)
+        reply = _extract_text_from_response(response)
+        if not reply:
+            raise RuntimeError("Empty fast local chat response")
+    return reply
+
+
 def call_chat_agent(context_text, chat_history, user_text, tool_handlers,
                     tools_list=None, max_iterations=8, user_image_descs=None,
                     # Legacy alias
