@@ -1771,6 +1771,29 @@ def _forward_chat_to_vps(text: str, image_file=None):
         return jsonify({"error": "Server response error"}), resp.status_code
 
 
+@app.route("/api/voice/transcribe", methods=["POST"])
+def api_voice_transcribe():
+    """Transcribe an authenticated push-to-talk recording on this backend."""
+    import voice_input
+
+    if request.mimetype not in {"audio/wav", "audio/x-wav"}:
+        return jsonify({"error": "Send the recording as audio/wav."}), 415
+    limit = voice_input.MAX_UPLOAD_BYTES
+    if request.content_length is not None and request.content_length > limit:
+        return jsonify({"error": "The recording is too large."}), 413
+    audio = request.stream.read(limit + 1)
+    if len(audio) > limit:
+        return jsonify({"error": "The recording is too large."}), 413
+
+    try:
+        transcript = voice_input.transcribe_wav(audio)
+    except voice_input.InvalidAudio as exc:
+        return jsonify({"error": str(exc)}), 400
+    except voice_input.VoiceUnavailable as exc:
+        return jsonify({"error": str(exc)}), 503
+    return jsonify({"text": transcript})
+
+
 @app.route("/api/chat/typing")
 def api_chat_typing():
     """Return whether Airi is currently generating a reply."""

@@ -438,3 +438,7 @@
   - Focused tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q tests/test_fast_local_chat.py tests/test_benchmark_chat.py tests/test_chat_preflight_routing.py tests/test_chat_error_copy.py tests/test_agent_modes_attention.py tests/test_user_settings.py`. Exit 0, 61 passed, two pre-existing Pillow warnings.
   - Live fast samples: `PYTHONDONTWRITEBYTECODE=1 MIRU_CLIENT_CONFIG_PATH=/tmp/sora-phase-34-unused-launcher.json /tmp/sora-phase-34-venv/bin/python -B -u scripts/benchmark_chat.py --timing --fast-only`. Exit 0, 2/2 replies saved. Individual times 3.18 s and 3.06 s, median 3.12 s. Both made one model request.
   - The live samples did not remeasure full mode. See the [Phase 3.5 record](phases/PHASE_03_05.md) for the pilot timeout and comparison limits.
+
+- **Phase 4.1 — Offline Push-to-Talk Transcription Backend**
+  - Command: `SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 41 passed.
+  - The real authenticated endpoint transcribed a synthetic English recording exactly in 2.25 s including model loading. A silence sample returned an empty transcript. Python socket connections were blocked during both requests. Real microphone capture was not exercised.

@@ -542,3 +542,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Replaced the opt-in loopback text turn's full agent prompt with a bounded persona and recent-history prompt. Kept the default full mode and existing reply delivery.
 - Verified 61 focused tests and two successful live Ollama turns. Each took one inference request. Send-to-history median was 3.12 s.
 - Publishing remains pending. Use the cumulative Phase 3.5 bundle, which includes the local Phase 3.4 commit and both phase records. See [Phase 3.5](phases/PHASE_03_05.md).
+
+## 2026-11-16 — Phase 4.1 offline push-to-talk transcription
+
+- Added an authenticated transcription endpoint for short PCM WAV uploads and optional offline Vosk setup. The transcript is returned for review and chat sending remains a separate action.
+- Verified 41 focused tests, including real local recognition of a synthetic English sentence in 2.25 s and an empty transcript for silence.
+- Publishing remains pending. The cumulative Phase 4.1 bundle includes Phases 3.4 and 3.5. Continue with local speech synthesis after this checkpoint. See [Phase 4.1](phases/PHASE_04_01.md).

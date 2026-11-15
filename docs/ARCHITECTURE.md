@@ -32,3 +32,7 @@ Miru (the base for Sora) is a cross-platform companion application with a Python
 - **Startup**: `linux_launcher.py` -> `windows_launcher.py` -> `desktop_main()`.
 - **Memory**: `storage.py` provides atomic JSON read/write helpers and directory management; `core_memory.py` manages higher-level memory state.
 - **Chinese Text/Branding**: Potential hardcoded Chinese strings and assets in `assets/brand/` or duplicated UI templates. Need to audit `assets/js/` and templates.
+
+## Offline voice input
+
+The backend's authenticated `POST /api/voice/transcribe` route accepts short mono PCM WAV uploads. `voice_input.py` validates the format and calls the explicitly configured local Vosk model. Clients receive a transcript in the response and use the regular chat route when the user sends it.
