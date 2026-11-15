@@ -14,6 +14,7 @@ from prompt_identity import (
     safe_user_address,
 )
 import ai_config
+import chat_timing
 
 # Backward-compat shim: legacy callers expected `get_runtime_config()` and
 # `DEFAULT_MODEL`. After 3-tier migration, runtime config is per-tier;
@@ -499,10 +500,12 @@ def _api_call_with_retry(fn, max_retries=3, base_delay=2.0, label="API"):
     Returns: Result of fn().
     Raises: The last exception if all retries are exhausted.
     """
+    kind = "agent" if label.startswith("AgentChat(") else "retrieval"
     last_exc = None
     for attempt in range(max_retries + 1):
         try:
-            return fn()
+            with chat_timing.model_attempt(kind, attempt + 1):
+                return fn()
         except Exception as exc:
             last_exc = exc
             if not _is_retryable_error(exc) or attempt == max_retries:
@@ -521,7 +524,8 @@ def _api_call_with_retry(fn, max_retries=3, base_delay=2.0, label="API"):
 
             print(f"[Retry] {label} attempt {attempt + 1}/{max_retries} failed: "
                   f"{exc.__class__.__name__}: {exc}. Retrying in {delay:.1f}s...")
-            time.sleep(delay)
+            with chat_timing.span("retry_backoff"):
+                time.sleep(delay)
 
     raise last_exc  # Should not reach here, but safety net
 

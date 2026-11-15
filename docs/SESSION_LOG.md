@@ -529,3 +529,10 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Overall Success: True (4/4 turns passed).
 - Enforced history prefix integrity via `python3 scripts/check_history_append_only.py 5dd707a0084833bf6c0d6c0bb247c23b485ed9f1` (PASSED).
 - Updated documentation (`docs/phases/PHASE_03_03B.md`, `docs/STATUS.md`, `docs/SESSION_LOG.md`, `docs/VERIFICATION.md`).
+
+## 2026-11-16 — Phase 3.4 local chat latency diagnosis
+
+- Added opt-in `--timing` traces keyed to the exact benchmark turn. Existing chat policy, prompts, and retry behavior are unchanged.
+- The project volume was unavailable. Used a temporary checkout from the verified Phase 3.3B commit `e69d08b67dd35e76d0457821e0b041e82a4cbf84` and a temporary virtual environment.
+- All four warmed local Ollama turns completed. The main agent call dominated both modes, and Ollama logged input truncation and request timeouts. The [Phase 3.4 record](phases/PHASE_03_04.md) contains the per-turn durations and retry evidence.
+- Handoff: the checkpoint was validated and committed locally. HTTPS push lacked GitHub credentials, and the connected GitHub integration returned HTTP 403 on the first blob write. Publish this commit from an authenticated checkout. The next experiment is a compact fast-mode prompt with an explicit output-token cap, retaining the configured persona and recent conversation context.

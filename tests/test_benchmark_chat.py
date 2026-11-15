@@ -124,46 +124,89 @@ def test_benchmark_runner_end_to_end_mocked(tmp_path, monkeypatch):
 
     monkeypatch.setattr("scripts.benchmark_chat.OpenAI", MockOpenAIClient)
 
-    # Mock core receive_chat_message to write history and set _last_resolved_chat_policy correctly
-    def mock_receive(text, image=None, device_id=""):
-        msg_id = "msg_" + os.urandom(4).hex()
-        reply_id = msg_id + "_reply"
-        chat_history = [
-            {"id": msg_id, "role": "user", "text": text, "time": "2026-11-13 12:00:00"},
-            {"id": reply_id, "role": "assistant", "text": "Valid matched benchmark response.", "time": "2026-11-13 12:00:01"}
-        ]
-        storage.write_json(storage.chat_history_path(), chat_history)
+    # Exercise the real worker and retry wrapper with a deterministic provider.
+    from types import SimpleNamespace
 
-        # Determine expected policy based on user settings
-        us = user_settings.get()
-        is_fast = us.get("local_text_chat_enabled", False)
-        core._last_resolved_chat_policy = {
-            "mode": "reactive_fast" if is_fast else "v4_pro",
-            "tier": "chat",
-            "reasoning": False,
-            "max_iterations": 1 if is_fast else 8,
-            "allow_tools": not is_fast,
-        }
-        return {"ok": True, "msg_id": msg_id}
+    import attention_engine
+    import sleep_agent
 
-    monkeypatch.setattr(core, "receive_chat_message", mock_receive)
+    def complete(**kwargs):
+        system_prompt = kwargs["messages"][0]["content"]
+        content = (
+            '{"need_retrieval": false, "files": [], "keywords": []}'
+            if "Memory Retriever" in system_prompt
+            else "Valid matched benchmark response."
+        )
+        message = SimpleNamespace(content=content, tool_calls=None)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=message, finish_reason="stop")],
+            usage=None,
+        )
+
+    provider = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=complete)))
+    monkeypatch.setattr(ai_config, "get_tier_client", lambda tier: provider)
+    monkeypatch.setattr(core, "_QUIET_PERIOD", 0.01)
+    monkeypatch.setattr(attention_engine, "get_attention_engine", lambda: SimpleNamespace(record_signal=lambda *a: None))
+    monkeypatch.setattr(sleep_agent, "get_sleep_agent", lambda: SimpleNamespace(enqueue=lambda *a, **kw: None))
+    ai_config.update_tier_config("memory", {
+        "host": "http://127.0.0.1:11434/v1", "api_key": "ollama", "model": "qwen2.5:1.5b-instruct",
+    })
 
     import scripts.benchmark_chat as bench
     app_mod = sys.modules["app"]
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
-    # Run benchmark pair test
-    pair_result = bench.run_benchmark_pair(client, prompt_text="Benchmark test prompt under matched conditions.", order="full_first")
-    assert pair_result[False]["success"] is True
-    assert pair_result[False]["policy_mode"] == "v4_pro"
-    assert pair_result[True]["success"] is True
-    assert pair_result[True]["policy_mode"] == "reactive_fast"
+    for order in ("full_first", "fast_first"):
+        pair = bench.run_benchmark_pair(
+            client, prompt_text="Synthetic benchmark text", order=order, timing=True,
+        )
+        assert list(pair) == ([False, True] if order == "full_first" else [True, False])
+        for fast_mode, result in pair.items():
+            assert result["success"]
+            assert result["policy_mode"] == ("reactive_fast" if fast_mode else "v4_pro")
+            trace = result["timing"]
+            assert trace["turn_id"]
+            assert trace["history_detection_seconds"] is not None
+            assert {"queue_wait", "context_assembly", "history_and_tools",
+                    "chat_agent", "reply_persistence"} <= trace["stages_seconds"].keys()
+            assert ("memory_preflight" in trace["stages_seconds"]) is not fast_mode
+            kinds = [attempt["kind"] for attempt in trace["model_attempts"]]
+            assert kinds == (["agent"] if fast_mode else ["retrieval", "agent"])
+            assert "Synthetic benchmark text" not in json.dumps(trace)
+            assert result["reply"] not in json.dumps(trace)
 
-    # Test fast_first order pair
-    pair_result_fast_first = bench.run_benchmark_pair(client, prompt_text="Benchmark test prompt under matched conditions.", order="fast_first")
-    assert pair_result_fast_first[True]["success"] is True
-    assert pair_result_fast_first[False]["success"] is True
+
+def test_timing_records_attempts_and_backoff_only_for_registered_turn(monkeypatch):
+    from types import SimpleNamespace
+
+    import chat_timing
+    import prompt
+
+    delays = []
+    monkeypatch.setattr(prompt, "time", SimpleNamespace(sleep=delays.append))
+    outcomes = iter([ConnectionError("synthetic error"), "success"])
+
+    def call():
+        result = next(outcomes)
+        if isinstance(result, Exception):
+            raise result
+        return result
+
+    with chat_timing.capture("benchmark-user") as trace:
+        chat_timing.queued("benchmark-user", "turn-1")
+        with chat_timing.worker("other-user", "turn-1"):
+            assert prompt._api_call_with_retry(lambda: "unrelated") == "unrelated"
+        with chat_timing.worker("benchmark-user", "other-turn"):
+            assert prompt._api_call_with_retry(lambda: "unrelated") == "unrelated"
+        with chat_timing.worker("benchmark-user", "turn-1"):
+            assert prompt._api_call_with_retry(call, label="AgentChat(iter=0)") == "success"
+
+    assert len(delays) == 1
+    assert trace.stages["retry_backoff"] >= 0
+    assert [(a["kind"], a["attempt"], a["succeeded"]) for a in trace.model_attempts] == [
+        ("agent", 1, False), ("agent", 2, True),
+    ]
 
 
 def test_benchmark_failure_conditions(tmp_path, monkeypatch):

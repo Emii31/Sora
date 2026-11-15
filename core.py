@@ -12,6 +12,7 @@ import threading
 import uuid
 from datetime import datetime, timedelta
 
+import chat_timing
 import server_config
 import user_settings
 import self_profile
@@ -2509,6 +2510,7 @@ def receive_chat_message(text, image=None, device_id=None):
         user_msg["_user_id"] = user_id
         user_msg["_user_data_dir"] = user_data_dir
         user_msg["_device_id"] = device_id or ""
+        chat_timing.queued(user_id, msg_id)
         _csm_pending.setdefault(user_id, []).append(user_msg)
         _csm_last_msg_time[user_id] = user_msg["_recv_time"]
 
@@ -2560,7 +2562,8 @@ def _csm_process_batch(batch, user_id):
             pending.clear()
             print(f"[Chat] Merged {len(batch)} messages before generation")
 
-    _csm_do_full_reply(batch, user_id)
+    with chat_timing.worker(user_id, batch[-1].get("id", "") if batch else ""):
+        _csm_do_full_reply(batch, user_id)
 
 
 def _csm_do_full_reply(batch, user_id):
@@ -2600,12 +2603,13 @@ def _csm_do_full_reply(batch, user_id):
         except Exception:
             pass
         try:
-            context_text = _build_chat_context()
+            with chat_timing.span("context_assembly"):
+                context_text = _build_chat_context()
 
-            # Daily greeting / late-night care injection
-            greeting_ctx = _get_greeting_context()
-            if greeting_ctx:
-                context_text += "\n" + greeting_ctx
+                # Daily greeting / late-night care injection
+                greeting_ctx = _get_greeting_context()
+                if greeting_ctx:
+                    context_text += "\n" + greeting_ctx
 
             # Collect image *descriptions* from batch. The chat tier is
             # pure-text (DeepSeek V4-flash), so vision.describe_image()
@@ -2634,51 +2638,55 @@ def _csm_do_full_reply(batch, user_id):
             if chat_policy.get("mode") != "reactive_fast":
                 # Preflight is text-only memory pre-retrieval. Image content is
                 # folded in through image_desc; model policy stays fixed pro.
-                try:
-                    from prompt import call_chat_preflight
-                    preflight = call_chat_preflight(
-                        combined_text, user_image_descs=user_image_descs or None,
-                    )
-                    memory_context = _format_memory_retrieval(
-                        preflight.get("memory_context", "") if isinstance(preflight, dict) else preflight
-                    )
-                    if memory_context:
-                        context_text += "\n" + memory_context
-                except Exception as e:
-                    print(f"[Chat] Preflight failed (non-fatal): {e}")
-                    preflight = {}
+                with chat_timing.span("memory_preflight"):
+                    try:
+                        from prompt import call_chat_preflight
+                        preflight = call_chat_preflight(
+                            combined_text, user_image_descs=user_image_descs or None,
+                        )
+                        memory_context = _format_memory_retrieval(
+                            preflight.get("memory_context", "") if isinstance(preflight, dict) else preflight
+                        )
+                        if memory_context:
+                            context_text += "\n" + memory_context
+                    except Exception as e:
+                        print(f"[Chat] Preflight failed (non-fatal): {e}")
+                        preflight = {}
                 chat_policy = _resolve_chat_agent_policy(
                     preflight, combined_text, user_image_descs=user_image_descs or None,
                 )
             else:
                 print("[Chat] Fast mode active: skipped model-based preflight.")
 
-            history_limit = 5 if chat_policy.get("mode") == "reactive_fast" else 20
-            history = storage.get_chat_history(limit=history_limit)
-            batch_ids = {m["id"] for m in batch}
-            history = [m for m in history if m.get("id") not in batch_ids]
+            chat_timing.selected_policy(chat_policy["mode"])
+            with chat_timing.span("history_and_tools"):
+                history_limit = 5 if chat_policy.get("mode") == "reactive_fast" else 20
+                history = storage.get_chat_history(limit=history_limit)
+                batch_ids = {m["id"] for m in batch}
+                history = [m for m in history if m.get("id") not in batch_ids]
 
-            from tools import get_registry
-            from ai_config import get_runtime_config
-            registry = get_registry()
-            tool_handlers = registry.get_handlers()
-            provider = get_runtime_config().get("provider", "openai")
-            tools_list = registry.to_tools(provider)
-            effective_tools = tools_list if chat_policy["allow_tools"] else []
+                from tools import get_registry
+                from ai_config import get_runtime_config
+                registry = get_registry()
+                tool_handlers = registry.get_handlers()
+                provider = get_runtime_config().get("provider", "openai")
+                tools_list = registry.to_tools(provider)
+                effective_tools = tools_list if chat_policy["allow_tools"] else []
             print(
                 f"[Chat] policy -> mode={chat_policy['mode']} tier={chat_policy['tier']} "
                 f"reasoning={chat_policy['reasoning']} tools={len(effective_tools)} "
                 f"reason={chat_policy.get('reason', '')}"
             )
 
-            result = call_chat_agent(
-                context_text, history, combined_text, tool_handlers,
-                tools_list=effective_tools, user_image_descs=user_image_descs or None,
-                max_iterations=chat_policy["max_iterations"],
-                tier=chat_policy["tier"],
-                reasoning=chat_policy["reasoning"],
-                reasoning_budget=chat_policy["reasoning_budget"],
-            )
+            with chat_timing.span("chat_agent"):
+                result = call_chat_agent(
+                    context_text, history, combined_text, tool_handlers,
+                    tools_list=effective_tools, user_image_descs=user_image_descs or None,
+                    max_iterations=chat_policy["max_iterations"],
+                    tier=chat_policy["tier"],
+                    reasoning=chat_policy["reasoning"],
+                    reasoning_budget=chat_policy["reasoning_budget"],
+                )
 
             reply_msg = {
                 "id": last_msg_id + "_reply",
@@ -2793,7 +2801,8 @@ def _csm_try_deliver(reply_msg, user_id, device_id=""):
         # permanently silenced waiting for a non-existent reply is strictly
         # worse than a missed persistence record.
         try:
-            storage.append_chat_message(reply_msg)
+            with chat_timing.span("reply_persistence"):
+                storage.append_chat_message(reply_msg)
         except Exception as e:
             print(f"[Chat] storage.append_chat_message failed (non-fatal for state): {e}")
         _csm_typing[user_id] = False

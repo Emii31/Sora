@@ -1,3 +1,4 @@
+import argparse
 import sys
 import os
 import tempfile
@@ -7,6 +8,7 @@ import statistics
 import resource
 import secrets
 from datetime import datetime
+from contextlib import nullcontext
 from openai import OpenAI
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -101,9 +103,12 @@ def create_fresh_disposable_user(auth) -> dict:
         auth._save_json(auth._users_path(), users)
     return {"token": token, "user_id": user_id, "is_new": True}
 
-def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under matched conditions.", order: str = "full_first"):
+def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under matched conditions.",
+                       order: str = "full_first", *, timing: bool = False):
     """Run a matched pair of benchmark turns (one full mode, one fast mode) in specified order with fresh disposable user state."""
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
+    import chat_timing
+
     modes = [False, True] if order == "full_first" else [True, False]
     results = {}
 
@@ -129,7 +134,7 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
 
         base_url = "http://127.0.0.1:11434/v1"
         model = "qwen2.5:1.5b-instruct"
-        openai_client = OpenAI(base_url=base_url, api_key="ollama")
+        openai_client = OpenAI(base_url=base_url, api_key="ollama", timeout=180.0, max_retries=0)
 
         # 3. Direct model timing (warmed model / connection check) reported separately
         t_direct_start = time.monotonic()
@@ -149,110 +154,141 @@ def run_benchmark_pair(client, prompt_text: str = "Benchmark test prompt under m
         t_direct_end = time.monotonic()
         direct_time = t_direct_end - t_direct_start
 
-        # 4. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
-        core._last_resolved_chat_policy = None
-        t_sora_start = time.monotonic()
+        capture = chat_timing.capture(local_user["user_id"]) if timing else nullcontext()
+        with capture as trace:
+            # 4. Sora POST /api/chat send-to-history timing matching exact reply ID via GET /api/chat/history
+            core._last_resolved_chat_policy = None
+            t_sora_start = time.perf_counter()
 
-        res = client.post(
-            "/api/chat",
-            json={"text": prompt_text},
-            headers=headers,
-            environ_base=environ
-        )
-        if res.status_code != 200:
-            print(f"  FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
-            results[fast_mode] = {"success": False, "error": f"HTTP {res.status_code}"}
-            continue
-
-        post_data = res.get_json() or {}
-        user_msg_id = post_data.get("msg_id")
-        if not user_msg_id:
-            print(f"  FAILURE: Missing msg_id in response: {post_data}")
-            results[fast_mode] = {"success": False, "error": "Missing msg_id"}
-            continue
-
-        expected_reply_id = user_msg_id + "_reply"
-
-        assistant_reply = ""
-        timeout = 600.0
-        poll_start = time.monotonic()
-        success = False
-
-        while time.monotonic() - poll_start < timeout:
-            hist_res = client.get(
-                "/api/chat/history?limit=50",
+            res = client.post(
+                "/api/chat",
+                json={"text": prompt_text},
                 headers=headers,
                 environ_base=environ
             )
-            if hist_res.status_code == 200:
-                history = hist_res.get_json() or []
-                for m in history:
-                    if m.get("id") == expected_reply_id:
-                        assistant_reply = m.get("text", "")
-                        success = True
-                        break
-            if success:
-                break
-            time.sleep(0.3)
+            request_seconds = time.perf_counter() - t_sora_start
+            if res.status_code != 200:
+                print(f"  FAILURE: POST /api/chat returned status {res.status_code}: {res.get_data(as_text=True)}")
+                results[fast_mode] = {"success": False, "error": f"HTTP {res.status_code}"}
+                continue
 
-        t_sora_end = time.monotonic()
-        sora_total_time = t_sora_end - t_sora_start
+            post_data = res.get_json() or {}
+            user_msg_id = post_data.get("msg_id")
+            if not user_msg_id:
+                print(f"  FAILURE: Missing msg_id in response: {post_data}")
+                results[fast_mode] = {"success": False, "error": "Missing msg_id"}
+                continue
 
-        # 5. Verify actual policy and exact saved reply for every turn
-        observed_policy = getattr(core, "_last_resolved_chat_policy", None) or {}
-        expected_mode = "reactive_fast" if fast_mode else "v4_pro"
-        observed_mode = observed_policy.get("mode")
+            expected_reply_id = user_msg_id + "_reply"
 
-        # 5. Verify actual policy and exact saved reply for every turn
+            assistant_reply = ""
+            timeout = 600.0
+            poll_start = time.perf_counter()
+            success = False
 
-        if observed_mode != expected_mode:
-            print(f"  FAILURE: Policy mismatch inside worker: expected {expected_mode}, got {observed_mode}")
-            results[fast_mode] = {"success": False, "error": f"Policy mismatch: expected {expected_mode}, got {observed_mode}"}
-            continue
+            while time.perf_counter() - poll_start < timeout:
+                hist_res = client.get(
+                    "/api/chat/history?limit=50",
+                    headers=headers,
+                    environ_base=environ
+                )
+                if hist_res.status_code == 200:
+                    history = hist_res.get_json() or []
+                    for m in history:
+                        if m.get("id") == expected_reply_id and m.get("role") == "assistant":
+                            assistant_reply = m.get("text", "")
+                            success = True
+                            break
+                if success:
+                    break
+                time.sleep(0.3)
 
-        lower_reply = assistant_reply.lower()
-        is_fallback = (
-            not success
-            or not assistant_reply
-            or lower_reply.startswith("error:")
-            or "i haven't configured my models yet" in lower_reply
-            or "i couldn't connect to the model service" in lower_reply
-            or "i ran into a small issue" in lower_reply
-            or "小问题" in assistant_reply
-            or "我还没有配置好" in assistant_reply
-        )
+            t_sora_end = time.perf_counter()
+            sora_total_time = t_sora_end - t_sora_start
 
-        if is_fallback:
-            print(f"  FAILURE: Timeout, missing reply, or error fallback received: {assistant_reply}")
-            results[fast_mode] = {"success": False, "error": f"Fallback/missing reply: {assistant_reply}"}
-        else:
-            print(f"  Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Policy: {observed_mode} | Reply: {assistant_reply[:60]}...")
-            results[fast_mode] = {
-                "success": True,
-                "direct_time": direct_time,
-                "sora_time": sora_total_time,
-                "policy_mode": observed_mode,
-                "reply": assistant_reply
-            }
+            # 5. Verify actual policy and exact saved reply for every turn
+            observed_policy = getattr(core, "_last_resolved_chat_policy", None) or {}
+            expected_mode = "reactive_fast" if fast_mode else "v4_pro"
+            if trace is not None:
+                if success:
+                    trace.persistence_finished.wait(timeout=1.0)
+                observed_mode = trace.policy if trace.message_id == user_msg_id else ""
+                timings = {
+                    "turn_id": user_msg_id,
+                    "policy": observed_mode,
+                    "request_seconds": request_seconds,
+                    "send_to_history_seconds": sora_total_time,
+                    "stages_seconds": dict(trace.stages),
+                    "model_attempts": list(trace.model_attempts),
+                    "history_detection_seconds": (
+                        max(0.0, t_sora_end - trace.persisted_at) if success and trace.persisted_at else None
+                    ),
+                }
+                print("TIMING " + json.dumps(timings), flush=True)
+            else:
+                observed_mode = observed_policy.get("mode")
+
+            if observed_mode != expected_mode:
+                print(f"  FAILURE: Policy mismatch inside worker: expected {expected_mode}, got {observed_mode}")
+                results[fast_mode] = {"success": False, "error": f"Policy mismatch: expected {expected_mode}, got {observed_mode}"}
+                continue
+
+            lower_reply = assistant_reply.lower()
+            is_fallback = (
+                not success
+                or not assistant_reply
+                or lower_reply.startswith(("error:", "(an unexpected error occurred."))
+                or "i haven't configured my models yet" in lower_reply
+                or "i couldn't connect to the model service" in lower_reply
+                or "i ran into a small issue" in lower_reply
+                or "小问题" in assistant_reply
+                or "我还没有配置好" in assistant_reply
+            )
+
+            if is_fallback:
+                print("  FAILURE: Timeout, missing reply, or error fallback received.")
+                results[fast_mode] = {"success": False, "error": "Fallback or missing reply"}
+            else:
+                print(f"  Success | Direct: {direct_time:.2f}s | Sora Send-to-History: {sora_total_time:.2f}s | Policy: {observed_mode}")
+                results[fast_mode] = {
+                    "success": True,
+                    "direct_time": direct_time,
+                    "sora_time": sora_total_time,
+                    "policy_mode": observed_mode,
+                    "reply": assistant_reply,
+                }
+
+                if trace is not None:
+                    results[fast_mode]["timing"] = timings
 
         time.sleep(1.0)
 
     return results
 
-def run_benchmark():
+def run_benchmark(*, timing=False):
     storage, core, user_settings, ai_config, auth, app_mod = _import_app_modules()
-    print("=== Sora Local Chat Matched Benchmark (Phase 3.3B) ===")
+    print("=== Sora Local Chat Matched Benchmark ===")
     app_mod.app.config["TESTING"] = True
     client = app_mod.app.test_client()
 
     prompt_text = "Benchmark test prompt under matched conditions."
 
+    # Load the model before any measured turn or direct comparison.
+    with OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="ollama",
+                timeout=180.0, max_retries=0) as warmup_client:
+        warmup_client.chat.completions.create(
+            model="qwen2.5:1.5b-instruct",
+            messages=[{"role": "user", "content": prompt_text}],
+            max_tokens=1,
+        )
+    print("Untimed Ollama warm-up complete.", flush=True)
+
     # Run at least two pairs with alternating orders (Pair 1: full_first, Pair 2: fast_first)
     print("\n--- Pair 1 (full_first) ---")
-    pair1 = run_benchmark_pair(client, prompt_text=prompt_text, order="full_first")
+    pair1 = run_benchmark_pair(client, prompt_text=prompt_text, order="full_first", timing=timing)
 
     print("\n--- Pair 2 (fast_first) ---")
-    pair2 = run_benchmark_pair(client, prompt_text=prompt_text, order="fast_first")
+    pair2 = run_benchmark_pair(client, prompt_text=prompt_text, order="fast_first", timing=timing)
 
     print("\n=== Benchmark Summary ===")
     all_success = all(p.get("success", False) for p in list(pair1.values()) + list(pair2.values()))
@@ -280,6 +316,10 @@ def run_benchmark():
     }
 
 def main():
+    parser = argparse.ArgumentParser(description="Benchmark Sora against a local Ollama model.")
+    parser.add_argument("--timing", action="store_true", help="Report timings for each chat stage.")
+    args = parser.parse_args()
+
     _temp_dir = tempfile.TemporaryDirectory()
     data_dir = _temp_dir.name
     os.environ["DATA_DIR"] = data_dir
@@ -307,7 +347,7 @@ def main():
         ai_config.invalidate_cache()
         storage._ensure_dirs()
 
-        res = run_benchmark()
+        res = run_benchmark(timing=args.timing)
         if not res.get("success"):
             print("ERROR: Benchmark failed in one or more pairs.", file=sys.stderr)
             _temp_dir.cleanup()

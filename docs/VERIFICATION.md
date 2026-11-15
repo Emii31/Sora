@@ -428,3 +428,8 @@
   - Test suite check: Benchmark run succeeded (Overall Success: True).
   - Git diff check: PASS (zero unexpected deletions, clean whitespace).
   - History Prefix Integrity: Enforced by `python3 scripts/check_history_append_only.py 5dd707a0084833bf6c0d6c0bb247c23b485ed9f1` (PASSED).
+
+- **Phase 3.4 — Local Chat Latency Diagnosis**
+  - Focused tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q tests/test_benchmark_chat.py tests/test_chat_preflight_routing.py tests/test_chat_error_copy.py tests/test_agent_modes_attention.py`. Exit 0, 38 passed.
+  - Live run: `PYTHONDONTWRITEBYTECODE=1 MIRU_CLIENT_CONFIG_PATH=/tmp/sora-phase-34-unused-launcher.json /tmp/sora-phase-34-venv/bin/python -B -u scripts/benchmark_chat.py --timing`. Exit 0, all 4 turns passed with recorded worker policies and exact saved replies.
+  - Send-to-history medians: full mode 337.85 s, fast mode 339.99 s. Direct Ollama medians: 56.03 s and 91.74 s. See the [Phase 3.4 record](phases/PHASE_03_04.md) for the matched turns and measurement limits.
