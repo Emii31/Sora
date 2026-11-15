@@ -1,6 +1,7 @@
 import io
 import json
 import os
+from pathlib import Path
 import socket
 import subprocess
 import time
@@ -9,6 +10,7 @@ import wave
 import pytest
 
 import voice_input
+import voice_output
 
 
 def wav_bytes(*, channels=1, sample_rate=16_000, frames=24):
@@ -128,3 +130,120 @@ def test_real_offline_voice_recognition(voice_client, monkeypatch, tmp_path):
     silence = client.post("/api/voice/transcribe", data=wav_bytes(frames=16_000), content_type="audio/wav", headers=headers)
     assert silence.status_code == 200
     assert silence.get_json() == {"text": ""}
+
+
+def save_voice_history(headers, messages):
+    import auth
+    import storage
+
+    token = headers["Authorization"].removeprefix("Bearer ")
+    user_id, _ = auth.get_user_by_token(token)
+    storage.write_json(str(Path(auth.get_user_data_dir(user_id)) / "chat_history.json"), messages)
+
+
+def test_synthesis_returns_only_the_callers_saved_reply(voice_client, monkeypatch, tmp_path):
+    import auth
+    import storage
+
+    client, headers = voice_client
+    save_voice_history(headers, [
+        {"id": "my-reply", "role": "assistant", "text": "Hello there."},
+        {"id": "my-message", "role": "user", "text": "Do not read this."},
+    ])
+    other_dir = Path(auth.get_user_data_dir("u_other"))
+    other_dir.mkdir()
+    storage.write_json(str(other_dir / "chat_history.json"), [
+        {"id": "other-reply", "role": "assistant", "text": "Other user's text."},
+    ])
+    seen = []
+    monkeypatch.setattr(voice_output, "synthesize_wav", lambda text: seen.append(text) or wav_bytes())
+    before = {path.relative_to(tmp_path) for path in tmp_path.rglob("*") if path.is_file()}
+
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "my-reply", "text": "ignored"})
+    assert response.status_code == 200
+    assert response.mimetype == "audio/wav"
+    assert response.cache_control.no_store
+    assert response.data == wav_bytes()
+    assert {path.relative_to(tmp_path) for path in tmp_path.rglob("*") if path.is_file()} == before
+
+    for message_id in ("my-message", "other-reply", "missing"):
+        response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": message_id})
+        assert response.status_code == 404
+    response = client.post("/api/voice/synthesize", json={"message_id": "my-reply"})
+    assert response.status_code == 401
+    assert seen == ["Hello there."]
+
+
+@pytest.mark.parametrize("content_type, body, status", [
+    ("audio/wav", b"{}", 415),
+    ("application/json", b"{", 400),
+    ("application/json", b"[]", 400),
+    ("application/json", b'{"message_id": ""}', 400),
+    ("application/json", b" " * 1025, 413),
+])
+def test_synthesis_validates_request(voice_client, content_type, body, status):
+    client, headers = voice_client
+    response = client.post("/api/voice/synthesize", headers=headers, data=body, content_type=content_type)
+    assert response.status_code == status
+    assert response.get_json()["error"]
+
+
+def test_synthesis_checks_configuration_and_reply_length(voice_client, monkeypatch):
+    client, headers = voice_client
+    monkeypatch.delenv("SORA_PIPER_MODEL_PATH", raising=False)
+    save_voice_history(headers, [
+        {"id": "my-reply", "role": "assistant", "text": "Hello."},
+        {"id": "long-reply", "role": "assistant", "text": "a" * 1001},
+    ])
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "my-reply"})
+    assert response.status_code == 503
+    assert "not configured" in response.get_json()["error"]
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "long-reply"})
+    assert response.status_code == 422
+
+
+def test_synthesis_timeout_cleans_up_audio_and_releases_lock(monkeypatch, tmp_path):
+    model_path = tmp_path / "voice.onnx"
+    model_path.touch()
+    model_path.with_suffix(".onnx.json").touch()
+    monkeypatch.setenv("SORA_PIPER_MODEL_PATH", str(model_path))
+    outputs = []
+
+    def timeout(command, **kwargs):
+        assert kwargs["input"] == b"Hello."
+        assert "Hello." not in command
+        path = Path(command[-1])
+        path.write_bytes(wav_bytes())
+        outputs.append(path)
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(voice_output.subprocess, "run", timeout)
+    for _ in range(2):
+        with pytest.raises(voice_output.VoiceOutputUnavailable, match="timed out"):
+            voice_output.synthesize_wav("Hello.")
+    assert len(outputs) == 2
+    assert all(not path.parent.exists() for path in outputs)
+
+
+def test_real_offline_speech_synthesis(voice_client, monkeypatch):
+    model_path = os.environ.get("SORA_TEST_PIPER_MODEL_PATH")
+    if not model_path:
+        pytest.skip("Set SORA_TEST_PIPER_MODEL_PATH to run the Piper smoke test")
+    monkeypatch.setenv("SORA_PIPER_MODEL_PATH", model_path)
+    client, headers = voice_client
+    save_voice_history(headers, [
+        {"id": "hello-reply", "role": "assistant", "text": "Hi, I'm Sora. It's good to hear from you."},
+    ])
+    started = time.perf_counter()
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "hello-reply"})
+    elapsed = time.perf_counter() - started
+    assert response.status_code == 200
+    assert response.mimetype == "audio/wav"
+    with wave.open(io.BytesIO(response.data), "rb") as speech:
+        assert speech.getnchannels() == 1
+        assert speech.getsampwidth() == 2
+        duration = speech.getnframes() / speech.getframerate()
+        assert 1 < duration < 10
+        samples = speech.readframes(speech.getnframes())
+    assert any(samples)
+    print(json.dumps({"synthesis_seconds": round(elapsed, 2), "audio_seconds": round(duration, 2)}))

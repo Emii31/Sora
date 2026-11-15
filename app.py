@@ -1794,6 +1794,43 @@ def api_voice_transcribe():
     return jsonify({"text": transcript})
 
 
+@app.route("/api/voice/synthesize", methods=["POST"])
+def api_voice_synthesize():
+    """Read a saved assistant reply aloud on this backend."""
+    import voice_output
+
+    if not request.is_json:
+        return jsonify({"error": "Send a JSON object containing message_id."}), 415
+    limit = 1024
+    if request.content_length is not None and request.content_length > limit:
+        return jsonify({"error": "The playback request is too large."}), 413
+    payload = request.stream.read(limit + 1)
+    if len(payload) > limit:
+        return jsonify({"error": "The playback request is too large."}), 413
+    try:
+        body = json.loads(payload)
+    except (ValueError, RecursionError):
+        body = None
+    message_id = body.get("message_id") if isinstance(body, dict) else None
+    if not isinstance(message_id, str) or not message_id.strip() or len(message_id) > 128:
+        return jsonify({"error": "Provide a valid message_id."}), 400
+
+    message = next((
+        item for item in reversed(storage.get_chat_history(limit=200))
+        if item.get("id") == message_id and item.get("role") == "assistant"
+    ), None)
+    if message is None:
+        return jsonify({"error": "Assistant reply not found in recent chat history."}), 404
+    text = str(message.get("text") or "").strip()
+    if not text or len(text) > voice_output.MAX_REPLY_CHARS:
+        return jsonify({"error": f"Choose a reply of 1 to {voice_output.MAX_REPLY_CHARS} characters."}), 422
+    try:
+        audio = voice_output.synthesize_wav(text)
+    except voice_output.VoiceOutputUnavailable as exc:
+        return jsonify({"error": str(exc)}), 503
+    return Response(audio, mimetype="audio/wav")
+
+
 @app.route("/api/chat/typing")
 def api_chat_typing():
     """Return whether Airi is currently generating a reply."""

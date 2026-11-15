@@ -442,3 +442,7 @@
 - **Phase 4.1 — Offline Push-to-Talk Transcription Backend**
   - Command: `SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 41 passed.
   - The real authenticated endpoint transcribed a synthetic English recording exactly in 2.25 s including model loading. A silence sample returned an empty transcript. Python socket connections were blocked during both requests. Real microphone capture was not exercised.
+
+- **Phase 4.2 — Offline Speech Synthesis for Saved Replies**
+  - Command: `SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-phase-42-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 50 passed.
+  - Real Piper 1.8.0 produced a non-silent 2.84 s mono WAV in 1.42 s. The suite covered caller-scoped reply lookup, unauthenticated access, cleanup on synthesis failure, and real offline Vosk transcription. Playback was not exercised.

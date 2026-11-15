@@ -36,3 +36,7 @@ Miru (the base for Sora) is a cross-platform companion application with a Python
 ## Offline voice input
 
 The backend's authenticated `POST /api/voice/transcribe` route accepts short mono PCM WAV uploads. `voice_input.py` validates the format and calls the explicitly configured local Vosk model. Clients receive a transcript in the response and use the regular chat route when the user sends it.
+
+## Offline voice output
+
+The authenticated `POST /api/voice/synthesize` route resolves a saved assistant reply in the caller's recent chat. `voice_output.py` passes the text on stdin to the optional Piper CLI and returns the generated WAV in the response. The client owns playback timing and interruption.

@@ -1,2 +1,5 @@
 # Optional Linux backend for offline push-to-talk transcription.
 vosk==0.3.45
+
+# Separate local CLI used for offline speech synthesis.
+piper-tts==1.8.0

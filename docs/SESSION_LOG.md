@@ -548,3 +548,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Added an authenticated transcription endpoint for short PCM WAV uploads and optional offline Vosk setup. The transcript is returned for review and chat sending remains a separate action.
 - Verified 41 focused tests, including real local recognition of a synthetic English sentence in 2.25 s and an empty transcript for silence.
 - Publishing remains pending. The cumulative Phase 4.1 bundle includes Phases 3.4 and 3.5. Continue with local speech synthesis after this checkpoint. See [Phase 4.1](phases/PHASE_04_01.md).
+
+## 2026-11-16 — Phase 4.2 offline speech synthesis
+
+- Added an authenticated WAV endpoint for the caller's saved assistant replies, using the optional local Piper CLI. No playback is started by the server.
+- Verified 50 focused tests, including a real Piper run producing 2.84 s of WAV audio in 1.42 s and a real offline Vosk regression.
+- Publishing remains pending. The cumulative bundle includes all work through Phase 4.2. Next, verify transcription, chat, and synthesis as one offline voice turn. See [Phase 4.2](phases/PHASE_04_02.md).

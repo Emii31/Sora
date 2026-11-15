@@ -9,3 +9,5 @@
 - **Git Publishing Policy**: Restricted publishing exclusively to `origin` (`https://github.com/Emii31/Sora.git`). Upstream (`kiyotakali/Miru.git`) is strictly fetch-only with push disabled; local commits do not modify upstream.
 
 - **Phase 4 offline voice input**: Use the optional Vosk runtime with an explicitly configured local model directory. Start with bounded, authenticated WAV uploads and transcript review before adding device capture or wake-word detection.
+
+- **Phase 4 offline voice output**: Use a separately installed local Piper CLI and an explicit voice model path. The initial API synthesizes a caller-owned saved assistant reply on demand, through private temporary audio files that are cleaned after each request.
