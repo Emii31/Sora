@@ -446,3 +446,8 @@
 - **Phase 4.2 — Offline Speech Synthesis for Saved Replies**
   - Command: `SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-phase-42-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 50 passed.
   - Real Piper 1.8.0 produced a non-silent 2.84 s mono WAV in 1.42 s. The suite covered caller-scoped reply lookup, unauthenticated access, cleanup on synthesis failure, and real offline Vosk transcription. Playback was not exercised.
+
+- **Phase 4.3 — Verify a Complete Offline Voice Turn**
+  - Opt-in test: `SORA_TEST_VOICE_TURN=1 SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-phase-42-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py::test_complete_offline_voice_turn`. Exit 0, 1 passed.
+  - Pipeline stages: transcription 1.48 s, chat 12.63 s, synthesis 2.03 s. Total 16.14 s, WAV length 6.15 s. Device capture and speaker playback were not exercised.
+  - The separate focused regression returned 50 passed. See [Phase 4.3](phases/PHASE_04_03.md) for the command and reproduction notes.

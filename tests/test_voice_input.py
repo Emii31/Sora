@@ -23,11 +23,11 @@ def wav_bytes(*, channels=1, sample_rate=16_000, frames=24):
 
 @pytest.fixture
 def voice_client(monkeypatch, tmp_path):
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+
     import app as app_module
     import auth
     import curator
-
-    monkeypatch.setenv("DATA_DIR", str(tmp_path))
     monkeypatch.setattr(auth, "_BASE_DATA_DIR", str(tmp_path))
     monkeypatch.setattr(auth, "_ADMIN_DIR", str(tmp_path / "_admin"))
     monkeypatch.setattr(app_module, "_client_mode_config", {})
@@ -105,21 +105,25 @@ def test_voice_route_reports_disabled_and_busy(voice_client, monkeypatch, tmp_pa
     assert "busy" in response.get_json()["error"]
 
 
+def make_synthetic_recording(directory, phrase):
+    source = directory / "synthetic.wav"
+    audio = directory / "recording.wav"
+    subprocess.run(["espeak-ng", "-v", "en-us", "-s", "125", "-w", str(source), phrase], check=True)
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(source),
+                    "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", str(audio)], check=True)
+    return audio.read_bytes()
+
+
 def test_real_offline_voice_recognition(voice_client, monkeypatch, tmp_path):
     model_dir = os.environ.get("SORA_TEST_VOICE_MODEL_DIR")
     if not model_dir:
         pytest.skip("Set SORA_TEST_VOICE_MODEL_DIR to run the Vosk smoke test")
     monkeypatch.setenv("SORA_VOSK_MODEL_DIR", model_dir)
-    source = tmp_path / "synthetic.wav"
-    audio = tmp_path / "recording.wav"
-    subprocess.run(["espeak-ng", "-v", "en-us", "-s", "125", "-w", str(source),
-                    "the quick brown fox jumps over the lazy dog"], check=True)
-    subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(source),
-                    "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", str(audio)], check=True)
+    audio = make_synthetic_recording(tmp_path, "the quick brown fox jumps over the lazy dog")
     monkeypatch.setattr(socket.socket, "connect", lambda *args: pytest.fail("Speech attempted a network connection"))
     client, headers = voice_client
     started = time.perf_counter()
-    response = client.post("/api/voice/transcribe", data=audio.read_bytes(), content_type="audio/wav", headers=headers)
+    response = client.post("/api/voice/transcribe", data=audio, content_type="audio/wav", headers=headers)
     elapsed = time.perf_counter() - started
     assert response.status_code == 200
     result = response.get_json()
@@ -247,3 +251,98 @@ def test_real_offline_speech_synthesis(voice_client, monkeypatch):
         samples = speech.readframes(speech.getnframes())
     assert any(samples)
     print(json.dumps({"synthesis_seconds": round(elapsed, 2), "audio_seconds": round(duration, 2)}))
+
+
+def test_complete_offline_voice_turn(voice_client, monkeypatch, tmp_path):
+    """Opt-in smoke test with real local Vosk, Ollama, and Piper."""
+    if os.environ.get("SORA_TEST_VOICE_TURN") != "1":
+        pytest.skip("Set SORA_TEST_VOICE_TURN=1 with both voice assets and local Ollama")
+
+    import ai_config
+    import auth
+    import chat_timing
+
+    vosk_dir = os.environ.get("SORA_TEST_VOICE_MODEL_DIR")
+    piper_path = os.environ.get("SORA_TEST_PIPER_MODEL_PATH")
+    assert vosk_dir and piper_path, "Configure both local voice asset paths"
+    monkeypatch.setenv("SORA_VOSK_MODEL_DIR", vosk_dir)
+    monkeypatch.setenv("SORA_PIPER_MODEL_PATH", piper_path)
+    monkeypatch.setenv("NO_PROXY", "127.0.0.1")
+    monkeypatch.setenv("no_proxy", "127.0.0.1")
+    monkeypatch.setattr(ai_config, "_cache", None)
+    monkeypatch.setattr(ai_config, "_client_cache", {})
+    for tier in ai_config.TIERS:
+        result = ai_config.update_tier_config(tier, {
+            "host": "http://127.0.0.1:11434/v1",
+            "api_key": "ollama",
+            "model": "qwen2.5:1.5b-instruct",
+        })
+        assert result["ok"]
+
+    original_lookup = socket.getaddrinfo
+    original_connect = socket.socket.connect
+
+    def only_ollama_lookup(host, port, *args, **kwargs):
+        assert host == "127.0.0.1" and port == 11434, f"Unexpected lookup: {host}:{port}"
+        return original_lookup(host, port, *args, **kwargs)
+
+    def only_ollama_connect(connection, address):
+        assert address == ("127.0.0.1", 11434), f"Unexpected connection: {address}"
+        return original_connect(connection, address)
+
+    audio = make_synthetic_recording(tmp_path, "can you tell me a joke")
+    monkeypatch.setattr(socket, "getaddrinfo", only_ollama_lookup)
+    monkeypatch.setattr(socket.socket, "connect", only_ollama_connect)
+
+    client, headers = voice_client
+    token = headers["Authorization"].removeprefix("Bearer ")
+    user_id, _ = auth.get_user_by_token(token)
+    settings = client.post("/api/user-settings", headers=headers, json={"local_text_chat_enabled": True})
+    assert settings.status_code == 200
+    assert client.get("/api/user-settings", headers=headers).get_json()["settings"]["local_text_chat_enabled"] is True
+
+    started = time.perf_counter()
+    transcription = client.post("/api/voice/transcribe", headers=headers, data=audio, content_type="audio/wav")
+    transcript_ready = time.perf_counter()
+    assert transcription.status_code == 200, transcription.get_json()
+    transcript = transcription.get_json()["text"]
+    assert transcript == "can you tell me a joke"
+    assert client.get("/api/chat/history", headers=headers).get_json() == []
+
+    with chat_timing.capture(user_id) as trace:
+        sent_at = time.perf_counter()
+        send = client.post("/api/chat", headers=headers, json={"text": transcript})
+        assert send.status_code == 200, send.get_json()
+        message_id = send.get_json()["msg_id"]
+        reply_id = message_id + "_reply"
+        reply = None
+        deadline = sent_at + 145
+        while time.perf_counter() < deadline:
+            response = client.get("/api/chat/history", headers=headers)
+            assert response.status_code == 200
+            history = response.get_json()
+            reply = next((item for item in history if item["id"] == reply_id), None)
+            if reply is not None:
+                break
+            time.sleep(0.2)
+        reply_ready = time.perf_counter()
+        assert reply is not None, "No saved reply arrived before the deadline"
+        assert trace.persistence_finished.wait(timeout=1)
+        assert trace.policy == "reactive_fast" and trace.message_id == message_id
+        assert len(trace.model_attempts) == 1 and trace.model_attempts[0]["succeeded"]
+    assert any(item["id"] == message_id and item["text"] == transcript for item in history)
+    assert reply["role"] == "assistant" and reply["text"].strip()
+
+    spoken = client.post("/api/voice/synthesize", headers=headers, json={"message_id": reply_id})
+    finished = time.perf_counter()
+    assert spoken.status_code == 200 and spoken.mimetype == "audio/wav"
+    with wave.open(io.BytesIO(spoken.data), "rb") as response_wav:
+        duration = response_wav.getnframes() / response_wav.getframerate()
+        assert duration > 0 and any(response_wav.readframes(response_wav.getnframes()))
+    print(json.dumps({
+        "transcription_seconds": round(transcript_ready - started, 2),
+        "chat_seconds": round(reply_ready - sent_at, 2),
+        "synthesis_seconds": round(finished - reply_ready, 2),
+        "total_seconds": round(finished - started, 2),
+        "audio_seconds": round(duration, 2),
+    }))

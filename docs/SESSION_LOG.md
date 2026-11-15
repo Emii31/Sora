@@ -554,3 +554,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Added an authenticated WAV endpoint for the caller's saved assistant replies, using the optional local Piper CLI. No playback is started by the server.
 - Verified 50 focused tests, including a real Piper run producing 2.84 s of WAV audio in 1.42 s and a real offline Vosk regression.
 - Publishing remains pending. The cumulative bundle includes all work through Phase 4.2. Next, verify transcription, chat, and synthesis as one offline voice turn. See [Phase 4.2](phases/PHASE_04_02.md).
+
+## 2026-11-16 — Phase 4.3 offline voice turn
+
+- Verified a real local voice turn from a synthetic recording through Vosk, opt-in fast chat with Ollama, and Piper synthesis for the exact saved reply.
+- The end-to-end test passed in a total pipeline time of 16.14 s. All 50 separate regression tests passed.
+- The cumulative Phase 4.3 bundle preserves all unpublished phases. See [Phase 4.3](phases/PHASE_04_03.md) for the Claude Code handoff.
