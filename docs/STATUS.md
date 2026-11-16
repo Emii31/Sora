@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.6 — On-request Camera Input Backend
-- **Current Status**: The authenticated camera-frame route was verified against a loopback vision test server. A real vision model and client camera capture remain to be verified.
-- **Next Action**: Import and publish the cumulative Phase 4.6 bundle. See [Phase 4.6](phases/PHASE_04_06.md) for the API contract and Claude Code handoff.
+- **Phase**: Phase 4.7 — Real Local Vision Smoke Test (Verified)
+- **Current Status**: Moondream described two generated frames from the authenticated route on the laptop CPU, in 61.69 s and 50.44 s. Real device capture remains untested.
+- **Next Action**: Audit the shared-memory backend for the laptop and Android. See [Phase 4.7](phases/PHASE_04_07.md) for test commands and the Claude Code handoff.

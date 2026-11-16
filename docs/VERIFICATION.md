@@ -463,3 +463,7 @@
 ## Phase 4.6 — On-request Camera Input Backend
 
 135 focused tests passed, and one optional Ollama voice-turn test was skipped. Camera checks covered authentication, still-frame validation, EXIF rotation and metadata removal, loopback target enforcement, redirect refusal, busy handling, and unchanged user files after a completed request. A real HTTP exchange with a loopback test vision server also passed. Real model inference and device capture remain pending. See [Phase 4.6](phases/PHASE_04_06.md).
+
+## Phase 4.7 — Real Local Vision Smoke Test
+
+17 camera tests passed with the live model enabled. The two Flask requests took 61.69 s and 50.44 s and preserved the caller's files and empty chat history. The broader regression run had 135 passes and two opt-in skips. Device capture and general vision performance remain untested. See [Phase 4.7](phases/PHASE_04_07.md).

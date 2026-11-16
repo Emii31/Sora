@@ -574,3 +574,7 @@ Added authenticated offline wake detection for submitted short WAV clips. Verifi
 ## 2026-11-16 (Phase 4.6)
 
 Added an on-request camera-frame API with bounded uploads, in-memory normalization, and loopback-only vision transport. Verified the Flask route with a local HTTP test double. See [Phase 4.6](phases/PHASE_04_06.md) for the handoff and pending real-model check.
+
+## 2026-11-16 (Phase 4.7)
+
+Ran the authenticated camera route against CPU-only Ollama with cloud features disabled. Moondream identified a red square and a blue circle in generated images. Added a rerunnable live integration test and stopped the temporary server. See [Phase 4.7](phases/PHASE_04_07.md).

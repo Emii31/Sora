@@ -1,10 +1,13 @@
 import base64
 import io
 import json
+import os
+import re
+import time
 
 import httpx
 import pytest
-from PIL import Image, PngImagePlugin
+from PIL import Image, ImageDraw, PngImagePlugin
 
 import camera_input
 
@@ -158,3 +161,52 @@ def test_jpeg_rotation_and_exif_removal():
     with Image.open(io.BytesIO(camera_input._prepare_frame(original, "image/jpeg"))) as result:
         assert result.size == (20, 30)
         assert not result.getexif()
+
+
+def test_real_local_vision_distinguishes_generated_frames(camera_client, monkeypatch, tmp_path):
+    host = os.environ.get("SORA_TEST_VISION_URL")
+    model = os.environ.get("SORA_TEST_VISION_MODEL")
+    if not (host and model):
+        pytest.skip("Set SORA_TEST_VISION_URL and SORA_TEST_VISION_MODEL to test an installed local model")
+
+    config = camera_input.ai_config
+    monkeypatch.setattr(config, "_cache", None)
+    monkeypatch.setattr(config, "_client_cache", {})
+    result = config.update_tier_config("vision", {
+        "host": host,
+        "model": model,
+        "api_key": "ollama",
+        "supports_images": True,
+        "max_tokens": 96,
+    })
+    assert result["ok"]
+
+    client, headers = camera_client
+    assert client.get("/api/chat/history", headers=headers).get_json() == []
+    before = {path: path.read_bytes() for path in tmp_path.rglob("*") if path.is_file()}
+    descriptions = {}
+    for color, shape in (("red", "rectangle"), ("blue", "ellipse")):
+        buffer = io.BytesIO()
+        with Image.new("RGB", (320, 240), "white") as frame:
+            draw = ImageDraw.Draw(frame)
+            bounds = (60, 20, 259, 219)
+            if shape == "rectangle":
+                draw.rectangle(bounds, fill=color)
+            else:
+                draw.ellipse(bounds, fill=color)
+            frame.save(buffer, format="PNG")
+
+        started = time.perf_counter()
+        response = client.post("/api/camera/describe", data=buffer.getvalue(),
+                               content_type="image/png", headers=headers)
+        elapsed = time.perf_counter() - started
+        assert response.status_code == 200, response.get_json()
+        assert response.cache_control.no_store
+        description = response.get_json()["description"]
+        descriptions[color] = description
+        print(f"{color} {shape}: {elapsed:.2f}s · {description}")
+        assert re.search(rf"\b{color}\b", description, flags=re.IGNORECASE), description
+
+    assert descriptions["red"] != descriptions["blue"]
+    assert client.get("/api/chat/history", headers=headers).get_json() == []
+    assert {path: path.read_bytes() for path in tmp_path.rglob("*") if path.is_file()} == before
