@@ -511,3 +511,7 @@ The offline render produced a 7.12-second, unclipped WAV in 56.16 seconds. The t
 ## Phase 4.16 — Approved voice backend
 
 83 focused tests passed, six optional live tests skipped, and two existing Pillow warnings were recorded. An authenticated reply from local Ollama was saved in 23.71 seconds. The real voice route rendered it in 62.85 seconds as a 3.60-second, 24 kHz mono PCM16 WAV. Device playback remains pending. See [Phase 4.16](phases/PHASE_04_16.md).
+
+## Phase 4.17 — Resident Vulkan voice
+
+64 focused tests passed and six optional tests skipped. The live route returned two valid offline WAVs from a single warmed worker, in 24.97 and 28.53 seconds. Both sets of spoken words were verified locally. See [Phase 4.17](phases/PHASE_04_17.md).

@@ -1,0 +1,47 @@
+diff --git a/tools/qwen-tts.cpp b/tools/qwen-tts.cpp
+index c8fd73f..b2a7a91 100644
+--- a/tools/qwen-tts.cpp
++++ b/tools/qwen-tts.cpp
+@@ -96,0 +97 @@ struct Args {
++    bool         sora_frames;
+@@ -185,0 +187 @@ static bool parse_args(int argc, char ** argv, Args & a) {
++    a.sora_frames     = false;
+@@ -244,0 +247,2 @@ static bool parse_args(int argc, char ** argv, Args & a) {
++        } else if (std::strcmp(arg, "--sora-frames") == 0) {
++            a.sora_frames = true;
+@@ -357,0 +362,5 @@ static int run(const Args & a) {
++    if (a.sora_frames && (!line_mode || wav_fmt != WAV_S16)) {
++        fprintf(stderr, "[CLI] ERROR: --sora-frames requires line streaming and 16-bit PCM\n");
++        qt_free(q);
++        return 1;
++    }
+@@ -392 +401,6 @@ static int run(const Args & a) {
+-        if (!wav_stream_open_stdout(&ws, 24000, wav_fmt)) {
++        if (a.sora_frames) {
++            ws = {stdout, WAV_S16, 24000};
++#if defined(_WIN32)
++            _setmode(_fileno(stdout), _O_BINARY);
++#endif
++        } else if (!wav_stream_open_stdout(&ws, 24000, wav_fmt)) {
+@@ -398,0 +413,10 @@ static int run(const Args & a) {
++        if (a.sora_frames) {
++            // Little-endian byte count before each PCM chunk and zero at successful end.
++            params.on_chunk = [](const float * samples, int n, void * ud) -> bool {
++                char size[4];
++                char * cursor = size;
++                wav_write_u32le(cursor, (uint32_t) n * 2);
++                return fwrite(size, 1, sizeof(size), stdout) == sizeof(size) &&
++                       wav_stream_write((wav_stream *) ud, samples, n);
++            };
++        }
+@@ -429 +453 @@ static int run(const Args & a) {
+-                        if (need_header) {
++                        if (need_header && !a.sora_frames) {
+@@ -445,0 +470,7 @@ static int run(const Args & a) {
++                        if (a.sora_frames) {
++                            const char end[4] = {};
++                            if (fwrite(end, 1, sizeof(end), stdout) != sizeof(end) || fflush(stdout) != 0) {
++                                qt_free(q);
++                                return 1;
++                            }
++                        }

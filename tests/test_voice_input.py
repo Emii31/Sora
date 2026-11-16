@@ -296,6 +296,75 @@ def test_qwen_speaks_a_saved_reply_using_the_reference(voice_client, qwen_voice_
     assert len(output_files) == 1 and not output_files[0].parent.exists()
 
 
+def test_resident_qwen_keeps_the_approved_reference_and_returns_wav(voice_client, qwen_voice_kit, monkeypatch):
+    import voice_qwen
+
+    client, headers = voice_client
+    executable = qwen_voice_kit / "vulkan" / "qwen-tts-framed"
+    executable.parent.mkdir()
+    executable.touch()
+    monkeypatch.setenv("SORA_QWEN_RESIDENT_DEVICE", "Vulkan0")
+    save_voice_history(headers, [{"id": "reply", "role": "assistant", "text": "Come sit with me."}])
+
+    def render(command, text, *, timeout, max_frames):
+        assert command[0] == str(executable)
+        assert command[command.index("--device") + 1] == "Vulkan0"
+        assert command[command.index("--ref-rvq") + 1] == str(qwen_voice_kit / "reference.rvq")
+        assert command[-3:] == ["-", "--stream-by-line", "--sora-frames"]
+        assert (text, timeout, max_frames) == ("Come sit with me.", 180, 320)
+        return b"\x00\x01" * 1920
+
+    monkeypatch.setattr(voice_qwen, "render", render)
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "reply"})
+    assert response.status_code == 200 and response.cache_control.no_store
+    with wave.open(io.BytesIO(response.data), "rb") as rendered:
+        assert (rendered.getframerate(), rendered.getnchannels(), rendered.getnframes()) == (24000, 1, 1920)
+        assert rendered.readframes(1920) == b"\x00\x01" * 1920
+
+
+def test_qwen_worker_uses_one_process_for_two_framed_replies(tmp_path):
+    import sys
+    import voice_qwen
+
+    program = tmp_path / "framed.py"
+    program.write_text(
+        "import os, struct, sys\n"
+        "for line in sys.stdin.buffer:\n"
+        "    size = len(line.rstrip(b'\\n'))\n"
+        "    frame = struct.pack('<I', 3840) + bytes([size]) * 3840 + bytes(4)\n"
+        "    os.write(sys.stdout.fileno(), frame[:2])\n"
+        "    os.write(sys.stdout.fileno(), frame[2:])\n"
+    )
+    command = [sys.executable, "-u", str(program)]
+    try:
+        assert voice_qwen.render(command, "Hi\nfriend", timeout=3, max_frames=4) == bytes([9]) * 3840
+        original = voice_qwen._worker
+        assert voice_qwen.render(command, "Hi", timeout=3, max_frames=4) == bytes([2]) * 3840
+        assert voice_qwen._worker is original
+    finally:
+        voice_qwen.close_worker()
+
+
+def test_qwen_worker_discards_failed_stream(tmp_path):
+    import sys
+    import voice_qwen
+
+    program = tmp_path / "invalid_frames.py"
+    program.write_text(
+        "import struct, sys\n"
+        "sys.stdin.buffer.readline()\n"
+        "sys.stdout.buffer.write(struct.pack('<I', 40000))\n"
+        "sys.stdout.buffer.flush()\n"
+        "sys.stdin.buffer.read()\n"
+    )
+    try:
+        with pytest.raises(EOFError, match="Invalid Qwen PCM chunk"):
+            voice_qwen.render([sys.executable, "-u", str(program)], "Hi", timeout=3, max_frames=4)
+        assert voice_qwen._worker is None
+    finally:
+        voice_qwen.close_worker()
+
+
 def test_qwen_rejects_unsupported_preset_and_long_replies(voice_client, qwen_voice_kit, monkeypatch):
     client, headers = voice_client
     save_voice_history(headers, [

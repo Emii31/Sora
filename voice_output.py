@@ -1,6 +1,7 @@
 """Optional offline speech synthesis for short saved replies."""
 
 import io
+import logging
 import os
 from pathlib import Path
 import subprocess
@@ -24,6 +25,7 @@ VOICE_STYLES: dict[str, tuple[str, ...]] = {
     "playful": ("--length-scale", "0.88", "--sentence-silence", "0.08"),
 }
 _synthesis_lock = threading.Lock()
+logger = logging.getLogger(__name__)
 
 
 class VoiceOutputUnavailable(RuntimeError):
@@ -47,19 +49,55 @@ def _piper_arguments(style: str, wav_path: Path) -> list[str]:
     ]
 
 
-def _qwen_arguments(directory: Path, wav_path: Path) -> list[str]:
+def _qwen_arguments(directory: Path, wav_path: Path | None, *, device: str = "CPU") -> list[str]:
     paths = {name: directory / name for name in (
-        "qwen-tts", "sora-base.gguf", "sora-codec.gguf", "reference.spk", "reference.rvq", "reference.txt",
+        "sora-base.gguf", "sora-codec.gguf", "reference.spk", "reference.rvq", "reference.txt",
     )}
-    if not all(path.is_file() for path in paths.values()):
+    executable = directory / "qwen-tts" if wav_path is not None else directory / "vulkan" / "qwen-tts-framed"
+    if not executable.is_file() or not all(path.is_file() for path in paths.values()):
         raise VoiceOutputUnavailable("The configured Qwen voice directory is missing required files.")
-    return [
-        str(paths["qwen-tts"]), "--model", str(paths["sora-base.gguf"]),
-        "--codec", str(paths["sora-codec.gguf"]), "--device", "CPU", "--lang", "English",
+    command = [
+        str(executable), "--model", str(paths["sora-base.gguf"]),
+        "--codec", str(paths["sora-codec.gguf"]), "--device", device, "--lang", "English",
         "--ref-spk", str(paths["reference.spk"]), "--ref-rvq", str(paths["reference.rvq"]),
         "--ref-text", str(paths["reference.txt"]), "--seed", "7",
-        "--max-new", str(_QWEN_MAX_FRAMES), "-o", str(wav_path),
+        "--max-new", str(_QWEN_MAX_FRAMES), "-o",
     ]
+    if wav_path is None:
+        return command + ["-", "--stream-by-line", "--sora-frames"]
+    return command + [str(wav_path)]
+
+
+def _resident_qwen_wav(directory: Path, device: str, text: str) -> bytes:
+    import voice_qwen
+
+    if "\0" in text:
+        raise VoiceOutputRequestError("The reply contains an unsupported character.")
+    command = _qwen_arguments(directory, None, device=device)
+    pcm = voice_qwen.render(command, text, timeout=_QWEN_TIMEOUT_SECONDS, max_frames=_QWEN_MAX_FRAMES)
+    if not pcm:
+        raise VoiceOutputUnavailable("The Qwen voice produced no audio.")
+    if len(pcm) >= 2 * _QWEN_MAX_FRAMES * _QWEN_FRAME_SAMPLES:
+        raise VoiceOutputRequestError("The approved voice reached its audio limit. Choose a shorter reply.")
+    file = io.BytesIO()
+    with wave.open(file, "wb") as out:
+        out.setparams((1, 2, 24000, 0, "NONE", "not compressed"))
+        out.writeframes(pcm)
+    return file.getvalue()
+
+
+def warm_up_configured_voice():
+    """Prime the opted-in worker without blocking application startup."""
+    if not os.environ.get("SORA_QWEN_VOICE_DIR", "").strip() or not os.environ.get("SORA_QWEN_RESIDENT_DEVICE", "").strip():
+        return
+
+    def warm():
+        try:
+            synthesize_wav("Hi.")
+        except VoiceOutputUnavailable as exc:
+            logger.warning("Could not warm up the local voice: %s", exc)
+
+    threading.Thread(target=warm, name="sora-voice-warm-up", daemon=True).start()
 
 
 def synthesize_wav(text: str, *, style: str = "neutral") -> bytes:
@@ -79,6 +117,9 @@ def synthesize_wav(text: str, *, style: str = "neutral") -> bytes:
         raise VoiceOutputUnavailable("Local speech synthesis is busy. Try again shortly.")
 
     try:
+        resident_device = os.environ.get("SORA_QWEN_RESIDENT_DEVICE", "").strip()
+        if qwen_dir and resident_device:
+            return _resident_qwen_wav(Path(qwen_dir).expanduser().resolve(), resident_device, text)
         with tempfile.TemporaryDirectory(prefix="sora-voice-") as directory:
             wav_path = Path(directory) / "reply.wav"
             if qwen_dir:

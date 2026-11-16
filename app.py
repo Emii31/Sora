@@ -875,6 +875,9 @@ def _start_local_single_device_backend_services_once(
             except Exception as e:
                 print(f"[ClientLocalBackend] AttentionEngine spawner failed (non-fatal): {e}")
 
+            from voice_output import warm_up_configured_voice
+            warm_up_configured_voice()
+
             _client_local_backend_services_started = True
             print(f"[ClientLocalBackend] Started local maintenance services for {uid} on port {port}")
             return True
@@ -4966,6 +4969,9 @@ if __name__ == "__main__":
     # background threads in the child (WERKZEUG_RUN_MAIN=true) or when
     # the reloader is not active.
     if not debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        from voice_output import warm_up_configured_voice
+        warm_up_configured_voice()
+
         # Auto-register local Mac as a device
         try:
             import device_manager
