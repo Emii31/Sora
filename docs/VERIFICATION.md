@@ -507,3 +507,7 @@ Five valid offline WAVs carried identical spoken words, as checked by Vosk. Toke
 ## Phase 4.15 — Qwen VoiceDesign
 
 The offline render produced a 7.12-second, unclipped WAV in 56.16 seconds. The transcript matched the script apart from apostrophe normalization. Owner listening, broader emotional coverage, and speaker consistency across turns remain pending. See [Phase 4.15](phases/PHASE_04_15.md).
+
+## Phase 4.16 — Approved voice backend
+
+83 focused tests passed, six optional live tests skipped, and two existing Pillow warnings were recorded. An authenticated reply from local Ollama was saved in 23.71 seconds. The real voice route rendered it in 62.85 seconds as a 3.60-second, 24 kHz mono PCM16 WAV. Device playback remains pending. See [Phase 4.16](phases/PHASE_04_16.md).

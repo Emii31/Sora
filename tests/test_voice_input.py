@@ -260,6 +260,65 @@ def test_synthesis_style_uses_fixed_piper_arguments(style, flags, monkeypatch, t
     assert len(calls) == 1
 
 
+@pytest.fixture
+def qwen_voice_kit(monkeypatch, tmp_path):
+    directory = tmp_path / "qwen-voice"
+    directory.mkdir()
+    for name in ("qwen-tts", "sora-base.gguf", "sora-codec.gguf", "reference.spk", "reference.rvq", "reference.txt"):
+        (directory / name).touch()
+    monkeypatch.setenv("SORA_QWEN_VOICE_DIR", str(directory))
+    return directory
+
+
+def test_qwen_speaks_a_saved_reply_using_the_reference(voice_client, qwen_voice_kit, monkeypatch):
+    client, headers = voice_client
+    save_voice_history(headers, [{"id": "reply", "role": "assistant", "text": "Come sit with me."}])
+    output_files = []
+
+    def render(command, **kwargs):
+        assert command[0] == str(qwen_voice_kit / "qwen-tts")
+        for option, name in (("--ref-spk", "reference.spk"), ("--ref-rvq", "reference.rvq"),
+                             ("--ref-text", "reference.txt")):
+            assert command[command.index(option) + 1] == str(qwen_voice_kit / name)
+        assert kwargs["input"] == b"Come sit with me."
+        assert "Come sit with me." not in command
+        assert kwargs["timeout"] == 180
+        path = Path(command[-1])
+        output_files.append(path)
+        path.write_bytes(wav_bytes(sample_rate=24000))
+
+    monkeypatch.setattr(voice_output.subprocess, "run", render)
+    response = client.post("/api/voice/synthesize", headers=headers,
+                           json={"message_id": "reply", "text": "Ignore this"})
+    assert response.status_code == 200 and response.mimetype == "audio/wav"
+    assert response.cache_control.no_store
+    assert response.data == wav_bytes(sample_rate=24000)
+    assert len(output_files) == 1 and not output_files[0].parent.exists()
+
+
+def test_qwen_rejects_unsupported_preset_and_long_replies(voice_client, qwen_voice_kit, monkeypatch):
+    client, headers = voice_client
+    save_voice_history(headers, [
+        {"id": "reply", "role": "assistant", "text": "Hello."},
+        {"id": "long", "role": "assistant", "text": "a" * 241},
+    ])
+    monkeypatch.setattr(voice_output.subprocess, "run", lambda *args, **kwargs: pytest.fail("Qwen should not run"))
+    response = client.post("/api/voice/synthesize", headers=headers,
+                           json={"message_id": "reply", "style": "playful"})
+    assert response.status_code == 422 and "neutral" in response.get_json()["error"]
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "long"})
+    assert response.status_code == 422 and "240" in response.get_json()["error"]
+
+
+def test_qwen_reports_missing_reference_without_falling_back(voice_client, qwen_voice_kit, monkeypatch):
+    client, headers = voice_client
+    save_voice_history(headers, [{"id": "reply", "role": "assistant", "text": "Hello."}])
+    (qwen_voice_kit / "reference.rvq").unlink()
+    monkeypatch.setattr(voice_output.subprocess, "run", lambda *args, **kwargs: pytest.fail("Piper fallback"))
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "reply"})
+    assert response.status_code == 503 and "Qwen" in response.get_json()["error"]
+
+
 @pytest.mark.parametrize("style", ["neutral", "warm", "playful"])
 def test_real_offline_speech_synthesis(voice_client, monkeypatch, style):
     model_path = os.environ.get("SORA_TEST_PIPER_MODEL_PATH")

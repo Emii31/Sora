@@ -626,3 +626,7 @@ Responded to the owner's rejection of the extended NeuTTS scene with a local Qwe
 ## 2026-11-17 (Phase 4.15 owner approval)
 
 The owner selected the Qwen VoiceDesign take as Sora's final voice. Recorded the artifact checksum and original generation settings. No live provider change was made.
+
+## 2026-11-17 — Phase 4.16
+
+Connected Sora's approved voice reference to the local authenticated speech backend. Used the pinned Qwen3-TTS 0.6B Base CPU runtime and encoded the exact approved sample once. Verified a real new local chat reply rendered as WAV. Saved the runtime kit, example audio, and handoff bundle outside Git. See [Phase 4.16](phases/PHASE_04_16.md).

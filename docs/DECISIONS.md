@@ -21,3 +21,5 @@
 - **Phase 4 voice choice update**: The owner rejected the extended Sophie audition. Hold provider integration and use the instruction-directed Qwen VoiceDesign sample to evaluate natural delivery. The initial i5-7300U run also showed a substantial latency tradeoff.
 
 - **Final Sora voice reference**: The owner approved the Qwen3-TTS VoiceDesign worry-to-relief take on 2026-11-17. Preserve its exact audio as the reference for future synthesis and compare changes against it. Model deployment and conversational latency are separate from the owner's final voice choice.
+
+- **Phase 4.16 voice runtime**: Use the approved reference waveform with the CPU build of Qwen3-TTS 0.6B Base. Pre-encode the reference once, keep runtime files and weights outside Git, and select the voice with `SORA_QWEN_VOICE_DIR`. Its reference-driven delivery has no independent acting presets.
