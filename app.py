@@ -1776,9 +1776,22 @@ def api_voice_transcribe():
     """Transcribe an authenticated push-to-talk recording on this backend."""
     import voice_input
 
+    return _voice_wav_response(voice_input.transcribe_wav, "text", voice_input.MAX_UPLOAD_BYTES)
+
+
+@app.route("/api/voice/wake", methods=["POST"])
+def api_voice_detect_wake():
+    """Check an authenticated short clip for Sora's wake phrase."""
+    import voice_input
+
+    return _voice_wav_response(voice_input.detect_wake_phrase, "detected", voice_input.MAX_WAKE_UPLOAD_BYTES)
+
+
+def _voice_wav_response(recognize, response_key, limit):
+    import voice_input
+
     if request.mimetype not in {"audio/wav", "audio/x-wav"}:
         return jsonify({"error": "Send the recording as audio/wav."}), 415
-    limit = voice_input.MAX_UPLOAD_BYTES
     if request.content_length is not None and request.content_length > limit:
         return jsonify({"error": "The recording is too large."}), 413
     audio = request.stream.read(limit + 1)
@@ -1786,12 +1799,12 @@ def api_voice_transcribe():
         return jsonify({"error": "The recording is too large."}), 413
 
     try:
-        transcript = voice_input.transcribe_wav(audio)
+        result = recognize(audio)
     except voice_input.InvalidAudio as exc:
         return jsonify({"error": str(exc)}), 400
     except voice_input.VoiceUnavailable as exc:
         return jsonify({"error": str(exc)}), 503
-    return jsonify({"text": transcript})
+    return jsonify({response_key: result})
 
 
 @app.route("/api/voice/synthesize", methods=["POST"])

@@ -566,3 +566,7 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Restored Phase 4.3 from its saved cumulative bundle in a fresh temporary checkout.
 - Added three request-scoped pacing presets to saved-reply playback and verified each with real local Piper.
 - GitHub publishing remains pending. The cumulative Phase 4.4 bundle includes the new checkpoint and earlier unpublished phases. See [Phase 4.4](phases/PHASE_04_04.md).
+
+## 2026-11-16 (Phase 4.5)
+
+Added authenticated offline wake detection for submitted short WAV clips. Verified the route with the real small English Vosk model and saved instructions in [Phase 4.5](phases/PHASE_04_05.md). Client microphone work remains deferred.

@@ -4,7 +4,7 @@
 - **Phase 1**: Reproducible Arch baseline (Completed)
 - **Phase 2**: English/Sora branding (Completed)
 - **Phase 3**: Unified provider and local-inference benchmark (Phases 3.1, 3.1A, 3.1B, and 3.2 Shared Provider Configuration and Automatic Model Selection Completed & Verified)
-- **Phase 4**: Voice/personality/on-request camera (4.1–4.4 verified locally, covering transcription, synthesis, the full offline backend turn, and speech delivery presets.)
+- **Phase 4**: Voice/personality/on-request camera (4.1–4.5 verified locally, covering transcription, synthesis, the full offline backend turn, speech delivery presets, and submitted-clip wake detection.)
 - **Phase 5**: 3D avatar/island interface (Deferred)
 - **Phase 6**: Android/shared memory (Deferred)
 - **Phase 7**: Device tools/tasks (Deferred)

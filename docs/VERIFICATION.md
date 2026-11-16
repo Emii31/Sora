@@ -455,3 +455,7 @@
 - **Phase 4.4 — Local Delivery Styles for Spoken Replies**
   - Command: `SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-44-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-44-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 57 passed, 2 optional tests skipped.
   - Real Piper produced valid non-silent WAVs in all three styles. Audio durations were 2.91 s neutral, 3.42 s warm, and 2.72 s playful. See [Phase 4.4](phases/PHASE_04_04.md) for test scope and handoff.
+
+## Phase 4.5 — Offline Wake Phrase Detection
+
+67 focused tests passed and one optional Ollama integration test was skipped. Real Vosk recognized the target and rejected similar phrases, longer utterances, and silence in synthetic samples. The API checks covered authentication, upload and duration limits, cache policy, and preservation of empty chat history. See [Phase 4.5](phases/PHASE_04_05.md) for the command and limits.

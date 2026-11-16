@@ -378,3 +378,71 @@ def test_complete_offline_voice_turn(voice_client, monkeypatch, tmp_path):
         "total_seconds": round(finished - started, 2),
         "audio_seconds": round(duration, 2),
     }))
+
+
+@pytest.mark.parametrize("recognized, expected", [
+    ("hey saw ra", True),
+    (" Hey  Sore Uh ", True),
+    ("hey sorry", False),
+    ("hey sarah", False),
+    ("[unk] hey saw ra", False),
+    ("hey saw ra [unk]", False),
+    ("", False),
+])
+def test_wake_route_checks_only_a_standalone_phrase(voice_client, monkeypatch, recognized, expected):
+    import core
+
+    audio = wav_bytes()
+
+    def recognize(data, max_seconds, *, wake):
+        assert wake and data == audio and max_seconds == voice_input.MAX_WAKE_SECONDS
+        return recognized
+
+    monkeypatch.setattr(voice_input, "_recognize", recognize)
+    monkeypatch.setattr(core, "receive_chat_message", lambda *args: pytest.fail("wake detection sent chat"))
+    client, headers = voice_client
+    response = client.post("/api/voice/wake", headers=headers, data=audio, content_type="audio/wav")
+    assert response.status_code == 200
+    assert response.get_json() == {"detected": expected}
+    assert response.cache_control.no_store
+    assert client.get("/api/chat/history", headers=headers).get_json() == []
+
+
+def test_wake_route_checks_authentication_and_size(voice_client):
+    client, headers = voice_client
+    response = client.post("/api/voice/wake", data=wav_bytes(), content_type="audio/wav")
+    assert response.status_code == 401
+    response = client.post("/api/voice/wake", headers=headers,
+                           data=wav_bytes(frames=48_001), content_type="audio/wav")
+    assert response.status_code == 400
+    assert "at most 3 seconds" in response.get_json()["error"]
+    response = client.post("/api/voice/wake", headers=headers,
+                           data=b" " * 100_001, content_type="audio/wav")
+    assert response.status_code == 413
+
+
+def test_real_offline_wake_phrase(voice_client, monkeypatch, tmp_path):
+    model_dir = os.environ.get("SORA_TEST_VOICE_MODEL_DIR")
+    if not model_dir:
+        pytest.skip("Set SORA_TEST_VOICE_MODEL_DIR to run the Vosk wake-phrase smoke test")
+    monkeypatch.setenv("SORA_VOSK_MODEL_DIR", model_dir)
+    client, headers = voice_client
+    cases = (
+        ("hey sora", True),
+        ("hey sarah", False),
+        ("hey sorry", False),
+        ("hello there", False),
+        ("hey sora tell me a joke", False),
+        ("i said hey sora", False),
+    )
+    for phrase, expected in cases:
+        directory = tmp_path / phrase.replace(" ", "-")
+        directory.mkdir()
+        audio = make_synthetic_recording(directory, phrase)
+        response = client.post("/api/voice/wake", headers=headers, data=audio, content_type="audio/wav")
+        assert response.status_code == 200, response.get_json()
+        assert response.get_json() == {"detected": expected}, phrase
+    silence = client.post("/api/voice/wake", headers=headers,
+                          data=wav_bytes(frames=16_000), content_type="audio/wav")
+    assert silence.status_code == 200
+    assert silence.get_json() == {"detected": False}
