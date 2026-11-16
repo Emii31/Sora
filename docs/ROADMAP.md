@@ -4,7 +4,7 @@
 - **Phase 1**: Reproducible Arch baseline (Completed)
 - **Phase 2**: English/Sora branding (Completed)
 - **Phase 3**: Unified provider and local-inference benchmark (Phases 3.1, 3.1A, 3.1B, and 3.2 Shared Provider Configuration and Automatic Model Selection Completed & Verified)
-- **Phase 4**: Voice/personality/on-request camera (4.1–4.7 cover transcription, synthesis, an offline voice turn, speech delivery presets, submitted-clip wake detection, and the camera frame API verified with local Moondream. 4.8 audited personality context and reran the offline voice chain. 4.9 added bounded core memory to fast chat. 4.10 refined the bundled persona. 4.11 generated local speech samples for owner review. Device capture checks remain pending.)
+- **Phase 4**: Voice/personality/on-request camera (4.1–4.7 cover transcription, synthesis, an offline voice turn, speech delivery presets, submitted-clip wake detection, and the camera frame API verified with local Moondream. 4.8 audited personality context and reran the offline voice chain. 4.9 added bounded core memory to fast chat. 4.10 refined the bundled persona. 4.11 generated Piper samples. 4.12 tested an expressive offline model for owner review. Device capture checks remain pending.)
 - **Phase 5**: 3D avatar/island interface (Deferred to the app stage at the owner's request.)
 - **Phase 6**: Android/shared memory (Paused after the 6.1 backend audit. Resume after the remaining Phase 4 backend work.)
 - **Phase 7**: Device tools/tasks (Deferred)

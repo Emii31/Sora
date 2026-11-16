@@ -598,3 +598,7 @@ Refined the bundled Sora persona and applied the shared dialogue rule to full an
 ## 2026-11-16 (Phase 4.11)
 
 Generated neutral, warm, and playful Piper WAVs from the same synthetic Sora line. Saved the samples beside the Git bundle for owner listening. See [Phase 4.11](phases/PHASE_04_11.md).
+
+## 2026-11-16 (Phase 4.12)
+
+The owner requested a more expressive voice. Auditioned Silencio-2 with bundled voices and generated playful, soft, thoughtful, and angry takes on the laptop CPU. See [Phase 4.12](phases/PHASE_04_12.md).
