@@ -467,3 +467,7 @@
 ## Phase 4.7 — Real Local Vision Smoke Test
 
 17 camera tests passed with the live model enabled. The two Flask requests took 61.69 s and 50.44 s and preserved the caller's files and empty chat history. The broader regression run had 135 passes and two opt-in skips. Device capture and general vision performance remain untested. See [Phase 4.7](phases/PHASE_04_07.md).
+
+## Phase 6.1 — Shared Memory Backend Audit
+
+97 focused tests passed. Two simulated devices shared the same Markdown file, core memory, and slot through the real Flask handlers. A separate account and an unauthenticated request could not read the owner's Markdown. The checks covered both invited and existing local accounts. Physical Android pairing and LAN transport remain untested. See [Phase 6.1](phases/PHASE_06_01.md).

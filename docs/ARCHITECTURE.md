@@ -44,3 +44,7 @@ The authenticated `POST /api/voice/synthesize` route resolves a saved assistant 
 ## On-request camera input
 
 The authenticated `POST /api/camera/describe` route takes one still frame and returns a description. `camera_input.py` normalizes the frame in memory and calls the configured loopback vision model directly. Client code owns capture and device permissions. The description is returned only to the request caller.
+
+## Shared memory
+
+Connected devices can read and update one account's memory through the laptop's authenticated APIs. The account determines the storage directory for Markdown, slots, core memory, and chat history. Clients revalidate cached reads against the backend. Pairing to the existing laptop account and private network transport are separate requirements for deployment.

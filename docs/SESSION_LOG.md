@@ -578,3 +578,7 @@ Added an on-request camera-frame API with bounded uploads, in-memory normalizati
 ## 2026-11-16 (Phase 4.7)
 
 Ran the authenticated camera route against CPU-only Ollama with cloud features disabled. Moondream identified a red square and a blue circle in generated images. Added a rerunnable live integration test and stopped the temporary server. See [Phase 4.7](phases/PHASE_04_07.md).
+
+## 2026-11-16 (Phase 6.1)
+
+Audited shared memory and verified two clients reading and writing one account's storage. Chose the existing laptop account as the source of truth. Documented the inherited pairing and transport gaps in [Phase 6.1](phases/PHASE_06_01.md).

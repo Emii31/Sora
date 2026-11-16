@@ -6,7 +6,7 @@
 - **Phase 3**: Unified provider and local-inference benchmark (Phases 3.1, 3.1A, 3.1B, and 3.2 Shared Provider Configuration and Automatic Model Selection Completed & Verified)
 - **Phase 4**: Voice/personality/on-request camera (4.1–4.7 cover transcription, synthesis, an offline voice turn, speech delivery presets, submitted-clip wake detection, and the camera frame API verified with local Moondream. Device capture checks remain pending.)
 - **Phase 5**: 3D avatar/island interface (Deferred)
-- **Phase 6**: Android/shared memory (Deferred)
+- **Phase 6**: Android/shared memory (6.1 backend audit verified. Private pairing, transport, and Android integration remain pending.)
 - **Phase 7**: Device tools/tasks (Deferred)
 - **Phase 8**: Controlled skill learning and self-improvement (Deferred)
 
