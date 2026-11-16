@@ -499,3 +499,7 @@ Generated 12 takes and verified three matched audition reels from female voice r
 ## Phase 4.13 — Supertonic 3 Audition
 
 The offline CPU run produced 12 44.1 kHz PCM takes with no clipped raw samples. Vosk detected the literal word “angry” in all three tagged anger takes. Owner listening and provider selection remain pending. See [Phase 4.13](phases/PHASE_04_13.md).
+
+## Phase 4.14 — NeuTTS-2E Emotion Comparison
+
+Five valid offline WAVs carried identical spoken words, as checked by Vosk. Token generation took 10.05–19.09 s per short take on the laptop CPU. The angry waveform was gain-adjusted before PCM output to avoid clipping. Owner listening remains pending. See [Phase 4.14](phases/PHASE_04_14.md).

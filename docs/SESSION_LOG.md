@@ -610,3 +610,7 @@ The owner asked to compare female voices for Sora. Checked the reference metadat
 ## 2026-11-16 (Phase 4.13)
 
 Tried Supertonic 3 after the owner reported poor Silencio-2 audio quality. Generated five female voice options and checked the waveforms and transcripts. Left the anger-tagged takes out of the shortlist because they spoke the tag. See [Phase 4.13](phases/PHASE_04_13.md).
+
+## 2026-11-16 (Phase 4.14)
+
+The owner found the prior samples emotionless. Restored the temporary checkout, completed the NeuTTS-2E codec download, and rendered a matched emotion comparison using a dedicated emotion control. See [Phase 4.14](phases/PHASE_04_14.md).
