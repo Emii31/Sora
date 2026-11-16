@@ -475,3 +475,7 @@
 ## Phase 4.8 — Personality and Voice Backend Review
 
 73 tests passed, including the real Vosk-to-Ollama-to-Piper turn in 19.04 s and WAV output for all three Piper pacing presets. Source review confirmed active character context in both chat modes and the omission of durable core memory in fast chat. See [Phase 4.8](phases/PHASE_04_08.md).
+
+## Phase 4.9 — Compact Core Memory
+
+39 focused tests passed, with one live check excluded and two existing Pillow warnings. The separate live Ollama test passed for two accounts with different remembered facts. Each turn used one model attempt and no preflight. See [Phase 4.9](phases/PHASE_04_09.md).

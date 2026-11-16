@@ -586,3 +586,7 @@ Audited shared memory and verified two clients reading and writing one account's
 ## 2026-11-16 (Phase 4.8)
 
 Returned to Phase 4 to audit personality and voice. Found that fast chat leaves out core memory and confirmed that Piper delivery styles are selected per request. Reran the real offline voice loop. Phase 5 remains deferred to the app stage. Phase 6 remains paused after the shared-memory audit.
+
+## 2026-11-16 (Phase 4.9)
+
+Added bounded core-memory excerpts to fast local text chat. Verified account isolation and a single reply-generation call through two real Ollama turns. See [Phase 4.9](phases/PHASE_04_09.md).

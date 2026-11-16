@@ -51,4 +51,4 @@ Connected devices can read and update one account's memory through the laptop's 
 
 ## Personality in full and fast chat
 
-Both chat modes use the active character. The full agent adds core memory and relationship context. The fast loopback prompt uses a compact persona and recent turns and currently leaves out durable core memory. Speech uses the saved reply and a caller-selected Piper delivery preset.
+Both chat modes use the active character. The full agent adds core memory and relationship context. The fast loopback prompt uses a compact persona, recent turns, and bounded excerpts of the active account's human and relationship core memory. Speech uses the saved reply and a caller-selected Piper delivery preset.

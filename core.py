@@ -2685,7 +2685,17 @@ def _csm_do_full_reply(batch, user_id):
 
             if fast_local:
                 with chat_timing.span("context_assembly"):
-                    messages = build_fast_local_chat_messages(history, combined_text)
+                    core_blocks = None
+                    if user_data_dir and user_id != "_admin":
+                        import core_memory
+                        try:
+                            core_blocks = core_memory.get_all_blocks()
+                        except (OSError, ValueError, RuntimeError, AttributeError):
+                            # A missing, malformed, or inaccessible memory file must not block fast chat.
+                            print("[Chat] Fast mode could not read core memory.")
+                    messages = build_fast_local_chat_messages(
+                        history, combined_text, core_blocks=core_blocks,
+                    )
                 with chat_timing.span("chat_agent"):
                     result = {"reply": call_fast_local_chat(messages)}
             else:
