@@ -495,3 +495,7 @@ The offline Silencio-2 audition produced nine valid non-silent WAVs using four b
 ## Phase 4.12A — Female Voice Audition
 
 Generated 12 takes and verified three matched audition reels from female voice references. The offline render completed with a socket-denying audit hook, and all reels decoded at 24 kHz mono PCM16. Owner preference remains pending. See [Phase 4.12A](phases/PHASE_04_12A.md).
+
+## Phase 4.13 — Supertonic 3 Audition
+
+The offline CPU run produced 12 44.1 kHz PCM takes with no clipped raw samples. Vosk detected the literal word “angry” in all three tagged anger takes. Owner listening and provider selection remain pending. See [Phase 4.13](phases/PHASE_04_13.md).
