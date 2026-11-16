@@ -622,3 +622,7 @@ The owner accepted the NeuTTS-2E audition for now and said the emotional deliver
 ## 2026-11-17 (Phase 4.15)
 
 Responded to the owner's rejection of the extended NeuTTS scene with a local Qwen VoiceDesign test. Built the native CPU runtime and verified one uninterrupted worry-to-relief take. See [Phase 4.15](phases/PHASE_04_15.md).
+
+## 2026-11-17 (Phase 4.15 owner approval)
+
+The owner selected the Qwen VoiceDesign take as Sora's final voice. Recorded the artifact checksum and original generation settings. No live provider change was made.

@@ -33,3 +33,7 @@ The model generates a new voice from a description. This test does not establish
 ## Handoff
 
 Import the cumulative Phase 4.15 bundle with `git fetch <bundle-path> main` and `git merge --ff-only FETCH_HEAD` into a clean checkout at Phase 3.3B (`e69d08b67dd35e76d0457821e0b041e82a4cbf84`). The audition WAV and model files are outside Git. Review the clip before choosing whether to pursue this engine. Application work remains deferred.
+
+## Final voice reference
+
+On 2026-11-17, the owner selected this exact take as Sora's final voice. The reference remains at `sora-qwen-audition/sora-worry-to-relief.wav` beside the cumulative bundle with SHA-256 `5ad5d7d8073ad5fb19c0abbf33373203600612f95d30e8432a53de0cb062946c`. Its spoken transcript is the input in the reproduction command above. Use the waveform as the reference when testing speaker consistency across replies. The app still uses Piper pending integration, and the measured 56.16 s cold render remains the local latency baseline.

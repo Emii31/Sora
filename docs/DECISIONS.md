@@ -19,3 +19,5 @@
 - **Phase 4 provisional voice choice**: Treat NeuTTS-2E's Sophie as the provisional expressive offline voice. The owner reported that it still sounds like a read line with an emotion applied and falls short of the natural delivery they want. Keep the speech provider configurable so the voice can be replaced later.
 
 - **Phase 4 voice choice update**: The owner rejected the extended Sophie audition. Hold provider integration and use the instruction-directed Qwen VoiceDesign sample to evaluate natural delivery. The initial i5-7300U run also showed a substantial latency tradeoff.
+
+- **Final Sora voice reference**: The owner approved the Qwen3-TTS VoiceDesign worry-to-relief take on 2026-11-17. Preserve its exact audio as the reference for future synthesis and compare changes against it. Model deployment and conversational latency are separate from the owner's final voice choice.
