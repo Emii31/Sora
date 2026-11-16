@@ -48,3 +48,7 @@ The authenticated `POST /api/camera/describe` route takes one still frame and re
 ## Shared memory
 
 Connected devices can read and update one account's memory through the laptop's authenticated APIs. The account determines the storage directory for Markdown, slots, core memory, and chat history. Clients revalidate cached reads against the backend. Pairing to the existing laptop account and private network transport are separate requirements for deployment.
+
+## Personality in full and fast chat
+
+Both chat modes use the active character. The full agent adds core memory and relationship context. The fast loopback prompt uses a compact persona and recent turns and currently leaves out durable core memory. Speech uses the saved reply and a caller-selected Piper delivery preset.

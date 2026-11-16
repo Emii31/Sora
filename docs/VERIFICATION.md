@@ -471,3 +471,7 @@
 ## Phase 6.1 — Shared Memory Backend Audit
 
 97 focused tests passed. Two simulated devices shared the same Markdown file, core memory, and slot through the real Flask handlers. A separate account and an unauthenticated request could not read the owner's Markdown. The checks covered both invited and existing local accounts. Physical Android pairing and LAN transport remain untested. See [Phase 6.1](phases/PHASE_06_01.md).
+
+## Phase 4.8 — Personality and Voice Backend Review
+
+73 tests passed, including the real Vosk-to-Ollama-to-Piper turn in 19.04 s and WAV output for all three Piper pacing presets. Source review confirmed active character context in both chat modes and the omission of durable core memory in fast chat. See [Phase 4.8](phases/PHASE_04_08.md).
