@@ -602,3 +602,7 @@ Generated neutral, warm, and playful Piper WAVs from the same synthetic Sora lin
 ## 2026-11-16 (Phase 4.12)
 
 The owner requested a more expressive voice. Auditioned Silencio-2 with bundled voices and generated playful, soft, thoughtful, and angry takes on the laptop CPU. See [Phase 4.12](phases/PHASE_04_12.md).
+
+## 2026-11-16 (Phase 4.12A)
+
+The owner asked to compare female voices for Sora. Checked the reference metadata and generated matched reels for the two bundled female speakers and Alba's published casual voice. See [Phase 4.12A](phases/PHASE_04_12A.md).

@@ -491,3 +491,7 @@
 ## Phase 4.12 — Expressive Offline Voice Audition
 
 The offline Silencio-2 audition produced nine valid non-silent WAVs using four bundled voices. The five-scene process peaked at 862 MiB RSS. The same-line neutral and angry files differ. Emotional quality and speaker preference await owner listening. See [Phase 4.12](phases/PHASE_04_12.md).
+
+## Phase 4.12A — Female Voice Audition
+
+Generated 12 takes and verified three matched audition reels from female voice references. The offline render completed with a socket-denying audit hook, and all reels decoded at 24 kHz mono PCM16. Owner preference remains pending. See [Phase 4.12A](phases/PHASE_04_12A.md).
