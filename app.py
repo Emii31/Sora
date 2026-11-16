@@ -1815,6 +1815,11 @@ def api_voice_synthesize():
     if not isinstance(message_id, str) or not message_id.strip() or len(message_id) > 128:
         return jsonify({"error": "Provide a valid message_id."}), 400
 
+    style = body.get("style", "neutral")
+    if not isinstance(style, str) or style not in voice_output.VOICE_STYLES:
+        choices = ", ".join(voice_output.VOICE_STYLES)
+        return jsonify({"error": f"Choose a voice style: {choices}."}), 400
+
     message = next((
         item for item in reversed(storage.get_chat_history(limit=200))
         if item.get("id") == message_id and item.get("role") == "assistant"
@@ -1825,7 +1830,7 @@ def api_voice_synthesize():
     if not text or len(text) > voice_output.MAX_REPLY_CHARS:
         return jsonify({"error": f"Choose a reply of 1 to {voice_output.MAX_REPLY_CHARS} characters."}), 422
     try:
-        audio = voice_output.synthesize_wav(text)
+        audio = voice_output.synthesize_wav(text, style=style)
     except voice_output.VoiceOutputUnavailable as exc:
         return jsonify({"error": str(exc)}), 503
     return Response(audio, mimetype="audio/wav")

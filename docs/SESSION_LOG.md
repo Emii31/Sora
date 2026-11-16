@@ -560,3 +560,9 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 - Verified a real local voice turn from a synthetic recording through Vosk, opt-in fast chat with Ollama, and Piper synthesis for the exact saved reply.
 - The end-to-end test passed in a total pipeline time of 16.14 s. All 50 separate regression tests passed.
 - The cumulative Phase 4.3 bundle preserves all unpublished phases. See [Phase 4.3](phases/PHASE_04_03.md) for the Claude Code handoff.
+
+## 2026-11-16 — Phase 4.4 local speech delivery styles
+
+- Restored Phase 4.3 from its saved cumulative bundle in a fresh temporary checkout.
+- Added three request-scoped pacing presets to saved-reply playback and verified each with real local Piper.
+- GitHub publishing remains pending. The cumulative Phase 4.4 bundle includes the new checkpoint and earlier unpublished phases. See [Phase 4.4](phases/PHASE_04_04.md).

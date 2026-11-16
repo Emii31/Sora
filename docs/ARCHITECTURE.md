@@ -39,4 +39,4 @@ The backend's authenticated `POST /api/voice/transcribe` route accepts short mon
 
 ## Offline voice output
 
-The authenticated `POST /api/voice/synthesize` route resolves a saved assistant reply in the caller's recent chat. `voice_output.py` passes the text on stdin to the optional Piper CLI and returns the generated WAV in the response. The client owns playback timing and interruption.
+The authenticated `POST /api/voice/synthesize` route resolves a saved assistant reply in the caller's recent chat. `voice_output.py` passes the text on stdin to the optional Piper CLI and returns the generated WAV in the response. The optional request style selects one of three fixed Piper pacing presets. The client owns playback timing and interruption.

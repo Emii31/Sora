@@ -160,7 +160,7 @@ def test_synthesis_returns_only_the_callers_saved_reply(voice_client, monkeypatc
         {"id": "other-reply", "role": "assistant", "text": "Other user's text."},
     ])
     seen = []
-    monkeypatch.setattr(voice_output, "synthesize_wav", lambda text: seen.append(text) or wav_bytes())
+    monkeypatch.setattr(voice_output, "synthesize_wav", lambda text, *, style: seen.append((text, style)) or wav_bytes())
     before = {path.relative_to(tmp_path) for path in tmp_path.rglob("*") if path.is_file()}
 
     response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "my-reply", "text": "ignored"})
@@ -175,7 +175,11 @@ def test_synthesis_returns_only_the_callers_saved_reply(voice_client, monkeypatc
         assert response.status_code == 404
     response = client.post("/api/voice/synthesize", json={"message_id": "my-reply"})
     assert response.status_code == 401
-    assert seen == ["Hello there."]
+    response = client.post("/api/voice/synthesize", headers=headers, json={
+        "message_id": "my-reply", "style": "warm",
+    })
+    assert response.status_code == 200
+    assert seen == [("Hello there.", "neutral"), ("Hello there.", "warm")]
 
 
 @pytest.mark.parametrize("content_type, body, status", [
@@ -183,6 +187,9 @@ def test_synthesis_returns_only_the_callers_saved_reply(voice_client, monkeypatc
     ("application/json", b"{", 400),
     ("application/json", b"[]", 400),
     ("application/json", b'{"message_id": ""}', 400),
+    ("application/json", b'{"message_id": "reply", "style": null}', 400),
+    ("application/json", b'{"message_id": "reply", "style": ["warm"]}', 400),
+    ("application/json", b'{"message_id": "reply", "style": "--cuda"}', 400),
     ("application/json", b" " * 1025, 413),
 ])
 def test_synthesis_validates_request(voice_client, content_type, body, status):
@@ -229,7 +236,32 @@ def test_synthesis_timeout_cleans_up_audio_and_releases_lock(monkeypatch, tmp_pa
     assert all(not path.parent.exists() for path in outputs)
 
 
-def test_real_offline_speech_synthesis(voice_client, monkeypatch):
+@pytest.mark.parametrize("style, flags", [
+    ("neutral", []),
+    ("warm", ["--length-scale", "1.15", "--sentence-silence", "0.20"]),
+    ("playful", ["--length-scale", "0.88", "--sentence-silence", "0.08"]),
+])
+def test_synthesis_style_uses_fixed_piper_arguments(style, flags, monkeypatch, tmp_path):
+    model_path = tmp_path / "voice.onnx"
+    model_path.touch()
+    model_path.with_suffix(".onnx.json").touch()
+    monkeypatch.setenv("SORA_PIPER_MODEL_PATH", str(model_path))
+    calls = []
+
+    def synthesize(command, *, input, **kwargs):
+        assert input == b"Hello."
+        output_index = command.index("--output-file") + 1
+        assert command[output_index + 1:] == flags
+        Path(command[output_index]).write_bytes(wav_bytes())
+        calls.append(command)
+
+    monkeypatch.setattr(voice_output.subprocess, "run", synthesize)
+    assert voice_output.synthesize_wav("Hello.", style=style) == wav_bytes()
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("style", ["neutral", "warm", "playful"])
+def test_real_offline_speech_synthesis(voice_client, monkeypatch, style):
     model_path = os.environ.get("SORA_TEST_PIPER_MODEL_PATH")
     if not model_path:
         pytest.skip("Set SORA_TEST_PIPER_MODEL_PATH to run the Piper smoke test")
@@ -239,7 +271,7 @@ def test_real_offline_speech_synthesis(voice_client, monkeypatch):
         {"id": "hello-reply", "role": "assistant", "text": "Hi, I'm Sora. It's good to hear from you."},
     ])
     started = time.perf_counter()
-    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "hello-reply"})
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "hello-reply", "style": style})
     elapsed = time.perf_counter() - started
     assert response.status_code == 200
     assert response.mimetype == "audio/wav"
@@ -250,7 +282,7 @@ def test_real_offline_speech_synthesis(voice_client, monkeypatch):
         assert 1 < duration < 10
         samples = speech.readframes(speech.getnframes())
     assert any(samples)
-    print(json.dumps({"synthesis_seconds": round(elapsed, 2), "audio_seconds": round(duration, 2)}))
+    print(json.dumps({"style": style, "synthesis_seconds": round(elapsed, 2), "audio_seconds": round(duration, 2)}))
 
 
 def test_complete_offline_voice_turn(voice_client, monkeypatch, tmp_path):

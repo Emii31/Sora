@@ -451,3 +451,7 @@
   - Opt-in test: `SORA_TEST_VOICE_TURN=1 SORA_TEST_VOICE_MODEL_DIR=/tmp/sora-phase-41-model/vosk-model-small-en-us-0.15 SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-phase-42-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-phase-34-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py::test_complete_offline_voice_turn`. Exit 0, 1 passed.
   - Pipeline stages: transcription 1.48 s, chat 12.63 s, synthesis 2.03 s. Total 16.14 s, WAV length 6.15 s. Device capture and speaker playback were not exercised.
   - The separate focused regression returned 50 passed. See [Phase 4.3](phases/PHASE_04_03.md) for the command and reproduction notes.
+
+- **Phase 4.4 — Local Delivery Styles for Spoken Replies**
+  - Command: `SORA_TEST_PIPER_MODEL_PATH=/tmp/sora-44-model/en_US-ljspeech-medium.onnx PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /tmp/sora-44-venv/bin/python -B -m pytest -p no:cacheprovider -q -rP tests/test_voice_input.py tests/test_local_single_device_mode.py tests/test_chat_error_copy.py`. Exit 0, 57 passed, 2 optional tests skipped.
+  - Real Piper produced valid non-silent WAVs in all three styles. Audio durations were 2.91 s neutral, 3.42 s warm, and 2.72 s playful. See [Phase 4.4](phases/PHASE_04_04.md) for test scope and handoff.
