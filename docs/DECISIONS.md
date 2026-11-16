@@ -11,3 +11,5 @@
 - **Phase 4 offline voice input**: Use the optional Vosk runtime with an explicitly configured local model directory. Start with bounded, authenticated WAV uploads and transcript review before adding device capture or wake-word detection.
 
 - **Phase 4 offline voice output**: Use a separately installed local Piper CLI and an explicit voice model path. The initial API synthesizes a caller-owned saved assistant reply on demand, through private temporary audio files that are cleaned after each request.
+
+- **Phase 4 on-request camera**: Start with explicit single-frame submission and transient descriptions. Restrict frame inference to a configured loopback vision endpoint, with no route-level persistence or remote fallback.

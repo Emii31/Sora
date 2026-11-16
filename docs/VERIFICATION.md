@@ -459,3 +459,7 @@
 ## Phase 4.5 — Offline Wake Phrase Detection
 
 67 focused tests passed and one optional Ollama integration test was skipped. Real Vosk recognized the target and rejected similar phrases, longer utterances, and silence in synthetic samples. The API checks covered authentication, upload and duration limits, cache policy, and preservation of empty chat history. See [Phase 4.5](phases/PHASE_04_05.md) for the command and limits.
+
+## Phase 4.6 — On-request Camera Input Backend
+
+135 focused tests passed, and one optional Ollama voice-turn test was skipped. Camera checks covered authentication, still-frame validation, EXIF rotation and metadata removal, loopback target enforcement, redirect refusal, busy handling, and unchanged user files after a completed request. A real HTTP exchange with a loopback test vision server also passed. Real model inference and device capture remain pending. See [Phase 4.6](phases/PHASE_04_06.md).

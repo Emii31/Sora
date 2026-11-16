@@ -1771,6 +1771,31 @@ def _forward_chat_to_vps(text: str, image_file=None):
         return jsonify({"error": "Server response error"}), resp.status_code
 
 
+@app.route("/api/camera/describe", methods=["POST"])
+def api_camera_describe():
+    """Describe one requested frame without adding it to chat or memory."""
+    import camera_input
+
+    media_type = request.mimetype
+    if media_type not in camera_input.FRAME_FORMATS:
+        return jsonify({"error": "Send a single JPEG or PNG camera frame."}), 415
+
+    limit = camera_input.MAX_FRAME_BYTES
+    if request.content_length is not None and request.content_length > limit:
+        return jsonify({"error": "The camera frame is too large."}), 413
+    frame = request.stream.read(limit + 1)
+    if len(frame) > limit:
+        return jsonify({"error": "The camera frame is too large."}), 413
+
+    try:
+        description = camera_input.describe_frame(frame, media_type)
+    except camera_input.InvalidFrame as exc:
+        return jsonify({"error": str(exc)}), 400
+    except camera_input.CameraUnavailable as exc:
+        return jsonify({"error": str(exc)}), 503
+    return jsonify({"description": description})
+
+
 @app.route("/api/voice/transcribe", methods=["POST"])
 def api_voice_transcribe():
     """Transcribe an authenticated push-to-talk recording on this backend."""

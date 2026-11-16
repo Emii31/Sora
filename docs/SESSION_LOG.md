@@ -570,3 +570,7 @@ tests/test_mobile_notification_memory_ui.py ............                 [100%]
 ## 2026-11-16 (Phase 4.5)
 
 Added authenticated offline wake detection for submitted short WAV clips. Verified the route with the real small English Vosk model and saved instructions in [Phase 4.5](phases/PHASE_04_05.md). Client microphone work remains deferred.
+
+## 2026-11-16 (Phase 4.6)
+
+Added an on-request camera-frame API with bounded uploads, in-memory normalization, and loopback-only vision transport. Verified the Flask route with a local HTTP test double. See [Phase 4.6](phases/PHASE_04_06.md) for the handoff and pending real-model check.
