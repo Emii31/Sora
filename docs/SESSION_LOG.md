@@ -594,3 +594,7 @@ Added bounded core-memory excerpts to fast local text chat. Verified account iso
 ## 2026-11-16 (Phase 4.10)
 
 Refined the bundled Sora persona and applied the shared dialogue rule to full and fast chat. Live testing exposed a false camera claim in fast chat. Made the text-only scope explicit and verified the rerun. See [Phase 4.10](phases/PHASE_04_10.md).
+
+## 2026-11-16 (Phase 4.11)
+
+Generated neutral, warm, and playful Piper WAVs from the same synthetic Sora line. Saved the samples beside the Git bundle for owner listening. See [Phase 4.11](phases/PHASE_04_11.md).
