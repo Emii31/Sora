@@ -30,3 +30,7 @@ The local `sora-neutts-assets` directory contains the pinned assets and `auditio
 ## Handoff
 
 Import the cumulative Phase 4.14 Git bundle with `git fetch <bundle-path> main` and `git merge --ff-only FETCH_HEAD` into a checkout based on Phase 3.3B (`e69d08b67dd35e76d0457821e0b041e82a4cbf84`). The application synthesis backend was left on Piper. Record the owner's feedback before selecting a provider. Phase 5 remains deferred to app work. Phase 6 remains paused at 6.1.
+
+## Owner feedback and next phase
+
+On 2026-11-17, the owner accepted the audition provisionally. They said the emotional takes still sounded like reading a sentence with emotion applied and fell short of the conversational delivery they wanted. Use Sophie as the provisional voice. Phase 4.15 should offer it as a configurable offline provider and test it against a saved chat reply. The measured 11–20 s latency for a short clip is a baseline for that integration, and Piper remains the current provider until then.

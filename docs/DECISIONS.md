@@ -15,3 +15,5 @@
 - **Phase 4 on-request camera**: Start with explicit single-frame submission and transient descriptions. Restrict frame inference to a configured loopback vision endpoint, with no route-level persistence or remote fallback.
 
 - **Phase 6 shared memory**: Use one laptop-hosted account and its existing memory files as the canonical store. Pair the phone to that account. Defer replica management and merging independent local histories.
+
+- **Phase 4 provisional voice choice**: Treat NeuTTS-2E's Sophie as the provisional expressive offline voice. The owner reported that it still sounds like a read line with an emotion applied and falls short of the natural delivery they want. Keep the speech provider configurable so the voice can be replaced later.

@@ -614,3 +614,7 @@ Tried Supertonic 3 after the owner reported poor Silencio-2 audio quality. Gener
 ## 2026-11-16 (Phase 4.14)
 
 The owner found the prior samples emotionless. Restored the temporary checkout, completed the NeuTTS-2E codec download, and rendered a matched emotion comparison using a dedicated emotion control. See [Phase 4.14](phases/PHASE_04_14.md).
+
+## 2026-11-17 (Phase 4.14 owner review)
+
+The owner accepted the NeuTTS-2E audition for now and said the emotional delivery still sounds like reading. Recorded Sophie as the provisional voice for the upcoming integration. The running app has not switched providers.
