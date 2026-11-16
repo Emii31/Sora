@@ -17,3 +17,5 @@
 - **Phase 6 shared memory**: Use one laptop-hosted account and its existing memory files as the canonical store. Pair the phone to that account. Defer replica management and merging independent local histories.
 
 - **Phase 4 provisional voice choice**: Treat NeuTTS-2E's Sophie as the provisional expressive offline voice. The owner reported that it still sounds like a read line with an emotion applied and falls short of the natural delivery they want. Keep the speech provider configurable so the voice can be replaced later.
+
+- **Phase 4 voice choice update**: The owner rejected the extended Sophie audition. Hold provider integration and use the instruction-directed Qwen VoiceDesign sample to evaluate natural delivery. The initial i5-7300U run also showed a substantial latency tradeoff.
