@@ -479,3 +479,7 @@
 ## Phase 4.9 — Compact Core Memory
 
 39 focused tests passed, with one live check excluded and two existing Pillow warnings. The separate live Ollama test passed for two accounts with different remembered facts. Each turn used one model attempt and no preflight. See [Phase 4.9](phases/PHASE_04_09.md).
+
+## Phase 4.10 — Bundled Sora Persona and Dialogue
+
+73 tests passed, one optional live-memory test was skipped, and 11 legacy warnings were recorded. The live fast-chat sample identified Sora as an AI companion, accurately denied camera access in text-only mode, and honored a request for quiet. See [Phase 4.10](phases/PHASE_04_10.md).

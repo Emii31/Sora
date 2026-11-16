@@ -590,3 +590,7 @@ Returned to Phase 4 to audit personality and voice. Found that fast chat leaves 
 ## 2026-11-16 (Phase 4.9)
 
 Added bounded core-memory excerpts to fast local text chat. Verified account isolation and a single reply-generation call through two real Ollama turns. See [Phase 4.9](phases/PHASE_04_09.md).
+
+## 2026-11-16 (Phase 4.10)
+
+Refined the bundled Sora persona and applied the shared dialogue rule to full and fast chat. Live testing exposed a false camera claim in fast chat. Made the text-only scope explicit and verified the rerun. See [Phase 4.10](phases/PHASE_04_10.md).

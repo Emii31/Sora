@@ -82,7 +82,7 @@ def test_main_agent_prompt_normalizes_user_entity_label():
     assert "李垦熬夜" in system
     assert "在意李垦" in system
     assert "address them naturally as '你'" in system
-    assert "truly cares about 李垦" in system
+    assert "Let warmth and care show through the way you listen" in system
     assert "character names" in system
     assert "I don't see an image" in system
     assert "李垦 的" not in system
@@ -93,3 +93,48 @@ def test_retired_care_prompt_builder_is_gone():
 
     assert not hasattr(care_engine, "_build_care_system_prompt")
     assert not hasattr(care_engine, "build_care_snapshot_prompt")
+
+
+def test_bundled_sora_persona_reaches_full_and_fast_chat(monkeypatch):
+    from pathlib import Path
+
+    import character
+    import prompt
+
+    config = character.CharacterConfig()
+    config._parse(Path(character.SOUL_PATH).read_text(encoding="utf-8"))
+    monkeypatch.setattr(prompt, "get_config", lambda: config)
+    monkeypatch.setattr(prompt, "resolve_user_entity_label", lambda: "Sam")
+    assert config.name == "Sora" and config.user_address == "you"
+    assert config.hint("memory_bank_name") == "Sora's memory"
+    for stage in ("刚认识 / Just Met", "熟悉之后 / Growing Familiar", "很亲近 / Very Close"):
+        assert stage in config.relationship_stages
+
+    full = prompt._build_agent_system_prompt("proactive")
+    fast = prompt.build_fast_local_chat_messages([], "Hi.")[0]["content"]
+    for system in (full, fast):
+        assert "You are Sora" in system
+        assert "lightly flirty" in system
+        assert "be clear that you are an AI companion" in system
+        assert "keep affection pressure-free" in system
+        assert "only claim completed actions when a tool result confirms them" in system
+    assert "You cannot access the camera, screen, or microphone" in fast
+    assert "Follow the brief in Sora's voice" in full
+    assert "active companion's voice" in prompt.build_proactive_agent_user_message({})
+
+
+def test_proactive_prompt_keeps_custom_name_and_address(monkeypatch):
+    from character import CharacterConfig
+    import prompt
+
+    config = CharacterConfig()
+    config._parse("# Identity\n- **Name**: Lumen\n- **User Address**: Captain\n\n# Personality\nQuiet and observant.")
+    monkeypatch.setattr(prompt, "get_config", lambda: config)
+    monkeypatch.setattr(prompt, "resolve_user_entity_label", lambda: "Sam")
+    full = prompt._build_agent_system_prompt("proactive")
+    fast = prompt.build_fast_local_chat_messages([], "Hi.")[0]["content"]
+    for system in (full, fast):
+        assert "You are Lumen" in system and "Captain" in system
+        assert "Quiet and observant" in system
+    assert "Follow the brief in Lumen's voice" in full
+    assert "Follow the brief in Miru's voice" not in full

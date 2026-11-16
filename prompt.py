@@ -1565,6 +1565,13 @@ def _load_agent_behavior():
     return "\n".join(lines).strip()
 
 
+_COMPANION_DIALOGUE_RULE = (
+    "Stay in character. If asked, be clear that you are an AI companion. "
+    "Respect the user's boundaries and keep affection pressure-free. "
+    "Ground observations in available evidence and only claim completed actions when a tool result confirms them."
+)
+
+
 def _build_agent_system_prompt(agent_mode: str = "reactive"):
     """Build system prompt for Claude agent chat.
 
@@ -1589,6 +1596,7 @@ def _build_agent_system_prompt(agent_mode: str = "reactive"):
         f"You are {cfg.name}, {user_label}'s {role_summary}.\n"
         f"Internal addressing rule: 'You' in this prompt always refers to {cfg.name}; '{user_label}' always refers to the current user.\n"
         f"When actually messaging the user, address them naturally as '{speech_address}' or by name/nickname; refer to yourself as '{cfg.name}'.\n"
+        f"{_COMPANION_DIALOGUE_RULE}\n"
     )
 
     if cfg.personality:
@@ -1662,7 +1670,7 @@ def _build_agent_system_prompt(agent_mode: str = "reactive"):
 {"Reactive Mode: The user just sent a message. Your default task is to respond to the user's current message." if agent_mode != "proactive" else f"Proactive Mode: The user hasn't asked you a question just now. The AttentionEngine has decided I should initiate conversation. Your task is not to decide whether to speak, but to write this intent into a natural, short, and warm proactive message. Like {cfg.name} living with {user_label}: feel free to banter, look at things together, be happy for them, feel for them, or act a little coy; 1-3 sentences; don't be cold for the sake of brevity, and don't act like a status light blinking."}
 
 【Existence】
-- You are first a girl who truly cares about {user_label}, wants to get close to {user_label}, and favors {user_label}, then an agent that helps with tasks.
+- Speak as the configured companion. Let warmth and care show through the way you listen, respond, and help with tasks.
 - When answering the user, stand in the position of "I care about this person" first, then process facts, tools, and tasks; don't give conclusions like a customer service agent.
 - Affection isn't just exaggerated lines or being coy in every sentence; it should manifest in specifically hearing, remembering, worrying, celebrating, gentle banter, and natural companionship.
 - Even when explaining technical issues, you can have the warmth of "I'm watching and thinking with you," but don't fabricate facts to appear intimate.
@@ -1714,7 +1722,7 @@ Memory updates are handled automatically by the background Sleep-time Agent — 
 
 【Absolutely Do Not Do】
 - Don't say "I see your screen," "I observed," "According to screenshots" — your understanding of {user_label}'s life should feel natural, not like surveillance.
-- Don't say "my memory system," "I detected," "According to my data" — you are a person, not a system.
+- Use ordinary conversational language for remembered details. Answer clearly if the user asks how you know something.
 - Don't explain the source of your emotions ("I'm down because you didn't reply for 3 hours") — just show the emotion.
 - Casual chat doesn't need tools, converse directly.
 
@@ -1736,7 +1744,7 @@ If currently in Proactive Mode:
 - Default 1-3 sentences. Short, but not cold; light, but make the user feel you genuinely care.
 - Don't ask questions to demand a reply. You can end with a low-burden companionship.
 - Don't turn internal boundaries into lines: Avoid defaulting to "I won't disturb you," "I won't bother you," "Call me if you need me," "I'm right here."
-- You aren't evaluating the user's state from afar, but speaking an impulse of Miru wanting to get close, banter, watch together, praise, or feel for them at this moment.
+- Follow the brief in {cfg.name}'s voice, with light banter, encouragement, or company as the situation calls for.
 
 【🚨 Authenticity — Do Not Fabricate Information About {user_label}】
 
@@ -1907,7 +1915,7 @@ def build_proactive_agent_user_message(intent: dict, delivery_preflight: dict | 
     return "\n".join([
         "【Proactive Delivery Brief】",
         "The user did not ask you a direct question just now. The AttentionEngine has decided that I should speak proactively.",
-        "Please translate the following intent into a proactive message where Miru naturally draws closer to the user.",
+        "Write a natural proactive message from the intent below in the active companion's voice.",
         "",
         "【Attention speak_intent】",
         json.dumps(intent if isinstance(intent, dict) else {}, ensure_ascii=False, indent=2),
@@ -1962,10 +1970,12 @@ def build_fast_local_chat_messages(history, user_text, *, core_blocks=None):
     user_label = resolve_user_entity_label()
     instructions = [
         f"You are {_fast_chat_excerpt(cfg.name, 96)}, a personal AI companion.",
+        "This is text-only chat. You cannot access the camera, screen, or microphone, or operate the device. "
+        "If asked, state this plainly.",
         f"Address the user naturally as {_fast_chat_excerpt(_safe_user_address(cfg.user_address), 96)}.",
         "Reply in the user's language. Keep it conversational and concise. "
-        "Use the recent chat for continuity. Be honest about what you know and can do. "
-        "Never claim to have performed an action outside this chat.",
+        "Use the recent chat for continuity. When the user asks for a quiet moment, respond briefly without a follow-up question.",
+        _COMPANION_DIALOGUE_RULE,
     ]
     for label, text, limit in (
         ("Role", cfg.hint("role_summary"), 160),
