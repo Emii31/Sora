@@ -306,12 +306,13 @@ def test_resident_qwen_keeps_the_approved_reference_and_returns_wav(voice_client
     monkeypatch.setenv("SORA_QWEN_RESIDENT_DEVICE", "Vulkan0")
     save_voice_history(headers, [{"id": "reply", "role": "assistant", "text": "Come sit with me."}])
 
-    def render(command, text, *, timeout, max_frames):
+    def render(command, text, *, timeout, max_frames, assets):
         assert command[0] == str(executable)
         assert command[command.index("--device") + 1] == "Vulkan0"
         assert command[command.index("--ref-rvq") + 1] == str(qwen_voice_kit / "reference.rvq")
         assert command[-3:] == ["-", "--stream-by-line", "--sora-frames"]
         assert (text, timeout, max_frames) == ("Come sit with me.", 180, 320)
+        assert len(assets) == 6
         return b"\x00\x01" * 1920
 
     monkeypatch.setattr(voice_qwen, "render", render)
@@ -320,6 +321,54 @@ def test_resident_qwen_keeps_the_approved_reference_and_returns_wav(voice_client
     with wave.open(io.BytesIO(response.data), "rb") as rendered:
         assert (rendered.getframerate(), rendered.getnchannels(), rendered.getnframes()) == (24000, 1, 1920)
         assert rendered.readframes(1920) == b"\x00\x01" * 1920
+
+
+def test_resident_qwen_replays_only_exact_audio_within_the_account(voice_client, qwen_voice_kit, monkeypatch):
+    from collections import OrderedDict
+    import auth
+    import voice_qwen
+
+    client, headers = voice_client
+    executable = qwen_voice_kit / "vulkan" / "qwen-tts-framed"
+    executable.parent.mkdir()
+    executable.touch()
+    monkeypatch.setenv("SORA_QWEN_RESIDENT_DEVICE", "Vulkan0")
+    monkeypatch.setattr(voice_output, "_reply_cache", OrderedDict())
+    calls = []
+
+    def render(command, text, **kwargs):
+        calls.append(text)
+        return bytes([len(calls), 0]) * 1920
+
+    monkeypatch.setattr(voice_qwen, "render", render)
+    reply = {"id": "reply", "role": "assistant", "text": "Come sit with me."}
+    save_voice_history(headers, [reply])
+
+    def play(for_headers=headers):
+        response = client.post("/api/voice/synthesize", headers=for_headers, json={"message_id": "reply"})
+        assert response.status_code == 200 and response.cache_control.no_store
+        return response.data
+
+    initial = play()
+    with voice_output._synthesis_lock:
+        assert play() == initial
+    assert calls == [reply["text"]]
+
+    response = client.post("/api/voice/synthesize", json={"message_id": "reply"})
+    assert response.status_code == 401
+    from scripts.benchmark_chat import create_fresh_disposable_user
+    other_user = create_fresh_disposable_user(auth)
+    other_headers = {"Authorization": f"Bearer {other_user['token']}"}
+    save_voice_history(other_headers, [reply])
+    assert play(other_headers) != initial
+    assert len(calls) == 2
+
+    (qwen_voice_kit / "reference.txt").write_text("Updated")
+    replacement = play()
+    assert replacement != initial and len(calls) == 3
+    save_voice_history(headers, [])
+    response = client.post("/api/voice/synthesize", headers=headers, json={"message_id": "reply"})
+    assert response.status_code == 404
 
 
 def test_qwen_worker_uses_one_process_for_two_framed_replies(tmp_path):
@@ -341,6 +390,9 @@ def test_qwen_worker_uses_one_process_for_two_framed_replies(tmp_path):
         original = voice_qwen._worker
         assert voice_qwen.render(command, "Hi", timeout=3, max_frames=4) == bytes([2]) * 3840
         assert voice_qwen._worker is original
+        assert voice_qwen.render(command, "Hi", timeout=3, max_frames=4, assets=((1, 2, 3, 4),)) == bytes([2]) * 3840
+        assert voice_qwen._worker is not original
+        assert original.process.poll() is not None
     finally:
         voice_qwen.close_worker()
 

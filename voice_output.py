@@ -1,5 +1,7 @@
 """Optional offline speech synthesis for short saved replies."""
 
+from collections import OrderedDict
+from hashlib import sha256
 import io
 import logging
 import os
@@ -8,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import wave
 
 
@@ -18,6 +21,8 @@ _QWEN_TIMEOUT_SECONDS = 180
 _QWEN_MAX_REPLY_CHARS = 240
 _QWEN_MAX_FRAMES = 320
 _QWEN_FRAME_SAMPLES = 1920
+_QWEN_CACHE_MAX_REPLIES = 8
+_QWEN_CACHE_TTL_SECONDS = 300
 
 VOICE_STYLES: dict[str, tuple[str, ...]] = {
     "neutral": (),
@@ -25,6 +30,8 @@ VOICE_STYLES: dict[str, tuple[str, ...]] = {
     "playful": ("--length-scale", "0.88", "--sentence-silence", "0.08"),
 }
 _synthesis_lock = threading.Lock()
+_reply_cache_lock = threading.Lock()
+_reply_cache: OrderedDict[tuple, tuple[float, bytes]] = OrderedDict()
 logger = logging.getLogger(__name__)
 
 
@@ -68,13 +75,25 @@ def _qwen_arguments(directory: Path, wav_path: Path | None, *, device: str = "CP
     return command + [str(wav_path)]
 
 
+def _qwen_assets(command: list[str]) -> tuple:
+    paths = [command[0]] + [
+        command[command.index(flag) + 1] for flag in ("--model", "--codec", "--ref-spk", "--ref-rvq", "--ref-text")
+    ]
+    try:
+        files = [Path(path).stat() for path in paths]
+    except OSError as exc:
+        raise VoiceOutputUnavailable("The configured Qwen voice directory is missing required files.") from exc
+    return tuple((file.st_dev, file.st_ino, file.st_size, file.st_mtime_ns) for file in files)
+
+
 def _resident_qwen_wav(directory: Path, device: str, text: str) -> bytes:
     import voice_qwen
 
     if "\0" in text:
         raise VoiceOutputRequestError("The reply contains an unsupported character.")
     command = _qwen_arguments(directory, None, device=device)
-    pcm = voice_qwen.render(command, text, timeout=_QWEN_TIMEOUT_SECONDS, max_frames=_QWEN_MAX_FRAMES)
+    pcm = voice_qwen.render(command, text, timeout=_QWEN_TIMEOUT_SECONDS, max_frames=_QWEN_MAX_FRAMES,
+                            assets=_qwen_assets(command))
     if not pcm:
         raise VoiceOutputUnavailable("The Qwen voice produced no audio.")
     if len(pcm) >= 2 * _QWEN_MAX_FRAMES * _QWEN_FRAME_SAMPLES:
@@ -98,6 +117,33 @@ def warm_up_configured_voice():
             logger.warning("Could not warm up the local voice: %s", exc)
 
     threading.Thread(target=warm, name="sora-voice-warm-up", daemon=True).start()
+
+
+def synthesize_saved_reply(text: str, *, style: str, account: tuple[str, str]) -> bytes:
+    """Reuse recent exact audio only within the same authenticated account."""
+    directory = os.environ.get("SORA_QWEN_VOICE_DIR", "").strip()
+    device = os.environ.get("SORA_QWEN_RESIDENT_DEVICE", "").strip()
+    if not directory or not device or style != "neutral":
+        return synthesize_wav(text, style=style)
+
+    directory = Path(directory).expanduser().resolve()
+    command = _qwen_arguments(directory, None, device=device)
+    key = (account, tuple(command), _qwen_assets(command), sha256(text.encode()).digest())
+    now = time.monotonic()
+    with _reply_cache_lock:
+        while _reply_cache and next(iter(_reply_cache.values()))[0] <= now:
+            _reply_cache.popitem(last=False)
+        found = _reply_cache.get(key)
+        if found is not None:
+            return found[1]
+
+    audio = synthesize_wav(text, style=style)
+    with _reply_cache_lock:
+        _reply_cache.pop(key, None)
+        _reply_cache[key] = (time.monotonic() + _QWEN_CACHE_TTL_SECONDS, audio)
+        while len(_reply_cache) > _QWEN_CACHE_MAX_REPLIES:
+            _reply_cache.popitem(last=False)
+    return audio
 
 
 def synthesize_wav(text: str, *, style: str = "neutral") -> bytes:

@@ -1871,7 +1871,8 @@ def api_voice_synthesize():
     if not text or len(text) > voice_output.MAX_REPLY_CHARS:
         return jsonify({"error": f"Choose a reply of 1 to {voice_output.MAX_REPLY_CHARS} characters."}), 422
     try:
-        audio = voice_output.synthesize_wav(text, style=style)
+        account = (g.user_id, g.user_data_dir)
+        audio = voice_output.synthesize_saved_reply(text, style=style, account=account)
     except voice_output.VoiceOutputRequestError as exc:
         return jsonify({"error": str(exc)}), 422
     except voice_output.VoiceOutputUnavailable as exc:

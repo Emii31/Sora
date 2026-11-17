@@ -519,3 +519,7 @@ The offline render produced a 7.12-second, unclipped WAV in 56.16 seconds. The t
 ## Phase 4.18 — Longer audition and Vulkan timing
 
 The standalone run produced 20 seconds of non-clipping 24 kHz mono PCM16. Two timed short replies per setting measured synthesis latency. The 256-node option's short WAVs matched the default configuration byte for byte. Vosk returned most of the long script, with two word-level discrepancies. See [Phase 4.18](phases/PHASE_04_18.md).
+
+## Phase 4.19 — Qwen replay and emotion reel
+
+65 focused tests passed and six optional tests skipped. Seven byte-identical replies replayed in 1.37 milliseconds median through the authenticated Flask endpoint. The first synthesis took 23.18 seconds for 3.68 seconds of audio. The 86.00-second audition combines thirteen PCM takes, with nonzero samples and no clipping in all source WAVs. See [Phase 4.19](phases/PHASE_04_19.md).

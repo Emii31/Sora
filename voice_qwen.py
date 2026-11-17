@@ -14,8 +14,9 @@ _MAX_CHUNK_BYTES = 8 * _PCM_FRAME_BYTES
 class QwenWorker:
     """One Qwen process. The voice backend serializes requests to it."""
 
-    def __init__(self, command: list[str]):
+    def __init__(self, command: list[str], assets: tuple):
         self.command = command
+        self.assets = assets
         self.process = subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
@@ -75,11 +76,12 @@ def close_worker():
         _worker = None
 
 
-def render(command: list[str], text: str, *, timeout: int, max_frames: int) -> bytes:
+def render(command: list[str], text: str, *, timeout: int, max_frames: int, assets: tuple = ()) -> bytes:
     global _worker
-    if _worker is None or _worker.process.poll() is not None or _worker.command != command:
+    if (_worker is None or _worker.process.poll() is not None
+            or _worker.command != command or _worker.assets != assets):
         close_worker()
-        _worker = QwenWorker(command)
+        _worker = QwenWorker(command, assets)
     try:
         return _worker.render(text, timeout=timeout, max_frames=max_frames)
     except (OSError, subprocess.TimeoutExpired, EOFError):
