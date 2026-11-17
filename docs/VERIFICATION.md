@@ -531,3 +531,7 @@ Model checksums, isolated dependency checks and offline rendering passed. Four s
 ## Phase 4.21 — Varied Nano dialogue
 
 The standalone offline audition and decoder trials exited 0. All eight audition WAVs decode without clipping. The 33.80-second reel and timestamped listening guide are ready for owner review. Vosk recovered the question in both floating-point benchmark variants and missed it in both int8 variants. See [Phase 4.21](phases/PHASE_04_21.md).
+
+## Phase 4.22 — Liquid Audio offline trial
+
+Publisher model checksums and loopback isolation passed. The four-thread successful conversation examples took 7.21 and 10.77 seconds to reach the estimated smooth audible start. The same short input took 9.39 seconds with two threads. The female TTS-only test reached 3.26 seconds for smooth audio input from finished text. The audition files passed WAV and clipping checks. See [Phase 4.22](phases/PHASE_04_22.md).

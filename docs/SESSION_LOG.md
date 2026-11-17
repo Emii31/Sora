@@ -650,3 +650,7 @@ Auditioned Chatterbox Nano offline with the approved Sora reference, using the s
 ## 2026-11-17 — Phase 4.21
 
 Rendered eight different dialogue lines with Chatterbox Nano and benchmarked thread count, decoder steps and dynamic int8. Four threads and one floating-point decoder step improved short synthesis, with the complete reply still taking about eight seconds. The int8 trials lost the second clause of the benchmark reply. See [Phase 4.21](phases/PHASE_04_21.md).
+
+## 2026-11-17 — Phase 4.22
+
+Ran the official Liquid Audio Q4_0 CPU runner offline in an isolated network namespace. Recorded spoken-input responses, streaming latency at two and four threads, and a separate female TTS audition. See [Phase 4.22](phases/PHASE_04_22.md).
