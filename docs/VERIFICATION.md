@@ -523,3 +523,7 @@ The standalone run produced 20 seconds of non-clipping 24 kHz mono PCM16. Two ti
 ## Phase 4.19 — Qwen replay and emotion reel
 
 65 focused tests passed and six optional tests skipped. Seven byte-identical replies replayed in 1.37 milliseconds median through the authenticated Flask endpoint. The first synthesis took 23.18 seconds for 3.68 seconds of audio. The 86.00-second audition combines thirteen PCM takes, with nonzero samples and no clipping in all source WAVs. See [Phase 4.19](phases/PHASE_04_19.md).
+
+## Phase 4.20 — Same-line Chatterbox Nano audition
+
+Model checksums, isolated dependency checks and offline rendering passed. Four standalone WAVs were intelligible in Vosk and had no clipped samples. The 16.96-second reel awaits the owner's listening judgment. See [Phase 4.20](phases/PHASE_04_20.md).

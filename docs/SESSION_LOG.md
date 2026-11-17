@@ -642,3 +642,7 @@ Rendered a continuous 20-second audition using the approved Qwen voice. Trialed 
 ## 2026-11-17 — Phase 4.19
 
 Added an account-scoped replay cache for the approved resident Qwen voice and generated a thirteen-scene audition. The 1.37 ms replay median improves playback of a rendered reply. The same reply took 23.18 seconds to generate the first time. See [Phase 4.19](phases/PHASE_04_19.md).
+
+## 2026-11-17 — Phase 4.20
+
+Auditioned Chatterbox Nano offline with the approved Sora reference, using the same sentence in four delivery conditions. Warm CPU synthesis took 14.45–17.18 seconds per take. See [Phase 4.20](phases/PHASE_04_20.md).
