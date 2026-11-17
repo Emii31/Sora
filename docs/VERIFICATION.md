@@ -543,3 +543,7 @@ The two offline runs finished successfully. The 45.06-second WAV passed PCM, non
 ## Short-turn Liquid Audio latency
 
 The isolated CPU run exited 0. Estimated smooth audible starts were 0.96–3.17 seconds for standalone TTS, 3.70–7.09 seconds for text-input chat and 3.70–7.35 seconds for spoken-input chat. These fixture measurements do not include microphone or playback hardware latency. See [Phase 4.22](phases/PHASE_04_22.md#short-turn-latency-comparison).
+
+## Phase 4.23 — Liquid transcription bridge
+
+The paired offline benchmark completed six replies. Vosk finalization after the input ended took 46–157 ms. The text bridge yielded an estimated smooth audible start of 7.64–16.15 seconds. Six non-silent PCM WAVs were verified. See [Phase 4.23](phases/PHASE_04_23.md).

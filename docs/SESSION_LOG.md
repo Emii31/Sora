@@ -662,3 +662,7 @@ Recorded the owner's tentative preference for Liquid's chat voice and produced a
 ## 2026-11-18 — Short-turn Liquid Audio latency
 
 Compared concise requests in Liquid's spoken-input and text-input chat modes with dedicated female TTS. Two ready-text lines started smoothly in about one second. The best complete chat path still needed 3.70 seconds before smooth audible playback. See [Phase 4.22](phases/PHASE_04_22.md#short-turn-latency-comparison).
+
+## 2026-11-18 — Phase 4.23
+
+Benchmarked incremental Vosk transcription feeding Liquid's preferred chat voice. First voiced chunks arrived sooner in all three comparisons, while smooth playback took longer on two. See [Phase 4.23](phases/PHASE_04_23.md).
