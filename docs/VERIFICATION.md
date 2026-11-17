@@ -515,3 +515,7 @@ The offline render produced a 7.12-second, unclipped WAV in 56.16 seconds. The t
 ## Phase 4.17 — Resident Vulkan voice
 
 64 focused tests passed and six optional tests skipped. The live route returned two valid offline WAVs from a single warmed worker, in 24.97 and 28.53 seconds. Both sets of spoken words were verified locally. See [Phase 4.17](phases/PHASE_04_17.md).
+
+## Phase 4.18 — Longer audition and Vulkan timing
+
+The standalone run produced 20 seconds of non-clipping 24 kHz mono PCM16. Two timed short replies per setting measured synthesis latency. The 256-node option's short WAVs matched the default configuration byte for byte. Vosk returned most of the long script, with two word-level discrepancies. See [Phase 4.18](phases/PHASE_04_18.md).

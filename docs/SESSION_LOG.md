@@ -634,3 +634,7 @@ Connected Sora's approved voice reference to the local authenticated speech back
 ## 2026-11-17 — Phase 4.17
 
 Added a reusable Intel Vulkan worker for the owner's approved Qwen voice and checked two replies through the authenticated speech endpoint. The preserved model and exact reference are recorded in [Phase 4.17](phases/PHASE_04_17.md).
+
+## 2026-11-17 — Phase 4.18
+
+Rendered a continuous 20-second audition using the approved Qwen voice. Trialed Vulkan submission size and sampling settings. The optional 256-node setting lowered the short-reply median to 22.18 seconds, compared with 24.51 seconds on the follow-up baseline. The matched WAVs were byte-identical. See [Phase 4.18](phases/PHASE_04_18.md).
