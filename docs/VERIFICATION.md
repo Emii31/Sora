@@ -527,3 +527,7 @@ The standalone run produced 20 seconds of non-clipping 24 kHz mono PCM16. Two ti
 ## Phase 4.20 — Same-line Chatterbox Nano audition
 
 Model checksums, isolated dependency checks and offline rendering passed. Four standalone WAVs were intelligible in Vosk and had no clipped samples. The 16.96-second reel awaits the owner's listening judgment. See [Phase 4.20](phases/PHASE_04_20.md).
+
+## Phase 4.21 — Varied Nano dialogue
+
+The standalone offline audition and decoder trials exited 0. All eight audition WAVs decode without clipping. The 33.80-second reel and timestamped listening guide are ready for owner review. Vosk recovered the question in both floating-point benchmark variants and missed it in both int8 variants. See [Phase 4.21](phases/PHASE_04_21.md).

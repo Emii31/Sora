@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.20 — Same-Line Chatterbox Nano Audition
-- **Current Status**: A 16.96-second offline comparison uses the approved Sora reference and four takes of the same line. On the two-core i5, each take took 14.45–17.18 seconds to synthesize after warm-up.
-- **Next Action**: Review the delivery and voice match before any provider change. See [Phase 4.20](phases/PHASE_04_20.md).
+- **Phase**: Phase 4.21 — Varied Nano Dialogue and CPU Timing
+- **Current Status**: The 33.80-second listening reel has eight different lines. An optimized floating-point short reply took about eight seconds to generate on the laptop, still above live chat latency.
+- **Next Action**: Review the reel's delivery and assess further runtime candidates against both perceived quality and fresh-reply speed. See [Phase 4.21](phases/PHASE_04_21.md).

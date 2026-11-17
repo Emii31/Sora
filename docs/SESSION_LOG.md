@@ -646,3 +646,7 @@ Added an account-scoped replay cache for the approved resident Qwen voice and ge
 ## 2026-11-17 — Phase 4.20
 
 Auditioned Chatterbox Nano offline with the approved Sora reference, using the same sentence in four delivery conditions. Warm CPU synthesis took 14.45–17.18 seconds per take. See [Phase 4.20](phases/PHASE_04_20.md).
+
+## 2026-11-17 — Phase 4.21
+
+Rendered eight different dialogue lines with Chatterbox Nano and benchmarked thread count, decoder steps and dynamic int8. Four threads and one floating-point decoder step improved short synthesis, with the complete reply still taking about eight seconds. The int8 trials lost the second clause of the benchmark reply. See [Phase 4.21](phases/PHASE_04_21.md).
