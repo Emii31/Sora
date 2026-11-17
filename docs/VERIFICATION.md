@@ -539,3 +539,7 @@ Publisher model checksums and loopback isolation passed. The four-thread success
 ## Liquid Audio tone comparison
 
 The two offline runs finished successfully. The 45.06-second WAV passed PCM, non-silence and clipping checks. The playful prompts yielded an unrelated refusal and a literal response respectively. Listen to assess tone. See [Phase 4.22](phases/PHASE_04_22.md#follow-up-tone-comparison).
+
+## Short-turn Liquid Audio latency
+
+The isolated CPU run exited 0. Estimated smooth audible starts were 0.96–3.17 seconds for standalone TTS, 3.70–7.09 seconds for text-input chat and 3.70–7.35 seconds for spoken-input chat. These fixture measurements do not include microphone or playback hardware latency. See [Phase 4.22](phases/PHASE_04_22.md#short-turn-latency-comparison).

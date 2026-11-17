@@ -30,3 +30,15 @@ The owner preferred the sound of the first Liquid chat reel and was unsure wheth
 The celebration response acknowledged the job offer, and the reassurance response addressed the caller's embarrassment. An explicit request for playful teasing got an unrelated refusal. A retry without that instruction led to a literal reply to the cookie joke. These are the model's actual reactions. The estimated smooth audible start was 8.73 seconds for celebration, 14.93 seconds for the cookie retry, and 16.12 seconds for reassurance.
 
 The offline runs exited 0. The 45.06-second comparison is mono 24 kHz PCM16 with one second between replies and no clipped samples. Vosk recovered the main replies, with uncertain words and a partial transcript of the final take. The reel, timestamps, and timing logs are in the conversation artifacts under `sora-liquid-audition/tone-comparison/`. Reel SHA-256 `3f009dd77536078b5ebdca19317831d2b2ead90295b24668ad56292145bc07eb`.
+
+## Short-turn latency comparison
+
+Tested three deliberately concise turns with the same offline runner on four CPU threads. The expected smooth audible start was computed from the received PCM chunk times, using the 20 ms RMS onset check from the benchmark. The TTS test starts with complete text. Text-input chat uses Liquid's built-in conversation voice and excludes transcription. Spoken-input chat includes the audio encoding and generation from a prerecorded prompt, beginning when the file is submitted.
+
+| Mode | Check-in | Good news | Comfort |
+| --- | ---: | ---: | ---: |
+| UK female TTS, text ready | 0.96 s | 1.20 s | 3.17 s |
+| Conversation voice, text input | 7.09 s | 3.96 s | 3.70 s |
+| Conversation voice, spoken input | 3.70 s | 4.14 s | 7.35 s |
+
+Short prompt instructions did not reliably produce short replies. Both conversation modes missed the two-second target even before playback device latency. A pipeline using streaming recognition, a fast chat model, and the dedicated TTS mode is a separate candidate. It still needs end-to-end measurement and owner approval for the voice. The benchmark exited 0 inside the loopback-only namespace. Timings and audio are under `sora-liquid-audition/short-turns/` in the conversation artifacts.

@@ -658,3 +658,7 @@ Ran the official Liquid Audio Q4_0 CPU runner offline in an isolated network nam
 ## 2026-11-17 — Liquid Audio tone comparison
 
 Recorded the owner's tentative preference for Liquid's chat voice and produced a contrast reel from celebration, a playful situation and reassurance. See [Phase 4.22](phases/PHASE_04_22.md#follow-up-tone-comparison).
+
+## 2026-11-18 — Short-turn Liquid Audio latency
+
+Compared concise requests in Liquid's spoken-input and text-input chat modes with dedicated female TTS. Two ready-text lines started smoothly in about one second. The best complete chat path still needed 3.70 seconds before smooth audible playback. See [Phase 4.22](phases/PHASE_04_22.md#short-turn-latency-comparison).
