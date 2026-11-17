@@ -547,3 +547,7 @@ The isolated CPU run exited 0. Estimated smooth audible starts were 0.96–3.17 
 ## Phase 4.23 — Liquid transcription bridge
 
 The paired offline benchmark completed six replies. Vosk finalization after the input ended took 46–157 ms. The text bridge yielded an estimated smooth audible start of 7.64–16.15 seconds. Six non-silent PCM WAVs were verified. See [Phase 4.23](phases/PHASE_04_23.md).
+
+## Phase 4.24 — Liquid Vulkan comparison
+
+The corrected offline run exited 0 and returned 12 verified WAVs. Logs show 17 of 17 model layers on the Intel HD 620 and a Vulkan audio decoder with CPU fallback. CPU and Vulkan median smooth audible starts were 10.94 and 39.44 seconds. `PYTHONPATH=. .venv/bin/python -B -m pytest tests/test_voice_input.py -q` returned 40 passed and 6 skipped. See [Phase 4.24](phases/PHASE_04_24.md).

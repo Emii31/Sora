@@ -666,3 +666,7 @@ Compared concise requests in Liquid's spoken-input and text-input chat modes wit
 ## 2026-11-18 — Phase 4.23
 
 Benchmarked incremental Vosk transcription feeding Liquid's preferred chat voice. First voiced chunks arrived sooner in all three comparisons, while smooth playback took longer on two. See [Phase 4.23](phases/PHASE_04_23.md).
+
+## 2026-11-18 — Phase 4.24
+
+Built a Vulkan-enabled Liquid runner and tested the owner's selected chat voice on the HD 620 and CPU using the same three fixtures and both input paths. The GPU took longer to start smooth playback on all six matched turns. See [Phase 4.24](phases/PHASE_04_24.md).

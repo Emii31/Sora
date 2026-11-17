@@ -43,6 +43,7 @@ def transcribe_at_capture_speed(wav: bytes, model, recognizer_factory):
 def generate(opener, endpoint, content, started):
     payload = {
         "model": "", "stream": True, "reset_context": True, "seed": 7, "max_tokens": 256,
+        "modalities": ["text", "audio"],
         "messages": [{"role": "system", "content": SYSTEM_PROMPT},
                      {"role": "user", "content": content}],
     }
@@ -63,15 +64,27 @@ def generate(opener, endpoint, content, started):
                 raise RuntimeError(event["error"])
             for choice in event.get("choices", []):
                 delta = choice.get("delta") or {}
+                finish = choice.get("finish_reason") or finish
                 if delta.get("content"):
                     words.append(delta["content"])
-                if delta.get("audio_chunk"):
-                    data = base64.b64decode(delta["audio_chunk"]["data"], validate=True)
-                    if not data or len(data) % 4:
+                packet = delta.get("audio") or delta.get("audio_chunk")
+                if packet:
+                    data = base64.b64decode(packet["data"], validate=True)
+                    pcm16 = "audio" in delta
+                    block = array("h" if pcm16 else "f")
+                    if pcm16 and (packet.get("format") != "pcm" or packet.get("sample_rate") != OUTPUT_RATE):
+                        raise ValueError("Liquid returned an unexpected PCM format")
+                    if pcm16 and not data:
+                        # Decoder startup can yield audio tokens before any PCM samples.
+                        continue
+                    if not data or len(data) % block.itemsize:
                         raise ValueError("Liquid returned an invalid PCM block")
-                    chunks.append((timestamp, len(samples), len(data) // 4))
-                    samples.frombytes(data)
-                finish = choice.get("finish_reason") or finish
+                    block.frombytes(data)
+                    chunks.append((timestamp, len(samples), len(block)))
+                    if pcm16:
+                        samples.extend(value / 32768 for value in block)
+                    else:
+                        samples.extend(block)
     if finish != "stop" or not chunks or not all(map(math.isfinite, samples)):
         raise RuntimeError(f"Incomplete or invalid Liquid reply (finish={finish})")
     # At each chunk arrival, its predecessors must cover playback up to that
@@ -99,6 +112,8 @@ def main():
     parser.add_argument("--kit", required=True, type=Path)
     parser.add_argument("--vosk-model", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--runner", type=Path, help="Use a specific locally built Liquid server binary")
+    parser.add_argument("--vulkan", action="store_true", help="Use the first visible Vulkan device")
     parser.add_argument("inputs", nargs="+", type=Path)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -109,10 +124,11 @@ def main():
         port = sock.getsockname()[1]
 
     kit = args.kit.resolve()
-    binary = kit / "llama-liquid-audio-ubuntu-x64" / "llama-liquid-audio-server"
+    binary = args.runner.resolve() if args.runner else kit / "llama-liquid-audio-ubuntu-x64" / "llama-liquid-audio-server"
+    device = ["--device", "Vulkan0", "-ngl", "99"] if args.vulkan else ["-ngl", "0"]
     weights = "LFM2.5-Audio-1.5B-Q4_0.gguf"
     command = [str(binary), "--host", "127.0.0.1", "--port", str(port),
-               "-ngl", "0", "-t", "4", "-tb", "4", "-c", "2048",
+               *device, "--seed", "7", "-t", "4", "-tb", "4", "-c", "2048",
                "-m", str(kit / weights), "-mm", str(kit / ("mmproj-" + weights)),
                "-mv", str(kit / ("vocoder-" + weights)),
                "--tts-speaker-file", str(kit / ("tokenizer-" + weights))]
