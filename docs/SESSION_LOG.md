@@ -654,3 +654,7 @@ Rendered eight different dialogue lines with Chatterbox Nano and benchmarked thr
 ## 2026-11-17 — Phase 4.22
 
 Ran the official Liquid Audio Q4_0 CPU runner offline in an isolated network namespace. Recorded spoken-input responses, streaming latency at two and four threads, and a separate female TTS audition. See [Phase 4.22](phases/PHASE_04_22.md).
+
+## 2026-11-17 — Liquid Audio tone comparison
+
+Recorded the owner's tentative preference for Liquid's chat voice and produced a contrast reel from celebration, a playful situation and reassurance. See [Phase 4.22](phases/PHASE_04_22.md#follow-up-tone-comparison).

@@ -22,3 +22,11 @@ Both measured runs exited 0 and all selected responses received a stop event. Th
 The 25.14-second reel contains the successful cheerful, reassurance and natural-input streaming replies, with one second between clips. Its SHA-256 is `81bb0e4c334b776048aac30ae7ec7aa963e420cca343baa71ea5e918b9a535f4`. The four listening samples decoded without clipping. Vosk recovered the main content, with minor recognition variations. The benchmark scripts, raw responses, timing traces, and standalone female TTS clip are in the conversation artifacts under `sora-liquid-audition/`. The verified local kit is under `/mnt/data/Companion/sora-liquid-audition/`.
 
 The latency misses the roughly two-second smooth-start target on this laptop. These results come from standalone fixtures. Microphone capture, playback device latency, and interruption behavior remain unmeasured.
+
+## Follow-up tone comparison
+
+The owner preferred the sound of the first Liquid chat reel and was unsure whether its tone changed enough across situations. A second four-thread trial sent three different situations to the same default interleaved chat voice. Liquid's separate US male TTS produced the test prompts, which were fed back locally as audio. Only chat replies appear in the listening reel.
+
+The celebration response acknowledged the job offer, and the reassurance response addressed the caller's embarrassment. An explicit request for playful teasing got an unrelated refusal. A retry without that instruction led to a literal reply to the cookie joke. These are the model's actual reactions. The estimated smooth audible start was 8.73 seconds for celebration, 14.93 seconds for the cookie retry, and 16.12 seconds for reassurance.
+
+The offline runs exited 0. The 45.06-second comparison is mono 24 kHz PCM16 with one second between replies and no clipped samples. Vosk recovered the main replies, with uncertain words and a partial transcript of the final take. The reel, timestamps, and timing logs are in the conversation artifacts under `sora-liquid-audition/tone-comparison/`. Reel SHA-256 `3f009dd77536078b5ebdca19317831d2b2ead90295b24668ad56292145bc07eb`.

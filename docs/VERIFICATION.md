@@ -535,3 +535,7 @@ The standalone offline audition and decoder trials exited 0. All eight audition 
 ## Phase 4.22 — Liquid Audio offline trial
 
 Publisher model checksums and loopback isolation passed. The four-thread successful conversation examples took 7.21 and 10.77 seconds to reach the estimated smooth audible start. The same short input took 9.39 seconds with two threads. The female TTS-only test reached 3.26 seconds for smooth audio input from finished text. The audition files passed WAV and clipping checks. See [Phase 4.22](phases/PHASE_04_22.md).
+
+## Liquid Audio tone comparison
+
+The two offline runs finished successfully. The 45.06-second WAV passed PCM, non-silence and clipping checks. The playful prompts yielded an unrelated refusal and a literal response respectively. Listen to assess tone. See [Phase 4.22](phases/PHASE_04_22.md#follow-up-tone-comparison).
