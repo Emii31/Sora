@@ -52,3 +52,7 @@ Connected devices can read and update one account's memory through the laptop's 
 ## Personality in full and fast chat
 
 Both chat modes use the active character. The full agent adds core memory and relationship context. The fast loopback prompt uses a compact persona, recent turns, and bounded excerpts of the active account's human and relationship core memory. Speech uses the saved reply and a caller-selected Piper delivery preset.
+
+## Phase 4.26 live Liquid terminal prototype
+
+`scripts/live_liquid_voice.py` coordinates laptop microphone capture, optional incremental Vosk recognition, the phone's Liquid streaming server, and buffered PipeWire playback. `voice_liquid_live.py` contains the cancellable stream and audio components. `scripts/liquid_phone.py` manages verified model caching, the owned Android runner, its CPU affinity and an ADB loopback forward. Enter cancels the current turn and begins listening again. Each prototype reply currently uses a reset context and the selected default interleaved chat voice. Integrating active-character context and account memory is the next backend phase.

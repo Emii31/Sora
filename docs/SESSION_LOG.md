@@ -674,3 +674,7 @@ Built a Vulkan-enabled Liquid runner and tested the owner's selected chat voice 
 ## 2026-11-19 — Phase 4.25
 
 Compiled an ARM64 Liquid runner with dot-product and FP16 support and ran the approved voice on the owner's USB-connected Motorola phone. Verified model hashes and measured 18 replies across three runs. Corrected runner thread placement after a slow repeated warmup. Median estimated smooth starts were 2.49 seconds from saved text and 3.20 seconds from audio, with most replies still above the two-second goal. Stopped the phone processes and removed temporary model files. See [Phase 4.25](phases/PHASE_04_25.md).
+
+## 2026-11-20 — Phase 4.26
+
+Implemented and verified a live terminal voice loop with laptop capture and local recognition, phone Liquid generation, buffered playback, Enter interruption and quit controls. The owner confirmed hearing a response. Corrected Android affinity changes, an early silence cutoff and subprocess stdin ownership. The confirmed turn started playback 2.97 seconds after capture/recognition. Longer replies still showed starvation, and persona/memory integration remains next. Prior pending checkpoints were published to origin using transient authentication. See [Phase 4.26](phases/PHASE_04_26.md).

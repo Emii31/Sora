@@ -1,0 +1,12 @@
+{
+  "recognized_test_phrase": "how are you today",
+  "reply": "I'm doing well, thanks for asking. How can I help you today?",
+  "first_audio_s": 1.0311365759998807,
+  "playback_started_s": 2.970252169000105,
+  "turn_finished_s": 8.950052126000173,
+  "audio_s": 5.9,
+  "estimated_gaps": 0,
+  "owner_confirmation": "I heard Sora reply",
+  "latency_origin": "After capture and recognition. Includes neither speech duration nor the roughly 900 ms endpoint pause.",
+  "raw_microphone_audio_saved": false
+}

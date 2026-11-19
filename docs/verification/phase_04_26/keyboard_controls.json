@@ -1,0 +1,12 @@
+[
+  {
+    "control": "enter",
+    "exit_code": 0,
+    "stop_and_cleanup_s": 0.717
+  },
+  {
+    "control": "quit",
+    "exit_code": 0,
+    "stop_and_cleanup_s": 1.192
+  }
+]

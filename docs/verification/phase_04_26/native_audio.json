@@ -1,0 +1,20 @@
+{
+  "recognized_fixture": "i got the job congratulate me in a few words",
+  "capture_and_playback": {
+    "first_audio_s": 0.9898338570001215,
+    "playback_started_s": 2.9630972780000775,
+    "turn_finished_s": 8.109806285000104,
+    "estimated_gaps": 0,
+    "audio_s": 5.02,
+    "text_characters": 67
+  },
+  "interruption_s": 0.0099,
+  "next_turn_after_interruption": {
+    "first_audio_s": 0.9406355279998024,
+    "playback_started_s": 3.0399781050000456,
+    "turn_finished_s": 5.832488085000023,
+    "estimated_gaps": 0,
+    "audio_s": 2.7,
+    "text_characters": 29
+  }
+}

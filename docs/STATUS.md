@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.25 — Liquid Audio on the Owner's Android Phone
-- **Current Status**: Verified 18 phone-generated replies with the selected Liquid voice. Median estimated smooth start was 2.49 seconds from saved text and 3.20 seconds from recorded speech across three runs. The final corrected-affinity run returned medians of 3.63 and 3.18 seconds. Most replies exceed the two-second goal, and the minimal-prompt check-in showed a response-quality issue.
-- **Next Action**: Build and measure a live conversation prototype using phone inference, microphone endpointing, buffered playback and interruption, then verify Sora context integration. See [Phase 4.25](phases/PHASE_04_25.md).
+- **Phase**: Phase 4.26 — Live Liquid Voice Prototype
+- **Current Status**: Verified microphone capture, local recognition, phone generation, buffered laptop playback and explicit interruption. The owner confirmed hearing a response. On the confirmed turn, playback began 2.97 seconds after capture/recognition. The endpoint pause adds about 0.9 seconds. Long replies can still starve playback, and the two-second target remains unmet.
+- **Next Action**: Phase 4.27 will integrate Sora persona and memory, then verify identity, response quality and latency through the context pipeline. See [Phase 4.26](phases/PHASE_04_26.md).

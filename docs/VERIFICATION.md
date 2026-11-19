@@ -555,3 +555,7 @@ The corrected offline run exited 0 and returned 12 verified WAVs. Logs show 17 o
 ## Phase 4.25 — Liquid Android benchmark
 
 The ARM64 build and three phone benchmark runs exited 0. All 18 WAVs passed format, non-silence and duration checks, with zero near-full-scale samples. Synthetic harness checks covered order, saved transcripts, output persistence and refusal to overwrite previous results. CPU affinity was corrected and recorded for the final run. Temporary phone files, processes and forwards were cleaned up. Committed timing and device evidence is in `docs/verification/phase_04_25/`. Live microphone, speaker latency, interruption, Sora context integration and all-day performance remain unverified. See [Phase 4.25](phases/PHASE_04_25.md).
+
+## Phase 4.26 — Live voice prototype
+
+The owner confirmed hearing the reply to the recognized microphone phrase `how are you today`. Buffered playback began 2.97 seconds after capture/recognition. The corrected synthetic capture test preserved the full known fixture. Active speech cancellation took 0.010 seconds and the next turn succeeded. Real pseudo-terminal Enter and quit tests exited 0. Focused regression returned 59 passed and 6 skipped, exit 0. The virtual environment passed pip consistency checks. Test processes, forwards and virtual audio devices were closed. Evidence is in `docs/verification/phase_04_26/`. Longer-response starvation, the two-second goal and full Sora context integration remain unresolved. See [Phase 4.26](phases/PHASE_04_26.md).
