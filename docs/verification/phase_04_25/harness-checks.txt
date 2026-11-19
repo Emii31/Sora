@@ -1,0 +1,1 @@
+PASS: untimed warmup, alternating direct/text order, exact saved transcripts, six saved outputs, total timing and refusal to overwrite prior evidence.

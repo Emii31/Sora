@@ -1,0 +1,20 @@
+{
+  "device": "Motorola moto g stylus 5G (2024)",
+  "soc": "SM6450 (Snapdragon 6 Gen 1)",
+  "android": "16",
+  "api": 36,
+  "abi": "arm64-v8a",
+  "memory_total_kb": 7633392,
+  "runner_source": "ec9d1fdd9cc18643c5e161b65b8053f6f6f34a4b",
+  "ndk": "27.3.13750724",
+  "cpu_flags": "armv8.2-a+dotprod+fp16",
+  "threads": 4,
+  "context": 2048,
+  "voice_mode": "default interleaved chat",
+  "models_sha256": {
+    "LFM2.5-Audio-1.5B-Q4_0.gguf": "3583bee853be20331ca342b0593fefd8acc43fb61a41ec6f1a1dc7465823e0d8",
+    "mmproj-LFM2.5-Audio-1.5B-Q4_0.gguf": "6b483682c263b100f8cc8022d61507e446b1d320b9febc328e7960f72d03f7ea",
+    "tokenizer-LFM2.5-Audio-1.5B-Q4_0.gguf": "01ec6afe4578bb1e02a4d43d87e7e5827d6b3d94d2d36912ee931b9c3050f1c1",
+    "vocoder-LFM2.5-Audio-1.5B-Q4_0.gguf": "423cfcb054f41b69a5706226c243abc96d2531c3aff1121f7a2ed17149b79c95"
+  }
+}

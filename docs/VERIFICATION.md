@@ -551,3 +551,7 @@ The paired offline benchmark completed six replies. Vosk finalization after the 
 ## Phase 4.24 — Liquid Vulkan comparison
 
 The corrected offline run exited 0 and returned 12 verified WAVs. Logs show 17 of 17 model layers on the Intel HD 620 and a Vulkan audio decoder with CPU fallback. CPU and Vulkan median smooth audible starts were 10.94 and 39.44 seconds. `PYTHONPATH=. .venv/bin/python -B -m pytest tests/test_voice_input.py -q` returned 40 passed and 6 skipped. See [Phase 4.24](phases/PHASE_04_24.md).
+
+## Phase 4.25 — Liquid Android benchmark
+
+The ARM64 build and three phone benchmark runs exited 0. All 18 WAVs passed format, non-silence and duration checks, with zero near-full-scale samples. Synthetic harness checks covered order, saved transcripts, output persistence and refusal to overwrite previous results. CPU affinity was corrected and recorded for the final run. Temporary phone files, processes and forwards were cleaned up. Committed timing and device evidence is in `docs/verification/phase_04_25/`. Live microphone, speaker latency, interruption, Sora context integration and all-day performance remain unverified. See [Phase 4.25](phases/PHASE_04_25.md).

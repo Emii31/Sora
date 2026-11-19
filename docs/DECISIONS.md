@@ -23,3 +23,5 @@
 - **Final Sora voice reference**: The owner approved the Qwen3-TTS VoiceDesign worry-to-relief take on 2026-11-17. Preserve its exact audio as the reference for future synthesis and compare changes against it. Model deployment and conversational latency are separate from the owner's final voice choice.
 
 - **Phase 4.16 voice runtime**: Use the approved reference waveform with the CPU build of Qwen3-TTS 0.6B Base. Pre-encode the reference once, keep runtime files and weights outside Git, and select the voice with `SORA_QWEN_VOICE_DIR`. Its reference-driven delivery has no independent acting presets.
+
+- **Current Sora voice reference and phone trial**: The owner selected Liquid Audio's default interleaved chat voice from the tone-comparison audition. Phase 4.25 verified that the Motorola Snapdragon SM6450 phone can run this model, with lower measured delays than the laptop. Treat phone inference as a candidate for the next live prototype. Continue evaluating real conversation latency and response quality before production integration.

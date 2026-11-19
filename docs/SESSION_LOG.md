@@ -670,3 +670,7 @@ Benchmarked incremental Vosk transcription feeding Liquid's preferred chat voice
 ## 2026-11-18 — Phase 4.24
 
 Built a Vulkan-enabled Liquid runner and tested the owner's selected chat voice on the HD 620 and CPU using the same three fixtures and both input paths. The GPU took longer to start smooth playback on all six matched turns. See [Phase 4.24](phases/PHASE_04_24.md).
+
+## 2026-11-19 — Phase 4.25
+
+Compiled an ARM64 Liquid runner with dot-product and FP16 support and ran the approved voice on the owner's USB-connected Motorola phone. Verified model hashes and measured 18 replies across three runs. Corrected runner thread placement after a slow repeated warmup. Median estimated smooth starts were 2.49 seconds from saved text and 3.20 seconds from audio, with most replies still above the two-second goal. Stopped the phone processes and removed temporary model files. See [Phase 4.25](phases/PHASE_04_25.md).

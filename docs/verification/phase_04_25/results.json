@@ -1,0 +1,276 @@
+{
+  "summary": {
+    "runs": 3,
+    "replies": 18,
+    "text": {
+      "first_voiced_s": {
+        "median": 1.145,
+        "min": 0.414,
+        "max": 1.379
+      },
+      "smooth_audible_s": {
+        "median": 2.485,
+        "min": 1.43,
+        "max": 4.574
+      },
+      "total_s": {
+        "median": 7.226,
+        "min": 5.28,
+        "max": 15.212
+      }
+    },
+    "direct": {
+      "first_voiced_s": {
+        "median": 2.073,
+        "min": 1.467,
+        "max": 2.243
+      },
+      "smooth_audible_s": {
+        "median": 3.204,
+        "min": 2.51,
+        "max": 4.027
+      },
+      "total_s": {
+        "median": 7.009,
+        "min": 6.849,
+        "max": 8.429
+      }
+    },
+    "final_run": {
+      "text": {
+        "median_smooth_audible_s": 3.626
+      },
+      "direct": {
+        "median_smooth_audible_s": 3.177
+      }
+    },
+    "near_full_scale_samples": 0
+  },
+  "replies": [
+    {
+      "fixture": "input-check-in",
+      "mode": "text",
+      "text": " webcam is on. Ready to talk?",
+      "first_voiced_s": 0.414,
+      "smooth_audible_s": 1.524,
+      "audio_s": 3.74,
+      "total_s": 5.387,
+      "transcript": "are you there just say yes",
+      "run": "cpu",
+      "peak_pcm16": 14995,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-check-in",
+      "mode": "direct",
+      "text": "Yes, I'm here! How can I assist you today?",
+      "first_voiced_s": 1.467,
+      "smooth_audible_s": 2.51,
+      "audio_s": 4.62,
+      "total_s": 6.849,
+      "run": "cpu",
+      "peak_pcm16": 11557,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "direct",
+      "text": "Congrats on the new job! I\u2019m so happy to hear you\u2019re doing well.",
+      "first_voiced_s": 2.027,
+      "smooth_audible_s": 3.41,
+      "audio_s": 5.1,
+      "total_s": 7.811,
+      "run": "cpu",
+      "peak_pcm16": 8507,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "text",
+      "text": "Congrats on the job! It\u2019s a great achievement. What\u2019s next for you?",
+      "first_voiced_s": 1.161,
+      "smooth_audible_s": 2.485,
+      "audio_s": 5.02,
+      "total_s": 7.226,
+      "transcript": "i got the job congratulate me in a few words",
+      "run": "cpu",
+      "peak_pcm16": 7361,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "text",
+      "text": "I\u2019m really sorry you\u2019re feeling this way. Remember, you\u2019re not alone and it\u2019s okay to ask for help.",
+      "first_voiced_s": 1.178,
+      "smooth_audible_s": 3.888,
+      "audio_s": 10.94,
+      "total_s": 14.544,
+      "transcript": "i'm nervous say something comforting and one short sentence",
+      "run": "cpu",
+      "peak_pcm16": 7786,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "direct",
+      "text": "Remember you\u2019re safe and loved, and you\u2019re stronger than you think.",
+      "first_voiced_s": 2.183,
+      "smooth_audible_s": 3.262,
+      "audio_s": 4.46,
+      "total_s": 7.06,
+      "run": "cpu",
+      "peak_pcm16": 9638,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-check-in",
+      "mode": "text",
+      "text": " webcam is on. Ready to talk?",
+      "first_voiced_s": 0.427,
+      "smooth_audible_s": 1.503,
+      "audio_s": 3.74,
+      "total_s": 5.573,
+      "transcript": "are you there just say yes",
+      "run": "cpu-repeat1",
+      "peak_pcm16": 14995,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-check-in",
+      "mode": "direct",
+      "text": "Yes, I'm here! How can I assist you today?",
+      "first_voiced_s": 1.542,
+      "smooth_audible_s": 2.655,
+      "audio_s": 4.62,
+      "total_s": 7.004,
+      "run": "cpu-repeat1",
+      "peak_pcm16": 11557,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "direct",
+      "text": "Congrats on the new job! I\u2019m so happy to hear you\u2019re doing well.",
+      "first_voiced_s": 2.073,
+      "smooth_audible_s": 3.464,
+      "audio_s": 5.1,
+      "total_s": 7.847,
+      "run": "cpu-repeat1",
+      "peak_pcm16": 8507,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "text",
+      "text": "Congrats on the job! It\u2019s a great achievement. What\u2019s next for you?",
+      "first_voiced_s": 1.084,
+      "smooth_audible_s": 2.403,
+      "audio_s": 5.02,
+      "total_s": 7.173,
+      "transcript": "i got the job congratulate me in a few words",
+      "run": "cpu-repeat1",
+      "peak_pcm16": 7361,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "text",
+      "text": "I\u2019m really sorry you\u2019re feeling this way. Remember, you\u2019re not alone and it\u2019s okay to ask for help.",
+      "first_voiced_s": 1.196,
+      "smooth_audible_s": 4.036,
+      "audio_s": 10.94,
+      "total_s": 14.686,
+      "transcript": "i'm nervous say something comforting and one short sentence",
+      "run": "cpu-repeat1",
+      "peak_pcm16": 7786,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "direct",
+      "text": "Remember you\u2019re safe and loved, and you\u2019re stronger than you think.",
+      "first_voiced_s": 2.176,
+      "smooth_audible_s": 3.204,
+      "audio_s": 4.46,
+      "total_s": 7.009,
+      "run": "cpu-repeat1",
+      "peak_pcm16": 9638,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-check-in",
+      "mode": "text",
+      "text": " webcam is on. Ready to talk?",
+      "first_voiced_s": 0.426,
+      "smooth_audible_s": 1.43,
+      "audio_s": 3.74,
+      "total_s": 5.28,
+      "transcript": "are you there just say yes",
+      "run": "cpu-repeat2",
+      "peak_pcm16": 14995,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-check-in",
+      "mode": "direct",
+      "text": "Yes, I'm here! How can I assist you today?",
+      "first_voiced_s": 1.53,
+      "smooth_audible_s": 2.517,
+      "audio_s": 4.62,
+      "total_s": 6.861,
+      "run": "cpu-repeat2",
+      "peak_pcm16": 11557,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "direct",
+      "text": "Congrats on the new job! I\u2019m so happy to hear you\u2019re doing well.",
+      "first_voiced_s": 2.243,
+      "smooth_audible_s": 4.027,
+      "audio_s": 5.1,
+      "total_s": 8.429,
+      "run": "cpu-repeat2",
+      "peak_pcm16": 8507,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-good-news",
+      "mode": "text",
+      "text": "Congrats on the job! It\u2019s a great achievement. What\u2019s next for you?",
+      "first_voiced_s": 1.145,
+      "smooth_audible_s": 3.626,
+      "audio_s": 5.02,
+      "total_s": 8.409,
+      "transcript": "i got the job congratulate me in a few words",
+      "run": "cpu-repeat2",
+      "peak_pcm16": 7361,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "text",
+      "text": "I\u2019m really sorry you\u2019re feeling this way. Remember, you\u2019re not alone and it\u2019s okay to ask for help.",
+      "first_voiced_s": 1.379,
+      "smooth_audible_s": 4.574,
+      "audio_s": 10.94,
+      "total_s": 15.212,
+      "transcript": "i'm nervous say something comforting and one short sentence",
+      "run": "cpu-repeat2",
+      "peak_pcm16": 7786,
+      "near_full_scale_samples": 0
+    },
+    {
+      "fixture": "input-comfort",
+      "mode": "direct",
+      "text": "Remember you\u2019re safe and loved, and you\u2019re stronger than you think.",
+      "first_voiced_s": 2.167,
+      "smooth_audible_s": 3.177,
+      "audio_s": 4.46,
+      "total_s": 6.983,
+      "run": "cpu-repeat2",
+      "peak_pcm16": 9638,
+      "near_full_scale_samples": 0
+    }
+  ]
+}
