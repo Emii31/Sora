@@ -91,7 +91,8 @@ class LiquidStream:
             except OSError:
                 pass
 
-    def events(self, wav, *, text=None, system_prompt=SYSTEM_PROMPT, spoken_text=None):
+    def events(self, wav, *, text=None, system_prompt=SYSTEM_PROMPT, spoken_text=None,
+               speech_input_id=None, on_ready=None):
         from voice_input import MAX_SECONDS, _read_pcm
 
         if text is None:
@@ -114,6 +115,12 @@ class LiquidStream:
                 raise ValueError("Send a spoken reply of 1 to 2,000 bytes")
             payload["spoken_text"] = spoken_text
             payload["max_tokens"] = 512
+        if speech_input_id is not None:
+            if (spoken_text is not None or len(speech_input_id) != 32
+                    or any(c not in '0123456789abcdef' for c in speech_input_id)):
+                raise ValueError("Use a fresh continuous speech ID without fixed spoken text")
+            payload["speech_input_id"] = speech_input_id
+            payload["max_tokens"] = 512
         connection = http.client.HTTPConnection(self.url.hostname, self.url.port, timeout=45)
         self.connection = connection
         received = 0
@@ -121,10 +128,23 @@ class LiquidStream:
         try:
             if self.stopped.is_set():
                 return
-            connection.request("POST", self.url.path, json.dumps(payload), {"Content-Type": "application/json"})
-            if self.stopped.is_set():
-                return
-            response = connection.getresponse()
+            busy_deadline = time.monotonic() + 3
+            while True:
+                if self.stopped.is_set():
+                    return
+                connection.request("POST", self.url.path, json.dumps(payload), {"Content-Type": "application/json"})
+                if self.stopped.is_set():
+                    return
+                response = connection.getresponse()
+                if response.status != 409 or speech_input_id is None:
+                    break
+                response.read(4096)
+                connection.close()
+                if time.monotonic() >= busy_deadline:
+                    raise RuntimeError("Continuous speech session is still busy after cancellation")
+                time.sleep(.05)
+                connection = http.client.HTTPConnection(self.url.hostname, self.url.port, timeout=45)
+                self.connection = connection
             if response.status != 200:
                 raise RuntimeError(f"Liquid returned HTTP {response.status}")
             while not self.stopped.is_set():
@@ -139,6 +159,8 @@ class LiquidStream:
                 if data == b"[DONE]":
                     break
                 event = json.loads(data)
+                if event.get("speech_input_ready") and on_ready:
+                    on_ready()
                 if "error" in event:
                     raise RuntimeError("Liquid generation failed")
                 for choice in event.get("choices", []):

@@ -28,14 +28,14 @@ class LocalVoiceBrain:
             except OSError:
                 pass
 
-    def reply(self, messages, *, on_sentence=None):
-        return self._complete(messages, token_limit=96, on_sentence=on_sentence)
+    def reply(self, messages, *, on_sentence=None, on_text=None):
+        return self._complete(messages, token_limit=96, on_sentence=on_sentence, on_text=on_text)
 
     def warmup(self, messages):
         """Load/prefill before listening; never return a conversational reply."""
         self._complete(messages, token_limit=1, warming=True)
 
-    def _complete(self, messages, *, token_limit, warming=False, on_sentence=None):
+    def _complete(self, messages, *, token_limit, warming=False, on_sentence=None, on_text=None):
         started = time.monotonic()
         self.metrics = {}
         with ai_config._lock:
@@ -98,6 +98,8 @@ class LocalVoiceBrain:
                         if size > 2000:
                             raise ValueError("Spoken reply exceeds 2,000 bytes")
                         words.append(text)
+                        if on_text is not None:
+                            on_text(text)
                         if on_sentence is not None:
                             for sentence in sentences.feed(text):
                                 on_sentence(sentence)

@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "mode": "whole",
+      "first_audio_s": 0.7072085789995981,
+      "finished_s": 7.29053747099988,
+      "audio_s": 3.74,
+      "pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba"
+    },
+    {
+      "mode": "continuous",
+      "first_audio_s": 0.6708179460001702,
+      "finished_s": 5.8071551869998075,
+      "audio_s": 3.74,
+      "pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba"
+    }
+  ],
+  "guards": {
+    "unknown": 404,
+    "oversized": 400,
+    "empty_final": 400,
+    "duplicate": 409,
+    "after_final": 409
+  },
+  "identical_pcm": true
+}

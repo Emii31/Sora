@@ -101,8 +101,8 @@ class PhoneRunner:
             health.request("GET", "/health")
             response = health.getresponse()
             capabilities = json.loads(response.read(4096)) if response.status == 200 else {}
-            if capabilities.get("forced_text") != 1 or capabilities.get("turn_reset") != 1:
-                raise RuntimeError("Rebuild the Android runner with the repository's current forced-speech/reset patch")
+            if any(capabilities.get(key) != 1 for key in ('forced_text', 'turn_reset', 'continuous_text')):
+                raise RuntimeError("Rebuild the Android runner with the repository's current continuous-speech patch")
         finally:
             health.close()
         self.adb("shell", f'cd {self.remote} && taskset -ap f0 "$(cat session.lock/pid)"')

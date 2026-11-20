@@ -13,21 +13,26 @@ import time
 
 from liquid_phone import PhoneRunner
 from voice_brain import LocalVoiceBrain
+from voice_continuous import ContinuousLiquid
 from voice_liquid_live import BufferedPlayer, LiquidStream, Microphone, voice_playback_buffer
 
 
 class VoiceTurn:
     def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=None,
-                 vosk_model=None, context=None, smooth_long_replies=False, sentence_streaming=False):
-        if sentence_streaming and smooth_long_replies:
-            raise ValueError("Choose sentence streaming or complete long replies")
+                 vosk_model=None, context=None, smooth_long_replies=False, sentence_streaming=False,
+                 continuous_speech=False):
+        if sum((sentence_streaming, smooth_long_replies, continuous_speech)) > 1:
+            raise ValueError("Choose one experimental playback mode")
+        if continuous_speech and context is None:
+            raise ValueError("Continuous speech requires account context")
         self.stopped = threading.Event()
         self.microphone = Microphone(self.stopped, source=source, threshold=threshold, vosk_model=vosk_model)
-        self.stream = LiquidStream(endpoint, self.stopped)
+        self.stream = (ContinuousLiquid if continuous_speech else LiquidStream)(endpoint, self.stopped)
         self.sink = sink
         self.buffer_seconds = buffer_seconds
         self.smooth_long_replies = smooth_long_replies
         self.sentence_streaming = sentence_streaming
+        self.continuous_speech = continuous_speech
         self.speech_thread = None
         self.speech_error = None
         self.player = None
@@ -58,6 +63,9 @@ class VoiceTurn:
             started = time.monotonic()
             snapshot = self.context.prepare(transcript) if self.context else None
             print("Thinking...", flush=True)
+            if snapshot and self.continuous_speech:
+                self._run_continuous(wav, snapshot, started)
+                return
             if snapshot and self.sentence_streaming:
                 self._run_sentences(wav, snapshot, started)
                 return
@@ -218,15 +226,96 @@ class VoiceTurn:
         }
         print("\n" + json.dumps(self.metrics), flush=True)
 
+    def _run_continuous(self, wav, snapshot, started):
+        reserve = self.buffer_seconds if self.buffer_seconds is not None else 0.5
+        self.player = BufferedPlayer(self.stopped, reserve, self.sink)
+        spoken = []
+        timing = {"first_audio_s": None, "first_text_sent_s": None}
+        pending_text = ''
+        updates = 0
+        leading = True
+
+        def speak():
+            try:
+                for kind, data in self.stream.events(wav, text=snapshot.user_text):
+                    if self.stopped.is_set():
+                        return
+                    if kind == 'text':
+                        spoken.append(data)
+                        print(data, end='', flush=True)
+                    else:
+                        if timing['first_audio_s'] is None:
+                            timing['first_audio_s'] = time.monotonic() - started
+                        self.player.feed(data)
+            except Exception as exc:
+                if not self.stopped.is_set():
+                    self.speech_error = exc
+                    self.brain.abort()
+
+        def receive(text):
+            nonlocal pending_text, updates, leading
+            if self.speech_error:
+                raise self.speech_error
+            if leading:
+                text = text.lstrip()
+                if not text:
+                    return
+                leading = False
+            pending_text += text
+            stable = pending_text.rstrip()
+            if len(stable.encode('utf-8')) >= 12:
+                self.stream.append(stable)
+                updates += 1
+                if timing['first_text_sent_s'] is None:
+                    timing['first_text_sent_s'] = time.monotonic() - started
+                pending_text = pending_text[len(stable):]
+
+        self.speech_thread = threading.Thread(target=speak, name='liquid-continuous', daemon=True)
+        self.speech_thread.start()
+        try:
+            reply = self.context.respond(snapshot, self.brain, on_text=receive)
+            brain_ready = time.monotonic() - started
+            if self.stopped.is_set():
+                return
+            self.stream.append(pending_text.rstrip(), final=True)
+            if timing['first_text_sent_s'] is None:
+                timing['first_text_sent_s'] = time.monotonic() - started
+        except Exception:
+            if self.speech_error:
+                raise self.speech_error
+            raise
+        while self.speech_thread.is_alive() and not self.stopped.is_set():
+            self.speech_thread.join(timeout=.05)
+        if self.speech_error:
+            raise self.speech_error
+        if self.stopped.is_set():
+            return
+        if ''.join(spoken).strip() != reply:
+            raise RuntimeError('Continuous speech text differs from the completed reply')
+        self.player.finish()
+        if self.stopped.is_set():
+            return
+        self.context.commit(snapshot, reply)
+        self.metrics = {
+            **timing, 'brain_ready_s': brain_ready,
+            'brain_first_token_s': self.brain.metrics.get('first_token_s'),
+            'buffer_seconds': reserve, 'playback_policy': 'continuous_speech', 'input_updates': updates + 1,
+            'playback_started_s': self.player.started_at - started if self.player.started_at else None,
+            'turn_finished_s': time.monotonic() - started, 'estimated_gaps': self.player.estimated_gaps,
+            'audio_s': self.player.bytes_written / 48000, 'text_characters': len(reply),
+            'character': snapshot.character_name, 'history_saved': True,
+        }
+        print('\n' + json.dumps(self.metrics), flush=True)
+
     def start(self, wav=None):
         self.thread = threading.Thread(target=self.run, args=(wav,), name="liquid-turn", daemon=True)
         self.thread.start()
 
     def cancel(self):
         self.stopped.set()
-        self.stream.cancel()
         if self.brain:
             self.brain.cancel()
+        self.stream.cancel()
         self.microphone.cancel()
         if self.player:
             self.player.cancel()
@@ -254,6 +343,8 @@ def main():
                         help="Wait for complete long replies before playback; avoids generation gaps but starts later")
     playback_modes.add_argument("--sentence-streaming", action="store_true",
                                 help="Speak completed sentences while the local brain continues (experimental)")
+    playback_modes.add_argument("--continuous-speech", action="store_true",
+                                help="Feed text into one continuous speech-model session (experimental)")
     parser.add_argument("--replay", type=Path, help="Run one prerecorded input through real phone inference and playback")
     parser.add_argument("--once", action="store_true", help="Listen for one sentence and exit after its reply")
     parser.add_argument("--user-id", help="Select an active local Sora account when several exist")
@@ -293,7 +384,8 @@ def main():
                                  threshold=args.threshold, buffer_seconds=args.buffer_seconds,
                                  vosk_model=args.vosk_model, context=context,
                                  smooth_long_replies=args.smooth_long_replies,
-                                 sentence_streaming=args.sentence_streaming)
+                                 sentence_streaming=args.sentence_streaming,
+                                 continuous_speech=args.continuous_speech)
             turn = new_turn()
             try:
                 turn.start(args.replay.read_bytes() if args.replay else None)

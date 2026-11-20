@@ -14,6 +14,7 @@ def main():
     parser.add_argument('--kit', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True, help='Fresh synthetic diagnostic directory')
     parser.add_argument('--save-audio', action='store_true', help='Save the fixed synthetic comparison WAVs')
+    parser.add_argument('--continuous-speech', action='store_true', help='Compare continuous input instead of sentence resets')
     args = parser.parse_args()
     args.report.mkdir(parents=True, exist_ok=False)
     original = os.environ.get('DATA_DIR')
@@ -36,6 +37,7 @@ def main():
             LocalVoiceContext().warmup(LocalVoiceBrain(threading.Event()))
             (args.report / 'warmup.json').write_text(json.dumps({'startup_s': time.monotonic() - start}))
             results = []
+            streamed_mode = 'continuous' if args.continuous_speech else 'sentences'
             with PhoneRunner(args.kit, args.report / 'server.log') as endpoint:
                 phrase = "I'm right here. Take a slow breath, Alex. Tell me what happened whenever you're ready."
                 for pair in range(2):
@@ -49,14 +51,17 @@ def main():
                         with context._scope():
                             LocalVoiceBrain(threading.Event()).warmup(list(context.prepare(question).messages))
                         prefill_s = time.monotonic() - prefill_started
-                        turn = VoiceTurn(endpoint, context=context, sentence_streaming=streaming, buffer_seconds=0.5)
+                        turn = VoiceTurn(endpoint, context=context, sentence_streaming=streaming and not args.continuous_speech,
+                                         continuous_speech=streaming and args.continuous_speech, buffer_seconds=0.5)
                         turn.microphone.transcript = question
                         chunks = []
-                        if args.save_audio:
+                        if args.save_audio or args.continuous_speech:
                             original_events = turn.stream.events
                             def record(*arguments, **options):
+                                if args.continuous_speech and not streaming:
+                                    options['text'] = question  # Match actor context in both modes, without changing defaults.
                                 for kind, data in original_events(*arguments, **options):
-                                    if kind == 'audio':
+                                    if kind == 'audio' and args.save_audio:
                                         chunks.append(data)
                                     yield kind, data
                             turn.stream.events = record
@@ -71,7 +76,8 @@ def main():
                             if len(saved) != 2:
                                 raise AssertionError('Expected one completed exchange')
                             result = {
-                                'pair': pair, 'mode': 'sentences' if streaming else 'whole_reply',
+                                'pair': pair, 'mode': streamed_mode if streaming else 'whole_reply',
+                                'matched_actor_context': args.continuous_speech,
                                 'prefill_outside_timer_s': prefill_s,
                                 'requested': phrase, 'reply': saved[-1]['text'],
                                 'exact_requested_reply': saved[-1]['text'] == phrase, **turn.metrics,
@@ -82,14 +88,14 @@ def main():
                         finally:
                             turn.cancel()
                             if args.save_audio and turn.metrics.get('history_saved'):
-                                name = f'pair-{pair}-' + ('sentences' if streaming else 'whole') + '.wav'
+                                name = f'pair-{pair}-' + (streamed_mode if streaming else 'whole') + '.wav'
                                 with wave.open(str(args.report / name), 'wb') as recording:
                                     recording.setparams((1, 2, 24000, 0, 'NONE', 'not compressed'))
                                     recording.writeframes(b''.join(chunks))
             comparisons = []
             for pair in range(2):
                 whole = next(row for row in results if row['pair'] == pair and row['mode'] == 'whole_reply')
-                streamed = next(row for row in results if row['pair'] == pair and row['mode'] == 'sentences')
+                streamed = next(row for row in results if row['pair'] == pair and row['mode'] == streamed_mode)
                 matched = whole['reply'] == streamed['reply']
                 comparisons.append({
                     'pair': pair, 'matched_text': matched,

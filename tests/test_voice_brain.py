@@ -142,3 +142,26 @@ def test_sentence_consumer_error_closes_provider_connection(provider):
     with pytest.raises(ValueError, match='Speech consumer'):
         voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_sentence=fail)
     assert seen['closed']
+
+
+def test_raw_text_callbacks_keep_unicode_and_arrive_before_completion(provider):
+    _, response, _ = provider
+    response.lines = [packet(' Hello '), packet('温🙂 ', 'stop')]
+    received = []
+    def consume(text):
+        received.append(text)
+        if len(received) == 1:
+            assert len(response.lines) == 1
+    reply = voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_text=consume)
+    assert received == [' Hello ', '温🙂 ']
+    assert reply == ''.join(received).strip() == 'Hello 温🙂'
+
+
+def test_raw_text_consumer_failure_closes_provider(provider):
+    seen, response, _ = provider
+    response.lines = [packet('Hello')]
+    def fail(text):
+        raise ValueError('Continuous consumer failed')
+    with pytest.raises(ValueError, match='Continuous consumer'):
+        voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_text=fail)
+    assert seen['closed']

@@ -17,7 +17,9 @@ def main():
     parser.add_argument('--kit', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True, help='Fresh diagnostic directory')
     parser.add_argument('--no-warmup', action='store_true')
-    parser.add_argument('--sentence-streaming', action='store_true')
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--sentence-streaming', action='store_true')
+    modes.add_argument('--continuous-speech', action='store_true')
     args = parser.parse_args()
     args.report.mkdir(parents=True, exist_ok=False)
     previous_data_dir = os.environ.get('DATA_DIR')
@@ -58,7 +60,8 @@ def main():
                     ('What did I name my plant?', 'juniper'),
                 ):
                     # Re-create the adapter each turn to exercise persisted history.
-                    turn = VoiceTurn(endpoint, context=LocalVoiceContext(), sentence_streaming=args.sentence_streaming)
+                    turn = VoiceTurn(endpoint, context=LocalVoiceContext(), sentence_streaming=args.sentence_streaming,
+                                     continuous_speech=args.continuous_speech)
                     turn.microphone.transcript = question
                     try:
                         turn.start(b'synthetic recognized input')

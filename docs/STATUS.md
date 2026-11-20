@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.29 — Experimental Sentence Streaming and Turn Reset
-- **Current Status**: Backend overlap, complete-turn persistence, cancellation and recovery verified. Sentence streaming remains off by default: controlled playback started at 2.09–3.31 s, but total responses became slower and possible repeated speech/continuity issues remain. Native audio-mode reset after interruption is corrected. Four memory checks and 168 targeted tests passed; human delivery-quality approval and consistent two-second conversation are unachieved.
-- **Next Action**: Proposed Phase 4.30: investigate continuous speech-model context and conversational conditioning, reduce repetition/completion delays and obtain listening review before promoting sentence mode. Recognition accuracy and app integration remain deferred. See [Phase 4.29](phases/PHASE_04_29.md).
+- **Phase**: Phase 4.30 — Continuous Speech Context
+- **Current Status**: Optional continuous input verified through real native guards, exact whole-context PCM parity, memory and cancellation/recovery. Matched controlled playback starts were 2.46–2.87 s versus 5.07–6.46 s, with shorter completion and no sentence-reset waveform inflation. Playback gaps remain; perceptual review and consistent two-second end-of-speech conversation are unachieved. Default whole-reply mode is unchanged. 188 targeted tests passed.
+- **Next Action**: Proposed Phase 4.31: measure actual playback continuity separately from pipe-write estimates and profile phone generation/underruns before promoting a mode. Recognition, wake-up and app work remain deferred. See [Phase 4.30](phases/PHASE_04_30.md).

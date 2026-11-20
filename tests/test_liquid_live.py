@@ -319,3 +319,61 @@ def test_forced_reading_context_has_bounded_headroom_without_truncating_reply(mo
     with pytest.raises(ValueError, match='2,048'):
         list(stream.events(b'', text='a' * 2049, spoken_text='short'))
     assert len(seen) == 1
+
+
+def test_continuous_ready_event_and_session_payload(monkeypatch):
+    events = [{'speech_input_ready': True},
+              {'choices': [{'delta': {'content': 'Hi'}}]},
+              {'choices': [{'delta': audio_delta(b'\x00\x10' * 480)}]},
+              {'choices': [{'delta': {}, 'finish_reason': 'stop'}]}]
+    response = io.BytesIO(b''.join(b'data: ' + json.dumps(event).encode() + b'\n\n' for event in events))
+    response.status = 200
+    class Connection:
+        def request(self, method, path, body, headers):
+            payload = json.loads(body)
+            assert payload['speech_input_id'] == 'a' * 32
+            assert payload['max_tokens'] == 512 and 'spoken_text' not in payload
+        def getresponse(self):
+            return response
+        def close(self):
+            pass
+    monkeypatch.setattr(live.http.client, 'HTTPConnection', lambda *args, **kwargs: Connection())
+    ready = []
+    stream = live.LiquidStream('http://127.0.0.1:1234/v1/chat/completions', threading.Event())
+    received = list(stream.events(b'', text='Hello', speech_input_id='a' * 32, on_ready=lambda: ready.append(True)))
+    assert ready == [True]
+    assert received == [('text', 'Hi'), ('audio', b'\x00\x10' * 480)]
+    with pytest.raises(ValueError, match='fresh continuous'):
+        list(stream.events(b'', text='Hello', speech_input_id='a' * 32, spoken_text='Hi'))
+
+
+def test_continuous_busy_retry_is_bounded_and_does_not_retry_other_modes(monkeypatch):
+    attempts = []
+    statuses = iter([409, 200])
+    class Connection:
+        def request(self, *args):
+            attempts.append(args)
+        def getresponse(self):
+            status = next(statuses)
+            if status == 409:
+                response = io.BytesIO(b'busy')
+            else:
+                event = {'choices': [{'delta': audio_delta(bytes(480)), 'finish_reason': 'stop'}]}
+                response = io.BytesIO(b'data: ' + json.dumps(event).encode() + b'\n\n')
+            response.status = status
+            return response
+        def close(self):
+            pass
+    monkeypatch.setattr(live.http.client, 'HTTPConnection', lambda *args, **kwargs: Connection())
+    monkeypatch.setattr(live.time, 'sleep', lambda delay: None)
+    stream = live.LiquidStream('http://127.0.0.1:1234/v1/chat/completions', threading.Event())
+    assert list(stream.events(b'', text='Hello', speech_input_id='b' * 32)) == [('audio', bytes(480))]
+    assert len(attempts) == 2
+    statuses = iter([409])
+    with pytest.raises(RuntimeError, match='HTTP 409'):
+        list(stream.events(b'', text='Hello'))
+    statuses = iter([409])
+    clock = iter([0., 4.])
+    monkeypatch.setattr(live.time, 'monotonic', lambda: next(clock))
+    with pytest.raises(RuntimeError, match='still busy'):
+        list(stream.events(b'', text='Hello', speech_input_id='c' * 32))

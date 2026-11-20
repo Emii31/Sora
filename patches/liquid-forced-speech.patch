@@ -1,19 +1,23 @@
 diff --git a/tools/liquid-audio/runner.cpp b/tools/liquid-audio/runner.cpp
-index 4dc72da..6c2e9f4 100644
+index 4dc72da..0909876 100644
 --- a/tools/liquid-audio/runner.cpp
 +++ b/tools/liquid-audio/runner.cpp
-@@ -102,9 +102,17 @@ class Runner::RunnerImpl {
+@@ -102,9 +102,21 @@ class Runner::RunnerImpl {
      int generate(const std::vector<Message> &              messages,
                   int                                       n_predict,
                   const text_callback_t &                   text_callback,
                   const audio_callback_t &                  audio_callback,
 -                 const std::vector<mtmd_output_modality> & modalities) {
 +                 const std::vector<mtmd_output_modality> & modalities,
-+                 const std::string &                      spoken_text) {
-+        force_text = !spoken_text.empty();
++                 const std::string &                      spoken_text,
++                 const text_source_t &                    text_source) {
++        stream_source = text_source;
++        stream_text.clear();
++        stream_final = false;
++        force_text = !spoken_text.empty() || bool(stream_source);
 +        forced_text_pos = 0;
 +        forced_text_tokens.clear();
-+        if (force_text) {
++        if (force_text && !stream_source) {
 +            forced_text_tokens = common_tokenize(ctx.vocab, spoken_text, false, false);
 +            forced_text_tokens.push_back(130);  // <|text_end|>: flush remaining audio
 +        }
@@ -21,7 +25,7 @@ index 4dc72da..6c2e9f4 100644
          if (audio_output_supported) {
              mtmd_set_output_modalities(ctx.mtmd_ctx_audio.get(), modalities.data(), modalities.size());
              mtmd_audio_output_start_new_turn(ctx.mtmd_ctx_audio.get());
-@@ -241,8 +249,11 @@ class Runner::RunnerImpl {
+@@ -241,8 +253,14 @@ class Runner::RunnerImpl {
      // The turn-ending (EOG) token is sampled but the loop breaks before decoding it,
      // so it never reaches the KV cache. Remember it and re-supply it at the next
      // continuation prefill (see eval_messages()).
@@ -29,11 +33,14 @@ index 4dc72da..6c2e9f4 100644
 +    bool force_text = false;
 +    std::vector<llama_token> forced_text_tokens;
 +    size_t forced_text_pos = 0;
++    text_source_t stream_source;
++    std::string stream_text;
++    bool stream_final = false;
 
      // perf
      size_t                 text_tokens_count = 0, audio_samples_count = 0;
      std::optional<int64_t> first_text_received, first_audio_received;
-@@ -258,8 +269,9 @@ class Runner::RunnerImpl {
+@@ -258,8 +276,9 @@ class Runner::RunnerImpl {
          llama_batch batch = llama_batch_get_one(nullptr, 1);  // doesn't own pointers, no need for free.
 
          n_predict = n_predict < 0 ? std::numeric_limits<int>::max() : n_predict;
@@ -43,12 +50,31 @@ index 4dc72da..6c2e9f4 100644
              if (i > n_predict || stop_requested) {
                  LOG("\n");
                  break;
-@@ -275,9 +287,14 @@ class Runner::RunnerImpl {
+@@ -275,9 +294,33 @@ class Runner::RunnerImpl {
 
              auto * mctx = ctx.mtmd_ctx_audio.get();
 
              if (mtmd_get_output_modality(mctx) == MTMD_OUTPUT_MODALITY_TEXT) {
 -                llama_token next_text_token = common_sampler_sample(ctx.smpl, ctx.lctx, -1);
++                while (stream_source && !stream_final && forced_text_pos == forced_text_tokens.size()) {
++                    if (!stream_source(stream_text, stream_final)) {
++                        return stop_requested ? 0 : error("Continuous speech input interrupted or timed out");
++                    }
++                    // Do not commit a partial last word: later bytes may change all
++                    // of its BPE tokens, not just the trailing token.
++                    const auto boundary = stream_text.find_last_of(" \t\r\n");
++                    const auto stable = stream_final ? stream_text :
++                        (boundary == std::string::npos ? std::string() : stream_text.substr(0, boundary));
++                    auto tokens = common_tokenize(ctx.vocab, stable, false, false);
++                    if (stream_final) {
++                        tokens.push_back(130);
++                    }
++                    if (tokens.size() < forced_text_pos ||
++                        !std::equal(tokens.begin(), tokens.begin() + forced_text_pos, forced_text_tokens.begin())) {
++                        return error("Continuous speech changed an accepted token prefix");
++                    }
++                    forced_text_tokens = std::move(tokens);
++                }
 +                if (force_text && forced_text_pos == forced_text_tokens.size()) {
 +                    pending_eot = llama_vocab_eos(ctx.vocab);
 +                    return 0;
@@ -59,7 +85,7 @@ index 4dc72da..6c2e9f4 100644
 
                  if (llama_vocab_is_eog(ctx.vocab, next_text_token)) {
                      // Sampled, not decoded. eval_messages() re-supplies it on the next
-@@ -287,9 +304,10 @@ class Runner::RunnerImpl {
+@@ -287,9 +330,10 @@ class Runner::RunnerImpl {
                      break;  // end of generation
                  }
 
@@ -71,7 +97,7 @@ index 4dc72da..6c2e9f4 100644
                      LOG("%s", token_str.c_str());
                      fflush(stdout);
                  }
-@@ -319,8 +337,11 @@ class Runner::RunnerImpl {
+@@ -319,8 +363,11 @@ class Runner::RunnerImpl {
              }
          }
          LOG("\n");
@@ -83,7 +109,7 @@ index 4dc72da..6c2e9f4 100644
      }
 
      void perf_context_reset() {
-@@ -415,10 +436,11 @@ void Runner::stop() {
+@@ -415,10 +462,12 @@ void Runner::stop() {
  int Runner::generate(const std::vector<Message> &              messages,
                       int                                       n_predict,
                       const text_callback_t &                   text_callback,
@@ -91,71 +117,194 @@ index 4dc72da..6c2e9f4 100644
 -                     const std::vector<mtmd_output_modality> & modalities) {
 -    return impl_->generate(messages, n_predict, text_callback, audio_callback, modalities);
 +                     const std::vector<mtmd_output_modality> & modalities,
-+                     const std::string &                      spoken_text) {
-+    return impl_->generate(messages, n_predict, text_callback, audio_callback, modalities, spoken_text);
++                     const std::string &                      spoken_text,
++                     const text_source_t &                    text_source) {
++    return impl_->generate(messages, n_predict, text_callback, audio_callback, modalities, spoken_text, text_source);
  }
 
  int Runner::init(common_params params) {
      return impl_->init(std::move(params));
 diff --git a/tools/liquid-audio/runner.h b/tools/liquid-audio/runner.h
-index 686b7e1..7bb101e 100644
+index 686b7e1..fe3c64a 100644
 --- a/tools/liquid-audio/runner.h
 +++ b/tools/liquid-audio/runner.h
-@@ -41,9 +41,10 @@ class Runner {
+@@ -11,8 +11,9 @@ namespace audio {
+
+ using generated_audio_t = std::vector<int16_t>;
+ using text_callback_t   = std::function<void(const std::string &)>;
+ using audio_callback_t  = std::function<void(const std::vector<int16_t> &)>;
++using text_source_t = std::function<bool(std::string &, bool &)>;
+
+ class Runner {
+   public:
+     // handling depends on system prompt
+@@ -41,9 +42,11 @@ class Runner {
      int  generate(const std::vector<Message> &              messages,
                    int                                       n_predict,
                    const text_callback_t &                   text_callback,
                    const audio_callback_t &                  audio_callback,
 -                  const std::vector<mtmd_output_modality> & modalities);
 +                  const std::vector<mtmd_output_modality> & modalities,
-+                  const std::string &                      spoken_text = "");
++                  const std::string &                      spoken_text = "",
++                  const text_source_t &                    text_source = {});
 
      int          get_output_sample_rate() const;
      const char * get_last_error() const;
    private:
 diff --git a/tools/liquid-audio/server.cpp b/tools/liquid-audio/server.cpp
-index c34a5ac..3a9eed8 100644
+index c34a5ac..fe3bfb0 100644
 --- a/tools/liquid-audio/server.cpp
 +++ b/tools/liquid-audio/server.cpp
-@@ -101,8 +101,9 @@ struct WorkItem {
+@@ -19,8 +19,9 @@
+ #include <nlohmann/json.hpp>
+ #include <optional>
+ #include <thread>
+ #include <vector>
++#include <unordered_map>
+
+ using json = nlohmann::ordered_json;
+
+ #define MIMETYPE_JSON "application/json; charset=utf-8"
+@@ -92,8 +93,16 @@ struct OutputBuffer {
+         cv.notify_one();
+     }
+ };
+
++struct TextFeed {
++    std::mutex mutex;
++    std::condition_variable cv;
++    std::string text;
++    bool final = false;
++    std::atomic<bool> cancelled{false};
++};
++
+ // A work item: parsed request + output buffer for streaming back
+ struct WorkItem {
+     std::vector<liquid::audio::Runner::Message> messages;
+     std::vector<mtmd_output_modality>           modalities;
+@@ -101,8 +110,11 @@ struct WorkItem {
      bool                                        reset_context;
      std::shared_ptr<OutputBuffer>               output;
      std::function<void()>                       check_abort;
      int                                         output_sample_rate;
 +    std::string                                 spoken_text;
++    liquid::audio::text_source_t                 text_source;
++    std::string                                 feed_id;
  };
 
  // Thread-safe work queue
  struct WorkQueue {
-@@ -233,9 +234,9 @@ int main(int argc, char ** argv) {
+@@ -158,23 +170,31 @@ int main(int argc, char ** argv) {
+     LOG_INF("Model loaded successfully!\n");
+
+     httplib::Server svr;
+     // keep request handling single-threaded to avoid per-thread allocator arena growth.
+-    svr.new_task_queue = [] { return new httplib::ThreadPool(1); };
++    // One SSE connection must not block text updates or cancellation controls.
++    svr.new_task_queue = [] { return new httplib::ThreadPool(3); };
+     svr.set_default_headers({
+         { "Server", "lfm2-audio-server" }
+     });
+
+     std::atomic<bool> is_server_running(true);
+     WorkQueue         work_queue;
++    std::mutex feeds_mutex;
++    std::unordered_map<std::string, std::shared_ptr<TextFeed>> feeds;
++    auto remove_feed = [&](const std::string & id) {
++        std::lock_guard<std::mutex> lock(feeds_mutex);
++        feeds.erase(id);
++    };
+
+     // Single worker thread — processes one request at a time, no mutexes needed
+     std::thread worker([&]() {
+         WorkItem item;
+         while (work_queue.pop(item)) {
+             auto & output = item.output;
+
+             if (output->aborted.load()) {
++                remove_feed(item.feed_id);
+                 continue;
+             }
+
+             if (item.reset_context) {
+@@ -233,9 +253,10 @@ int main(int argc, char ** argv) {
                  output->push("data: " + chunk.dump(-1, ' ', false, json::error_handler_t::replace) + "\n\n");
              };
 
              std::optional<std::string> err;
 -            if (runner.generate(item.messages, item.n_predict, text_cb, audio_cb, item.modalities)) {
-+            if (runner.generate(item.messages, item.n_predict, text_cb, audio_cb, item.modalities, item.spoken_text)) {
++            if (runner.generate(item.messages, item.n_predict, text_cb, audio_cb, item.modalities,
++                                item.spoken_text, item.text_source)) {
                  err = runner.get_last_error();
              }
 
              if (!output->aborted.load()) {
-@@ -303,8 +304,11 @@ int main(int argc, char ** argv) {
+@@ -257,8 +278,9 @@ int main(int argc, char ** argv) {
+                 }
+             }
+
+             output->finish();
++            remove_feed(item.feed_id);
+         }
+     });
+
+     // Set up shutdown handler
+@@ -303,8 +325,44 @@ int main(int argc, char ** argv) {
          return httplib::Server::HandlerResponse::Unhandled;
      });
 
      // Chat completions endpoint
 +    svr.Get("/health", [](const httplib::Request &, httplib::Response & res) {
-+        res.set_content("{\"ok\":true,\"forced_text\":1,\"turn_reset\":1}", "application/json");
++        res.set_content("{\"ok\":true,\"forced_text\":1,\"turn_reset\":1,\"continuous_text\":1}", "application/json");
++    });
++    svr.Post(R"(/v1/speech-input/([0-9a-f]{32}))", [&](const httplib::Request & req, httplib::Response & res) {
++        try {
++            const auto body = json::parse(req.body);
++            const auto addition = body.value("text", std::string());
++            const bool final = body.value("final", false);
++            std::shared_ptr<TextFeed> feed;
++            {
++                std::lock_guard<std::mutex> lock(feeds_mutex);
++                auto it = feeds.find(req.matches[1].str());
++                if (it == feeds.end()) { res_error(res, "Unknown speech input", 404); return; }
++                feed = it->second;
++            }
++            {
++                std::lock_guard<std::mutex> lock(feed->mutex);
++                if (feed->final || feed->cancelled.load()) { res_error(res, "Speech input closed", 409); return; }
++                if ((addition.empty() && (!final || feed->text.empty())) || feed->text.size() + addition.size() > 2000) {
++                    res_error(res, "Speech input must contain at most 2000 bytes", 400); return;
++                }
++                feed->text += addition;
++                feed->final = final;
++            }
++            feed->cv.notify_all();
++            res.set_content("{\"ok\":true}", MIMETYPE_JSON);
++        } catch (const std::exception &) { res_error(res, "Invalid speech input", 400); }
++    });
++    svr.Delete(R"(/v1/speech-input/([0-9a-f]{32}))", [&](const httplib::Request & req, httplib::Response & res) {
++        std::lock_guard<std::mutex> lock(feeds_mutex);
++        auto it = feeds.find(req.matches[1].str());
++        if (it == feeds.end()) { res_error(res, "Unknown speech input", 404); return; }
++        it->second->cancelled = true;
++        it->second->cv.notify_all();
++        res.set_content("{\"ok\":true}", MIMETYPE_JSON);
 +    });
      svr.Post("/v1/chat/completions", [&](const httplib::Request & req, httplib::Response & res) {
          if (!is_server_running.load()) {
              res_error(res, "Server is shutting down", 503);
              return;
-@@ -315,8 +319,13 @@ int main(int argc, char ** argv) {
+@@ -315,8 +373,18 @@ int main(int argc, char ** argv) {
 
              int  n_predict     = body.value("max_tokens", 2048);
              bool stream        = body.value("stream", false);
              bool reset_context = body.value("reset_context", true);
 +            std::string spoken_text = body.value("spoken_text", std::string());
++            std::string feed_id = body.value("speech_input_id", std::string());
++            if (!feed_id.empty() && (feed_id.size() != 32 || !std::all_of(feed_id.begin(), feed_id.end(), [](char c) {
++                    return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'); }))) {
++                res_error(res, "Invalid speech input ID", 400); return;
++            }
 +            if (spoken_text.size() > 2000) {
 +                res_error(res, "spoken_text exceeds 2000 bytes", 400);
 +                return;
@@ -164,12 +313,77 @@ index c34a5ac..3a9eed8 100644
              std::vector<liquid::audio::Runner::Message> messages;
              std::vector<mtmd_output_modality>           modalities;
 
-@@ -411,8 +420,9 @@ int main(int argc, char ** argv) {
+@@ -385,25 +453,60 @@ int main(int argc, char ** argv) {
+             if (!stream) {
+                 res_error(res, "non streaming API is not implemented", 400);
+                 return;
+             }
++            if (!feed_id.empty() && (n_predict < 1 || n_predict > 512 || messages.empty() ||
++                    std::find(modalities.begin(), modalities.end(), MTMD_OUTPUT_MODALITY_TEXT) == modalities.end() ||
++                    std::find(modalities.begin(), modalities.end(), MTMD_OUTPUT_MODALITY_AUDIO) == modalities.end())) {
++                res_error(res, "Continuous speech requires text/audio, messages and 1-512 steps", 400);
++                return;
++            }
+
+             // Create output buffer and enqueue work
+             auto output = std::make_shared<OutputBuffer>();
++            std::shared_ptr<TextFeed> feed;
++            if (!feed_id.empty()) {
++                if (!reset_context || !spoken_text.empty()) {
++                    res_error(res, "Continuous speech requires a fresh empty text source", 400); return;
++                }
++                feed = std::make_shared<TextFeed>();
++                std::lock_guard<std::mutex> lock(feeds_mutex);
++                if (!feeds.empty()) { res_error(res, "A continuous speech session is active", 409); return; }
++                feeds.emplace(feed_id, feed);
++                output->push("data: {\"speech_input_ready\":true}\n\n");
++            }
+
+-            auto check_abort = [&req, output, &runner, &is_server_running]() {
++            auto check_abort = [&req, output, feed, &runner, &is_server_running]() {
+                 if (output->aborted.load()) {
+                     return;
+                 }
+-                bool should_abort = !is_server_running.load();
++                bool should_abort = !is_server_running.load() || (feed && feed->cancelled.load());
+                 if (!should_abort && req.is_connection_closed) {
+                     should_abort = req.is_connection_closed();
+                 }
+                 if (should_abort && !output->aborted.exchange(true)) {
+                     LOG_INF("Aborting generation\n");
+                     runner.stop();
+                 }
+             };
++            liquid::audio::text_source_t text_source;
++            if (feed) {
++                text_source = [feed, output, check_abort](std::string & text, bool & final) {
++                    const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
++                    std::unique_lock<std::mutex> lock(feed->mutex);
++                    while (feed->text == text && !feed->final && !feed->cancelled.load()) {
++                        feed->cv.wait_for(lock, std::chrono::milliseconds(100));
++                        lock.unlock();
++                        check_abort();
++                        lock.lock();
++                        if (output->aborted.load() || std::chrono::steady_clock::now() > deadline) return false;
++                    }
++                    if (feed->cancelled.load() || output->aborted.load()) return false;
++                    text = feed->text;
++                    final = feed->final;
++                    return true;
++                };
++            }
+
+             work_queue.push({
+                 std::move(messages),
+                 std::move(modalities),
+@@ -411,8 +514,11 @@ int main(int argc, char ** argv) {
                  reset_context,
                  output,
                  check_abort,
                  runner.get_output_sample_rate(),
 +                std::move(spoken_text),
++                std::move(text_source),
++                feed_id,
              });
 
              // Stream chunks as the worker produces them

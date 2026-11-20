@@ -1,0 +1,18 @@
+[
+  {
+    "pair": 0,
+    "hashes": {
+      "whole": "3038fd4d2939c502ef3e808e1dd3c6b5b62e898c88145b9a563e8bdf1d16a16e",
+      "continuous": "3038fd4d2939c502ef3e808e1dd3c6b5b62e898c88145b9a563e8bdf1d16a16e"
+    },
+    "identical_pcm": true
+  },
+  {
+    "pair": 1,
+    "hashes": {
+      "whole": "3038fd4d2939c502ef3e808e1dd3c6b5b62e898c88145b9a563e8bdf1d16a16e",
+      "continuous": "3038fd4d2939c502ef3e808e1dd3c6b5b62e898c88145b9a563e8bdf1d16a16e"
+    },
+    "identical_pcm": true
+  }
+]
