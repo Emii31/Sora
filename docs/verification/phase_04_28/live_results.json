@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What is your name?",
+    "reply": "I'm Sora, your AI companion. How can I help you today?",
+    "first_audio_s": 5.0240884549998555,
+    "brain_ready_s": 3.5045777049999742,
+    "brain_first_token_s": 1.1238396979999834,
+    "buffer_seconds": 1.5,
+    "playback_started_s": 7.030975932999809,
+    "turn_finished_s": 13.00238563799985,
+    "estimated_gaps": 0,
+    "audio_s": 5.82,
+    "text_characters": 54,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "What tea do I like?",
+    "reply": "You like jasmine tea, isn't that right?",
+    "first_audio_s": 3.329388447999918,
+    "brain_ready_s": 2.005492072999914,
+    "brain_first_token_s": 0.7123544339999626,
+    "buffer_seconds": 0.5,
+    "playback_started_s": 3.881642753999813,
+    "turn_finished_s": 6.436993817999792,
+    "estimated_gaps": 0,
+    "audio_s": 2.38,
+    "text_characters": 39,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "My plant is called Juniper.",
+    "reply": "Oh, that's a lovely name for a plant! What's it growing in?",
+    "first_audio_s": 4.719901279999931,
+    "brain_ready_s": 3.773877334999952,
+    "brain_first_token_s": 1.3249956490001296,
+    "buffer_seconds": 1.5,
+    "playback_started_s": 6.667891989000054,
+    "turn_finished_s": 12.615481923000061,
+    "estimated_gaps": 0,
+    "audio_s": 5.82,
+    "text_characters": 59,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "What did I name my plant?",
+    "reply": "You named your plant Juniper.",
+    "first_audio_s": 6.577670953000052,
+    "brain_ready_s": 5.3387524580000445,
+    "brain_first_token_s": 4.277746867000133,
+    "buffer_seconds": 0.5,
+    "playback_started_s": 7.130988934000015,
+    "turn_finished_s": 9.919010980999929,
+    "estimated_gaps": 0,
+    "audio_s": 2.7,
+    "text_characters": 29,
+    "character": "Sora",
+    "history_saved": true
+  }
+]

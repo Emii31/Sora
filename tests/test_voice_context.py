@@ -144,6 +144,17 @@ def test_corrupt_history_is_preserved(local_data):
     assert history.read_text() == "{broken"
 
 
+def test_warmup_uses_account_context_without_saving_a_turn(local_data):
+    save_json(local_data / "core_memory.json", {"human": {"value": "Likes jasmine tea."}})
+    seen = []
+    class Brain:
+        def warmup(self, messages):
+            seen.append(messages)
+    LocalVoiceContext().warmup(Brain())
+    assert "jasmine" in seen[0][0]["content"]
+    assert json.loads((local_data / "chat_history.json").read_text()) == []
+
+
 def test_chat_append_is_serialized_across_processes(local_data):
     code = """
 import storage,sys
@@ -167,7 +178,8 @@ for i in range(8):
 
 
 @pytest.mark.parametrize("outcome", ["complete", "cancel", "error", "mismatch"])
-def test_live_turn_persists_only_completed_exchange(local_data, monkeypatch, outcome):
+@pytest.mark.parametrize("buffer_override", [None, 0.0])
+def test_live_turn_persists_only_completed_exchange(local_data, monkeypatch, outcome, buffer_override):
     import time
 
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -201,19 +213,20 @@ def test_live_turn_persists_only_completed_exchange(local_data, monkeypatch, out
         def __init__(self, stopped):
             pass
         def reply(self, messages):
-            assert "Your conversational name is Sora" in messages[0]["content"]
+            assert messages[0]["content"].startswith("You are Sora,")
             assert messages[-1]["content"] == "Hello"
             return "Hello from Sora"
     monkeypatch.setattr(cli, "LiquidStream", Stream)
     monkeypatch.setattr(cli, "BufferedPlayer", Player)
     monkeypatch.setattr(cli, "LocalVoiceBrain", Brain)
-    turn = cli.VoiceTurn("http://127.0.0.1", context=LocalVoiceContext())
+    turn = cli.VoiceTurn("http://127.0.0.1", context=LocalVoiceContext(), buffer_seconds=buffer_override)
     turn.microphone.transcript = "Hello"
     turn.run(b"fixture")
     saved = json.loads((local_data / "chat_history.json").read_text())
     if outcome == "complete":
         assert len(saved) == 2 and saved[1]["text"] == "Hello from Sora"
         assert turn.metrics["history_saved"] is True
+        assert turn.metrics["buffer_seconds"] == (0.5 if buffer_override is None else buffer_override)
     else:
         assert saved == []
         if outcome in ("error", "mismatch"):

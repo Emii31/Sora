@@ -89,3 +89,24 @@ def test_cancel_shuts_down_active_socket():
     brain.connection = SimpleNamespace(sock=SimpleNamespace(shutdown=lambda how: calls.append(how)))
     brain.cancel()
     assert brain.stopped.is_set() and len(calls) == 1
+
+
+@pytest.mark.parametrize('text', ['Hello', ' '])
+def test_warmup_is_one_token_and_accepts_only_its_own_length_finish(provider, monkeypatch, text):
+    seen, response, _ = provider
+    monkeypatch.setattr(voice_brain.ai_config, 'resolve_max_tokens', lambda tier, limit: limit)
+    response.lines = [packet(text, 'length')]
+    brain = voice_brain.LocalVoiceBrain(threading.Event())
+    assert brain.warmup([{'role': 'user', 'content': 'Hello'}]) is None
+    assert seen['payload']['max_tokens'] == 1 and seen['closed']
+    assert brain.metrics['finished_s'] >= brain.metrics['first_token_s'] >= 0
+    response.lines = [packet('Partial', 'length')]
+    with pytest.raises(RuntimeError, match='incomplete'):
+        brain.reply([])
+
+
+def test_warmup_rejects_missing_completion(provider):
+    _, response, _ = provider
+    response.lines = []
+    with pytest.raises(RuntimeError, match='incomplete'):
+        voice_brain.LocalVoiceBrain(threading.Event()).warmup([])

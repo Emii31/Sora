@@ -1,0 +1,56 @@
+[
+  {
+    "text": "You named your plant Juniper.",
+    "buffer_s": 1.5,
+    "first_audio_s": 0.677739289000101,
+    "playback_s": 2.5564292200001546,
+    "finish_s": 5.3778053060000275,
+    "audio_s": 2.7,
+    "gaps": 0
+  },
+  {
+    "text": "You named your plant Juniper.",
+    "buffer_s": 0.5,
+    "first_audio_s": 0.9313788179999847,
+    "playback_s": 1.515712017999931,
+    "finish_s": 4.515791884999999,
+    "audio_s": 2.7,
+    "gaps": 0
+  },
+  {
+    "text": "You named your plant Juniper.",
+    "buffer_s": 2.5,
+    "first_audio_s": 0.6122778169999492,
+    "playback_s": 3.738979574000041,
+    "finish_s": 6.499387813000112,
+    "audio_s": 2.7,
+    "gaps": 0
+  },
+  {
+    "text": "I'm here with you, Alex. Take a slow breath, and tell me what happened when you feel ready.",
+    "buffer_s": 1.5,
+    "first_audio_s": 1.2186607549999735,
+    "playback_s": 3.4656300320000355,
+    "finish_s": 17.926825740999902,
+    "audio_s": 11.82,
+    "gaps": 2
+  },
+  {
+    "text": "I'm here with you, Alex. Take a slow breath, and tell me what happened when you feel ready.",
+    "buffer_s": 0.5,
+    "first_audio_s": 0.6211070939998535,
+    "playback_s": 1.2236796629999844,
+    "finish_s": 16.762712197999917,
+    "audio_s": 11.82,
+    "gaps": 3
+  },
+  {
+    "text": "I'm here with you, Alex. Take a slow breath, and tell me what happened when you feel ready.",
+    "buffer_s": 2.5,
+    "first_audio_s": 0.6349986549998903,
+    "playback_s": 4.430429516999993,
+    "finish_s": 16.749298752999948,
+    "audio_s": 11.82,
+    "gaps": 1
+  }
+]

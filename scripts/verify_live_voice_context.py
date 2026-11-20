@@ -8,12 +8,15 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import threading
+import time
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--kit', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True, help='Fresh diagnostic directory')
+    parser.add_argument('--no-warmup', action='store_true')
     args = parser.parse_args()
     args.report.mkdir(parents=True, exist_ok=False)
     previous_data_dir = os.environ.get('DATA_DIR')
@@ -36,8 +39,16 @@ def main():
             from voice_context import LocalVoiceContext
             from liquid_phone import PhoneRunner
             from live_liquid_voice import VoiceTurn
+            from voice_brain import LocalVoiceBrain
 
             results = []
+            if not args.no_warmup:
+                start = time.monotonic()
+                LocalVoiceContext().warmup(LocalVoiceBrain(threading.Event()))
+                (args.report / 'warmup.json').write_text(json.dumps({
+                    'warmup_s': time.monotonic() - start,
+                    'history_after_warmup': json.loads((root / 'chat_history.json').read_text()),
+                }, indent=2))
             with PhoneRunner(args.kit, args.report / 'server.log') as endpoint:
                 for question, expected in (
                     ('What is your name?', 'sora'),

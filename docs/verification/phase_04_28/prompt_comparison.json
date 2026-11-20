@@ -1,0 +1,50 @@
+[
+  {
+    "pair": 0,
+    "variant": "before",
+    "question": "What is your name?",
+    "system_bytes": 1850,
+    "brain_s": 14.582227309000018,
+    "reply": "Hello! I'm Sora. How can I help you today?"
+  },
+  {
+    "pair": 0,
+    "variant": "after",
+    "question": "What is your name?",
+    "system_bytes": 1533,
+    "brain_s": 12.954954011999916,
+    "reply": "I'm Sora, your AI companion. How can I help you today?"
+  },
+  {
+    "pair": 1,
+    "variant": "after",
+    "question": "What tea do I like?",
+    "system_bytes": 1533,
+    "brain_s": 1.4463693059999514,
+    "reply": "You like jasmine tea."
+  },
+  {
+    "pair": 1,
+    "variant": "before",
+    "question": "What tea do I like?",
+    "system_bytes": 1850,
+    "brain_s": 1.572523928999999,
+    "reply": "You like jasmine tea, Alex!"
+  },
+  {
+    "pair": 2,
+    "variant": "before",
+    "question": "I feel a little overwhelmed.",
+    "system_bytes": 1850,
+    "brain_s": 5.216513565000014,
+    "reply": "It's okay to feel that way sometimes. Take a deep breath and remember, you're not alone. How about we chat about something that makes you feel better?"
+  },
+  {
+    "pair": 2,
+    "variant": "after",
+    "question": "I feel a little overwhelmed.",
+    "system_bytes": 1533,
+    "brain_s": 3.0336021240000264,
+    "reply": "It's okay to feel overwhelmed sometimes. How can I help you feel better?"
+  }
+]

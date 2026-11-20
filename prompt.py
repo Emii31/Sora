@@ -1970,23 +1970,24 @@ def build_fast_local_chat_messages(history, user_text, *, core_blocks=None, voic
     user_label = resolve_user_entity_label()
     instructions = [
         f"You are {_fast_chat_excerpt(cfg.name, 96)}, a personal AI companion.",
-        ("You are speaking in a live voice conversation. The current message comes from local speech recognition "
-         "or submitted audio. Camera and screen input are inactive. Describe device actions only after confirmed results."
-         if voice else
-         "This is text-only chat. You cannot access the camera, screen, or microphone, or operate the device. "
-         "If asked, state this plainly."),
+        "This is text-only chat. You cannot access the camera, screen, or microphone, or operate the device. "
+        "If asked, state this plainly.",
         f"Address the user naturally as {_fast_chat_excerpt(_safe_user_address(cfg.user_address), 96)}.",
         "Reply in the user's language. Keep it conversational and concise. "
         "Use the recent chat for continuity. When the user asks for a quiet moment, respond briefly without a follow-up question.",
         _COMPANION_DIALOGUE_RULE,
     ]
     if voice:
-        instructions.extend([
-            f"Your conversational name is {_fast_chat_excerpt(cfg.name, 96)}. Use that name when introducing yourself.",
-            "Use brief, natural spoken replies, usually one short sentence. Express feeling through your words and tone. "
-            "Use plain spoken words and punctuation. Leave space for the user to answer.",
+        instructions = [
+            f"You are {_fast_chat_excerpt(cfg.name, 96)}, a personal AI companion in a live voice conversation.",
+            f"Address the user naturally as {_fast_chat_excerpt(_safe_user_address(cfg.user_address), 96)}.",
+            "Reply in the user's language with one short sentence unless more detail is requested. "
+            "Use natural spoken words and express feeling. Leave space for the user to answer.",
+            "Use recent chat for continuity. Respect requests for quiet without a follow-up question. "
+            "Camera and screen are inactive; you have no device tools.",
+            _COMPANION_DIALOGUE_RULE,
             f"Character style: {_fast_chat_excerpt(cfg.hint('archetype'), 96)}.",
-        ])
+        ]
         import identity
         facts = [{"field": fact["category"], "value": _fast_chat_excerpt(fact["text"], 96)}
                  for fact in identity.get_authoritative_facts()[:5]]

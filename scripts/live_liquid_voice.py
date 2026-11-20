@@ -12,17 +12,18 @@ import time
 
 from liquid_phone import PhoneRunner
 from voice_brain import LocalVoiceBrain
-from voice_liquid_live import BufferedPlayer, LiquidStream, Microphone
+from voice_liquid_live import BufferedPlayer, LiquidStream, Microphone, voice_playback_buffer
 
 
 class VoiceTurn:
-    def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=1.5,
-                 vosk_model=None, context=None):
+    def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=None,
+                 vosk_model=None, context=None, smooth_long_replies=False):
         self.stopped = threading.Event()
         self.microphone = Microphone(self.stopped, source=source, threshold=threshold, vosk_model=vosk_model)
         self.stream = LiquidStream(endpoint, self.stopped)
         self.sink = sink
         self.buffer_seconds = buffer_seconds
+        self.smooth_long_replies = smooth_long_replies
         self.player = None
         self.metrics = {}
         self.error = None
@@ -55,7 +56,9 @@ class VoiceTurn:
             brain_ready = time.monotonic() - started if snapshot else None
             if self.stopped.is_set():
                 return
-            self.player = BufferedPlayer(self.stopped, self.buffer_seconds, self.sink)
+            buffer_seconds = (self.buffer_seconds if self.buffer_seconds is not None
+                              else voice_playback_buffer(reply_text, smooth_long=self.smooth_long_replies))
+            self.player = BufferedPlayer(self.stopped, buffer_seconds, self.sink)
             text = []
             first_audio = None
             options = {"text": transcript}
@@ -77,6 +80,9 @@ class VoiceTurn:
                 self.metrics = {
                     "first_audio_s": first_audio,
                     "brain_ready_s": brain_ready,
+                    "brain_first_token_s": getattr(self.brain, "metrics", {}).get("first_token_s"),
+                    "buffer_seconds": buffer_seconds,
+                    "playback_policy": "complete_reply" if buffer_seconds is None else "streaming",
                     "playback_started_s": self.player.started_at - started if self.player.started_at else None,
                     "turn_finished_s": time.monotonic() - started,
                     "estimated_gaps": self.player.estimated_gaps,
@@ -123,13 +129,16 @@ def main():
     parser.add_argument("--vosk-model", type=Path, help="Use a local Vosk model to show and send the recognized text")
     parser.add_argument("--sink", help="PipeWire playback node name")
     parser.add_argument("--threshold", type=float, default=0.015, help="Microphone RMS threshold, default 0.015")
-    parser.add_argument("--buffer-seconds", type=float, default=1.5)
+    parser.add_argument("--buffer-seconds", type=float, help="Override automatic reply-length buffering (0–5 seconds)")
+    parser.add_argument("--no-warmup", action="store_true", help="Skip chat-model prefill before listening")
+    parser.add_argument("--smooth-long-replies", action="store_true",
+                        help="Wait for complete long replies before playback; avoids generation gaps but starts later")
     parser.add_argument("--replay", type=Path, help="Run one prerecorded input through real phone inference and playback")
     parser.add_argument("--once", action="store_true", help="Listen for one sentence and exit after its reply")
     parser.add_argument("--user-id", help="Select an active local Sora account when several exist")
     parser.add_argument("--report", type=Path, help="Save diagnostic logs and timings in a fresh directory")
     args = parser.parse_args()
-    if not 0 < args.threshold <= 1 or not 0 <= args.buffer_seconds <= 5:
+    if not 0 < args.threshold <= 1 or (args.buffer_seconds is not None and not 0 <= args.buffer_seconds <= 5):
         parser.error("Use a threshold between zero and one and a buffer from zero to five seconds")
     if not args.replay and not sys.stdin.isatty():
         parser.error("Live mode needs an interactive terminal")
@@ -145,15 +154,24 @@ def main():
         print("Loading local speech recognition...", flush=True)
         os.environ["SORA_VOSK_MODEL_DIR"] = str(args.vosk_model.resolve())
         _load_model(args.vosk_model.resolve())
+    warmup_seconds = None
+    if not args.no_warmup:
+        print("Warming Sora's local chat model before listening...", flush=True)
+        warm_started = time.monotonic()
+        context.warmup(LocalVoiceBrain(threading.Event()))
+        warmup_seconds = time.monotonic() - warm_started
+        print(f"Chat model ready after {warmup_seconds:.2f}s. No conversation was saved.", flush=True)
     if args.report:
         args.report.mkdir(parents=True, exist_ok=False)
+        (args.report / "startup.json").write_text(json.dumps({"brain_warmup_s": warmup_seconds}) + "\n")
     with tempfile.TemporaryDirectory(prefix="sora-live-voice-") as temporary:
         directory = args.report or Path(temporary)
         with PhoneRunner(args.kit, directory / "server.log") as endpoint:
             def new_turn():
                 return VoiceTurn(endpoint, source=args.source, sink=args.sink,
                                  threshold=args.threshold, buffer_seconds=args.buffer_seconds,
-                                 vosk_model=args.vosk_model, context=context)
+                                 vosk_model=args.vosk_model, context=context,
+                                 smooth_long_replies=args.smooth_long_replies)
             turn = new_turn()
             try:
                 turn.start(args.replay.read_bytes() if args.replay else None)

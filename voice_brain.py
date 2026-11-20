@@ -3,6 +3,7 @@
 import http.client
 import json
 import socket
+import time
 from urllib.parse import urlsplit
 
 import ai_config
@@ -12,6 +13,7 @@ class LocalVoiceBrain:
     def __init__(self, stopped):
         self.stopped = stopped
         self.connection = None
+        self.metrics = {}
 
     def cancel(self):
         self.stopped.set()
@@ -23,11 +25,20 @@ class LocalVoiceBrain:
                 pass
 
     def reply(self, messages):
+        return self._complete(messages, token_limit=96)
+
+    def warmup(self, messages):
+        """Load/prefill before listening; never return a conversational reply."""
+        self._complete(messages, token_limit=1, warming=True)
+
+    def _complete(self, messages, *, token_limit, warming=False):
+        started = time.monotonic()
+        self.metrics = {}
         with ai_config._lock:
             config = ai_config.get_tier_config("chat")
             client = ai_config.get_tier_client("chat")
             base = str(client.base_url).rstrip("/")
-            max_tokens = ai_config.resolve_max_tokens("chat", 96)
+            max_tokens = ai_config.resolve_max_tokens("chat", token_limit)
         url = urlsplit(base)
         if (url.scheme not in ("http", "https") or url.username or url.password
                 or not ai_config._is_loopback(base)):
@@ -74,6 +85,7 @@ class LocalVoiceBrain:
                     finish = choice.get("finish_reason") or finish
                     text = (choice.get("delta") or {}).get("content") or ""
                     if text:
+                        self.metrics.setdefault("first_token_s", time.monotonic() - started)
                         size += len(text.encode("utf-8"))
                         if size > 2000:
                             raise ValueError("Spoken reply exceeds 2,000 bytes")
@@ -81,8 +93,9 @@ class LocalVoiceBrain:
             if self.stopped.is_set():
                 return ""
             reply = "".join(words).strip()
-            if finish != "stop" or not reply:
+            if finish not in (("stop", "length") if warming else ("stop",)) or (not warming and not reply):
                 raise RuntimeError("Local chat returned an incomplete reply. Ask for a shorter response")
+            self.metrics["finished_s"] = time.monotonic() - started
             return reply
         finally:
             connection.close()

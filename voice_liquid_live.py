@@ -23,6 +23,19 @@ OUTPUT_RATE = 24000
 SYSTEM_PROMPT = "Respond with interleaved text and audio."
 
 
+def voice_playback_buffer(text, *, smooth_long=False):
+    """Prefer earlier short replies; optionally fully buffer long speech."""
+    if text is None:
+        return 1.5
+    size = len(text.encode("utf-8"))
+    words = len(text.split())
+    if size <= 64 and words <= 8:
+        return 0.5
+    if size <= 100 and words <= 16:
+        return 1.5
+    return None if smooth_long else 1.5
+
+
 def stop_process(proc):
     if proc is not None and proc.poll() is None:
         try:
@@ -240,10 +253,10 @@ class Microphone:
 
 class BufferedPlayer:
     def __init__(self, stopped, buffer_seconds=1.5, sink=None):
-        if not 0 <= buffer_seconds <= 5:
+        if buffer_seconds is not None and not 0 <= buffer_seconds <= 5:
             raise ValueError("Playback buffer must be between zero and five seconds")
         self.stopped = stopped
-        self.buffer_bytes = round(buffer_seconds * OUTPUT_RATE) * 2
+        self.buffer_bytes = None if buffer_seconds is None else round(buffer_seconds * OUTPUT_RATE) * 2
         self.sink = sink
         self.proc = None
         self.items = queue.Queue(maxsize=128)
@@ -303,6 +316,10 @@ class BufferedPlayer:
                     return
                 if self.started_at is None:
                     pending.extend(pcm)
+                    if self.buffer_bytes is None:
+                        if len(pending) > OUTPUT_RATE * 2 * 30:
+                            raise ValueError("Buffered speech exceeds 30 seconds")
+                        continue
                     if len(pending) < self.buffer_bytes:
                         continue
                     self._write(pending)

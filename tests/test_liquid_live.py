@@ -182,11 +182,12 @@ def test_player_drains_short_reply_at_end(monkeypatch):
     assert player.started_at is not None and player.bytes_written == 960
 
 
-def test_player_cancel_discards_prebuffer(monkeypatch):
+@pytest.mark.parametrize('buffer', [1.5, None])
+def test_player_cancel_discards_prebuffer(monkeypatch, buffer):
     def forbidden(*a, **k):
         raise AssertionError("Cancelled prebuffer started speaker output")
     monkeypatch.setattr(live.subprocess, "Popen", forbidden)
-    player = live.BufferedPlayer(threading.Event(), buffer_seconds=1.5)
+    player = live.BufferedPlayer(threading.Event(), buffer_seconds=buffer)
     player.feed(bytes(4800))
     player.cancel()
     assert not player.thread.is_alive() and player.proc is None
@@ -239,5 +240,56 @@ def test_gap_estimate_recovers_after_one_late_chunk(monkeypatch):
         player._write(bytes(4800))
         assert player.estimated_gaps == 1
         assert player.play_until == pytest.approx(.45)
+    finally:
+        player.cancel()
+
+
+@pytest.mark.parametrize('text,smooth,expected', [
+    (None, False, 1.5), ('You named your plant Juniper.', False, 0.5),
+    ('One two three four five six seven eight nine ten.', False, 1.5),
+    ('A longer response ' * 12, False, 1.5), ('A longer response ' * 12, True, None),
+    ('温' * 24, False, 1.5), ('温' * 40, True, None),
+])
+def test_reply_buffer_uses_words_and_utf8_size(text, smooth, expected):
+    assert live.voice_playback_buffer(text, smooth_long=smooth) == expected
+
+
+def test_complete_reply_waits_for_end_before_opening_speaker(monkeypatch):
+    completed = threading.Event()
+    received = []
+    class Pipe(io.BytesIO):
+        def close(self):
+            received.append(self.getvalue())
+            super().close()
+    class Process:
+        def __init__(self, *args, **kwargs):
+            assert completed.is_set(), 'Speaker opened before audio generation finished'
+            self.stdin = Pipe()
+        def wait(self, timeout):
+            return 0
+        def poll(self):
+            return 0
+    monkeypatch.setattr(live.subprocess, 'Popen', Process)
+    player = live.BufferedPlayer(threading.Event(), buffer_seconds=None)
+    try:
+        pcm = bytes(48000 * 6)
+        player.feed(pcm)
+        deadline = time.monotonic() + 1
+        while not player.items.empty() and time.monotonic() < deadline:
+            time.sleep(.001)
+        assert player.proc is None
+        completed.set()
+        player.finish()
+        assert received == [pcm]
+    finally:
+        player.cancel()
+
+
+def test_complete_reply_buffer_remains_bounded(monkeypatch):
+    player = live.BufferedPlayer(threading.Event(), buffer_seconds=None)
+    try:
+        player.feed(bytes(48000 * 31))
+        with pytest.raises(ValueError, match='30 seconds'):
+            player.finish()
     finally:
         player.cancel()

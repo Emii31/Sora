@@ -89,6 +89,11 @@ class LocalVoiceContext:
         with self._scope():
             return brain.reply(list(snapshot.messages))
 
+    def warmup(self, brain):
+        snapshot = self.prepare("Hello")
+        with self._scope():
+            brain.warmup(list(snapshot.messages))
+
     def commit(self, snapshot, reply_text):
         if (snapshot.user_id, snapshot.data_dir) != (self.user_id, self.data_dir):
             raise ValueError("Voice context belongs to another account")
