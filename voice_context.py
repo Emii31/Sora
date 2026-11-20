@@ -83,10 +83,12 @@ class LocalVoiceContext:
                 self.user_id, self.data_dir, cfg.name, tuple(messages),
             )
 
-    def respond(self, snapshot, brain):
+    def respond(self, snapshot, brain, *, on_sentence=None):
         if (snapshot.user_id, snapshot.data_dir) != (self.user_id, self.data_dir):
             raise ValueError("Voice context belongs to another account")
         with self._scope():
+            if on_sentence is not None:
+                return brain.reply(list(snapshot.messages), on_sentence=on_sentence)
             return brain.reply(list(snapshot.messages))
 
     def warmup(self, brain):

@@ -1,0 +1,16 @@
+[
+  {
+    "conditioning": "Please speak to me.",
+    "completed": false,
+    "text_match": true,
+    "elapsed_s": 20.05181391000042,
+    "audio_s": 14.78
+  },
+  {
+    "conditioning": "Read this aloud: Juniper is a great name for a plant, Alex!",
+    "completed": false,
+    "text_match": true,
+    "elapsed_s": 20.068747348000215,
+    "audio_s": 14.54
+  }
+]

@@ -110,3 +110,35 @@ def test_warmup_rejects_missing_completion(provider):
     response.lines = []
     with pytest.raises(RuntimeError, match='incomplete'):
         voice_brain.LocalVoiceBrain(threading.Event()).warmup([])
+
+
+def test_sentence_callback_runs_before_provider_completion_and_preserves_exact_reply(provider):
+    _, response, _ = provider
+    response.lines = [packet('Hello. '), packet('How are '), packet('you?', 'stop')]
+    emitted = []
+    def receive(text):
+        emitted.append(text)
+        if len(emitted) == 1:
+            assert len(response.lines) == 2, 'Callback waited until model completion'
+    brain = voice_brain.LocalVoiceBrain(threading.Event())
+    reply = brain.reply([], on_sentence=receive)
+    assert reply == ''.join(emitted) == 'Hello. How are you?'
+
+
+def test_incomplete_provider_does_not_release_unfinished_tail(provider):
+    _, response, _ = provider
+    response.lines = [packet('Hello. '), packet('Unfinished', 'length')]
+    emitted = []
+    with pytest.raises(RuntimeError, match='incomplete'):
+        voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_sentence=emitted.append)
+    assert emitted == ['Hello. ']
+
+
+def test_sentence_consumer_error_closes_provider_connection(provider):
+    seen, response, _ = provider
+    response.lines = [packet('Hello. '), packet('More', 'stop')]
+    def fail(sentence):
+        raise ValueError('Speech consumer failed')
+    with pytest.raises(ValueError, match='Speech consumer'):
+        voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_sentence=fail)
+    assert seen['closed']

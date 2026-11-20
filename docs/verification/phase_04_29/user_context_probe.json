@@ -1,0 +1,9 @@
+[
+  {
+    "conditioning": "My plant is called Juniper.",
+    "completed": true,
+    "text_match": true,
+    "elapsed_s": 5.904840352999599,
+    "audio_s": 3.74
+  }
+]

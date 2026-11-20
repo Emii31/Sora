@@ -573,3 +573,11 @@ Legacy-test qualification: two pytest wrappers emit return-value warnings and do
 Actual CLI replay used disposable DATA_DIR, real Vosk, startup warmup, phone inference, playback and report writing; exit 0, exactly one exchange saved. Misrecognition changed the input meaning, documented in the phase record. Python compilation and CLI help passed. Evidence is docs/verification/phase_04_28/. Standalone legacy scripts were not rerun against production data, and earlier test limitations are preserved in Phase 4.27.
 
 Final checks: repository secret scan and history-prefix check against e7cfccf passed. Phone runner lock and ADB forward were absent after tests; the owned temporary Ollama service was stopped. Model caches remain for reuse. No autostart was enabled.
+
+## 2026-11-20 — Phase 4.29: experimental streaming
+
+168 targeted tests passed, 7 skipped, 2 existing tuple-return warnings, exit 0. Final real controlled comparisons had matched text and prefill outside timing: whole starts 4.92/5.33 s; sentence starts 2.09/3.31 s, both before brain completion. Sentence completion was slower (24.42/25.61 s versus 15.31/15.94 s), with estimated gaps and possible repetition. This is not quality approval or a two-second live-conversation result; mode stays opt-in. Four final real memory checks passed. Cancellation stopped both workers in 0.041/0.092 s, saved no messages, and a subsequent completed turn saved one exchange.
+
+Earlier generic-context speech exceeded its audio limit; failed probes and the corrected explicit-context probe are retained in phase evidence. Native output modality/PCM reset was repaired and the Android target rebuilt successfully. Clean pinned-source patch reconstruction matched all four built sources exactly. Compilation and CLI help passed. Full standalone legacy tests and human microphone capture were not rerun; prior limitations remain. Evidence is docs/verification/phase_04_29/; synthetic audition WAVs and private logs remain in the external recovery directory.
+
+Final checks: source secret scan and history-prefix checks passed. Owned phone runner lock and ADB forward were removed; the temporary Ollama service was stopped. Verified model caches remain. No autostart or upstream publication was performed.

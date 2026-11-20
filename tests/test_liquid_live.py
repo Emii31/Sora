@@ -293,3 +293,29 @@ def test_complete_reply_buffer_remains_bounded(monkeypatch):
             player.finish()
     finally:
         player.cancel()
+
+
+def test_forced_reading_context_has_bounded_headroom_without_truncating_reply(monkeypatch):
+    seen = []
+    class Response:
+        status = 400
+    class Connection:
+        def request(self, method, path, body, headers):
+            seen.append(json.loads(body))
+        def getresponse(self):
+            return Response()
+        def close(self):
+            pass
+    monkeypatch.setattr(live.http.client, 'HTTPConnection', lambda *args, **kwargs: Connection())
+    stream = live.LiquidStream('http://127.0.0.1:1234/v1/chat/completions', threading.Event())
+    reply = 'a' * 2000
+    text = 'Read this aloud: ' + reply
+    with pytest.raises(RuntimeError, match='HTTP 400'):
+        list(stream.events(b'', text=text, spoken_text=reply))
+    assert seen[0]['messages'][1]['content'] == text
+    assert seen[0]['spoken_text'] == reply
+    with pytest.raises(ValueError, match='2,000'):
+        list(stream.events(b'', text=text))
+    with pytest.raises(ValueError, match='2,048'):
+        list(stream.events(b'', text='a' * 2049, spoken_text='short'))
+    assert len(seen) == 1

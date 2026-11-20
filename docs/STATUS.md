@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.28 — Voice Startup and Playback Latency Controls
-- **Current Status**: Verified cold prefill before Listening, compact voice instructions, first-token diagnostics and earlier short-reply buffering. Identity/core-memory/restart checks still pass; measured playback starts were 3.88–7.13 s after recognition, following 16.85 s cold startup. Long smooth playback is optional because waiting for complete audio adds substantial delay. Streaming gaps and recognition mistakes remain; two-second live conversation is unachieved.
-- **Next Action**: Proposed Phase 4.29: investigate sentence-boundary speech pipelining while retaining complete-turn persistence, interruption and the selected Liquid voice. App work remains deferred. See [Phase 4.28](phases/PHASE_04_28.md).
+- **Phase**: Phase 4.29 — Experimental Sentence Streaming and Turn Reset
+- **Current Status**: Backend overlap, complete-turn persistence, cancellation and recovery verified. Sentence streaming remains off by default: controlled playback started at 2.09–3.31 s, but total responses became slower and possible repeated speech/continuity issues remain. Native audio-mode reset after interruption is corrected. Four memory checks and 168 targeted tests passed; human delivery-quality approval and consistent two-second conversation are unachieved.
+- **Next Action**: Proposed Phase 4.30: investigate continuous speech-model context and conversational conditioning, reduce repetition/completion delays and obtain listening review before promoting sentence mode. Recognition accuracy and app integration remain deferred. See [Phase 4.29](phases/PHASE_04_29.md).

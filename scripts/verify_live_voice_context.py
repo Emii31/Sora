@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--kit', type=Path, required=True)
     parser.add_argument('--report', type=Path, required=True, help='Fresh diagnostic directory')
     parser.add_argument('--no-warmup', action='store_true')
+    parser.add_argument('--sentence-streaming', action='store_true')
     args = parser.parse_args()
     args.report.mkdir(parents=True, exist_ok=False)
     previous_data_dir = os.environ.get('DATA_DIR')
@@ -57,7 +58,7 @@ def main():
                     ('What did I name my plant?', 'juniper'),
                 ):
                     # Re-create the adapter each turn to exercise persisted history.
-                    turn = VoiceTurn(endpoint, context=LocalVoiceContext())
+                    turn = VoiceTurn(endpoint, context=LocalVoiceContext(), sentence_streaming=args.sentence_streaming)
                     turn.microphone.transcript = question
                     try:
                         turn.start(b'synthetic recognized input')
@@ -74,6 +75,12 @@ def main():
                         results.append(result)
                         (args.report / 'results.json').write_text(json.dumps(results, indent=2))
                         print(json.dumps(result), flush=True)
+                    except Exception as exc:
+                        (args.report / 'failure.json').write_text(json.dumps({
+                            'question': question, 'error_type': type(exc).__name__, 'error': str(exc),
+                            'saved_messages': len(json.loads((root / 'chat_history.json').read_text())),
+                        }, indent=2))
+                        raise
                     finally:
                         turn.cancel()
                 if len(json.loads((root / 'chat_history.json').read_text())) != 8:

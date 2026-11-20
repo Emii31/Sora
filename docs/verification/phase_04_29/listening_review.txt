@@ -1,0 +1,5 @@
+Automatic Vosk transcription of fixed synthetic PCM (not a human listening review):
+Whole: i'm right here take a so breath tell me what happened whenever you're ready
+Sentences: i'm right here take a slow breath take a slow breath alex tell me what happened whenever you're ready
+
+The recognizer flagged a possible repeated phrase in sentence mode. Recognition itself is imperfect; perceptual confirmation is pending. Sentence-mode generated audio was 16.82 seconds versus 7.98 seconds for whole mode. These WAVs concatenate generated PCM and do not encode additional wall-time playback starvation.

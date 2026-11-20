@@ -1,0 +1,30 @@
+[
+  {
+    "stage": "reasoning",
+    "cancel_s": 0.041205440999874554,
+    "saved_messages": 0
+  },
+  {
+    "stage": "playback",
+    "cancel_s": 0.09158334499988996,
+    "saved_messages": 0
+  },
+  {
+    "stage": "recovery",
+    "saved_messages": 2,
+    "first_sentence_s": 0.7650289100001828,
+    "first_audio_s": 1.5453828540003087,
+    "buffer_seconds": 0.5,
+    "brain_ready_s": 1.8110364240001218,
+    "brain_first_token_s": 0.13704478399995423,
+    "playback_started_s": 2.1354807520001486,
+    "turn_finished_s": 10.396089974999995,
+    "playback_policy": "sentence_streaming",
+    "segments": 3,
+    "estimated_gaps": 2,
+    "audio_s": 5.94,
+    "text_characters": 50,
+    "character": "Sora",
+    "history_saved": true
+  }
+]

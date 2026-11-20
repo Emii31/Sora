@@ -80,6 +80,10 @@ class LiquidStream:
 
     def cancel(self):
         self.stopped.set()
+        self.abort()
+
+    def abort(self):
+        """Interrupt a pipeline failure without marking it as a user cancellation."""
         connection = self.connection
         if connection is not None and connection.sock is not None:
             try:
@@ -95,8 +99,9 @@ class LiquidStream:
             content = [{"type": "input_audio", "input_audio": {
                 "data": base64.b64encode(wav).decode("ascii"), "format": "wav"}}]
         else:
-            if not isinstance(text, str) or not text.strip() or len(text) > 2000:
-                raise ValueError("Send a nonempty transcript of at most 2,000 characters")
+            text_limit = 2048 if spoken_text is not None else 2000
+            if not isinstance(text, str) or not text.strip() or len(text) > text_limit:
+                raise ValueError(f"Send a nonempty transcript of at most {text_limit:,} characters")
             content = text
         payload = {
             "stream": True, "reset_context": True, "max_tokens": 256,

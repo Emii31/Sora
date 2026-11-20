@@ -17,6 +17,10 @@ class LocalVoiceBrain:
 
     def cancel(self):
         self.stopped.set()
+        self.abort()
+
+    def abort(self):
+        """Unblock a failed speech pipeline without hiding its error as cancellation."""
         connection = self.connection
         if connection is not None and connection.sock is not None:
             try:
@@ -24,14 +28,14 @@ class LocalVoiceBrain:
             except OSError:
                 pass
 
-    def reply(self, messages):
-        return self._complete(messages, token_limit=96)
+    def reply(self, messages, *, on_sentence=None):
+        return self._complete(messages, token_limit=96, on_sentence=on_sentence)
 
     def warmup(self, messages):
         """Load/prefill before listening; never return a conversational reply."""
         self._complete(messages, token_limit=1, warming=True)
 
-    def _complete(self, messages, *, token_limit, warming=False):
+    def _complete(self, messages, *, token_limit, warming=False, on_sentence=None):
         started = time.monotonic()
         self.metrics = {}
         with ai_config._lock:
@@ -58,6 +62,10 @@ class LocalVoiceBrain:
         words = []
         size = 0
         finish = None
+        if on_sentence is not None:
+            from voice_sentences import SentenceBuffer
+
+            sentences = SentenceBuffer()
         try:
             if self.stopped.is_set():
                 return ""
@@ -90,12 +98,18 @@ class LocalVoiceBrain:
                         if size > 2000:
                             raise ValueError("Spoken reply exceeds 2,000 bytes")
                         words.append(text)
+                        if on_sentence is not None:
+                            for sentence in sentences.feed(text):
+                                on_sentence(sentence)
             if self.stopped.is_set():
                 return ""
             reply = "".join(words).strip()
             if finish not in (("stop", "length") if warming else ("stop",)) or (not warming and not reply):
                 raise RuntimeError("Local chat returned an incomplete reply. Ask for a shorter response")
             self.metrics["finished_s"] = time.monotonic() - started
+            if on_sentence is not None:
+                for sentence in sentences.finish():
+                    on_sentence(sentence)
             return reply
         finally:
             connection.close()
