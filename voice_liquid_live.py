@@ -74,7 +74,7 @@ class LiquidStream:
             except OSError:
                 pass
 
-    def events(self, wav, *, text=None):
+    def events(self, wav, *, text=None, system_prompt=SYSTEM_PROMPT, spoken_text=None):
         from voice_input import MAX_SECONDS, _read_pcm
 
         if text is None:
@@ -88,9 +88,14 @@ class LiquidStream:
         payload = {
             "stream": True, "reset_context": True, "max_tokens": 256,
             "modalities": ["text", "audio"],
-            "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {
+            "messages": [{"role": "system", "content": system_prompt}, {
                 "role": "user", "content": content}],
         }
+        if spoken_text is not None:
+            if not spoken_text.strip() or len(spoken_text.encode("utf-8")) > 2000:
+                raise ValueError("Send a spoken reply of 1 to 2,000 bytes")
+            payload["spoken_text"] = spoken_text
+            payload["max_tokens"] = 512
         connection = http.client.HTTPConnection(self.url.hostname, self.url.port, timeout=45)
         self.connection = connection
         received = 0

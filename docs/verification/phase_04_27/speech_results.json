@@ -1,0 +1,26 @@
+[
+  {
+    "text": "I'm Sora. It's lovely to hear you.",
+    "first_s": 0.8016718760000003,
+    "total_s": 13.231168500000024,
+    "audio_s": 8.7
+  },
+  {
+    "text": "Hello! I'm Sora, your AI companion. How can I help you today?",
+    "first_s": 0.5982351139999764,
+    "total_s": 8.912064413999985,
+    "audio_s": 6.14
+  },
+  {
+    "text": "Your favorite tea is jasmine tea, Alex.",
+    "first_s": 0.6043574109999668,
+    "total_s": 10.10560536099996,
+    "audio_s": 7.58
+  },
+  {
+    "text": "You named your plant Juniper.",
+    "first_s": 0.6041092570000046,
+    "total_s": 4.169502000000023,
+    "audio_s": 2.7
+  }
+]

@@ -566,6 +566,7 @@ def migrate_timestamps_utc_to_cst():
 _CLEAR_ALL_CONFIRM_TEXT = "Clear All"
 
 
+@storage.serialized_chat_history
 def migrate_reminders_to_chat_history():
     """One-time migration: copy reminder entries from timeline.json into chat_history.json."""
     timeline = storage.read_json(storage.timeline_path())

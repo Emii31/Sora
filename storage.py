@@ -1,6 +1,9 @@
 import json
 import os
 import shutil
+from contextlib import contextmanager
+from functools import wraps
+import threading
 from datetime import datetime
 
 from PIL import Image, ImageOps
@@ -12,6 +15,52 @@ MEMORY_SCOPE_USER = "user"
 MEMORY_SCOPE_AIRI = "airi"
 MEMORY_SCOPE_ALL = "all"
 SUPPORTED_MEMORY_SCOPES = (MEMORY_SCOPE_USER, MEMORY_SCOPE_AIRI)
+_chat_lock = threading.RLock()
+_chat_lock_state = threading.local()
+
+
+@contextmanager
+def chat_history_transaction(path=None):
+    """Serialize chat read/modify/write operations across threads and processes."""
+    path = os.path.realpath(path or chat_history_path())
+    with _chat_lock:
+        held = getattr(_chat_lock_state, "paths", set())
+        if path in held:
+            yield
+            return
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path + ".lock", "a+b") as lock:
+            if os.name == "nt":
+                import msvcrt
+
+                if os.fstat(lock.fileno()).st_size == 0:
+                    lock.write(b"\0")
+                    lock.flush()
+                lock.seek(0)
+                msvcrt.locking(lock.fileno(), msvcrt.LK_LOCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(lock, fcntl.LOCK_EX)
+            held.add(path)
+            _chat_lock_state.paths = held
+            try:
+                yield
+            finally:
+                held.remove(path)
+                if os.name == "nt":
+                    lock.seek(0)
+                    msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def serialized_chat_history(function):
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        with chat_history_transaction():
+            return function(*args, **kwargs)
+    return wrapped
 
 
 def get_data_dir() -> str:
@@ -118,6 +167,13 @@ def compress_image(input_path, max_size=1600, quality=85):
 
 
 def read_json(path):
+    if os.path.basename(path) == "chat_history.json":
+        with chat_history_transaction(path):
+            return _read_json(path)
+    return _read_json(path)
+
+
+def _read_json(path):
     _ensure_dirs()
     if not os.path.exists(path):
         write_json(path, [])
@@ -128,6 +184,13 @@ def read_json(path):
 
 def write_json(path, data):
     """Atomic JSON write: write to temp file then rename to prevent corruption."""
+    if os.path.basename(path) == "chat_history.json":
+        with chat_history_transaction(path):
+            return _write_json(path, data)
+    return _write_json(path, data)
+
+
+def _write_json(path, data):
     _ensure_dirs()
     tmp_path = path + ".tmp"
     with open(tmp_path, "w", encoding="utf-8") as f:
@@ -325,10 +388,35 @@ def chat_history_path():
     return os.path.join(get_data_dir(),"chat_history.json")
 
 
+@serialized_chat_history
 def append_chat_message(msg):
     history = read_json(chat_history_path())
     history.append(msg)
     write_json(chat_history_path(), history)
+
+
+@serialized_chat_history
+def append_voice_exchange(turn_id, user_text, reply_text, timestamp):
+    """Save a completed voice turn atomically, allowing an identical retry."""
+    if not turn_id.startswith("voice_") or not user_text or not reply_text:
+        raise ValueError("Invalid completed voice exchange")
+    messages = [
+        {"id": turn_id, "role": "user", "text": user_text, "time": timestamp, "type": "voice"},
+        {"id": turn_id + "_reply", "role": "assistant", "text": reply_text, "time": timestamp, "type": "voice"},
+    ]
+    history = read_json(chat_history_path())
+    if not isinstance(history, list):
+        raise ValueError("Saved chat history is invalid")
+    ids = {message["id"] for message in messages}
+    existing = [item for item in history if isinstance(item, dict) and item.get("id") in ids]
+    if existing:
+        if len(existing) != 2 or any(
+                not any(all(old.get(key) == new[key] for key in ("id", "role", "text")) for old in existing)
+                for new in messages):
+            raise ValueError("Voice turn conflicts with saved history")
+        return False
+    write_json(chat_history_path(), history + messages)
+    return True
 
 
 def get_chat_history(limit=50):
@@ -426,6 +514,7 @@ def get_pending_notifications(device_id: str, mark_read: bool = True):
 CHAT_ARCHIVE_KEEP_RECENT = 500  # messages to keep in active file
 
 
+@serialized_chat_history
 def archive_old_chat_messages(keep_recent=CHAT_ARCHIVE_KEEP_RECENT):
     """Move old chat messages to monthly archive files.
 

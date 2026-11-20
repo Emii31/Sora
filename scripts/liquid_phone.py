@@ -2,6 +2,7 @@
 
 import hashlib
 import http.client
+import json
 from pathlib import Path
 import subprocess
 import threading
@@ -95,6 +96,14 @@ class PhoneRunner:
                 connection.close()
         else:
             raise TimeoutError("Phone runner did not become ready")
+        health = http.client.HTTPConnection("127.0.0.1", int(self.port), timeout=3)
+        try:
+            health.request("GET", "/health")
+            response = health.getresponse()
+            if response.status != 200 or json.loads(response.read(4096)).get("forced_text") != 1:
+                raise RuntimeError("Rebuild the Android runner with the repository's forced-speech patch")
+        finally:
+            health.close()
         self.adb("shell", f'cd {self.remote} && taskset -ap f0 "$(cat session.lock/pid)"')
         self.pid = self.adb("shell", f"cat {self.remote}/session.lock/pid").stdout.strip()
         if not self.pid.isdigit():

@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What is your name?",
+    "reply": "Hello! I'm Sora. How can I help you today?",
+    "first_audio_s": 21.09570371899997,
+    "playback_started_s": 23.17496502099999,
+    "turn_finished_s": 28.409725710999965,
+    "estimated_gaps": 0,
+    "audio_s": 5.1,
+    "text_characters": 42,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "What tea do I like?",
+    "reply": "You like jasmine tea. It's a nice, calming drink.",
+    "first_audio_s": 3.9123246249999966,
+    "playback_started_s": 6.418716067999981,
+    "turn_finished_s": 11.378867409999998,
+    "estimated_gaps": 0,
+    "audio_s": 4.86,
+    "text_characters": 49,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "My plant is called Juniper.",
+    "reply": "Oh, that's a lovely name for a plant! It sounds like it could be a juniper bush. What's the story behind it?",
+    "first_audio_s": 6.957822336000049,
+    "playback_started_s": 9.053470457000003,
+    "turn_finished_s": 21.665883146,
+    "estimated_gaps": 1,
+    "audio_s": 10.78,
+    "text_characters": 108,
+    "character": "Sora",
+    "history_saved": true
+  },
+  {
+    "question": "What did I name my plant?",
+    "reply": "You named your plant Juniper. It's a nice, unique name!",
+    "first_audio_s": 7.432847461999984,
+    "playback_started_s": 9.386057227000038,
+    "turn_finished_s": 15.590130380999994,
+    "estimated_gaps": 0,
+    "audio_s": 6.06,
+    "text_characters": 55,
+    "character": "Sora",
+    "history_saved": true
+  }
+]

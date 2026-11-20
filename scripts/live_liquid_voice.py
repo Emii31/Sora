@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 import select
 import sys
@@ -10,11 +11,13 @@ import threading
 import time
 
 from liquid_phone import PhoneRunner
+from voice_brain import LocalVoiceBrain
 from voice_liquid_live import BufferedPlayer, LiquidStream, Microphone
 
 
 class VoiceTurn:
-    def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=1.5, vosk_model=None):
+    def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=1.5,
+                 vosk_model=None, context=None):
         self.stopped = threading.Event()
         self.microphone = Microphone(self.stopped, source=source, threshold=threshold, vosk_model=vosk_model)
         self.stream = LiquidStream(endpoint, self.stopped)
@@ -24,6 +27,8 @@ class VoiceTurn:
         self.metrics = {}
         self.error = None
         self.thread = None
+        self.context = context
+        self.brain = LocalVoiceBrain(self.stopped) if context else None
 
     def run(self, wav=None):
         try:
@@ -35,14 +40,29 @@ class VoiceTurn:
                     print("No utterance detected. Check the input device and speech threshold.", flush=True)
                 return
             transcript = self.microphone.transcript
+            if self.context and transcript is None:
+                from voice_input import transcribe_wav
+
+                transcript = transcribe_wav(wav)
+                if not transcript:
+                    raise RuntimeError("No speech was recognized in the voice input")
             if transcript:
                 print("Heard: " + transcript, flush=True)
             started = time.monotonic()
+            snapshot = self.context.prepare(transcript) if self.context else None
             print("Thinking...", flush=True)
+            reply_text = self.context.respond(snapshot, self.brain) if snapshot else None
+            brain_ready = time.monotonic() - started if snapshot else None
+            if self.stopped.is_set():
+                return
             self.player = BufferedPlayer(self.stopped, self.buffer_seconds, self.sink)
             text = []
             first_audio = None
-            for kind, data in self.stream.events(wav, text=transcript):
+            options = {"text": transcript}
+            if snapshot:
+                options["spoken_text"] = reply_text
+                options["text"] = "Please speak to me."
+            for kind, data in self.stream.events(wav, **options):
                 if self.stopped.is_set():
                     break
                 if kind == "text":
@@ -56,12 +76,19 @@ class VoiceTurn:
             if not self.stopped.is_set():
                 self.metrics = {
                     "first_audio_s": first_audio,
+                    "brain_ready_s": brain_ready,
                     "playback_started_s": self.player.started_at - started if self.player.started_at else None,
                     "turn_finished_s": time.monotonic() - started,
                     "estimated_gaps": self.player.estimated_gaps,
                     "audio_s": self.player.bytes_written / 48000,
                     "text_characters": len("".join(text)),
                 }
+                if snapshot:
+                    if "".join(text).strip() != reply_text:
+                        raise RuntimeError("Voice output text differs from Sora's reply. Rebuild the Liquid runner")
+                    self.context.commit(snapshot, reply_text)
+                    self.metrics["character"] = snapshot.character_name
+                    self.metrics["history_saved"] = True
                 print("\n" + json.dumps(self.metrics), flush=True)
         except Exception as exc:
             if not self.stopped.is_set():
@@ -78,6 +105,8 @@ class VoiceTurn:
     def cancel(self):
         self.stopped.set()
         self.stream.cancel()
+        if self.brain:
+            self.brain.cancel()
         self.microphone.cancel()
         if self.player:
             self.player.cancel()
@@ -97,16 +126,24 @@ def main():
     parser.add_argument("--buffer-seconds", type=float, default=1.5)
     parser.add_argument("--replay", type=Path, help="Run one prerecorded input through real phone inference and playback")
     parser.add_argument("--once", action="store_true", help="Listen for one sentence and exit after its reply")
+    parser.add_argument("--user-id", help="Select an active local Sora account when several exist")
     parser.add_argument("--report", type=Path, help="Save diagnostic logs and timings in a fresh directory")
     args = parser.parse_args()
     if not 0 < args.threshold <= 1 or not 0 <= args.buffer_seconds <= 5:
         parser.error("Use a threshold between zero and one and a buffer from zero to five seconds")
     if not args.replay and not sys.stdin.isatty():
         parser.error("Live mode needs an interactive terminal")
+    from voice_context import LocalVoiceContext
+
+    context = LocalVoiceContext(user_id=args.user_id)
+    if not args.vosk_model:
+        parser.error("Sora context needs local recognition. Supply --vosk-model to transcribe your input")
+    print("Using Sora context from " + context.data_dir, flush=True)
     if args.vosk_model:
         from voice_input import _load_model
 
         print("Loading local speech recognition...", flush=True)
+        os.environ["SORA_VOSK_MODEL_DIR"] = str(args.vosk_model.resolve())
         _load_model(args.vosk_model.resolve())
     if args.report:
         args.report.mkdir(parents=True, exist_ok=False)
@@ -115,7 +152,8 @@ def main():
         with PhoneRunner(args.kit, directory / "server.log") as endpoint:
             def new_turn():
                 return VoiceTurn(endpoint, source=args.source, sink=args.sink,
-                                 threshold=args.threshold, buffer_seconds=args.buffer_seconds, vosk_model=args.vosk_model)
+                                 threshold=args.threshold, buffer_seconds=args.buffer_seconds,
+                                 vosk_model=args.vosk_model, context=context)
             turn = new_turn()
             try:
                 turn.start(args.replay.read_bytes() if args.replay else None)

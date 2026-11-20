@@ -56,3 +56,7 @@ Both chat modes use the active character. The full agent adds core memory and re
 ## Phase 4.26 live Liquid terminal prototype
 
 `scripts/live_liquid_voice.py` coordinates laptop microphone capture, optional incremental Vosk recognition, the phone's Liquid streaming server, and buffered PipeWire playback. `voice_liquid_live.py` contains the cancellable stream and audio components. `scripts/liquid_phone.py` manages verified model caching, the owned Android runner, its CPU affinity and an ADB loopback forward. Enter cancels the current turn and begins listening again. Each prototype reply currently uses a reset context and the selected default interleaved chat voice. Integrating active-character context and account memory is the next backend phase.
+
+## Phase 4.27 account-scoped live voice
+
+The terminal now transcribes input locally, loads a `LocalVoiceContext` snapshot, requests a complete reply from `LocalVoiceBrain` using the existing loopback chat provider, and streams forced-text Liquid speech on the phone. The runner patch keeps the selected audio model and interleaving mode. Existing identity/core memory and bounded chat are read from the selected account; completed exchanges append to the same history under thread/process transaction locks. No new memory store, remote provider fallback or voice-controlled device tools are introduced. Recognition and voice synthesis are cancellable; the phone runner and ADB forward remain session-owned. See Phase 4.27 for measured delays and limitations.

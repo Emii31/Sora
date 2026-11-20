@@ -50,7 +50,8 @@ def test_stream_requires_loopback_without_credentials(url):
 
 @pytest.mark.parametrize("finish,has_audio,valid", [("stop", True, True), ("length", True, False), ("stop", False, False)])
 @pytest.mark.parametrize("transcript", [None, "Hello Sora"])
-def test_stream_completion_contract(monkeypatch, finish, has_audio, valid, transcript):
+@pytest.mark.parametrize("spoken", [None, "Hello"])
+def test_stream_completion_contract(monkeypatch, finish, has_audio, valid, transcript, spoken):
     events = [{"choices": [{"delta": {"content": "Hello"}, "finish_reason": None}]}]
     if has_audio:
         events.append({"choices": [{"delta": audio_delta(b"\x00\x10" * 480), "finish_reason": None}]})
@@ -65,6 +66,11 @@ def test_stream_completion_contract(monkeypatch, finish, has_audio, valid, trans
             assert payload["reset_context"] is True
             assert payload["messages"][0]["content"] == live.SYSTEM_PROMPT
             assert payload["modalities"] == ["text", "audio"]
+            if spoken is not None:
+                assert payload["spoken_text"] == spoken
+                assert payload["max_tokens"] == 512
+            else:
+                assert "spoken_text" not in payload
             if transcript:
                 assert payload["messages"][1]["content"] == transcript
             else:
@@ -77,11 +83,11 @@ def test_stream_completion_contract(monkeypatch, finish, has_audio, valid, trans
     monkeypatch.setattr(live.http.client, "HTTPConnection", lambda *a, **k: connection)
     stream = live.LiquidStream("http://127.0.0.1:1234/v1/chat/completions", threading.Event())
     if valid:
-        received = list(stream.events(wav_input(), text=transcript))
+        received = list(stream.events(wav_input(), text=transcript, spoken_text=spoken))
         assert received == [("text", "Hello"), ("audio", b"\x00\x10" * 480)]
     else:
         with pytest.raises(RuntimeError):
-            list(stream.events(wav_input(), text=transcript))
+            list(stream.events(wav_input(), text=transcript, spoken_text=spoken))
     assert connection.closed and stream.connection is None
 
 
