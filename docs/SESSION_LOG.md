@@ -730,3 +730,7 @@ Regenerated the missing audition using the saved Liquid model in its default int
 ## 2026-11-22 — Phase 4.46 Liquid performance on Motorola
 
 Replayed the owner-approved reference prompts on the stock Android runner. Compared direct spoken input with text input and tried a staged ARM CPU backend. The stock path still misses the live-chat timing goal. The alternative produced invalid audio, so the timed gain was excluded. The approved reel and runtime defaults were preserved.
+
+## 2026-11-22 — Phase 4.47 reference-conditioned voice tests
+
+Tested Sopro V2 Turbo and LuxTTS using examples from the owner-approved Liquid reel. Sopro preserved the test words but missed the startup target. LuxTTS also missed startup and truncated a short reply. No voice change selected.

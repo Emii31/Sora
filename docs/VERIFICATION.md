@@ -619,3 +619,7 @@ All three Liquid replies completed. Verified PCM16 mono at 24 kHz, duration 42.5
 ## 2026-11-22 — Phase 4.46 Liquid phone baseline
 
 Five stock turns returned distinct replies. The experimental build produced byte-identical PCM for two different inputs and local recognition returned only sound. Stopped the trial and verified phone lock and USB forward cleanup. The approved reel SHA-256 is unchanged. Targeted tests returned 122 passed and 6 skipped. See PHASE_04_46.md.
+
+## 2026-11-22 — Phase 4.47 voice timing and recognition
+
+Verified pinned model weights, local PCM output, continuity estimates and Whisper transcriptions. Four-thread Sopro preserved 81/81 words with a 2.61–7.76 s estimated start. LuxTTS needed 2.16–4.97 s and produced 6 recognition edits in 52 words. Exact approved reference checksum passed. See PHASE_04_47.md.
