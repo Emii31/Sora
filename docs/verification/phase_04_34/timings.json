@@ -1,0 +1,34 @@
+{
+  "voice": "Kiki",
+  "preset": "expressive",
+  "threads": 4,
+  "seed": 1234,
+  "load_seconds": 6.237,
+  "sample_rate": 24000,
+  "takes": [
+    {
+      "name": "tender-comparison",
+      "input": "[tender] Come here for a second. I have something to tell you.",
+      "speech_seconds": 4.0,
+      "generation_seconds": 101.291,
+      "real_time_factor": 25.323,
+      "peak": 0.99
+    },
+    {
+      "name": "stern-comparison",
+      "input": "[stern] Come here for a second. I have something to tell you.",
+      "speech_seconds": 3.8,
+      "generation_seconds": 99.278,
+      "real_time_factor": 26.126,
+      "peak": 0.99
+    },
+    {
+      "name": "playful",
+      "input": "[joyful] I saved you the last strawberry. <laugh> It was very hard to be noble.",
+      "speech_seconds": 6.12,
+      "generation_seconds": 131.835,
+      "real_time_factor": 21.542,
+      "peak": 0.99
+    }
+  ]
+}

@@ -601,3 +601,7 @@ Final checks: source secret scan and append-only history checks against a1c2dd2 
 ## 2026-11-21 — Phase 4.33 voice evaluation
 
 104 targeted regression tests passed. The diagnostic Android build completed, both Liquid fixtures retained exact reference PCM, and the existing phone binary was restored and health-checked. Native timings identified backbone prefill/decode and token sampling as larger measured costs than detokenization. Piper passed the stock CPU synthesis check and a network-restricted repeat. Three virtual playback tests with real local chat replies matched with zero added monitor time between anchors. Evidence is under docs/verification/phase_04_33/. Microphone and subjective quality remain pending.
+
+## 2026-11-21 — Phase 4.34 expressive voice audition
+
+The config and three model assets matched upstream hashes. Python compilation and pip dependency checks passed. Three Kiki takes finished before the six-minute test limit. Verified the two comparison transcripts and the joined 15.22-second WAV. The timed takes produced 3.80–6.12 seconds of speech in 99.28–131.84 seconds. The streaming probe did not run. See docs/verification/phase_04_34/.

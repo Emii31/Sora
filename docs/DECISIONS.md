@@ -41,3 +41,5 @@
 - **Phase 4.32 CPU profiles**: Keep alternate affinity and thread counts available to the benchmark. Compare identical PCM and require repeatable throughput and monitor continuity before adopting a profile for conversation.
 
 - **Phase 4.33 stock voice audition**: Piper Amy Low passed the laptop speech speed checks at factory settings. Keep her as an audition candidate pending the owner's listening review. The complete turn's dominant delay now comes from the local chat model in the measured alternate path.
+
+- **Phase 4.34 voice audition** The owner rejected Piper Amy Low's delivery. Stock KittenTTS 2 is a listening candidate only. Its measured runtime on the laptop rules it out for live use.

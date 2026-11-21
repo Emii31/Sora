@@ -714,3 +714,7 @@ Started from 19ca2f5. Added optional per-session CPU profiles to the existing ru
 ## 2026-11-21 — Phase 4.33 Liquid profile and stock voice search
 
 Started from 804e020. Profiled Liquid on the Motorola with native sampler and detokenization timing. Restored the original source and binary after measuring. Liquid stayed slower than playback. Auditioned Kokoro, Kitten Nano and Piper Amy Low on the laptop using their released model settings. Amy generated a 15-second clip in about 1.6 seconds and three warm local chat replies started playback in 3.08–5.04 seconds. Saved a new six-line audition for owner review. The alternate benchmark used synthetic inputs and did not change Sora's runtime voice.
+
+## 2026-11-21 — Phase 4.34 expressive KittenTTS 2 audition
+
+Started from e48d244. The owner rejected Piper Amy Low's delivery. Generated Kiki's tender, stern, and playful takes with the released CPU model in an isolated offline run. The same-line comparison preserved the spoken words in both takes. All completed takes were over 21 times slower than playback. Saved the audition, timings, and local reproduction command in the phase record.

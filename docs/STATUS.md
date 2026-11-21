@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.33 — Liquid stage timing and offline voice audition
-- **Current status**: Liquid remains slower than playback on the Motorola. The backbone and audio sampler dominated its measured stages. Stock Piper Amy Low produced first PCM in under 0.7 seconds in the laptop runs. Warm local chat to playback took 3.08–5.04 seconds, with zero added monitor time across the three checks. 104 tests passed.
-- **Next action**: Owner listening review for natural delivery. If Amy is selected, add her as an option and address the local chat delay. See [Phase 4.33](phases/PHASE_04_33.md).
+- **Phase**: Phase 4.34 — Expressive KittenTTS 2 audition
+- **Current status**: The owner rejected Piper Amy Low. KittenTTS 2 produced a matched Kiki tender/stern comparison offline. Two four-second takes required about 100 seconds each on the laptop, so this build cannot support live chat there.
+- **Next action**: Compare the delivery with the owner's Liquid reference and test a lighter expressive engine with a short latency probe. See [Phase 4.34](phases/PHASE_04_34.md).
