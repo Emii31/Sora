@@ -1,0 +1,42 @@
+{
+  "profile": [
+    {
+      "prompt_eval_ms": 1175.46,
+      "backbone_decode_ms": 2894.95
+    },
+    {
+      "prompt_eval_ms": 3762.79,
+      "backbone_decode_ms": 3205.87
+    },
+    {
+      "prompt_eval_ms": 4131.09,
+      "backbone_decode_ms": 8411.97
+    },
+    {
+      "prompt_eval_ms": 4192.96,
+      "backbone_decode_ms": 8527.06
+    }
+  ],
+  "final": [
+    {
+      "prompt_eval_ms": 2768.67,
+      "backbone_decode_ms": 7639.18
+    },
+    {
+      "prompt_eval_ms": 5128.76,
+      "backbone_decode_ms": 5099.64
+    },
+    {
+      "prompt_eval_ms": 5406.31,
+      "backbone_decode_ms": 15364.05
+    },
+    {
+      "prompt_eval_ms": 6177.27,
+      "backbone_decode_ms": 18577.35
+    },
+    {
+      "prompt_eval_ms": 5759.28,
+      "backbone_decode_ms": 10356.91
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+[
+  {
+    "case": "short-0.5",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "generation_done_s": 6.25719749900054,
+    "generation_wall_rtf": 1.6730474596258127,
+    "emission_rtf": 1.4817078687166239,
+    "process_cpu_seconds": 23.41,
+    "first_chunk_s": 0.7156100700003662,
+    "playback_pipe_start_s": 1.3534891190001872,
+    "pipe_estimated_gaps": 3,
+    "maximum_feed_blocked_s": 0.0009255149998352863,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2208000,
+        "5": 2208000,
+        "6": 2208000,
+        "7": 2208000
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2112000,
+        "5": 2112000,
+        "6": 2112000,
+        "7": 2112000
+      }
+    },
+    "run": "initial",
+    "alignment": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 0.9172916666666666,
+      "material_lag_jumps": [
+        {
+          "reference_s": 1.3,
+          "added_s": 0.04266666666666663
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.04979166666666668
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.17654166666666682
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.10454166666666653
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 0.22074999999999978
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.03750000000000009
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.05545833333333361
+        }
+      ]
+    }
+  },
+  {
+    "case": "short-1.5",
+    "reserve_s": 1.5,
+    "generated_audio_s": 3.74,
+    "generation_done_s": 6.9705350009999165,
+    "generation_wall_rtf": 1.8637794120320632,
+    "emission_rtf": 1.6699692294117177,
+    "process_cpu_seconds": 25.51,
+    "first_chunk_s": 0.7248500830000921,
+    "playback_pipe_start_s": 3.7122274160001325,
+    "pipe_estimated_gaps": 0,
+    "maximum_feed_blocked_s": 0.00011307700060569914,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2112000,
+        "5": 2112000,
+        "6": 2112000,
+        "7": 2112000
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2112000,
+        "5": 2112000,
+        "6": 2112000,
+        "7": 2112000
+      }
+    },
+    "run": "initial",
+    "alignment": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 1.0,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 0.0,
+      "material_lag_jumps": []
+    }
+  },
+  {
+    "case": "long-0.5",
+    "reserve_s": 0.5,
+    "generated_audio_s": 10.86,
+    "generation_done_s": 16.19826527799978,
+    "generation_wall_rtf": 1.4915529721915084,
+    "emission_rtf": 1.4228522780846964,
+    "process_cpu_seconds": 61.21,
+    "first_chunk_s": 0.7460895379999783,
+    "playback_pipe_start_s": 1.3832730599997376,
+    "pipe_estimated_gaps": 4,
+    "maximum_feed_blocked_s": 0.00013635899995279033,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2112000,
+        "5": 2112000,
+        "6": 2112000,
+        "7": 2112000
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "run": "initial",
+    "alignment": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.640625,
+      "reliable": false,
+      "reason": "Too few high-confidence waveform matches"
+    }
+  },
+  {
+    "case": "long-1.5",
+    "reserve_s": 1.5,
+    "generated_audio_s": 10.86,
+    "generation_done_s": 16.402770175000114,
+    "generation_wall_rtf": 1.5103839940147437,
+    "emission_rtf": 1.446369318508266,
+    "process_cpu_seconds": 61.96,
+    "first_chunk_s": 0.6951993760003461,
+    "playback_pipe_start_s": 2.953984046000187,
+    "pipe_estimated_gaps": 6,
+    "maximum_feed_blocked_s": 0.0008139969995681895,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 65.4,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "run": "initial",
+    "alignment": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.65625,
+      "reliable": false,
+      "reason": "Reference onset or tail was not matched"
+    }
+  },
+  {
+    "case": "short-0.5",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "generation_done_s": 17.435705951999978,
+    "generation_wall_rtf": 4.661953463101598,
+    "emission_rtf": 3.782648423529409,
+    "process_cpu_seconds": 52.49,
+    "first_chunk_s": 3.2886008479999873,
+    "playback_pipe_start_s": 5.519484570999964,
+    "pipe_estimated_gaps": 35,
+    "maximum_feed_blocked_s": 0.00026929900002414797,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 68.6,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 70.9,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "run": "repeat",
+    "alignment": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 5.343958333333334,
+      "material_lag_jumps": [
+        {
+          "reference_s": 0.95,
+          "added_s": 0.9429999999999996
+        },
+        {
+          "reference_s": 1.05,
+          "added_s": 0.08537499999999998
+        },
+        {
+          "reference_s": 1.15,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 1.2,
+          "added_s": 0.13866666666666738
+        },
+        {
+          "reference_s": 1.3,
+          "added_s": 0.25599999999999934
+        },
+        {
+          "reference_s": 1.35,
+          "added_s": 0.10666666666666735
+        },
+        {
+          "reference_s": 1.45,
+          "added_s": 0.13358333333333317
+        },
+        {
+          "reference_s": 1.55,
+          "added_s": 0.2666666666666666
+        },
+        {
+          "reference_s": 1.6,
+          "added_s": 0.08529166666666743
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.12445833333333312
+        },
+        {
+          "reference_s": 1.75,
+          "added_s": 0.13279166666666686
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.40054166666666546
+        },
+        {
+          "reference_s": 2.0,
+          "added_s": 0.053333333333334565
+        },
+        {
+          "reference_s": 2.1,
+          "added_s": 0.04262499999999925
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.1792083333333334
+        },
+        {
+          "reference_s": 2.25,
+          "added_s": 0.06937499999999908
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 1.7780833333333348
+        },
+        {
+          "reference_s": 3.05,
+          "added_s": 0.1386666666666656
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.17616666666666703
+        },
+        {
+          "reference_s": 3.2,
+          "added_s": 0.13870833333333366
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.09812499999999957
+        }
+      ]
+    }
+  },
+  {
+    "case": "short-1.5",
+    "reserve_s": 1.5,
+    "generated_audio_s": 3.74,
+    "generation_done_s": 11.324193296999965,
+    "generation_wall_rtf": 3.027859170320846,
+    "emission_rtf": 2.611179188235298,
+    "process_cpu_seconds": 37.78,
+    "first_chunk_s": 1.5583831329999498,
+    "playback_pipe_start_s": 5.365251969999974,
+    "pipe_estimated_gaps": 15,
+    "maximum_feed_blocked_s": 0.00016368300003932745,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 70.3,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.9,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "run": "repeat",
+    "alignment": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 1.0,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 1.4826249999999996,
+      "material_lag_jumps": [
+        {
+          "reference_s": 3.0,
+          "added_s": 0.906625
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.10150000000000059
+        },
+        {
+          "reference_s": 3.2,
+          "added_s": 0.19204166666666644
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.2581250000000006
+        }
+      ]
+    }
+  },
+  {
+    "case": "long-0.5",
+    "reserve_s": 0.5,
+    "generated_audio_s": 10.86,
+    "generation_done_s": 29.588353386999984,
+    "generation_wall_rtf": 2.7245260945672176,
+    "emission_rtf": 2.6320154579189663,
+    "process_cpu_seconds": 99.19,
+    "first_chunk_s": 1.0046655140000098,
+    "playback_pipe_start_s": 2.140069600000004,
+    "pipe_estimated_gaps": 104,
+    "maximum_feed_blocked_s": 0.00013889999996763436,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.9,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "after": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 69.9,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "run": "repeat",
+    "alignment": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.40625,
+      "reliable": false,
+      "reason": "Too few high-confidence waveform matches"
+    }
+  },
+  {
+    "case": "long-1.5",
+    "reserve_s": 1.5,
+    "generated_audio_s": 10.86,
+    "generation_done_s": 33.203763761000005,
+    "generation_wall_rtf": 3.0574368104051572,
+    "emission_rtf": 2.940781108563538,
+    "process_cpu_seconds": 108.34,
+    "first_chunk_s": 1.2668809219999844,
+    "playback_pipe_start_s": 4.860893540999996,
+    "pipe_estimated_gaps": 96,
+    "maximum_feed_blocked_s": 0.0005500660000166135,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "before": {
+      "battery_temperature_c": 36.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 68.6,
+      "big_core_frequencies_khz": {
+        "4": 2054400,
+        "5": 2054400,
+        "6": 2054400,
+        "7": 2054400
+      }
+    },
+    "after": {
+      "battery_temperature_c": 37.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 68.9,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "run": "repeat",
+    "alignment": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.421875,
+      "reliable": false,
+      "reason": "Too few high-confidence waveform matches"
+    }
+  },
+  {
+    "case": "long-None",
+    "reserve_s": null,
+    "generated_audio_s": 10.86,
+    "generation_done_s": 20.93103955700002,
+    "generation_wall_rtf": 1.9273517087477,
+    "emission_rtf": 1.8139378974217297,
+    "process_cpu_seconds": 75.41,
+    "first_chunk_s": 1.2316739910000365,
+    "playback_pipe_start_s": 20.97431560000001,
+    "pipe_estimated_gaps": 0,
+    "maximum_feed_blocked_s": 0.0004451109999763503,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "before": {
+      "battery_temperature_c": 37.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.5,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 37.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "run": "repeat",
+    "alignment": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 1.0,
+      "reliable": true,
+      "anchored_span_s": 9.6,
+      "added_time_between_anchors_s": 0.0,
+      "material_lag_jumps": []
+    }
+  }
+]

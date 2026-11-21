@@ -1,0 +1,2 @@
+# Optional offline playback-analysis tools; not required by normal voice runtime.
+numpy==2.4.6

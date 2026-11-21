@@ -72,3 +72,7 @@ An optional callback in the local brain feeds a conservative sentence buffer and
 ## Phase 4.30 continuous text-to-speech session
 
 `--continuous-speech` connects the local brain's raw text callback to one native Liquid inference job. `ContinuousLiquid` owns a per-turn input ID and separate SSE/control connections; small append-only updates share the same backbone and vocoder state. The native server retains one inference worker with three HTTP handlers for stream/input/cancel, and limits input/session activity. Prefix token checks prevent partial-word retokenization from changing accepted tokens. Final text is closed only after valid brain completion; both stages and playback must succeed before history is appended. The speaker uses the original user text for context. Defaults, model weights, existing app voice routes and account storage remain unchanged.
+
+## Phase 4.31 playback diagnostics
+
+An optional profiler creates and owns a dedicated virtual sink and recorder, sends fixed synthetic input through the existing phone runner and playback writer, and aligns the monitor recording to reference PCM. It also records phone process CPU time, thermal snapshots and chunk arrival timing. NumPy is isolated to the optional diagnostics requirements.
