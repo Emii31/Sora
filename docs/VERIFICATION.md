@@ -597,3 +597,7 @@ Final checks: source secret scan and append-only history checks against a1c2dd2 
 ## 2026-11-21 — Phase 4.32 Motorola CPU profiles
 
 104 targeted tests passed. Python compilation, CLI help, whitespace and append-only history checks passed. Playback calibration detected about 0.57 seconds of deliberately inserted delay. Ten short and two long phone trials completed with identical reference PCM hashes per fixture. Short same-mask runs had 1.25–1.92 seconds of added monitor time. Both long alignments were inconclusive. Phone lock, USB forward and virtual sinks were removed. Summaries are under docs/verification/phase_04_32/.
+
+## 2026-11-21 — Phase 4.33 voice evaluation
+
+104 targeted regression tests passed. The diagnostic Android build completed, both Liquid fixtures retained exact reference PCM, and the existing phone binary was restored and health-checked. Native timings identified backbone prefill/decode and token sampling as larger measured costs than detokenization. Piper passed the stock CPU synthesis check and a network-restricted repeat. Three virtual playback tests with real local chat replies matched with zero added monitor time between anchors. Evidence is under docs/verification/phase_04_33/. Microphone and subjective quality remain pending.

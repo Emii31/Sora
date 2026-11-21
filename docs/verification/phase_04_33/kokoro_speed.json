@@ -1,0 +1,54 @@
+{
+  "package": "0.6.0",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "load_s": 2.0487433440000586,
+  "trials": [
+    {
+      "voice": "af_heart",
+      "case": "delight",
+      "first_pcm_s": 12.755140554000036,
+      "synthesis_s": 12.755288821000022,
+      "audio_s": 3.712,
+      "audio_chunks": 1,
+      "rtf": 3.4362308246228506
+    },
+    {
+      "voice": "af_heart",
+      "case": "teasing",
+      "first_pcm_s": 18.417258102000005,
+      "synthesis_s": 18.417319174000113,
+      "audio_s": 4.416,
+      "audio_chunks": 1,
+      "rtf": 4.170588581068865
+    },
+    {
+      "voice": "af_heart",
+      "case": "comfort",
+      "first_pcm_s": 13.844637637000005,
+      "synthesis_s": 13.844674929999883,
+      "audio_s": 3.8826666666666667,
+      "audio_chunks": 1,
+      "rtf": 3.5657644908996953
+    },
+    {
+      "voice": "af_heart",
+      "case": "firm",
+      "first_pcm_s": 23.502595276999955,
+      "synthesis_s": 23.502646538999898,
+      "audio_s": 4.501333333333333,
+      "audio_chunks": 1,
+      "rtf": 5.221263301021897
+    },
+    {
+      "voice": "af_heart",
+      "case": "relief",
+      "first_pcm_s": 20.333213149999892,
+      "synthesis_s": 20.333248040999933,
+      "audio_s": 4.48,
+      "audio_chunks": 1,
+      "rtf": 4.538671437723199
+    }
+  ]
+}

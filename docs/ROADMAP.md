@@ -24,3 +24,5 @@ Next proposed work is Phase 4.31, measuring actual playback continuity and phone
 Phase 4.31 added calibrated digital playback capture and phone profiling. The measured speech generator ran below playback speed. The next backend experiment is inference throughput on the selected voice, followed by repeat digital continuity checks.
 
 Phase 4.32 compared CPU placement and thread count using identical synthetic speech. Android changed some requested masks despite periodic reapplication. Throughput work should distinguish time in the native backbone from time in audio decoding and vocoding before changing the terminal's defaults.
+
+Phase 4.33 separated Liquid's native stages and measured stock offline alternatives. Piper Amy Low has verified speech throughput on the laptop. Owner review and full conversation latency remain separate checkpoints.

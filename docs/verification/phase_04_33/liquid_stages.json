@@ -1,0 +1,26 @@
+[
+  {
+    "case": "short",
+    "generated_audio_s": 3.74,
+    "generation_done_s": 14.613710012999945,
+    "generation_wall_rtf": 3.9074090943850117,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "audio_frames": 47,
+    "audio_token_sampling_s": 4.911653,
+    "detokenization_s": 0.654768,
+    "backbone_prefill_s": 1.56435,
+    "backbone_decode_s": 7.21575
+  },
+  {
+    "case": "long",
+    "generated_audio_s": 10.86,
+    "generation_done_s": 22.500467179999987,
+    "generation_wall_rtf": 2.0718662228360945,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "audio_frames": 136,
+    "audio_token_sampling_s": 6.818286,
+    "detokenization_s": 1.76165,
+    "backbone_prefill_s": 5.5475,
+    "backbone_decode_s": 10.7765
+  }
+]

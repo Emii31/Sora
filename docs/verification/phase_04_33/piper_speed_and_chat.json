@@ -1,0 +1,134 @@
+{
+  "engine": "piper",
+  "package": "1.8.0",
+  "provider": "CPUExecutionProvider",
+  "load_s": 0.8266740719998324,
+  "trials": [
+    {
+      "voice": null,
+      "case": "delight",
+      "first_pcm_s": 0.3209272139999939,
+      "synthesis_s": 0.8335918859997946,
+      "audio_s": 4.768,
+      "audio_chunks": 2,
+      "rtf": 0.17483051300331265
+    },
+    {
+      "voice": null,
+      "case": "teasing",
+      "first_pcm_s": 0.28677674400000797,
+      "synthesis_s": 0.5747684820000813,
+      "audio_s": 5.168,
+      "audio_chunks": 2,
+      "rtf": 0.11121681153252348
+    },
+    {
+      "voice": null,
+      "case": "comfort",
+      "first_pcm_s": 0.08320929700016677,
+      "synthesis_s": 0.6481174600000941,
+      "audio_s": 4.8,
+      "audio_chunks": 3,
+      "rtf": 0.13502447083335295
+    },
+    {
+      "voice": null,
+      "case": "firm",
+      "first_pcm_s": 0.24079686400000355,
+      "synthesis_s": 0.6100282200000038,
+      "audio_s": 5.728,
+      "audio_chunks": 2,
+      "rtf": 0.10649934008379955
+    },
+    {
+      "voice": null,
+      "case": "relief",
+      "first_pcm_s": 0.12083154199990531,
+      "synthesis_s": 0.5098240339998483,
+      "audio_s": 5.168,
+      "audio_chunks": 2,
+      "rtf": 0.09865016137767962
+    },
+    {
+      "voice": null,
+      "case": "thoughtful",
+      "first_pcm_s": 0.4761772249999012,
+      "synthesis_s": 0.47618928199995025,
+      "audio_s": 4.656,
+      "audio_chunks": 1,
+      "rtf": 0.10227433032644981
+    },
+    {
+      "voice": null,
+      "case": "long-1",
+      "first_pcm_s": 0.3602603619999627,
+      "synthesis_s": 1.6818416379999235,
+      "audio_s": 15.168,
+      "audio_chunks": 5,
+      "rtf": 0.110880909678265
+    },
+    {
+      "voice": null,
+      "case": "long-2",
+      "first_pcm_s": 0.40695915500009505,
+      "synthesis_s": 1.606017169000097,
+      "audio_s": 15.488,
+      "audio_chunks": 5,
+      "rtf": 0.10369429035382859
+    },
+    {
+      "voice": null,
+      "case": "chat-reply",
+      "first_pcm_s": 0.1498356199999762,
+      "synthesis_s": 0.4362144149999949,
+      "audio_s": 4.192,
+      "audio_chunks": 2,
+      "rtf": 0.10405878220419726
+    },
+    {
+      "voice": null,
+      "case": "chat-reply",
+      "first_pcm_s": 0.4530206599997655,
+      "synthesis_s": 0.4530463329997474,
+      "audio_s": 3.504,
+      "audio_chunks": 1,
+      "rtf": 0.12929404480586398
+    },
+    {
+      "voice": null,
+      "case": "chat-reply",
+      "first_pcm_s": 0.2441397570000845,
+      "synthesis_s": 0.5708561490000648,
+      "audio_s": 3.68,
+      "audio_chunks": 2,
+      "rtf": 0.15512395353262629
+    }
+  ],
+  "chat_warmup_s": 8.23422166499995,
+  "chat": [
+    {
+      "prompt": "I finally finished the painting.",
+      "reply": "That's great, Sora! You've completed your artwork, aren't you excited?",
+      "brain_s": 3.793885767999882,
+      "pipe_start_s": 5.036607644000014,
+      "alignment_reliable": true,
+      "added_monitor_s": 0.0
+    },
+    {
+      "prompt": "I could use a little reassurance.",
+      "reply": "Just remember, I'm here to make your day a little brighter.",
+      "brain_s": 2.948798399000225,
+      "pipe_start_s": 3.5292626590003238,
+      "alignment_reliable": true,
+      "added_monitor_s": 0.0
+    },
+    {
+      "prompt": "You hid my favorite mug again!",
+      "reply": "Oops, I couldn't resist. Here's your favorite mug.",
+      "brain_s": 2.2712207989998205,
+      "pipe_start_s": 3.084723092999866,
+      "alignment_reliable": true,
+      "added_monitor_s": 0.0
+    }
+  ]
+}

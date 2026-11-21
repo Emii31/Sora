@@ -1,0 +1,47 @@
+--- a/tools/mtmd/audio-decoder.cpp
++++ b/tools/mtmd/audio-decoder.cpp
+@@ -729,6 +729,9 @@
+     virtual ~audio_decoder_lfm25() = default;
+
+     void start_new_turn() override {
++        profile_sampling_us = 0;
++        profile_vocoder_us = 0;
++        profile_frames = 0;
+         llama_memory_clear(llama_get_memory(audio_tokenizer_lctx), false);
+         istft_state->reset();
+
+@@ -753,7 +756,9 @@
+
+         auto               t0 = ggml_time_ms();
+         std::vector<float> embd(embd_ptr, embd_ptr + n_embd);
++        const auto sampling_started = ggml_time_us();
+         audio_token_t      next_token = decoder_model.sample(ctx, embd, smpl.get());
++        profile_sampling_us += ggml_time_us() - sampling_started;
+
+         if (verbose) {
+             LOG_INF("audio frame sampled in %" PRId64 " ms\n", ggml_time_ms() - t0);
+@@ -762,8 +767,13 @@
+         if (next_token[0] == 2048) {
+             result.is_final = true;  // switch back to text
+             std::fill(next_token.begin(), next_token.end(), 2048);
++            LOG_INF("SORA_STAGE_PROFILE frames=%" PRId64 " sampling_us=%" PRId64 " vocoder_us=%" PRId64 "\n",
++                    profile_frames, profile_sampling_us, profile_vocoder_us);
+         } else {
++            const auto vocoder_started = ggml_time_us();
+             auto decoded = detokenize(next_token);
++            profile_vocoder_us += ggml_time_us() - vocoder_started;
++            ++profile_frames;
+
+             result.pcm16.resize(decoded.size());
+             for (size_t i = 0; i < decoded.size(); i++) {
+@@ -815,6 +825,10 @@
+     }
+
+   private:
++    int64_t profile_sampling_us = 0;
++    int64_t profile_vocoder_us = 0;
++    int64_t profile_frames = 0;
++
+     bool is_interleaved_mode() const {
+         return std::find(modalities.begin(), modalities.end(), MTMD_OUTPUT_MODALITY_TEXT) != modalities.end() &&
+                std::find(modalities.begin(), modalities.end(), MTMD_OUTPUT_MODALITY_AUDIO) != modalities.end();

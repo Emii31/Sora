@@ -710,3 +710,7 @@ Started from d3848df. Added synthetic virtual monitor capture and waveform align
 ## 2026-11-21 — Phase 4.32 Motorola Liquid CPU comparison
 
 Started from 19ca2f5. Added optional per-session CPU profiles to the existing runner and a reproducible phone benchmark. An initial pilot stopped when the observed mask differed from the requested one. The completed comparisons recorded affinity snapshots and kept mismatched trials out of candidate selection. Three and four threads on mask f0 tied at 1.99 wall seconds per second of short speech. The long comparison remained slower than playback and had an affinity mismatch in the four-thread control. Kept the runtime default. All PCM hashes matched within each of the two fixtures.
+
+## 2026-11-21 — Phase 4.33 Liquid profile and stock voice search
+
+Started from 804e020. Profiled Liquid on the Motorola with native sampler and detokenization timing. Restored the original source and binary after measuring. Liquid stayed slower than playback. Auditioned Kokoro, Kitten Nano and Piper Amy Low on the laptop using their released model settings. Amy generated a 15-second clip in about 1.6 seconds and three warm local chat replies started playback in 3.08–5.04 seconds. Saved a new six-line audition for owner review. The alternate benchmark used synthetic inputs and did not change Sora's runtime voice.

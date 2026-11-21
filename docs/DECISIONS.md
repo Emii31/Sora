@@ -39,3 +39,5 @@
 - **Phase 4.31 playback diagnostics**: Use captured virtual monitor PCM and reference waveform alignment to verify added playback time. Treat pipe estimates separately and report inconclusive captures explicitly. Full buffering is a useful control with a substantial startup cost. Prioritize synthesis throughput over a new buffer default.
 
 - **Phase 4.32 CPU profiles**: Keep alternate affinity and thread counts available to the benchmark. Compare identical PCM and require repeatable throughput and monitor continuity before adopting a profile for conversation.
+
+- **Phase 4.33 stock voice audition**: Piper Amy Low passed the laptop speech speed checks at factory settings. Keep her as an audition candidate pending the owner's listening review. The complete turn's dominant delay now comes from the local chat model in the measured alternate path.
