@@ -734,3 +734,7 @@ Replayed the owner-approved reference prompts on the stock Android runner. Compa
 ## 2026-11-22 — Phase 4.47 reference-conditioned voice tests
 
 Tested Sopro V2 Turbo and LuxTTS using examples from the owner-approved Liquid reel. Sopro preserved the test words but missed the startup target. LuxTTS also missed startup and truncated a short reply. No voice change selected.
+
+## 2026-11-22 — Phase 4.48 native Sopro streaming
+
+Benchmarked the same Sopro checkpoint and Liquid references through audio.cpp. Four warmed CPU threads reached an estimated continuous audible start of 0.96–1.30 s. Generated a listening sample. Voice fit and end-to-end chat timing remain pending.

@@ -623,3 +623,7 @@ Five stock turns returned distinct replies. The experimental build produced byte
 ## 2026-11-22 — Phase 4.47 voice timing and recognition
 
 Verified pinned model weights, local PCM output, continuity estimates and Whisper transcriptions. Four-thread Sopro preserved 81/81 words with a 2.61–7.76 s estimated start. LuxTTS needed 2.16–4.97 s and produced 6 recognition edits in 52 words. Exact approved reference checksum passed. See PHASE_04_47.md.
+
+## 2026-11-22 — Phase 4.48 cached native voice
+
+Verified the release checksum, isolated loopback runs, reference cache hits and five complete replies for each profile. Four threads reached 1.2 s in three of five tests. Whisper tiny.en found two edits in 81 words. Verified the 24.80-second audition and retained the exact approved Liquid reel.
