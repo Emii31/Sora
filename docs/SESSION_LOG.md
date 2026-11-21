@@ -722,3 +722,7 @@ Started from e48d244. The owner rejected Piper Amy Low's delivery. Generated Kik
 ## 2026-11-22 — Phase 4.42 Gwen live speech
 
 The owner chose to continue with Gwen. Benchmarked four chunk ceilings and the stock control on the Moto G Stylus 5G (2024). Chose 256 frames, added a warmed standalone PCM worker, and collected a four-style audition on the Motorola. Model weights and delivery settings were preserved. See PHASE_04_42.md for results and setup.
+
+## 2026-11-22 — Phase 4.45 Liquid voice reference approved
+
+Regenerated the missing audition using the saved Liquid model in its default interleaved conversation mode. The owner approved the full 42.5-second reel for voice and emotional delivery. Saved a verified local copy and recorded its checksum and source. No voice settings changed.

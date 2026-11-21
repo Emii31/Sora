@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.42 — Gwen live speech on Motorola
-- **Current status**: Gwen’s offline phone-to-client speech prototype meets the native speech startup target on the tested holdout set. The i5-7300U still missed it in tested profiles. Sora’s existing voice remains in service.
-- **Next action**: Connect the experimental speech worker to an opt-in trial and measure the microphone-to-speaker loop. See [Phase 4.42](phases/PHASE_04_42.md).
+- **Phase**: Phase 4.45 — Liquid voice reference approved
+- **Current status**: The owner approved the full 42.5-second Liquid conversation reel for Sora’s voice and delivery. The exact recording is preserved locally. Live-chat performance remains pending.
+- **Next action**: Evaluate live conversation speed against the approved audio. See [Phase 4.45](phases/PHASE_04_45.md).
