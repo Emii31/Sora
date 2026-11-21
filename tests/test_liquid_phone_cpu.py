@@ -24,3 +24,13 @@ def test_runner_preserves_default_and_formats_explicit_masks(runner, tmp_path):
     assert (default.cpu_mask, default.threads) == ('f0', 4)
     mixed = runner(tmp_path, tmp_path / 'mixed.log', cpu_mask=0xf3, threads=6)
     assert (mixed.cpu_mask, mixed.threads) == ('f3', 6)
+
+
+def test_experimental_runner_uses_a_separate_phone_filename(runner, tmp_path):
+    stock = runner(tmp_path, tmp_path / 'stock.log')
+    alternate = tmp_path / 'optimized runner'
+    trial = runner(tmp_path, tmp_path / 'trial.log', runner=alternate)
+    assert stock.binary == tmp_path / 'android/build/bin/llama-liquid-audio-server'
+    assert stock.binary_name == 'llama-liquid-audio-server'
+    assert trial.binary == alternate
+    assert trial.binary_name == 'llama-liquid-audio-server-experimental'

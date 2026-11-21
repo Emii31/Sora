@@ -615,3 +615,7 @@ The Android worker compiled with warnings treated as errors. The manifest utilit
 ## 2026-11-22 — Phase 4.45 Liquid reference integrity
 
 All three Liquid replies completed. Verified PCM16 mono at 24 kHz, duration 42.5 s and exact joined PCM. The approved local copy matches the audition byte for byte. A live microphone-to-speaker run remains pending. See PHASE_04_45.md.
+
+## 2026-11-22 — Phase 4.46 Liquid phone baseline
+
+Five stock turns returned distinct replies. The experimental build produced byte-identical PCM for two different inputs and local recognition returned only sound. Stopped the trial and verified phone lock and USB forward cleanup. The approved reel SHA-256 is unchanged. Targeted tests returned 122 passed and 6 skipped. See PHASE_04_46.md.

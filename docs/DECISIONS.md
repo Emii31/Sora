@@ -47,3 +47,5 @@
 - **Phase 4.42 phone speech**: Keep Gwen’s stock weights and delivery controls. Use a 256-frame chunk ceiling and prime short and longer synthesis before accepting a request. Keep the USB worker experimental until a microphone-to-speaker check verifies complete conversational latency and playback continuity.
 
 - **Phase 4.45 voice selection**: The owner approved the full Liquid conversation reel. Its exact playback audio is the reference for delivery across moods. The Gwen and Supertonic trials did not meet the owner’s delivery preference. Voice quality is approved for the reference and live performance remains a separate acceptance check.
+
+- **Phase 4.46 performance**: Keep the approved Liquid reel. The stock Motorola runner missed the speed target even with complete text input. The tested KleidiAI build returned invalid speech and is ruled out for this runner.

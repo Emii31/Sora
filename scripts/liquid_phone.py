@@ -14,13 +14,18 @@ from voice_liquid_live import stop_process
 class PhoneRunner:
     remote = "/data/local/tmp/sora-liquid-live"
 
-    def __init__(self, kit, log_path, *, cpu_mask=0xf0, threads=4):
+    def __init__(self, kit, log_path, *, cpu_mask=0xf0, threads=4, runner=None):
         if (type(cpu_mask) is not int or not 0 < cpu_mask <= 0xff
                 or type(threads) is not int or not 1 <= threads <= cpu_mask.bit_count()):
             raise ValueError("Use a valid eight-core CPU mask and thread count")
         self.cpu_mask = format(cpu_mask, "x")
         self.threads = threads
         self.kit = Path(kit).resolve()
+        self.binary_name = "llama-liquid-audio-server"
+        self.binary = self.kit / "android/build/bin" / self.binary_name
+        if runner is not None:
+            self.binary = Path(runner).resolve()
+            self.binary_name += "-experimental"
         self.log_path = Path(log_path)
         self.proc = None
         self.log = None
@@ -56,17 +61,17 @@ class PhoneRunner:
         self.serial = devices[0]
         weights = "LFM2.5-Audio-1.5B-Q4_0.gguf"
         models = [self.kit / (prefix + weights) for prefix in ("", "mmproj-", "vocoder-", "tokenizer-")]
-        binary = self.kit / "android/build/bin/llama-liquid-audio-server"
-        for path in [binary, *models]:
+        files = [(self.binary, self.binary_name), *((path, path.name) for path in models)]
+        for path, _ in files:
             if not path.is_file():
                 raise FileNotFoundError(f"Missing local runner or model: {path}")
         self.adb("shell", f"mkdir -p {self.remote} && chmod 700 {self.remote} && mkdir {self.remote}/session.lock")
         self.locked = True
         print("Checking the phone's local Liquid model cache...", flush=True)
-        for path in [binary, *models]:
+        for path, name in files:
             with path.open("rb") as source:
                 digest = hashlib.file_digest(source, "sha256").hexdigest()
-            remote_path = self.remote + "/" + path.name
+            remote_path = self.remote + "/" + name
             saved = self.adb("shell", "sha256sum " + remote_path, check=False)
             if saved.returncode != 0 or saved.stdout.split()[0] != digest:
                 print("Copying " + path.name, flush=True)
@@ -74,12 +79,12 @@ class PhoneRunner:
                 verified = self.adb("shell", "sha256sum " + remote_path)
                 if verified.stdout.split()[0] != digest:
                     raise RuntimeError("Phone model checksum mismatch")
-        self.adb("shell", f"chmod 700 {self.remote}/llama-liquid-audio-server")
+        self.adb("shell", f"chmod 700 {self.remote}/{self.binary_name}")
         self.port = self.adb("forward", "tcp:0", "tcp:18086").stdout.strip()
         if not self.port.isdigit():
             raise RuntimeError("ADB did not allocate a loopback port")
         command = (f"cd {self.remote} && echo $$ > session.lock/pid && "
-                   f"exec taskset {self.cpu_mask} ./llama-liquid-audio-server --host 127.0.0.1 --port 18086 "
+                   f"exec taskset {self.cpu_mask} ./{self.binary_name} --host 127.0.0.1 --port 18086 "
                    f"-ngl 0 --seed 7 -t {self.threads} -tb {self.threads} -c 2048 "
                    f"--cpu-mask {self.cpu_mask} --cpu-mask-batch {self.cpu_mask} "
                    f"-m {weights} -mm mmproj-{weights} -mv vocoder-{weights} "

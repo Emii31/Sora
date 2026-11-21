@@ -726,3 +726,7 @@ The owner chose to continue with Gwen. Benchmarked four chunk ceilings and the s
 ## 2026-11-22 — Phase 4.45 Liquid voice reference approved
 
 Regenerated the missing audition using the saved Liquid model in its default interleaved conversation mode. The owner approved the full 42.5-second reel for voice and emotional delivery. Saved a verified local copy and recorded its checksum and source. No voice settings changed.
+
+## 2026-11-22 — Phase 4.46 Liquid performance on Motorola
+
+Replayed the owner-approved reference prompts on the stock Android runner. Compared direct spoken input with text input and tried a staged ARM CPU backend. The stock path still misses the live-chat timing goal. The alternative produced invalid audio, so the timed gain was excluded. The approved reel and runtime defaults were preserved.

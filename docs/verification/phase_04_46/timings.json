@@ -1,0 +1,95 @@
+{
+  "stock": [
+    {
+      "mode": "spoken",
+      "mood": "celebration",
+      "elapsed_s": 38.621,
+      "exact_reply": true,
+      "matches_approved_pcm": false,
+      "text": "Congrats on landing the job you\u2019ve been looking for. It\u2019s great to hear you\u2019re finally getting what you wanted. What\u2019s been the most exciting part of the new role so far?",
+      "first_voiced_s": 4.119,
+      "smooth_audible_s": 25.067,
+      "audio_s": 12.94
+    },
+    {
+      "mode": "spoken",
+      "mood": "playful",
+      "elapsed_s": 26.711,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "I see, you\u2019re pointing out that crumbs aren\u2019t proof. In other words, the last cookie was eaten, so the claim that crumbs are proof doesn\u2019t hold up.",
+      "first_voiced_s": 4.353,
+      "smooth_audible_s": 17.242,
+      "audio_s": 9.98
+    },
+    {
+      "mode": "spoken",
+      "mood": "reassurance",
+      "elapsed_s": 28.616,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "I\u2019m sorry you\u2019re feeling that way; take a breath, remind yourself it\u2019s okay, and focus on what you can control. Would you like a quick grounding exercise?",
+      "first_voiced_s": 2.585,
+      "smooth_audible_s": 14.975,
+      "audio_s": 13.66
+    },
+    {
+      "mode": "text",
+      "mood": "celebration",
+      "elapsed_s": 37.196,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "That\u2019s awesome news! Congratulations on landing the job you\u2019ve been dreaming about. It sounds like you\u2019ve been working hard and finally got the opportunity. Keep enjoying the new chapter and don\u2019t forget to celebrate your hard\u2011earned success!",
+      "first_voiced_s": 2.088,
+      "smooth_audible_s": 21.59,
+      "audio_s": 15.98
+    },
+    {
+      "mode": "text",
+      "mood": "reassurance",
+      "elapsed_s": 55.511,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "I hear you, that can be really unsettling. It helps to pause, take a breath, and remind yourself that everyone makes mistakes, especially when you\u2019re nervous. If you\u2019d like, I can suggest a quick way to calm your mind or a simple phrase to use when you feel the pressure building.",
+      "first_voiced_s": 4.338,
+      "smooth_audible_s": 41.776,
+      "audio_s": 15.34
+    }
+  ],
+  "kleidiai": [
+    {
+      "mode": "spoken",
+      "mood": "celebration",
+      "elapsed_s": 23.315,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "",
+      "first_voiced_s": 2.509,
+      "smooth_audible_s": 9.326,
+      "audio_s": 13.42
+    },
+    {
+      "mode": "spoken",
+      "mood": "playful",
+      "elapsed_s": 21.638,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "",
+      "first_voiced_s": 1.294,
+      "smooth_audible_s": 7.811,
+      "audio_s": 13.42
+    },
+    {
+      "mode": "spoken",
+      "mood": "reassurance",
+      "elapsed_s": 21.15,
+      "exact_reply": false,
+      "matches_approved_pcm": false,
+      "text": "",
+      "first_voiced_s": 1.24,
+      "smooth_audible_s": 7.408,
+      "audio_s": 13.42
+    }
+  ],
+  "kleidiai_cancelled_after_failed_speech": true
+}
