@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.34 — Expressive KittenTTS 2 audition
-- **Current status**: The owner rejected Piper Amy Low. KittenTTS 2 produced a matched Kiki tender/stern comparison offline. Two four-second takes required about 100 seconds each on the laptop, so this build cannot support live chat there.
-- **Next action**: Compare the delivery with the owner's Liquid reference and test a lighter expressive engine with a short latency probe. See [Phase 4.34](phases/PHASE_04_34.md).
+- **Phase**: Phase 4.42 — Gwen live speech on Motorola
+- **Current status**: Gwen’s offline phone-to-client speech prototype meets the native speech startup target on the tested holdout set. The i5-7300U still missed it in tested profiles. Sora’s existing voice remains in service.
+- **Next action**: Connect the experimental speech worker to an opt-in trial and measure the microphone-to-speaker loop. See [Phase 4.42](phases/PHASE_04_42.md).

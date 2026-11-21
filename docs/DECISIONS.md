@@ -43,3 +43,5 @@
 - **Phase 4.33 stock voice audition**: Piper Amy Low passed the laptop speech speed checks at factory settings. Keep her as an audition candidate pending the owner's listening review. The complete turn's dominant delay now comes from the local chat model in the measured alternate path.
 
 - **Phase 4.34 voice audition** The owner rejected Piper Amy Low's delivery. Stock KittenTTS 2 is a listening candidate only. Its measured runtime on the laptop rules it out for live use.
+
+- **Phase 4.42 phone speech**: Keep Gwen’s stock weights and delivery controls. Use a 256-frame chunk ceiling and prime short and longer synthesis before accepting a request. Keep the USB worker experimental until a microphone-to-speaker check verifies complete conversational latency and playback continuity.

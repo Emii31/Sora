@@ -718,3 +718,7 @@ Started from 804e020. Profiled Liquid on the Motorola with native sampler and de
 ## 2026-11-21 — Phase 4.34 expressive KittenTTS 2 audition
 
 Started from e48d244. The owner rejected Piper Amy Low's delivery. Generated Kiki's tender, stern, and playful takes with the released CPU model in an isolated offline run. The same-line comparison preserved the spoken words in both takes. All completed takes were over 21 times slower than playback. Saved the audition, timings, and local reproduction command in the phase record.
+
+## 2026-11-22 — Phase 4.42 Gwen live speech
+
+The owner chose to continue with Gwen. Benchmarked four chunk ceilings and the stock control on the Moto G Stylus 5G (2024). Chose 256 frames, added a warmed standalone PCM worker, and collected a four-style audition on the Motorola. Model weights and delivery settings were preserved. See PHASE_04_42.md for results and setup.
