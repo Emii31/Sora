@@ -1,0 +1,618 @@
+[
+  {
+    "case": "first-short-four-big",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "first_chunk_s": 0.7838006330000553,
+    "generation_done_s": 7.156049628000005,
+    "cpu_after_ticks": 2913,
+    "finished_s": 7.1952741270000615,
+    "generation_wall_rtf": 1.913382253475937,
+    "emission_rtf": 1.7038098917112166,
+    "process_cpu_seconds": 26.4,
+    "playback_pipe_start_s": 1.550624350000021,
+    "pipe_estimated_gaps": 8,
+    "maximum_feed_blocked_s": 0.00010800000006838673,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 1.2479583333333333,
+      "material_lag_jumps": [
+        {
+          "reference_s": 0.95,
+          "added_s": 0.07899999999999996
+        },
+        {
+          "reference_s": 1.05,
+          "added_s": 0.04270833333333335
+        },
+        {
+          "reference_s": 1.15,
+          "added_s": 0.05333333333333323
+        },
+        {
+          "reference_s": 1.2,
+          "added_s": 0.06400000000000006
+        },
+        {
+          "reference_s": 1.35,
+          "added_s": 0.07466666666666688
+        },
+        {
+          "reference_s": 1.45,
+          "added_s": 0.037583333333333524
+        },
+        {
+          "reference_s": 1.55,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.039124999999999854
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.19787500000000025
+        },
+        {
+          "reference_s": 2.0,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.11520833333333291
+        },
+        {
+          "reference_s": 2.25,
+          "added_s": 0.04804166666666676
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 0.2100833333333334
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.03750000000000009
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.05545833333333361
+        }
+      ]
+    },
+    "profile": "four-big",
+    "fixture": "short",
+    "tag": "first",
+    "requested_mask": "f0",
+    "threads": 4,
+    "observed_masks": [
+      "f0",
+      "f0"
+    ],
+    "mask_checks_passed": true
+  },
+  {
+    "case": "first-short-three-wide",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "first_chunk_s": 1.1115286069999684,
+    "generation_done_s": 7.347981418000018,
+    "cpu_after_ticks": 3389,
+    "finished_s": 7.40512954299993,
+    "generation_wall_rtf": 1.964700913903748,
+    "emission_rtf": 1.6675007516042912,
+    "process_cpu_seconds": 20.69,
+    "playback_pipe_start_s": 1.8889962590000096,
+    "pipe_estimated_gaps": 2,
+    "maximum_feed_blocked_s": 0.0011892449999777455,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 1.3972916666666664,
+      "material_lag_jumps": [
+        {
+          "reference_s": 0.95,
+          "added_s": 0.18566666666666665
+        },
+        {
+          "reference_s": 1.05,
+          "added_s": 0.05337499999999995
+        },
+        {
+          "reference_s": 1.2,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 1.35,
+          "added_s": 0.04266666666666685
+        },
+        {
+          "reference_s": 1.45,
+          "added_s": 0.037583333333333524
+        },
+        {
+          "reference_s": 1.55,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.0604583333333335
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.20854166666666663
+        },
+        {
+          "reference_s": 2.0,
+          "added_s": 0.04266666666666685
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.12587499999999974
+        },
+        {
+          "reference_s": 2.25,
+          "added_s": 0.04804166666666676
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 0.24208333333333343
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.03750000000000009
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.055458333333333165
+        }
+      ]
+    },
+    "profile": "three-wide",
+    "fixture": "short",
+    "tag": "first",
+    "requested_mask": "f0",
+    "threads": 3,
+    "observed_masks": [
+      "f0",
+      "f0"
+    ],
+    "mask_checks_passed": true
+  },
+  {
+    "case": "reverse-short-three-wide",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "first_chunk_s": 0.8971462320000683,
+    "generation_done_s": 7.501890445000072,
+    "cpu_after_ticks": 2390,
+    "finished_s": 7.546607466000069,
+    "generation_wall_rtf": 2.005853060160447,
+    "emission_rtf": 1.7659743885026746,
+    "process_cpu_seconds": 21.33,
+    "playback_pipe_start_s": 1.65249032600002,
+    "pipe_estimated_gaps": 12,
+    "maximum_feed_blocked_s": 0.00011347599991040624,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 1.706625,
+      "material_lag_jumps": [
+        {
+          "reference_s": 0.95,
+          "added_s": 0.14300000000000002
+        },
+        {
+          "reference_s": 1.05,
+          "added_s": 0.042708333333333126
+        },
+        {
+          "reference_s": 1.15,
+          "added_s": 0.06400000000000006
+        },
+        {
+          "reference_s": 1.2,
+          "added_s": 0.08533333333333326
+        },
+        {
+          "reference_s": 1.3,
+          "added_s": 0.04266666666666685
+        },
+        {
+          "reference_s": 1.35,
+          "added_s": 0.06400000000000006
+        },
+        {
+          "reference_s": 1.45,
+          "added_s": 0.048249999999999904
+        },
+        {
+          "reference_s": 1.55,
+          "added_s": 0.05333333333333368
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.09245833333333309
+        },
+        {
+          "reference_s": 1.75,
+          "added_s": 0.04745833333333316
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.2725416666666667
+        },
+        {
+          "reference_s": 2.0,
+          "added_s": 0.05333333333333368
+        },
+        {
+          "reference_s": 2.1,
+          "added_s": 0.07462499999999972
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.12587500000000018
+        },
+        {
+          "reference_s": 2.25,
+          "added_s": 0.037374999999999936
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 0.28474999999999984
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.05883333333333329
+        },
+        {
+          "reference_s": 3.2,
+          "added_s": 0.04270833333333357
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.055458333333333165
+        }
+      ]
+    },
+    "profile": "three-wide",
+    "fixture": "short",
+    "tag": "reverse",
+    "requested_mask": "f0",
+    "threads": 3,
+    "observed_masks": [
+      "f0",
+      "f0"
+    ],
+    "mask_checks_passed": true
+  },
+  {
+    "case": "reverse-short-four-big",
+    "reserve_s": 0.5,
+    "generated_audio_s": 3.74,
+    "reference_pcm_sha256": "c9929eecccae6c0c6a261c3e1a6c19b7576ed786ec8f1c8ba26737521c894aba",
+    "first_chunk_s": 0.8620044850000568,
+    "generation_done_s": 7.737750273000074,
+    "cpu_after_ticks": 4663,
+    "finished_s": 7.784565930999975,
+    "generation_wall_rtf": 2.0689171852941373,
+    "emission_rtf": 1.8384347026738013,
+    "process_cpu_seconds": 27.93,
+    "playback_pipe_start_s": 1.6984702470000457,
+    "pipe_estimated_gaps": 17,
+    "maximum_feed_blocked_s": 0.00011304300005576806,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 42,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.8571428571428571,
+      "reliable": true,
+      "anchored_span_s": 2.8499999999999996,
+      "added_time_between_anchors_s": 1.9199583333333332,
+      "material_lag_jumps": [
+        {
+          "reference_s": 0.95,
+          "added_s": 0.23899999999999988
+        },
+        {
+          "reference_s": 1.15,
+          "added_s": 0.05333333333333323
+        },
+        {
+          "reference_s": 1.2,
+          "added_s": 0.04266666666666685
+        },
+        {
+          "reference_s": 1.3,
+          "added_s": 0.04266666666666641
+        },
+        {
+          "reference_s": 1.35,
+          "added_s": 0.04266666666666685
+        },
+        {
+          "reference_s": 1.45,
+          "added_s": 0.037583333333333524
+        },
+        {
+          "reference_s": 1.55,
+          "added_s": 0.06400000000000006
+        },
+        {
+          "reference_s": 1.65,
+          "added_s": 0.0817916666666667
+        },
+        {
+          "reference_s": 1.75,
+          "added_s": 0.03679166666666678
+        },
+        {
+          "reference_s": 1.95,
+          "added_s": 0.2832083333333335
+        },
+        {
+          "reference_s": 2.0,
+          "added_s": 0.05333333333333323
+        },
+        {
+          "reference_s": 2.1,
+          "added_s": 0.07462500000000016
+        },
+        {
+          "reference_s": 2.2,
+          "added_s": 0.11520833333333336
+        },
+        {
+          "reference_s": 2.25,
+          "added_s": 0.04804166666666676
+        },
+        {
+          "reference_s": 3.0,
+          "added_s": 0.3914166666666663
+        },
+        {
+          "reference_s": 3.05,
+          "added_s": 0.07466666666666688
+        },
+        {
+          "reference_s": 3.1,
+          "added_s": 0.11216666666666653
+        },
+        {
+          "reference_s": 3.2,
+          "added_s": 0.053375000000000394
+        },
+        {
+          "reference_s": 3.25,
+          "added_s": 0.055458333333333165
+        }
+      ]
+    },
+    "profile": "four-big",
+    "fixture": "short",
+    "tag": "reverse",
+    "requested_mask": "f0",
+    "threads": 4,
+    "observed_masks": [
+      "f0",
+      "f0"
+    ],
+    "mask_checks_passed": true
+  },
+  {
+    "case": "confirmation-long-three-wide",
+    "reserve_s": 0.5,
+    "generated_audio_s": 10.86,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "first_chunk_s": 0.9034788330000083,
+    "generation_done_s": 19.00304537799991,
+    "cpu_after_ticks": 5777,
+    "finished_s": 19.055402683000125,
+    "generation_wall_rtf": 1.7498200163904154,
+    "emission_rtf": 1.6666267536832324,
+    "process_cpu_seconds": 55.11,
+    "playback_pipe_start_s": 1.6228320230000008,
+    "pipe_estimated_gaps": 24,
+    "maximum_feed_blocked_s": 0.00024738199999774224,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1900800,
+        "5": 1900800,
+        "6": 1900800,
+        "7": 1900800
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1651200,
+        "5": 1651200,
+        "6": 1651200,
+        "7": 1651200
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.640625,
+      "reliable": false,
+      "reason": "Too few high-confidence waveform matches"
+    },
+    "profile": "three-wide",
+    "fixture": "long",
+    "tag": "confirmation",
+    "requested_mask": "f0",
+    "threads": 3,
+    "observed_masks": [
+      "f0",
+      "f0"
+    ],
+    "mask_checks_passed": true
+  },
+  {
+    "case": "confirmation-long-four-big",
+    "reserve_s": 0.5,
+    "generated_audio_s": 10.86,
+    "reference_pcm_sha256": "796a87fbcedd1081068128a2d3e57c3b1550d2708de2e0135f4657fac22da12f",
+    "first_chunk_s": 1.096623819999877,
+    "generation_done_s": 19.586114554999995,
+    "cpu_after_ticks": 8985,
+    "finished_s": 19.633596387999887,
+    "generation_wall_rtf": 1.803509627532228,
+    "emission_rtf": 1.7025313752302136,
+    "process_cpu_seconds": 71.05,
+    "playback_pipe_start_s": 1.858513412999855,
+    "pipe_estimated_gaps": 38,
+    "maximum_feed_blocked_s": 0.0005326420000528742,
+    "before": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1651200,
+        "5": 1651200,
+        "6": 1651200,
+        "7": 1651200
+      }
+    },
+    "after": {
+      "battery_temperature_c": 38.0,
+      "thermal_status": 0,
+      "maximum_reported_cpu_temperature_c": 67.2,
+      "big_core_frequencies_khz": {
+        "4": 1651200,
+        "5": 1651200,
+        "6": 1651200,
+        "7": 1651200
+      }
+    },
+    "analysis": {
+      "attempted_anchors": 64,
+      "alignment_filter": "symmetric_hann_9",
+      "window_s": 0.02,
+      "matched_fraction": 0.640625,
+      "reliable": false,
+      "reason": "Too few high-confidence waveform matches"
+    },
+    "profile": "four-big",
+    "fixture": "long",
+    "tag": "confirmation",
+    "requested_mask": "f0",
+    "threads": 4,
+    "observed_masks": [
+      "c0",
+      "20"
+    ],
+    "mask_checks_passed": false
+  }
+]

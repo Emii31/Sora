@@ -37,3 +37,5 @@
 - **Phase 4.30 continuous speech context**: Add an optional single-session text feed rather than resetting the speech model per sentence. Incremental and whole-context audio matched byte-for-byte in the tested fixtures, with earlier starts and shorter completion than the matched baseline. Preserve the default until listening and real continuity checks pass. Use only complete stable token prefixes, explicit finalization, bounded input and owner-session cancellation; tolerate brief native cleanup lag through bounded HTTP-409 retry. Real-time playback and recognition remain unresolved.
 
 - **Phase 4.31 playback diagnostics**: Use captured virtual monitor PCM and reference waveform alignment to verify added playback time. Treat pipe estimates separately and report inconclusive captures explicitly. Full buffering is a useful control with a substantial startup cost. Prioritize synthesis throughput over a new buffer default.
+
+- **Phase 4.32 CPU profiles**: Keep alternate affinity and thread counts available to the benchmark. Compare identical PCM and require repeatable throughput and monitor continuity before adopting a profile for conversation.

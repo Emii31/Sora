@@ -14,7 +14,12 @@ from voice_liquid_live import stop_process
 class PhoneRunner:
     remote = "/data/local/tmp/sora-liquid-live"
 
-    def __init__(self, kit, log_path):
+    def __init__(self, kit, log_path, *, cpu_mask=0xf0, threads=4):
+        if (type(cpu_mask) is not int or not 0 < cpu_mask <= 0xff
+                or type(threads) is not int or not 1 <= threads <= cpu_mask.bit_count()):
+            raise ValueError("Use a valid eight-core CPU mask and thread count")
+        self.cpu_mask = format(cpu_mask, "x")
+        self.threads = threads
         self.kit = Path(kit).resolve()
         self.log_path = Path(log_path)
         self.proc = None
@@ -74,8 +79,9 @@ class PhoneRunner:
         if not self.port.isdigit():
             raise RuntimeError("ADB did not allocate a loopback port")
         command = (f"cd {self.remote} && echo $$ > session.lock/pid && "
-                   "exec taskset f0 ./llama-liquid-audio-server --host 127.0.0.1 --port 18086 "
-                   "-ngl 0 --seed 7 -t 4 -tb 4 -c 2048 --cpu-mask f0 --cpu-mask-batch f0 "
+                   f"exec taskset {self.cpu_mask} ./llama-liquid-audio-server --host 127.0.0.1 --port 18086 "
+                   f"-ngl 0 --seed 7 -t {self.threads} -tb {self.threads} -c 2048 "
+                   f"--cpu-mask {self.cpu_mask} --cpu-mask-batch {self.cpu_mask} "
                    f"-m {weights} -mm mmproj-{weights} -mv vocoder-{weights} "
                    f"--tts-speaker-file tokenizer-{weights}")
         self.log = self.log_path.open("wb")
@@ -105,7 +111,7 @@ class PhoneRunner:
                 raise RuntimeError("Rebuild the Android runner with the repository's current continuous-speech patch")
         finally:
             health.close()
-        self.adb("shell", f'cd {self.remote} && taskset -ap f0 "$(cat session.lock/pid)"')
+        self.adb("shell", f'cd {self.remote} && taskset -ap {self.cpu_mask} "$(cat session.lock/pid)"')
         self.pid = self.adb("shell", f"cat {self.remote}/session.lock/pid").stdout.strip()
         if not self.pid.isdigit():
             raise RuntimeError("Phone did not report a valid runner PID")
@@ -119,7 +125,7 @@ class PhoneRunner:
             if self.proc.poll() is not None:
                 return
             try:
-                subprocess.run(["adb", "-s", self.serial, "shell", "taskset", "-ap", "f0", self.pid],
+                subprocess.run(["adb", "-s", self.serial, "shell", "taskset", "-ap", self.cpu_mask, self.pid],
                                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3)
             except subprocess.TimeoutExpired:
                 pass

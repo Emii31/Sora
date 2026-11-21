@@ -22,3 +22,5 @@ Phase 4 continues. Later auditions selected the Liquid interleaved voice for the
 Next proposed work is Phase 4.31, measuring actual playback continuity and phone throughput before promoting a voice mode. Do not jump to Phase 5 or resume Phase 6 without the owner's instruction. Consistent two-second conversation, reliable recognition, natural barge-in and owner approval of delivery remain open. The active project environment is the existing Python 3.11.18 virtual environment; the older system-interpreter note above is not a requirement to replace it.
 
 Phase 4.31 added calibrated digital playback capture and phone profiling. The measured speech generator ran below playback speed. The next backend experiment is inference throughput on the selected voice, followed by repeat digital continuity checks.
+
+Phase 4.32 compared CPU placement and thread count using identical synthetic speech. Android changed some requested masks despite periodic reapplication. Throughput work should distinguish time in the native backbone from time in audio decoding and vocoding before changing the terminal's defaults.

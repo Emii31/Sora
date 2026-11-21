@@ -76,3 +76,7 @@ An optional callback in the local brain feeds a conservative sentence buffer and
 ## Phase 4.31 playback diagnostics
 
 An optional profiler creates and owns a dedicated virtual sink and recorder, sends fixed synthetic input through the existing phone runner and playback writer, and aligns the monitor recording to reference PCM. It also records phone process CPU time, thermal snapshots and chunk arrival timing. NumPy is isolated to the optional diagnostics requirements.
+
+## Phase 4.32 phone CPU benchmarking
+
+The phone runner accepts a validated per-session CPU mask and thread count. The benchmark applies each profile to both prefill and generation, captures playback through the virtual monitor, records affinity snapshots and checks exact PCM hashes. The terminal's ordinary runner uses its existing four-thread configuration.

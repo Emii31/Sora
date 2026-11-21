@@ -593,3 +593,7 @@ Final checks: source secret scan and append-only history checks against a1c2dd2 
 ## 2026-11-21 — Phase 4.31 digital playback
 
 96 targeted tests passed. Python compilation and pip dependency checks passed. Synthetic calibration returned zero added time in two clean tests and 0.53 seconds with a deliberately delayed producer. Nine phone profiles used identical generated PCM per fixture. Short monitor measurements confirmed added playback time in three of four runs. Long streaming captures were inconclusive. The fully buffered long control matched with zero added time between anchors and a 20.97-second pipe start. Evidence and native backbone timings are in docs/verification/phase_04_31/.
+
+## 2026-11-21 — Phase 4.32 Motorola CPU profiles
+
+104 targeted tests passed. Python compilation, CLI help, whitespace and append-only history checks passed. Playback calibration detected about 0.57 seconds of deliberately inserted delay. Ten short and two long phone trials completed with identical reference PCM hashes per fixture. Short same-mask runs had 1.25–1.92 seconds of added monitor time. Both long alignments were inconclusive. Phone lock, USB forward and virtual sinks were removed. Summaries are under docs/verification/phase_04_32/.

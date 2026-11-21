@@ -706,3 +706,7 @@ Two matched pairs started continuous playback at 2.87/2.46 s versus 5.07/6.46 s,
 ## 2026-11-21 — Phase 4.31 playback diagnosis
 
 Started from d3848df. Added synthetic virtual monitor capture and waveform alignment with confidence checks, plus read-only phone throughput profiling. Measured short streaming delays and validated the full-buffer long control. Phone generation remained slower than playback, with substantial run-to-run variation. Long streaming alignment was inconclusive. Kept voice playback defaults and added the pinned optional diagnostic dependency inside the project virtual environment. See PHASE_04_31.md for results and reproduction.
+
+## 2026-11-21 — Phase 4.32 Motorola Liquid CPU comparison
+
+Started from 19ca2f5. Added optional per-session CPU profiles to the existing runner and a reproducible phone benchmark. An initial pilot stopped when the observed mask differed from the requested one. The completed comparisons recorded affinity snapshots and kept mismatched trials out of candidate selection. Three and four threads on mask f0 tied at 1.99 wall seconds per second of short speech. The long comparison remained slower than playback and had an affinity mismatch in the four-thread control. Kept the runtime default. All PCM hashes matched within each of the two fixtures.
