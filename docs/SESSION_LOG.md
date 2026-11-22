@@ -742,3 +742,7 @@ Benchmarked the same Sopro checkpoint and Liquid references through audio.cpp. F
 ## 2026-11-22 — Phase 4.49 Sopro local conversation trial
 
 Added explicit native Sopro options to the terminal prototype. Prerecorded input and two microphone turns reached playback and persisted one exchange each in disposable storage. The owner heard the first reply and requested a repeat with a clearer speech cue. Both microphone turns reached the capture limit and mistranscribed the intended phrases. Full live latency and continuity remain unresolved.
+
+## 2026-11-22 — Phase 4.50 Motorola microphone trial
+
+Tested the Motorola microphone over USB. Unreliable live sink routing was bypassed with a disposable capture and replay. The laptop recognized the intended phrase on one repetition and played a local Sopro reply. Live microphone streaming remains pending.

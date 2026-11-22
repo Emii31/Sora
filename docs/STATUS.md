@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.49 — Native Sopro conversation trial
-- **Current status**: Opt-in local Sopro can reply through the laptop speakers. The two microphone runs gave inaccurate transcriptions and needed 4.28–4.34 seconds after recognition to begin playback, with estimated gaps.
-- **Next action**: Diagnose live microphone endpointing and measure combined recognition, chat and speech latency. See [Phase 4.49](phases/PHASE_04_49.md).
+- **Phase**: Phase 4.50 — Motorola microphone test
+- **Current status**: The Motorola microphone works for recorded USB input to the opt-in Sopro terminal prototype. The live audio route needs verification. Replay started laptop playback after 5.91 seconds from recognition.
+- **Next action**: Establish reliable live USB input and measure a single phone-microphone-to-speaker turn. See [Phase 4.50](phases/PHASE_04_50.md).

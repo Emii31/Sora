@@ -631,3 +631,7 @@ Verified the release checksum, isolated loopback runs, reference cache hits and 
 ## 2026-11-22 — Phase 4.49 Sopro conversation verification
 
 Verified the Sopro completion contract, dry CLI options, local Ollama inference, PipeWire playback and disposal of synthetic account data. The replay started playback 8.62 s after recognition. Microphone trials started playback at 4.34 s and 4.28 s after recognition with two estimated gaps each. Available results exclude valid speech-end latency because the microphone reached its capture limit. See PHASE_04_49.md.
+
+## 2026-11-22 — Phase 4.50 phone input verification
+
+Verified portable scrcpy checksum, USB microphone PCM, local recognition, one completed replay exchange and cleanup. Sopro began laptop playback 5.91 s after recognition, with two estimated gaps. This was a recording replay, so live microphone latency is unverified.
