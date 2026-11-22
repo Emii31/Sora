@@ -1,0 +1,420 @@
+{
+  "reference_sha256": "3eaab2ab4ddab06960886fad564b494c56c6702e115743bb9fec1ed54d2620ce",
+  "chat_warmup_s": 12.479325658000107,
+  "sopro_startup_and_warmup_s": 9.81838253900014,
+  "summary": {
+    "playback_median_s": 4.791743926499976,
+    "chat_median_s": 2.713211413999943,
+    "sopro_first_pcm_median_s": 2.0602388320000955,
+    "within_two_seconds": 0,
+    "reliable_monitor_turns": 5
+  },
+  "runs": [
+    {
+      "fixture": "relief",
+      "input": "I finally finished that project!",
+      "reply": "Great job, you must feel so accomplished!",
+      "words": 7,
+      "sentences": 1,
+      "first_audio_s": 3.97709075199964,
+      "brain_ready_s": 2.17655286299987,
+      "brain_first_token_s": 0.9941702149999401,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 3.9776752679999845,
+      "turn_finished_s": 7.269754528999783,
+      "estimated_gaps": 2,
+      "audio_s": 2.7626666666666666,
+      "text_characters": 41,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 1.8003006930002812,
+      "speech_generation_finished_s": 6.452796288000172,
+      "arrivals": [
+        {
+          "at_s": 3.9772950870001296,
+          "bytes": 30208
+        },
+        {
+          "at_s": 5.021258573000068,
+          "bytes": 32768
+        },
+        {
+          "at_s": 5.809340005000195,
+          "bytes": 32768
+        },
+        {
+          "at_s": 6.452452147999793,
+          "bytes": 36864
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 43,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9302325581395349,
+        "reliable": false,
+        "reason": "Reference onset or tail was not matched"
+      }
+    },
+    {
+      "fixture": "tender",
+      "input": "I feel a little lonely tonight.",
+      "reply": "I understand how that can feel sometimes. Maybe sharing a story or two could help make you feel a bit more connected with someone.",
+      "words": 24,
+      "sentences": 2,
+      "first_audio_s": 6.674715206000201,
+      "brain_ready_s": 4.519172497,
+      "brain_first_token_s": 1.0329938400000174,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 6.6757499989998905,
+      "turn_finished_s": 16.022729532000085,
+      "estimated_gaps": 9,
+      "audio_s": 7.541333333333333,
+      "text_characters": 130,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 2.1549491700002363,
+      "speech_generation_finished_s": 15.255869503999747,
+      "arrivals": [
+        {
+          "at_s": 6.674886440000137,
+          "bytes": 30208
+        },
+        {
+          "at_s": 7.437129212999935,
+          "bytes": 32768
+        },
+        {
+          "at_s": 8.240607850999822,
+          "bytes": 32768
+        },
+        {
+          "at_s": 9.274312068999734,
+          "bytes": 32768
+        },
+        {
+          "at_s": 10.255581787999745,
+          "bytes": 32768
+        },
+        {
+          "at_s": 11.04283429499992,
+          "bytes": 32768
+        },
+        {
+          "at_s": 11.82959926500007,
+          "bytes": 32768
+        },
+        {
+          "at_s": 12.893048355999781,
+          "bytes": 32768
+        },
+        {
+          "at_s": 13.767849541000032,
+          "bytes": 32768
+        },
+        {
+          "at_s": 14.565293652000037,
+          "bytes": 32768
+        },
+        {
+          "at_s": 15.255629767999835,
+          "bytes": 36864
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 114,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9649122807017544,
+        "reliable": true,
+        "anchored_span_s": 7.3500000000000005,
+        "added_time_between_anchors_s": 1.7493333333333325,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.65,
+            "added_s": 0.0804999999999998
+          },
+          {
+            "reference_s": 1.4,
+            "added_s": 0.12795833333333384
+          },
+          {
+            "reference_s": 2.0,
+            "added_s": 0.3520000000000003
+          },
+          {
+            "reference_s": 2.95,
+            "added_s": 0.29866666666666664
+          },
+          {
+            "reference_s": 3.35,
+            "added_s": 0.10758333333333336
+          },
+          {
+            "reference_s": 4.05,
+            "added_s": 0.10670833333333363
+          },
+          {
+            "reference_s": 4.95,
+            "added_s": 0.3839583333333332
+          },
+          {
+            "reference_s": 5.4,
+            "added_s": 0.19775000000000098
+          },
+          {
+            "reference_s": 6.1,
+            "added_s": 0.11733333333333285
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "playful",
+      "input": "I saved you the last cookie.",
+      "reply": "Thank you, I appreciate that.",
+      "words": 5,
+      "sentences": 1,
+      "first_audio_s": 3.6582114590000856,
+      "brain_ready_s": 1.769495599000038,
+      "brain_first_token_s": 0.7053885989998889,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 3.661667017000127,
+      "turn_finished_s": 5.502839791000042,
+      "estimated_gaps": 1,
+      "audio_s": 1.396,
+      "text_characters": 29,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 1.8865762280001945,
+      "speech_generation_finished_s": 4.383840515999964,
+      "arrivals": [
+        {
+          "at_s": 3.6584105740002997,
+          "bytes": 15808
+        },
+        {
+          "at_s": 4.38313783600006,
+          "bytes": 51200
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 23,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9565217391304348,
+        "reliable": true,
+        "anchored_span_s": 1.2,
+        "added_time_between_anchors_s": 0.32004166666666656,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.35,
+            "added_s": 0.31999999999999984
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "quiet",
+      "input": "Could you keep me company quietly for a moment?",
+      "reply": "Of course! Just a moment, I'll be right here.",
+      "words": 9,
+      "sentences": 2,
+      "first_audio_s": 4.969850997999856,
+      "brain_ready_s": 2.7809660909997547,
+      "brain_first_token_s": 1.0263465480002196,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 4.970288053999866,
+      "turn_finished_s": 8.380533285999718,
+      "estimated_gaps": 1,
+      "audio_s": 3.3173333333333335,
+      "text_characters": 45,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 2.188694723000026,
+      "speech_generation_finished_s": 7.660086022000087,
+      "arrivals": [
+        {
+          "at_s": 4.9701967659998445,
+          "bytes": 30208
+        },
+        {
+          "at_s": 5.657291370000166,
+          "bytes": 32768
+        },
+        {
+          "at_s": 6.367988352999873,
+          "bytes": 32768
+        },
+        {
+          "at_s": 7.0329265790001045,
+          "bytes": 32768
+        },
+        {
+          "at_s": 7.657745357999829,
+          "bytes": 30720
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 42,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 3.0500000000000003,
+        "added_time_between_anchors_s": 0.010625000000000107,
+        "material_lag_jumps": []
+      }
+    },
+    {
+      "fixture": "frustrated",
+      "input": "I missed the bus and now I'm late.",
+      "reply": "Oh no! Don't worry, we can still catch a ride together.",
+      "words": 11,
+      "sentences": 2,
+      "first_audio_s": 5.385949366999739,
+      "brain_ready_s": 2.978921808999985,
+      "brain_first_token_s": 0.7768236780002553,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 5.387867117000042,
+      "turn_finished_s": 10.18093289699982,
+      "estimated_gaps": 1,
+      "audio_s": 4.554666666666667,
+      "text_characters": 55,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 2.4068502400000398,
+      "speech_generation_finished_s": 9.26196859599986,
+      "arrivals": [
+        {
+          "at_s": 5.386159409999891,
+          "bytes": 62976
+        },
+        {
+          "at_s": 6.624336188000143,
+          "bytes": 32768
+        },
+        {
+          "at_s": 7.544274362000124,
+          "bytes": 32768
+        },
+        {
+          "at_s": 8.259133458000179,
+          "bytes": 32768
+        },
+        {
+          "at_s": 8.871559849999812,
+          "bytes": 32768
+        },
+        {
+          "at_s": 9.261802781999904,
+          "bytes": 24576
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 58,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9827586206896551,
+        "reliable": true,
+        "anchored_span_s": 4.4,
+        "added_time_between_anchors_s": 0.1386666666666665,
+        "material_lag_jumps": [
+          {
+            "reference_s": 2.0,
+            "added_s": 0.10666666666666647
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "curious",
+      "input": "I found a tiny frog in the garden.",
+      "reply": "That's quite a find! Frogs are quite fascinating creatures.",
+      "words": 9,
+      "sentences": 2,
+      "first_audio_s": 4.611463722999815,
+      "brain_ready_s": 2.6454567370001314,
+      "brain_first_token_s": 0.648133056000006,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 4.6131997990000855,
+      "turn_finished_s": 9.191576002000147,
+      "estimated_gaps": 2,
+      "audio_s": 3.616,
+      "text_characters": 59,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 1.9655284939999547,
+      "speech_generation_finished_s": 8.224191685999813,
+      "arrivals": [
+        {
+          "at_s": 4.611957459999758,
+          "bytes": 30208
+        },
+        {
+          "at_s": 5.283199187999799,
+          "bytes": 32768
+        },
+        {
+          "at_s": 6.1138152019998415,
+          "bytes": 32768
+        },
+        {
+          "at_s": 7.509106423000048,
+          "bytes": 32768
+        },
+        {
+          "at_s": 8.22396579999986,
+          "bytes": 45056
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 55,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9818181818181818,
+        "reliable": true,
+        "anchored_span_s": 3.35,
+        "added_time_between_anchors_s": 0.8959583333333336,
+        "material_lag_jumps": [
+          {
+            "reference_s": 1.45,
+            "added_s": 0.14933333333333376
+          },
+          {
+            "reference_s": 2.0,
+            "added_s": 0.714666666666667
+          },
+          {
+            "reference_s": 2.7,
+            "added_s": 0.038124999999999964
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.53 — Sopro sentence streaming comparison
-- **Current status**: Sentence splitting started longer replies 1.00–1.96 seconds earlier on matched token replays, with an extra 1.74–2.63 seconds of playback delay from gaps. Sopro still uses whole-reply synthesis.
-- **Next action**: Benchmark complete short replies against the same voice and actual local chat backend. See [Phase 4.53](phases/PHASE_04_53.md).
+- **Phase**: Phase 4.54 — Short-reply voice benchmark
+- **Current status**: Warmed laptop playback started in 3.66–6.68 seconds in six recognized-input trials. The owner wants Motorola delivery to take priority and accepts slower laptop speech.
+- **Next action**: Verify expressive synthesis and playback on the Motorola using the approved Liquid reference. See [Phase 4.54](phases/PHASE_04_54.md).

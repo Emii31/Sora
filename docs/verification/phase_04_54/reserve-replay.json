@@ -1,0 +1,34 @@
+[
+  {
+    "fixture": "tender",
+    "reserve_s": 0.25,
+    "start_since_first_pcm_s": 0.0019350719999238208,
+    "monitor_reliable": true,
+    "added_delay_s": 1.7706666666666666,
+    "alignment_reason": null
+  },
+  {
+    "fixture": "tender",
+    "reserve_s": 0.6,
+    "start_since_first_pcm_s": 0.0004491029999371676,
+    "monitor_reliable": true,
+    "added_delay_s": 1.7813333333333332,
+    "alignment_reason": null
+  },
+  {
+    "fixture": "curious",
+    "reserve_s": 0.25,
+    "start_since_first_pcm_s": 0.000559963999876345,
+    "monitor_reliable": true,
+    "added_delay_s": 0.9066250000000001,
+    "alignment_reason": null
+  },
+  {
+    "fixture": "curious",
+    "reserve_s": 0.6,
+    "start_since_first_pcm_s": 0.00045208299980004085,
+    "monitor_reliable": true,
+    "added_delay_s": 0.9066250000000001,
+    "alignment_reason": null
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "fixture": "relief",
+    "expected": "Great job, you must feel so accomplished!",
+    "generated": "Great job, you must feel so accomplished.",
+    "monitor": "Great job, you must feel so accomplished.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  },
+  {
+    "fixture": "tender",
+    "expected": "I understand how that can feel sometimes. Maybe sharing a story or two could help make you feel a bit more connected with someone.",
+    "generated": "I understand how that can feel sometimes. Maybe sharing a story or two could help make you feel a bit more connected with someone.",
+    "monitor": "I understand how that can feel sometimes. Maybe sharing a story or two could help make you feel a bit more connected with someone.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  },
+  {
+    "fixture": "playful",
+    "expected": "Thank you, I appreciate that.",
+    "generated": "Thank you, I appreciate that.",
+    "monitor": "Thank you, I appreciate that.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  },
+  {
+    "fixture": "quiet",
+    "expected": "Of course! Just a moment, I'll be right here.",
+    "generated": "Of course, just a moment I'll be right here.",
+    "monitor": "Of course, just a moment I'll be right here.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  },
+  {
+    "fixture": "frustrated",
+    "expected": "Oh no! Don't worry, we can still catch a ride together.",
+    "generated": "Oh no, don't worry. We can still catch a ride together.",
+    "monitor": "Oh no, don't worry, we can still catch a ride together.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  },
+  {
+    "fixture": "curious",
+    "expected": "That's quite a find! Frogs are quite fascinating creatures.",
+    "generated": "That's quite a find. Frogs are quite fascinating creatures.",
+    "monitor": "That's quite a find. Frogs are quite fascinating creatures.",
+    "monitor_matches_generated_words": true,
+    "generated_matches_expected_words": true,
+    "monitor_matches_expected_words": true
+  }
+]

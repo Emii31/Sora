@@ -647,3 +647,7 @@ Two paced synthetic turns generated local replies and saved one temporary exchan
 ## 2026-11-22 — Phase 4.53 Sopro playback verification
 
 Six matched local trials saved exact replies in disposable history. Reliable virtual monitor alignment showed an extra 1.74–2.63 seconds of playback delay for the longer split replies. Offline recognition found no word edits across either set. The focused regression suite returned 29 passed. See PHASE_04_53.md and verification/phase_04_53.
+
+## 2026-11-23 — Phase 4.54 short voice benchmark
+
+All six turns saved the exact exchange in disposable storage. Playback started in 3.66–6.68 seconds. Five monitor alignments were reliable and small buffer changes did not reduce the two largest measured delays. Whisper recognized all expected words in monitor output. The regression subset passed 46 tests. See PHASE_04_54.md.

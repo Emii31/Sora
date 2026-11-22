@@ -758,3 +758,7 @@ Reproduced a clipped ending after a one-second synthetic pause and separated it 
 ## 2026-11-22 — Phase 4.53 Sopro sentence streaming comparison
 
 Compared the same three recorded Qwen replies using whole-reply synthesis and separate Sopro calls per sentence. Splitting started the two longer replies earlier and added long gaps, so the terminal prototype continues using whole replies. See PHASE_04_53.md.
+
+## 2026-11-23 — Phase 4.54 short voice replies
+
+Tested six real local Qwen and Sopro replies through a muted sink. The owner set Motorola voice quality as the priority and accepts slower laptop delivery. See PHASE_04_54.md.
