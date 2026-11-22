@@ -2,6 +2,7 @@ import base64
 from array import array
 import io
 import json
+import sys
 import threading
 import time
 import wave
@@ -158,6 +159,50 @@ def test_endpoint_keeps_short_pause_inside_sentence():
     for _ in range(44):
         assert not detector.feed(bytes(640))
     assert detector.feed(bytes(640))
+
+
+@pytest.mark.parametrize("silence_ms,includes_ending", [(900, False), (1200, True)])
+def test_microphone_pause_and_stage_timings(monkeypatch, tmp_path, silence_ms, includes_ending):
+    import voice_input
+
+    prefix = array("h", [3000] * 320).tobytes()
+    ending = array("h", [4000] * 320).tobytes()
+    quiet = bytes(640)
+    blocks = [prefix] * 20 + [quiet] * 50 + [ending] * 15 + [quiet] * 70
+    fixture = tmp_path / "fixture.pcm"
+    fixture.write_bytes(b"".join(blocks))
+    command = [sys.executable, "-c",
+               "from pathlib import Path; import sys; sys.stdout.buffer.write(Path(sys.argv[1]).read_bytes())",
+               str(fixture)]
+
+    class Recognizer:
+        heard_ending = False
+
+        def AcceptWaveform(self, pcm):
+            self.heard_ending |= pcm == ending
+            return False
+
+        def FinalResult(self):
+            return json.dumps({"text": "I had a long day" if self.heard_ending else "I had a long"})
+
+    monkeypatch.setattr(voice_input, "_load_model", lambda _: (None, lambda *_: Recognizer()))
+    popen = live.subprocess.Popen
+    microphone = live.Microphone(threading.Event(), vosk_model="fixture", silence_ms=silence_ms)
+
+    def start_fixture(_command, **kwargs):
+        return popen(command, **kwargs)
+
+    monkeypatch.setattr(live.subprocess, "Popen", start_fixture)
+    recording = microphone.capture()
+
+    assert recording
+    assert microphone.transcript == ("I had a long day" if includes_ending else "I had a long")
+    assert microphone.speech_ended_at is not None
+    assert microphone.timings["capture_end_reason"] == "silence"
+    assert microphone.timings["endpoint_silence_s"] == pytest.approx(silence_ms / 1000)
+    assert microphone.timings["recognition_finalize_s"] >= 0
+    assert microphone.timings["capture_close_s"] >= 0
+    assert microphone.proc.poll() is not None
 
 
 def test_player_drains_short_reply_at_end(monkeypatch):

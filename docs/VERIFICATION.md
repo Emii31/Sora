@@ -639,3 +639,7 @@ Verified portable scrcpy checksum, USB microphone PCM, local recognition, one co
 ## 2026-11-22 — Phase 4.51 live Motorola microphone verification
 
 The cue prompted a live phone turn through the direct PCM pipe. Sora recognized “I had a long,” generated a local reply and saved one exchange in disposable storage. The run exited successfully. Timing metadata reports 5.93 s from estimated speech end to playback submission and one estimated gap. Confirmed capture and test process shutdown, temporary sound device removal and zero ADB forwards. See PHASE_04_51.md.
+
+## 2026-11-22 — Phase 4.52 voice pipeline diagnostics
+
+Two paced synthetic turns generated local replies and saved one temporary exchange each. Measured 7.53–9.16 seconds to playback submission. Five fixture probes isolated early cutoff from recognition errors. Whisper preserved final words on complete captures but took 1.63–2.36 seconds to decode the 1,200 ms variants. Regression results were 160 passed, 6 skipped. See PHASE_04_52.md and verification/phase_04_52.

@@ -1,0 +1,117 @@
+{
+  "plain": {
+    "expected": "i had a long day",
+    "whole_input": {
+      "text": "i had a long day",
+      "offline_decode_s": 1.582
+    },
+    "source_end_s": 1.54,
+    "650": {
+      "end_at_s": 2.16,
+      "text": "i had a long day",
+      "offline_decode_s": 1.108
+    },
+    "900": {
+      "end_at_s": 2.4,
+      "text": "i had a long day",
+      "offline_decode_s": 1.64
+    },
+    "1200": {
+      "end_at_s": 2.7,
+      "text": "i had a long day",
+      "offline_decode_s": 1.213
+    }
+  },
+  "second_sentence": {
+    "expected": "please close the window",
+    "whole_input": {
+      "text": "please close and window",
+      "offline_decode_s": 1.246
+    },
+    "source_end_s": 1.96,
+    "650": {
+      "end_at_s": 2.46,
+      "text": "please close knit window",
+      "offline_decode_s": 1.527
+    },
+    "900": {
+      "end_at_s": 2.7,
+      "text": "please close and window",
+      "offline_decode_s": 1.143
+    },
+    "1200": {
+      "end_at_s": 3.0,
+      "text": "please close and window",
+      "offline_decode_s": 1.828
+    }
+  },
+  "short_pause": {
+    "expected": "i had a long day",
+    "whole_input": {
+      "text": "i had a long day",
+      "offline_decode_s": 2.289
+    },
+    "source_end_s": 2.14,
+    "650": {
+      "end_at_s": 2.7600000000000002,
+      "text": "i had a long day",
+      "offline_decode_s": 2.896
+    },
+    "900": {
+      "end_at_s": 3.0,
+      "text": "i had a long day",
+      "offline_decode_s": 2.681
+    },
+    "1200": {
+      "end_at_s": 3.3000000000000003,
+      "text": "i had a long day",
+      "offline_decode_s": 2.75
+    }
+  },
+  "one_second_pause": {
+    "expected": "i had a long day",
+    "whole_input": {
+      "text": "i heard a law they",
+      "offline_decode_s": 2.876
+    },
+    "source_end_s": 2.74,
+    "650": {
+      "end_at_s": 1.96,
+      "text": "i had a law",
+      "offline_decode_s": 1.739
+    },
+    "900": {
+      "end_at_s": 2.2,
+      "text": "i had a law",
+      "offline_decode_s": 2.01
+    },
+    "1200": {
+      "end_at_s": 3.9,
+      "text": "i heard a law they",
+      "offline_decode_s": 2.628
+    }
+  },
+  "quiet_final_word": {
+    "expected": "i had a long day",
+    "whole_input": {
+      "text": "i had a long day",
+      "offline_decode_s": 3.619
+    },
+    "source_end_s": 1.74,
+    "650": {
+      "end_at_s": 2.36,
+      "text": "i had a long day",
+      "offline_decode_s": 3.579
+    },
+    "900": {
+      "end_at_s": 2.6,
+      "text": "i had a long day",
+      "offline_decode_s": 3.317
+    },
+    "1200": {
+      "end_at_s": 2.9,
+      "text": "i had a long day",
+      "offline_decode_s": 3.929
+    }
+  }
+}

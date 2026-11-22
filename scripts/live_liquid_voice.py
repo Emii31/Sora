@@ -21,7 +21,7 @@ from voice_sopro_live import SoproStream, sopro_session
 class VoiceTurn:
     def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=None,
                  vosk_model=None, context=None, smooth_long_replies=False, sentence_streaming=False,
-                 continuous_speech=False, sopro_reference=None):
+                 continuous_speech=False, sopro_reference=None, silence_ms=900):
         if sum((sentence_streaming, smooth_long_replies, continuous_speech)) > 1:
             raise ValueError("Choose one experimental playback mode")
         if continuous_speech and context is None:
@@ -30,7 +30,8 @@ class VoiceTurn:
                 any((sentence_streaming, smooth_long_replies, continuous_speech))):
             raise ValueError("Sopro requires account context and the regular playback path")
         self.stopped = threading.Event()
-        self.microphone = Microphone(self.stopped, source=source, threshold=threshold, vosk_model=vosk_model)
+        self.microphone = Microphone(self.stopped, source=source, threshold=threshold,
+                                     vosk_model=vosk_model, silence_ms=silence_ms)
         self.sopro = sopro_reference is not None
         if self.sopro:
             self.stream = SoproStream(endpoint, self.stopped, sopro_reference)
@@ -118,9 +119,11 @@ class VoiceTurn:
                 }
                 if self.sopro:
                     self.metrics["speech_engine"] = "sopro"
+                    self.metrics.update(self.microphone.timings)
                     ended = self.microphone.speech_ended_at
+                    self.metrics["speech_end_to_chat_s"] = started - ended if ended is not None else None
                     self.metrics["speech_end_to_playback_pipe_s"] = (
-                        self.player.started_at - ended if ended and self.player.started_at else None)
+                        self.player.started_at - ended if ended is not None and self.player.started_at else None)
                 if snapshot:
                     if "".join(text).strip() != reply_text:
                         raise RuntimeError("Voice output text differs from Sora's reply")
@@ -355,6 +358,8 @@ def main():
     parser.add_argument("--vosk-model", type=Path, help="Use a local Vosk model to show and send the recognized text")
     parser.add_argument("--sink", help="PipeWire playback node name")
     parser.add_argument("--threshold", type=float, default=0.015, help="Microphone RMS threshold, default 0.015")
+    parser.add_argument("--silence-ms", type=int, default=900,
+                        help="Quiet time before ending a microphone utterance (300–2,000 ms, default 900)")
     parser.add_argument("--buffer-seconds", type=float, help="Override automatic reply-length buffering (0–5 seconds)")
     parser.add_argument("--no-warmup", action="store_true", help="Skip chat-model prefill before listening")
     playback_modes = parser.add_mutually_exclusive_group()
@@ -380,6 +385,8 @@ def main():
         parser.error("--wait-to-listen is available only for microphone input")
     if not 0 < args.threshold <= 1 or (args.buffer_seconds is not None and not 0 <= args.buffer_seconds <= 5):
         parser.error("Use a threshold between zero and one and a buffer from zero to five seconds")
+    if not 300 <= args.silence_ms <= 2000:
+        parser.error("--silence-ms must be between 300 and 2,000")
     if not args.replay and not sys.stdin.isatty():
         parser.error("Live mode needs an interactive terminal")
     from voice_context import LocalVoiceContext
@@ -417,6 +424,7 @@ def main():
             def new_turn():
                 return VoiceTurn(endpoint, source=args.source, sink=args.sink,
                                  threshold=args.threshold, buffer_seconds=args.buffer_seconds,
+                                 silence_ms=args.silence_ms,
                                  vosk_model=args.vosk_model, context=context,
                                  smooth_long_replies=args.smooth_long_replies,
                                  sentence_streaming=args.sentence_streaming,

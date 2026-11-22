@@ -221,27 +221,31 @@ class EndpointDetector:
 
 
 class Microphone:
-    def __init__(self, stopped, source=None, threshold=0.015, vosk_model=None):
+    def __init__(self, stopped, source=None, threshold=0.015, vosk_model=None, silence_ms=900):
         self.stopped = stopped
         self.source = source
         self.threshold = threshold
+        self.silence_ms = silence_ms
         self.proc = None
         self.vosk_model = vosk_model
         self.transcript = None
         self.speech_ended_at = None
+        self.timings = {}
 
     def cancel(self):
         self.stopped.set()
         stop_process(self.proc)
 
     def capture(self):
+        self.transcript = None
         self.speech_ended_at = None
+        self.timings = {}
         command = ["pw-record", "--raw", "--rate", "16000", "--channels", "1",
                    "--format", "s16", "--latency", "20ms"]
         if self.source:
             command.extend(["--target", self.source])
         command.append("-")
-        detector = EndpointDetector(threshold=self.threshold)
+        detector = EndpointDetector(threshold=self.threshold, silence_ms=self.silence_ms)
         recognizer = None
         segments = []
         if self.vosk_model:
@@ -268,18 +272,25 @@ class Microphone:
                         if recognizer and recognizer.AcceptWaveform(frame):
                             segments.append(json.loads(recognizer.Result()).get("text", ""))
                         if detector.feed(frame):
+                            endpoint_at = time.monotonic()
+                            self.timings["capture_end_reason"] = "limit"
                             if detector.quiet >= detector.silence_frames:
-                                self.speech_ended_at = time.monotonic() - detector.quiet * .02
+                                silence_s = detector.quiet * .02
+                                self.speech_ended_at = endpoint_at - silence_s
+                                self.timings.update(capture_end_reason="silence", endpoint_silence_s=silence_s)
                             if recognizer:
                                 segments.append(json.loads(recognizer.FinalResult()).get("text", ""))
                                 self.transcript = " ".join(segment.strip() for segment in segments if segment.strip())
+                                self.timings["recognition_finalize_s"] = time.monotonic() - endpoint_at
                                 if not self.transcript:
                                     return None
                             return detector.wav()
             return None
         finally:
+            close_started = time.monotonic()
             stop_process(self.proc)
             self.proc.stdout.close()
+            self.timings["capture_close_s"] = time.monotonic() - close_started
 
 
 class BufferedPlayer:

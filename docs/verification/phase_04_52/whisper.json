@@ -1,0 +1,90 @@
+{
+  "load_s": 0.254,
+  "fixtures": {
+    "plain": {
+      "whole_input": {
+        "text": "I have a long day.",
+        "decode_s": 1.884,
+        "exact": false
+      },
+      "900": {
+        "text": "I have a long day.",
+        "decode_s": 1.637,
+        "exact": false
+      },
+      "1200": {
+        "text": "I have a long day.",
+        "decode_s": 2.197,
+        "exact": false
+      }
+    },
+    "second_sentence": {
+      "whole_input": {
+        "text": "Please close the window.",
+        "decode_s": 1.978,
+        "exact": true
+      },
+      "900": {
+        "text": "Please close the window.",
+        "decode_s": 1.865,
+        "exact": true
+      },
+      "1200": {
+        "text": "Please close the window.",
+        "decode_s": 1.628,
+        "exact": true
+      }
+    },
+    "short_pause": {
+      "whole_input": {
+        "text": "I have a long day.",
+        "decode_s": 1.911,
+        "exact": false
+      },
+      "900": {
+        "text": "I have a long day.",
+        "decode_s": 1.639,
+        "exact": false
+      },
+      "1200": {
+        "text": "I have a long day.",
+        "decode_s": 1.908,
+        "exact": false
+      }
+    },
+    "one_second_pause": {
+      "whole_input": {
+        "text": "I have a long day.",
+        "decode_s": 1.642,
+        "exact": false
+      },
+      "900": {
+        "text": "I can't at long.",
+        "decode_s": 1.834,
+        "exact": false
+      },
+      "1200": {
+        "text": "I have a long day.",
+        "decode_s": 2.36,
+        "exact": false
+      }
+    },
+    "quiet_final_word": {
+      "whole_input": {
+        "text": "I have a long day.",
+        "decode_s": 1.946,
+        "exact": false
+      },
+      "900": {
+        "text": "I have a long day.",
+        "decode_s": 1.696,
+        "exact": false
+      },
+      "1200": {
+        "text": "I have a long day.",
+        "decode_s": 1.955,
+        "exact": false
+      }
+    }
+  }
+}

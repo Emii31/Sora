@@ -750,3 +750,7 @@ Tested the Motorola microphone over USB. Unreliable live sink routing was bypass
 ## 2026-11-22 — Phase 4.51 live Motorola microphone
 
 Verified a live Motorola USB microphone turn with direct PCM input. Recognition missed the final word. Sopro started laptop playback 5.93 seconds after estimated speech end. No live audio was retained. See PHASE_04_51.md.
+
+## 2026-11-22 — Phase 4.52 sentence endings and latency
+
+Reproduced a clipped ending after a one-second synthetic pause and separated it from Vosk errors on complete audio. Added a diagnostic silence setting with the 900 ms default and split microphone, chat, and Sopro timings. No microphone was opened. See PHASE_04_52.md.
