@@ -53,3 +53,5 @@
 - **Phase 4.49 Sopro integration**: Keep Sopro an explicit terminal option using the approved Liquid reference. One-turn microphone and speaker wiring is verified. Promotion depends on accurate recognition, reliable endpointing and acceptable full-turn latency.
 
 - **Phase 4.55 Motorola voice quality baseline**: The owner approved the three on-device Sopro LiteRT readings. Use the exact audition build, reference and seed sequence as the comparison baseline for phone optimization. Accept slower laptop delivery. The first-PCM wait on the Motorola remains 12.11–15.76 seconds and live speed is unverified.
+
+- **Phase 4.56 Motorola acceleration**: Keep the approved LiteRT build as the listening reference. Native ARM streaming is a faster experimental candidate with identical generated PCM in its two- and three-thread tests. Approval requires listening on the phone and a measured live turn.

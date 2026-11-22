@@ -1,0 +1,387 @@
+{
+  "source_tag": "v0.9.6",
+  "source_tar_sha256": "f7441650c0ff61882b6bff8273c3c80459a4e47c82bf87a1d6dad3eb4e450413",
+  "android_executable_sha256": "e6f8903f4f791f34f798b6e33a1f61dde771ea0eb827db12ff4a42f96c3b6493",
+  "two_threads_warmup": {
+    "expected": "I am right here.",
+    "seed": 9,
+    "first_pcm_s": 6.054035446000853,
+    "speech_onset_within_audio_s": 0.08,
+    "continuous_audible_start_estimate_s": 6.134035446000853,
+    "generated_s": 6.4125530470009835,
+    "audio_s": 0.954,
+    "arrivals": [
+      [
+        6.054035446000853,
+        0,
+        19168
+      ],
+      [
+        6.4125027310001315,
+        19168,
+        26624
+      ]
+    ],
+    "audio_sha256": "1ff2a1c149383da6b5571cea1f0386fb66f1da9c950fd98df9d504ad915b1763"
+  },
+  "two_threads": [
+    {
+      "expected": "Hey, take your time. I\u2019m right here with you.",
+      "seed": 9000,
+      "first_pcm_s": 1.894077543000094,
+      "speech_onset_within_audio_s": 0.04,
+      "continuous_audible_start_estimate_s": 1.9571860976666455,
+      "generated_s": 3.834573891999753,
+      "audio_s": 2.8906666666666667,
+      "arrivals": [
+        [
+          1.894077543000094,
+          0,
+          30208
+        ],
+        [
+          2.546519430999979,
+          30208,
+          32768
+        ],
+        [
+          3.209758799001065,
+          62976,
+          32768
+        ],
+        [
+          3.8344049389997963,
+          95744,
+          43008
+        ]
+      ],
+      "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd"
+    },
+    {
+      "expected": "Wait, you did it? Oh, I\u2019m so proud of you!",
+      "seed": 9001,
+      "first_pcm_s": 1.8852369110009022,
+      "speech_onset_within_audio_s": 0.02,
+      "continuous_audible_start_estimate_s": 1.9512237046667384,
+      "generated_s": 4.608854912001334,
+      "audio_s": 3.4873333333333334,
+      "arrivals": [
+        [
+          1.8852369110009022,
+          0,
+          30208
+        ],
+        [
+          2.550608994000868,
+          30208,
+          32768
+        ],
+        [
+          3.215310256000521,
+          62976,
+          32768
+        ],
+        [
+          3.896450879999975,
+          95744,
+          32768
+        ],
+        [
+          4.608557038000072,
+          128512,
+          38880
+        ]
+      ],
+      "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f"
+    },
+    {
+      "expected": "You saved me a cookie? Okay, you\u2019re my favorite today.",
+      "seed": 9002,
+      "first_pcm_s": 2.4837753680003516,
+      "speech_onset_within_audio_s": 0.04,
+      "continuous_audible_start_estimate_s": 2.5237753680003516,
+      "generated_s": 4.921803301000182,
+      "audio_s": 4.0,
+      "arrivals": [
+        [
+          2.4837753680003516,
+          0,
+          62976
+        ],
+        [
+          3.146353817999625,
+          62976,
+          32768
+        ],
+        [
+          3.826591033999648,
+          95744,
+          32768
+        ],
+        [
+          4.489242753999861,
+          128512,
+          32768
+        ],
+        [
+          4.921733221000977,
+          161280,
+          30720
+        ]
+      ],
+      "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72"
+    }
+  ],
+  "three_threads": [
+    {
+      "expected": "Hey, take your time. I\u2019m right here with you.",
+      "seed": 9000,
+      "first_pcm_s": 1.8080963059983333,
+      "speech_onset_within_audio_s": 0.04,
+      "continuous_audible_start_estimate_s": 1.9133176449985767,
+      "generated_s": 3.6873644089973823,
+      "audio_s": 2.8906666666666667,
+      "arrivals": [
+        [
+          1.8080963059983333,
+          0,
+          30208
+        ],
+        [
+          2.4950236869990476,
+          30208,
+          32768
+        ],
+        [
+          3.1853176449985767,
+          62976,
+          32768
+        ],
+        [
+          3.687124647996825,
+          95744,
+          43008
+        ]
+      ],
+      "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd"
+    },
+    {
+      "expected": "Wait, you did it? Oh, I\u2019m so proud of you!",
+      "seed": 9001,
+      "first_pcm_s": 1.835403362998477,
+      "speech_onset_within_audio_s": 0.02,
+      "continuous_audible_start_estimate_s": 1.9590955053339034,
+      "generated_s": 4.54552661300113,
+      "audio_s": 3.4873333333333334,
+      "arrivals": [
+        [
+          1.835403362998477,
+          0,
+          30208
+        ],
+        [
+          2.531157281999185,
+          30208,
+          32768
+        ],
+        [
+          3.2298221599994577,
+          62976,
+          32768
+        ],
+        [
+          3.93376217200057,
+          95744,
+          32768
+        ],
+        [
+          4.545324041999265,
+          128512,
+          38880
+        ]
+      ],
+      "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f"
+    },
+    {
+      "expected": "You saved me a cookie? Okay, you\u2019re my favorite today.",
+      "seed": 9002,
+      "first_pcm_s": 2.466650779999327,
+      "speech_onset_within_audio_s": 0.04,
+      "continuous_audible_start_estimate_s": 2.506650779999327,
+      "generated_s": 4.896935191998637,
+      "audio_s": 4.0,
+      "arrivals": [
+        [
+          2.466650779999327,
+          0,
+          62976
+        ],
+        [
+          3.1600556550001784,
+          62976,
+          32768
+        ],
+        [
+          3.8632046089987853,
+          95744,
+          32768
+        ],
+        [
+          4.561614141999598,
+          128512,
+          32768
+        ],
+        [
+          4.896632845000568,
+          161280,
+          30720
+        ]
+      ],
+      "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72"
+    }
+  ],
+  "four_pinned": "warmup SSE read timed out twice",
+  "word_check": [
+    {
+      "expected": "Hey, take your time. I\u2019m right here with you.",
+      "heard": "Hey, take your time. I'm right here with you.",
+      "word_match": true
+    },
+    {
+      "expected": "Wait, you did it? Oh, I\u2019m so proud of you!",
+      "heard": "Wait, you did it. Oh, I'm so proud of you.",
+      "word_match": true
+    },
+    {
+      "expected": "You saved me a cookie? Okay, you\u2019re my favorite today.",
+      "heard": "You saved me a cookie. Okay, you're my favorite today.",
+      "word_match": true
+    }
+  ],
+  "comparison_to_approved": [
+    {
+      "approved_pcm_sha256": "0b37a34da54f1556ed233c22155c4f049067d776f0f5fbd4c120ab9193504b97",
+      "candidate_pcm_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd",
+      "waveform_match_fraction": 0.045454545454545456,
+      "identical_pcm": false
+    },
+    {
+      "approved_pcm_sha256": "9aec0898eff461a7973ca1abe8b8fe4f8beecdfc575fbc7faaa244d2ddbdb652",
+      "candidate_pcm_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f",
+      "waveform_match_fraction": 0.06521739130434782,
+      "identical_pcm": false
+    },
+    {
+      "approved_pcm_sha256": "8ce482ed2a076a428fdaf7d0d9cee14126554c74bab52b110a6fea0b3809f256",
+      "candidate_pcm_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+      "waveform_match_fraction": 0.12727272727272726,
+      "identical_pcm": false
+    }
+  ],
+  "live_model_recognized_input": [
+    {
+      "fixture": "reassure",
+      "input": "I had a long day. Say something warm and brief.",
+      "reply": "Goodnight, sleepyhead! \ud83c\udf41",
+      "words": 3,
+      "sentences": 2,
+      "first_audio_s": 3.5821879930008436,
+      "brain_ready_s": 1.702293931000895,
+      "brain_first_token_s": 0.6456859980007721,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 3.5869412179999927,
+      "turn_finished_s": 6.863166752000325,
+      "estimated_gaps": 0,
+      "audio_s": 3.1893333333333334,
+      "text_characters": 24,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 1.8796795589987596,
+      "speech_generation_finished_s": 5.89698092800063,
+      "arrivals": [
+        {
+          "at_s": 3.582387110000127,
+          "bytes": 30208
+        },
+        {
+          "at_s": 4.254743254001369,
+          "bytes": 32768
+        },
+        {
+          "at_s": 4.928738653001346,
+          "bytes": 32768
+        },
+        {
+          "at_s": 5.557722939000087,
+          "bytes": 32768
+        },
+        {
+          "at_s": 5.896652749999703,
+          "bytes": 24576
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 37,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.8648648648648649,
+        "reliable": true,
+        "anchored_span_s": 3.0500000000000003,
+        "added_time_between_anchors_s": 0.0,
+        "material_lag_jumps": []
+      }
+    },
+    {
+      "fixture": "tease",
+      "input": "I saved you the last cookie.",
+      "reply": "Thank you, I appreciate the thought.",
+      "words": 6,
+      "sentences": 1,
+      "first_audio_s": 3.470144295000864,
+      "brain_ready_s": 1.6345272939997813,
+      "brain_first_token_s": 0.6283758670015231,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 3.4749021690004156,
+      "turn_finished_s": 5.984499685000628,
+      "estimated_gaps": 0,
+      "audio_s": 2.3786666666666667,
+      "text_characters": 36,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "speech_first_pcm_s": 1.8348602619989833,
+      "speech_generation_finished_s": 4.816998637999859,
+      "arrivals": [
+        {
+          "at_s": 3.4703709829991567,
+          "bytes": 30208
+        },
+        {
+          "at_s": 4.1508022179987165,
+          "bytes": 32768
+        },
+        {
+          "at_s": 4.816739691999828,
+          "bytes": 51200
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 32,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.96875,
+        "reliable": true,
+        "anchored_span_s": 2.25,
+        "added_time_between_anchors_s": 0.0,
+        "material_lag_jumps": []
+      }
+    }
+  ]
+}

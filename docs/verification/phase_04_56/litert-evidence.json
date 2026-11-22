@@ -1,0 +1,213 @@
+{
+  "approved-cpu": [
+    {
+      "seed": 9000,
+      "reference_cache_hit": false,
+      "ttfa_ms": 15756.523431,
+      "ttfa_to_onset_ms": 15756.523431,
+      "total_wall_ms": 16099.51864,
+      "ar_steps_total_ms": 6544.906195,
+      "acoustic_condition_ms": 1497.520364,
+      "velocity_ms": [
+        2882.517603,
+        2368.109843
+      ],
+      "token_count": 88,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": null
+    },
+    {
+      "seed": 9001,
+      "reference_cache_hit": true,
+      "ttfa_ms": 13157.28838,
+      "ttfa_to_onset_ms": 13157.28838,
+      "total_wall_ms": 13475.332755,
+      "ar_steps_total_ms": 6374.618018,
+      "acoustic_condition_ms": 1278.838541,
+      "velocity_ms": [
+        2473.992083,
+        2495.519218
+      ],
+      "token_count": 78,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": null
+    },
+    {
+      "seed": 9002,
+      "reference_cache_hit": true,
+      "ttfa_ms": 12114.436037,
+      "ttfa_to_onset_ms": 12114.436037,
+      "total_wall_ms": 12448.553432,
+      "ar_steps_total_ms": 5507.541248,
+      "acoustic_condition_ms": 1252.663697,
+      "velocity_ms": [
+        2471.390989,
+        2454.621822
+      ],
+      "token_count": 83,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": null
+    }
+  ],
+  "acoustic-gpu": [
+    {
+      "seed": 9000,
+      "reference_cache_hit": false,
+      "ttfa_ms": 11391.527912,
+      "ttfa_to_onset_ms": 11391.527912,
+      "total_wall_ms": 11942.730048,
+      "ar_steps_total_ms": 6935.84057,
+      "acoustic_condition_ms": 170.990417,
+      "velocity_ms": [
+        854.649739,
+        886.013021
+      ],
+      "token_count": 88,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9000,
+        "first_pcm_s": 11.391527911999999,
+        "ar_s": 6.93584057,
+        "baseline_tokens": 88,
+        "tokens": 88,
+        "waveform_match_fraction": 0.9772727272727273,
+        "same_pcm": false
+      }
+    },
+    {
+      "seed": 9001,
+      "reference_cache_hit": true,
+      "ttfa_ms": 8282.708799,
+      "ttfa_to_onset_ms": 8282.708799,
+      "total_wall_ms": 8609.281038,
+      "ar_steps_total_ms": 5943.222237,
+      "acoustic_condition_ms": 172.077761,
+      "velocity_ms": [
+        851.783386,
+        815.611302
+      ],
+      "token_count": 78,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9001,
+        "first_pcm_s": 8.282708799,
+        "ar_s": 5.943222237,
+        "baseline_tokens": 78,
+        "tokens": 78,
+        "waveform_match_fraction": 1.0,
+        "same_pcm": false
+      }
+    },
+    {
+      "seed": 9002,
+      "reference_cache_hit": true,
+      "ttfa_ms": 8568.352236,
+      "ttfa_to_onset_ms": 8568.352236,
+      "total_wall_ms": 8899.096038,
+      "ar_steps_total_ms": 6276.171144,
+      "acoustic_condition_ms": 171.553437,
+      "velocity_ms": [
+        823.684792,
+        814.758177
+      ],
+      "token_count": 83,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9002,
+        "first_pcm_s": 8.568352236,
+        "ar_s": 6.276171144,
+        "baseline_tokens": 83,
+        "tokens": 83,
+        "waveform_match_fraction": 0.9818181818181818,
+        "same_pcm": false
+      }
+    }
+  ],
+  "ar-gpu32": [
+    {
+      "seed": 9000,
+      "reference_cache_hit": false,
+      "ttfa_ms": 15004.633848,
+      "ttfa_to_onset_ms": 15004.633848,
+      "total_wall_ms": 15414.383223,
+      "ar_steps_total_ms": 10591.671611,
+      "acoustic_condition_ms": 174.564479,
+      "velocity_ms": [
+        818.363802,
+        815.434323
+      ],
+      "token_count": 85,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=gpu32, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9000,
+        "first_pcm_s": 15.004633848,
+        "ar_s": 10.591671610999999,
+        "baseline_tokens": 88,
+        "tokens": 85,
+        "waveform_match_fraction": 0.09090909090909091,
+        "same_pcm": false
+      }
+    },
+    {
+      "seed": 9001,
+      "reference_cache_hit": true,
+      "ttfa_ms": 11919.296401,
+      "ttfa_to_onset_ms": 11919.296401,
+      "total_wall_ms": 12232.916349,
+      "ar_steps_total_ms": 9542.566194,
+      "acoustic_condition_ms": 161.041354,
+      "velocity_ms": [
+        818.782135,
+        819.500625
+      ],
+      "token_count": 77,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=gpu32, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9001,
+        "first_pcm_s": 11.919296401,
+        "ar_s": 9.542566194,
+        "baseline_tokens": 78,
+        "tokens": 77,
+        "waveform_match_fraction": 0.021739130434782608,
+        "same_pcm": false
+      }
+    },
+    {
+      "seed": 9002,
+      "reference_cache_hit": true,
+      "ttfa_ms": 12636.6851,
+      "ttfa_to_onset_ms": 12636.6851,
+      "total_wall_ms": 13014.40286,
+      "ar_steps_total_ms": 10236.301298,
+      "acoustic_condition_ms": 193.517083,
+      "velocity_ms": [
+        823.277187,
+        811.466718
+      ],
+      "token_count": 82,
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=gpu32, acoustic_condition=gpu, acoustic_velocity=gpu, acoustic_condition_t4096=gpu, acoustic_velocity_t4096=gpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "word_match": true,
+      "approval_waveform": {
+        "seed": 9002,
+        "first_pcm_s": 12.636685100000001,
+        "ar_s": 10.236301298,
+        "baseline_tokens": 83,
+        "tokens": 82,
+        "waveform_match_fraction": 0.18181818181818182,
+        "same_pcm": false
+      }
+    }
+  ],
+  "ar-gpu": {
+    "completed": 0,
+    "reported_error": "java.lang.IllegalArgumentException in Sampler.inverseCdf"
+  }
+}

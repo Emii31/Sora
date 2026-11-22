@@ -766,3 +766,7 @@ Tested six real local Qwen and Sopro replies through a muted sink. The owner set
 ## 2026-11-23 — Phase 4.55 Motorola voice audition
 
 Built a private test APK, verified its 20 assets on the Motorola and played three fully on-device Sopro readings. The owner approved the delivery. Preserved the exact build and output as the phone quality baseline. See PHASE_04_55.md.
+
+## 2026-11-23 — Phase 4.56 Motorola acceleration
+
+Tested acoustic GPU, GPU speech-token generation and native ARM streaming. Warmed native synthesis approached two seconds from ready text. The real chat pipeline still missed the two-second target before recognition time. See PHASE_04_56.md.
