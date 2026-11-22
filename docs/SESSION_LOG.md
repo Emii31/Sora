@@ -746,3 +746,7 @@ Added explicit native Sopro options to the terminal prototype. Prerecorded input
 ## 2026-11-22 — Phase 4.50 Motorola microphone trial
 
 Tested the Motorola microphone over USB. Unreliable live sink routing was bypassed with a disposable capture and replay. The laptop recognized the intended phrase on one repetition and played a local Sopro reply. Live microphone streaming remains pending.
+
+## 2026-11-22 — Phase 4.51 live Motorola microphone
+
+Verified a live Motorola USB microphone turn with direct PCM input. Recognition missed the final word. Sopro started laptop playback 5.93 seconds after estimated speech end. No live audio was retained. See PHASE_04_51.md.

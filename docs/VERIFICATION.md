@@ -635,3 +635,7 @@ Verified the Sopro completion contract, dry CLI options, local Ollama inference,
 ## 2026-11-22 — Phase 4.50 phone input verification
 
 Verified portable scrcpy checksum, USB microphone PCM, local recognition, one completed replay exchange and cleanup. Sopro began laptop playback 5.91 s after recognition, with two estimated gaps. This was a recording replay, so live microphone latency is unverified.
+
+## 2026-11-22 — Phase 4.51 live Motorola microphone verification
+
+The cue prompted a live phone turn through the direct PCM pipe. Sora recognized “I had a long,” generated a local reply and saved one exchange in disposable storage. The run exited successfully. Timing metadata reports 5.93 s from estimated speech end to playback submission and one estimated gap. Confirmed capture and test process shutdown, temporary sound device removal and zero ADB forwards. See PHASE_04_51.md.
