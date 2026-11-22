@@ -1,0 +1,93 @@
+{
+  "device": "Motorola Moto G Stylus 5G (2024)",
+  "abi": "arm64-v8a",
+  "source_revision": "a92f0dda86b17e3976756743af3a60fa81f7acc2",
+  "package": "com.sopro.soraaudition",
+  "android_permissions": {
+    "microphone": false,
+    "internet": false
+  },
+  "apk_sha256": "5036136e1b13ecb28df857dafe38ebabfffaf005d40ddad15befff0515360f48",
+  "android_reference_sha256": "641469e0bbb3c62956495acab64d47dddef40578c0e72103f1cc7d2190f262f4",
+  "android_assets_manifest_sha256": "dd8905f8187776ef6e0aff08a61aa65729fc789a4c689da7ac7e96d922408f39",
+  "original_approved_reel_sha256": "20998802025caa81a3263a1554ecaf23c63923f761f1d3e68d50d87024ee8206",
+  "generated_audition_reel_sha256": "8c8446abf95f7a72636556ba5c202a694fb59cd7a3b1ceafe14ca25e6fbd4cbb",
+  "assets_verified_on_phone": 20,
+  "model_startup_ms": 3255.952291,
+  "playback_confirmed_complete": 3,
+  "owner_listening_feedback": "perfect",
+  "runs": [
+    {
+      "tone": "reassurance",
+      "expected": "Hey, take your time. I\u2019m right here with you.",
+      "heard": "Hey, take your time. I'm right here with you.",
+      "word_match": true,
+      "duration_s": 3.744,
+      "seed": 9000,
+      "reference_cache_hit": false,
+      "ttfa_ms": 15756.523431,
+      "ttfa_to_onset_ms": 15756.523431,
+      "total_wall_ms": 16099.51864,
+      "reference_prep_ms": 1742.238021,
+      "prefill_ms": 317.895104,
+      "ar_steps_total_ms": 6544.906195,
+      "acoustic_condition_ms": 1497.520364,
+      "velocity_ms": [
+        2882.517603,
+        2368.109843
+      ],
+      "precision": "ship",
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "contract_set": "r9",
+      "style_variant": "fp32"
+    },
+    {
+      "tone": "excitement",
+      "expected": "Wait, you did it? Oh, I\u2019m so proud of you!",
+      "heard": "Wait, you did it. Oh, I'm so proud of you.",
+      "word_match": true,
+      "duration_s": 3.3173333333333335,
+      "seed": 9001,
+      "reference_cache_hit": true,
+      "ttfa_ms": 13157.28838,
+      "ttfa_to_onset_ms": 13157.28838,
+      "total_wall_ms": 13475.332755,
+      "reference_prep_ms": 15.755208,
+      "prefill_ms": 367.124011,
+      "ar_steps_total_ms": 6374.618018,
+      "acoustic_condition_ms": 1278.838541,
+      "velocity_ms": [
+        2473.992083,
+        2495.519218
+      ],
+      "precision": "ship",
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "contract_set": "r9",
+      "style_variant": "fp32"
+    },
+    {
+      "tone": "teasing",
+      "expected": "You saved me a cookie? Okay, you\u2019re my favorite today.",
+      "heard": "You saved me a cookie. Okay, you're my favorite today.",
+      "word_match": true,
+      "duration_s": 3.530666666666667,
+      "seed": 9002,
+      "reference_cache_hit": true,
+      "ttfa_ms": 12114.436037,
+      "ttfa_to_onset_ms": 12114.436037,
+      "total_wall_ms": 12448.553432,
+      "reference_prep_ms": 19.197708,
+      "prefill_ms": 252.234062,
+      "ar_steps_total_ms": 5507.541248,
+      "acoustic_condition_ms": 1252.663697,
+      "velocity_ms": [
+        2471.390989,
+        2454.621822
+      ],
+      "precision": "ship",
+      "placement": "speaker_encoder=cpu, semantic_encoder=cpu, style_prefix=cpu, ar_merged=cpu, acoustic_condition=cpu, acoustic_velocity=cpu, acoustic_condition_t4096=cpu, acoustic_velocity_t4096=cpu, vocoder_stream_start=cpu, vocoder_stream_step=cpu, vocoder_stream_flush=cpu",
+      "contract_set": "r9",
+      "style_variant": "fp32"
+    }
+  ]
+}

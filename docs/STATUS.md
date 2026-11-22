@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.54 — Short-reply voice benchmark
-- **Current status**: Warmed laptop playback started in 3.66–6.68 seconds in six recognized-input trials. The owner wants Motorola delivery to take priority and accepts slower laptop speech.
-- **Next action**: Verify expressive synthesis and playback on the Motorola using the approved Liquid reference. See [Phase 4.54](phases/PHASE_04_54.md).
+- **Phase**: Phase 4.55 — Owner-approved Motorola voice audition
+- **Current status**: The Motorola generated all three lines locally in the standalone Sora Voice Audition app. The owner approved the delivery. First PCM took 12.11–15.76 seconds.
+- **Next action**: Test phone acceleration against the preserved approved voice, APK, reference, text and seeds. See [Phase 4.55](phases/PHASE_04_55.md).

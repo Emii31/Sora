@@ -51,3 +51,5 @@
 - **Phase 4.46 performance**: Keep the approved Liquid reel. The stock Motorola runner missed the speed target even with complete text input. The tested KleidiAI build returned invalid speech and is ruled out for this runner.
 
 - **Phase 4.49 Sopro integration**: Keep Sopro an explicit terminal option using the approved Liquid reference. One-turn microphone and speaker wiring is verified. Promotion depends on accurate recognition, reliable endpointing and acceptable full-turn latency.
+
+- **Phase 4.55 Motorola voice quality baseline**: The owner approved the three on-device Sopro LiteRT readings. Use the exact audition build, reference and seed sequence as the comparison baseline for phone optimization. Accept slower laptop delivery. The first-PCM wait on the Motorola remains 12.11–15.76 seconds and live speed is unverified.
