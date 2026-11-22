@@ -770,3 +770,7 @@ Built a private test APK, verified its 20 assets on the Motorola and played thre
 ## 2026-11-23 — Phase 4.56 Motorola acceleration
 
 Tested acoustic GPU, GPU speech-token generation and native ARM streaming. Warmed native synthesis approached two seconds from ready text. The real chat pipeline still missed the two-second target before recognition time. See PHASE_04_56.md.
+
+## 2026-11-23 — Phase 4.57 Motorola mic-to-speaker trial
+
+Measured a live turn from the Motorola microphone through local inference and back to its speaker. The owner reported the same feel in the native reply. The actual turn took 6.88 seconds and the recognizer misheard the test phrase. See PHASE_04_57.md.

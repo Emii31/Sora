@@ -55,3 +55,5 @@
 - **Phase 4.55 Motorola voice quality baseline**: The owner approved the three on-device Sopro LiteRT readings. Use the exact audition build, reference and seed sequence as the comparison baseline for phone optimization. Accept slower laptop delivery. The first-PCM wait on the Motorola remains 12.11–15.76 seconds and live speed is unverified.
 
 - **Phase 4.56 Motorola acceleration**: Keep the approved LiteRT build as the listening reference. Native ARM streaming is a faster experimental candidate with identical generated PCM in its two- and three-thread tests. Approval requires listening on the phone and a measured live turn.
+
+- **Phase 4.57 native Motorola listening check**: The owner reported “Same feel” for the measured native live reply. Preserve the reference and native synthesis settings for latency work. The abbreviated chat prompt remains experimental because its median gain was small. The live route needs faster input handling and more accurate recognition.

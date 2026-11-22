@@ -1,0 +1,252 @@
+{
+  "summary": {
+    "usual": {
+      "median_playback_s": 3.403669772500507,
+      "median_brain_s": 1.2322615799985215,
+      "median_words": 6.0,
+      "recall_correct": true
+    },
+    "brief": {
+      "median_playback_s": 3.34399911500077,
+      "median_brain_s": 1.4545361979999143,
+      "median_words": 5.5,
+      "recall_correct": true
+    }
+  },
+  "runs": [
+    {
+      "case": "comfort",
+      "mode": "usual",
+      "input": "My day was exhausting.",
+      "reply": "Oh, that sounds tough. Maybe a nice nap or a good book could help.",
+      "words": 14,
+      "sentences": 2,
+      "expected_fact_present": null,
+      "brain_ready_s": 1.9955165940009465,
+      "brain_first_token_s": 0.14049609499852522,
+      "first_sentence_ready_s": 0.7885105720015417,
+      "max_overlap_s": 1.1993630409997422,
+      "speech_first_pcm_s": 1.9438047590010683,
+      "playback_started_s": 3.9415095830008795,
+      "turn_finished_s": 8.205908931002341,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 60,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 3.95,
+        "added_time_between_anchors_s": 0.0320416666666663,
+        "material_lag_jumps": []
+      }
+    },
+    {
+      "case": "comfort",
+      "mode": "brief",
+      "input": "My day was exhausting.",
+      "reply": "Oh, that sounds tough. What happened?",
+      "words": 6,
+      "sentences": 2,
+      "expected_fact_present": null,
+      "brain_ready_s": 1.9533274710011028,
+      "brain_first_token_s": 0.10749924199990346,
+      "first_sentence_ready_s": 1.4836090310018335,
+      "max_overlap_s": 0.46539113899780205,
+      "speech_first_pcm_s": 1.8577589580017957,
+      "playback_started_s": 3.8119539899998927,
+      "turn_finished_s": 6.622141523002938,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 39,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 2.5500000000000003,
+        "added_time_between_anchors_s": 0.03200000000000003,
+        "material_lag_jumps": []
+      }
+    },
+    {
+      "case": "excited",
+      "mode": "brief",
+      "input": "I got the job I wanted!",
+      "reply": "Yay! Congratulations, that\u2019s great news!",
+      "words": 5,
+      "sentences": 2,
+      "expected_fact_present": null,
+      "brain_ready_s": 1.2906094499994651,
+      "brain_first_token_s": 0.13262648400268517,
+      "first_sentence_ready_s": 0.4696680529996229,
+      "max_overlap_s": 0.818604725998739,
+      "speech_first_pcm_s": 1.8867249009999796,
+      "playback_started_s": 3.177966582999943,
+      "turn_finished_s": 6.382059898998705,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 43,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.37209302325581395,
+        "reliable": false,
+        "reason": "Too few high-confidence waveform matches"
+      }
+    },
+    {
+      "case": "excited",
+      "mode": "usual",
+      "input": "I got the job I wanted!",
+      "reply": "Yay! Congratulations! What's the job about?",
+      "words": 6,
+      "sentences": 3,
+      "expected_fact_present": null,
+      "brain_ready_s": 1.4689403859993035,
+      "brain_first_token_s": 0.14557274699836853,
+      "first_sentence_ready_s": 0.5009237359990948,
+      "max_overlap_s": 0.9631153869995615,
+      "speech_first_pcm_s": 2.543466945000546,
+      "playback_started_s": 4.0131059140003345,
+      "turn_finished_s": 8.893038048998278,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 59,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9491525423728814,
+        "reliable": true,
+        "anchored_span_s": 4.7,
+        "added_time_between_anchors_s": 0.0,
+        "material_lag_jumps": []
+      }
+    },
+    {
+      "case": "playful",
+      "mode": "usual",
+      "input": "I saved you the last cookie.",
+      "reply": "Thank you, I really appreciate that.",
+      "words": 6,
+      "sentences": 1,
+      "expected_fact_present": null,
+      "brain_ready_s": 0.9955827739977394,
+      "brain_first_token_s": 0.1353181519989448,
+      "first_sentence_ready_s": 0.9923571620020084,
+      "max_overlap_s": 0.0,
+      "speech_first_pcm_s": 1.869318163000571,
+      "playback_started_s": 2.8658299620001344,
+      "turn_finished_s": 5.010158428998693,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 33,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9696969696969697,
+        "reliable": true,
+        "anchored_span_s": 1.5999999999999999,
+        "added_time_between_anchors_s": 0.29866666666666664,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.35,
+            "added_s": 0.29866666666666664
+          }
+        ]
+      }
+    },
+    {
+      "case": "playful",
+      "mode": "brief",
+      "input": "I saved you the last cookie.",
+      "reply": "Thank you, I really appreciate it.",
+      "words": 6,
+      "sentences": 1,
+      "expected_fact_present": null,
+      "brain_ready_s": 1.080843381001614,
+      "brain_first_token_s": 0.13248067600216018,
+      "first_sentence_ready_s": 1.0754437440009497,
+      "max_overlap_s": 0.0,
+      "speech_first_pcm_s": 1.8436406229993736,
+      "playback_started_s": 2.9274982630013255,
+      "turn_finished_s": 4.7425905960008095,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 28,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9642857142857143,
+        "reliable": true,
+        "anchored_span_s": 1.3499999999999999,
+        "added_time_between_anchors_s": 0.20266666666666655,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.35,
+            "added_s": 0.2077916666666666
+          }
+        ]
+      }
+    },
+    {
+      "case": "recall",
+      "mode": "brief",
+      "input": "What did I name the kitten?",
+      "reply": "You named the kitten Miso.",
+      "words": 5,
+      "sentences": 1,
+      "expected_fact_present": true,
+      "brain_ready_s": 1.6184629460003634,
+      "brain_first_token_s": 0.16281059399989317,
+      "first_sentence_ready_s": 1.6087709679995896,
+      "max_overlap_s": 0.0,
+      "speech_first_pcm_s": 1.8862810989994614,
+      "playback_started_s": 3.510031647001597,
+      "turn_finished_s": 5.343610004998482,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 24,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 1.25,
+        "added_time_between_anchors_s": 0.309333333333333,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.3,
+            "added_s": 0.309333333333333
+          }
+        ]
+      }
+    },
+    {
+      "case": "recall",
+      "mode": "usual",
+      "input": "What did I name the kitten?",
+      "reply": "You named the kitten Miso.",
+      "words": 5,
+      "sentences": 1,
+      "expected_fact_present": true,
+      "brain_ready_s": 0.9766867450016434,
+      "brain_first_token_s": 0.13440887899923837,
+      "first_sentence_ready_s": 0.9692654749997018,
+      "max_overlap_s": 0.0,
+      "speech_first_pcm_s": 1.8622247659986897,
+      "playback_started_s": 2.8397354279986757,
+      "turn_finished_s": 4.590756771001907,
+      "history_saved": true,
+      "monitor": {
+        "attempted_anchors": 25,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 1.2999999999999998,
+        "added_time_between_anchors_s": 0.18129166666666663,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.4,
+            "added_s": 0.1927500000000002
+          }
+        ]
+      }
+    }
+  ]
+}

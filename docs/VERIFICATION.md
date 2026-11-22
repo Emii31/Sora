@@ -659,3 +659,7 @@ Android logged three completed lines. Offline recognition recovered every expect
 ## 2026-11-23 — Phase 4.56 Motorola performance
 
 The two- and three-thread native runs each generated three complete lines with matching PCM hashes and correct words. Two Qwen-to-phone synthesis tests started virtual playback in 3.47–3.59 seconds from recognized text with no measured added monitor delay. Source and binary hashes and profile failures are captured in the phase evidence. See PHASE_04_56.md.
+
+## 2026-11-23 — Phase 4.57 voice timing verification
+
+Four reply pairs measured usual and brief prompts, with median starts of 3.40 and 3.34 seconds. Android speaker timing was 6.62 seconds for synthetic input and 6.88 seconds for the live input. The live player drained its reply with zero reported underruns and the owner confirmed delivery. Regression results were 126 passed and 6 skipped. See PHASE_04_57.md.
