@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.48 — Native Sopro streaming audition
-- **Current status**: Native Sopro is the closest timed reference-conditioned candidate. Warm four-thread playback starts in an estimated 0.96–1.30 s. The approved Liquid reel remains the voice reference.
-- **Next action**: Compare the new audition against Liquid. If the owner approves the delivery, measure the full conversation loop. See [Phase 4.48](phases/PHASE_04_48.md).
+- **Phase**: Phase 4.49 — Native Sopro conversation trial
+- **Current status**: Opt-in local Sopro can reply through the laptop speakers. The two microphone runs gave inaccurate transcriptions and needed 4.28–4.34 seconds after recognition to begin playback, with estimated gaps.
+- **Next action**: Diagnose live microphone endpointing and measure combined recognition, chat and speech latency. See [Phase 4.49](phases/PHASE_04_49.md).

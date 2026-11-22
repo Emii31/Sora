@@ -15,19 +15,27 @@ from liquid_phone import PhoneRunner
 from voice_brain import LocalVoiceBrain
 from voice_continuous import ContinuousLiquid
 from voice_liquid_live import BufferedPlayer, LiquidStream, Microphone, voice_playback_buffer
+from voice_sopro_live import SoproStream, sopro_session
 
 
 class VoiceTurn:
     def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=None,
                  vosk_model=None, context=None, smooth_long_replies=False, sentence_streaming=False,
-                 continuous_speech=False):
+                 continuous_speech=False, sopro_reference=None):
         if sum((sentence_streaming, smooth_long_replies, continuous_speech)) > 1:
             raise ValueError("Choose one experimental playback mode")
         if continuous_speech and context is None:
             raise ValueError("Continuous speech requires account context")
+        if sopro_reference is not None and (context is None or
+                any((sentence_streaming, smooth_long_replies, continuous_speech))):
+            raise ValueError("Sopro requires account context and the regular playback path")
         self.stopped = threading.Event()
         self.microphone = Microphone(self.stopped, source=source, threshold=threshold, vosk_model=vosk_model)
-        self.stream = (ContinuousLiquid if continuous_speech else LiquidStream)(endpoint, self.stopped)
+        self.sopro = sopro_reference is not None
+        if self.sopro:
+            self.stream = SoproStream(endpoint, self.stopped, sopro_reference)
+        else:
+            self.stream = (ContinuousLiquid if continuous_speech else LiquidStream)(endpoint, self.stopped)
         self.sink = sink
         self.buffer_seconds = buffer_seconds
         self.smooth_long_replies = smooth_long_replies
@@ -73,8 +81,10 @@ class VoiceTurn:
             brain_ready = time.monotonic() - started if snapshot else None
             if self.stopped.is_set():
                 return
-            buffer_seconds = (self.buffer_seconds if self.buffer_seconds is not None
-                              else voice_playback_buffer(reply_text, smooth_long=self.smooth_long_replies))
+            buffer_seconds = self.buffer_seconds
+            if buffer_seconds is None:
+                buffer_seconds = 0.25 if self.sopro else voice_playback_buffer(
+                    reply_text, smooth_long=self.smooth_long_replies)
             self.player = BufferedPlayer(self.stopped, buffer_seconds, self.sink)
             text = []
             first_audio = None
@@ -106,9 +116,14 @@ class VoiceTurn:
                     "audio_s": self.player.bytes_written / 48000,
                     "text_characters": len("".join(text)),
                 }
+                if self.sopro:
+                    self.metrics["speech_engine"] = "sopro"
+                    ended = self.microphone.speech_ended_at
+                    self.metrics["speech_end_to_playback_pipe_s"] = (
+                        self.player.started_at - ended if ended and self.player.started_at else None)
                 if snapshot:
                     if "".join(text).strip() != reply_text:
-                        raise RuntimeError("Voice output text differs from Sora's reply. Rebuild the Liquid runner")
+                        raise RuntimeError("Voice output text differs from Sora's reply")
                     self.context.commit(snapshot, reply_text)
                     self.metrics["character"] = snapshot.character_name
                     self.metrics["history_saved"] = True
@@ -331,7 +346,11 @@ class VoiceTurn:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--kit", type=Path, required=True)
+    engines = parser.add_mutually_exclusive_group(required=True)
+    engines.add_argument("--kit", type=Path, help="Liquid model and Android runner kit")
+    engines.add_argument("--sopro-runtime", type=Path, help="Directory containing the native Sopro server")
+    parser.add_argument("--sopro-model", type=Path, help="Local Sopro model directory")
+    parser.add_argument("--sopro-reference", type=Path, help="Approved 5–20 second voice reference WAV")
     parser.add_argument("--source", help="PipeWire microphone node name")
     parser.add_argument("--vosk-model", type=Path, help="Use a local Vosk model to show and send the recognized text")
     parser.add_argument("--sink", help="PipeWire playback node name")
@@ -345,11 +364,20 @@ def main():
                                 help="Speak completed sentences while the local brain continues (experimental)")
     playback_modes.add_argument("--continuous-speech", action="store_true",
                                 help="Feed text into one continuous speech-model session (experimental)")
-    parser.add_argument("--replay", type=Path, help="Run one prerecorded input through real phone inference and playback")
+    parser.add_argument("--replay", type=Path, help="Run one prerecorded input through inference and playback")
     parser.add_argument("--once", action="store_true", help="Listen for one sentence and exit after its reply")
+    parser.add_argument("--wait-to-listen", action="store_true", help="Wait for Enter after warmup before opening the microphone")
     parser.add_argument("--user-id", help="Select an active local Sora account when several exist")
     parser.add_argument("--report", type=Path, help="Save diagnostic logs and timings in a fresh directory")
     args = parser.parse_args()
+    if args.sopro_runtime and (not args.sopro_model or not args.sopro_reference):
+        parser.error("Sopro needs --sopro-model and --sopro-reference")
+    if args.sopro_runtime and any((args.continuous_speech, args.sentence_streaming, args.smooth_long_replies)):
+        parser.error("Those playback modes apply only to Liquid")
+    if args.kit and (args.sopro_model or args.sopro_reference):
+        parser.error("The Sopro model and reference options need --sopro-runtime")
+    if args.replay and args.wait_to_listen:
+        parser.error("--wait-to-listen is available only for microphone input")
     if not 0 < args.threshold <= 1 or (args.buffer_seconds is not None and not 0 <= args.buffer_seconds <= 5):
         parser.error("Use a threshold between zero and one and a buffer from zero to five seconds")
     if not args.replay and not sys.stdin.isatty():
@@ -378,14 +406,22 @@ def main():
         (args.report / "startup.json").write_text(json.dumps({"brain_warmup_s": warmup_seconds}) + "\n")
     with tempfile.TemporaryDirectory(prefix="sora-live-voice-") as temporary:
         directory = args.report or Path(temporary)
-        with PhoneRunner(args.kit, directory / "server.log") as endpoint:
+        session = (sopro_session(args.sopro_runtime, args.sopro_model, args.sopro_reference, directory)
+                   if args.sopro_runtime else PhoneRunner(args.kit, directory / "server.log"))
+        with session as endpoint:
+            if args.wait_to_listen:
+                print("Ready. Press Enter to open the microphone.", flush=True)
+                start_command = sys.stdin.readline()
+                if not start_command or start_command.strip().lower() == "q":
+                    return
             def new_turn():
                 return VoiceTurn(endpoint, source=args.source, sink=args.sink,
                                  threshold=args.threshold, buffer_seconds=args.buffer_seconds,
                                  vosk_model=args.vosk_model, context=context,
                                  smooth_long_replies=args.smooth_long_replies,
                                  sentence_streaming=args.sentence_streaming,
-                                 continuous_speech=args.continuous_speech)
+                                 continuous_speech=args.continuous_speech,
+                                 sopro_reference=args.sopro_reference)
             turn = new_turn()
             try:
                 turn.start(args.replay.read_bytes() if args.replay else None)

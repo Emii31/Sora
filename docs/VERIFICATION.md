@@ -627,3 +627,7 @@ Verified pinned model weights, local PCM output, continuity estimates and Whispe
 ## 2026-11-22 — Phase 4.48 cached native voice
 
 Verified the release checksum, isolated loopback runs, reference cache hits and five complete replies for each profile. Four threads reached 1.2 s in three of five tests. Whisper tiny.en found two edits in 81 words. Verified the 24.80-second audition and retained the exact approved Liquid reel.
+
+## 2026-11-22 — Phase 4.49 Sopro conversation verification
+
+Verified the Sopro completion contract, dry CLI options, local Ollama inference, PipeWire playback and disposal of synthetic account data. The replay started playback 8.62 s after recognition. Microphone trials started playback at 4.34 s and 4.28 s after recognition with two estimated gaps each. Available results exclude valid speech-end latency because the microphone reached its capture limit. See PHASE_04_49.md.

@@ -738,3 +738,7 @@ Tested Sopro V2 Turbo and LuxTTS using examples from the owner-approved Liquid r
 ## 2026-11-22 — Phase 4.48 native Sopro streaming
 
 Benchmarked the same Sopro checkpoint and Liquid references through audio.cpp. Four warmed CPU threads reached an estimated continuous audible start of 0.96–1.30 s. Generated a listening sample. Voice fit and end-to-end chat timing remain pending.
+
+## 2026-11-22 — Phase 4.49 Sopro local conversation trial
+
+Added explicit native Sopro options to the terminal prototype. Prerecorded input and two microphone turns reached playback and persisted one exchange each in disposable storage. The owner heard the first reply and requested a repeat with a clearer speech cue. Both microphone turns reached the capture limit and mistranscribed the intended phrases. Full live latency and continuity remain unresolved.

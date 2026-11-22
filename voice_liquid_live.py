@@ -228,12 +228,14 @@ class Microphone:
         self.proc = None
         self.vosk_model = vosk_model
         self.transcript = None
+        self.speech_ended_at = None
 
     def cancel(self):
         self.stopped.set()
         stop_process(self.proc)
 
     def capture(self):
+        self.speech_ended_at = None
         command = ["pw-record", "--raw", "--rate", "16000", "--channels", "1",
                    "--format", "s16", "--latency", "20ms"]
         if self.source:
@@ -266,6 +268,8 @@ class Microphone:
                         if recognizer and recognizer.AcceptWaveform(frame):
                             segments.append(json.loads(recognizer.Result()).get("text", ""))
                         if detector.feed(frame):
+                            if detector.quiet >= detector.silence_frames:
+                                self.speech_ended_at = time.monotonic() - detector.quiet * .02
                             if recognizer:
                                 segments.append(json.loads(recognizer.FinalResult()).get("text", ""))
                                 self.transcript = " ".join(segment.strip() for segment in segments if segment.strip())

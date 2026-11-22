@@ -49,3 +49,5 @@
 - **Phase 4.45 voice selection**: The owner approved the full Liquid conversation reel. Its exact playback audio is the reference for delivery across moods. The Gwen and Supertonic trials did not meet the owner’s delivery preference. Voice quality is approved for the reference and live performance remains a separate acceptance check.
 
 - **Phase 4.46 performance**: Keep the approved Liquid reel. The stock Motorola runner missed the speed target even with complete text input. The tested KleidiAI build returned invalid speech and is ruled out for this runner.
+
+- **Phase 4.49 Sopro integration**: Keep Sopro an explicit terminal option using the approved Liquid reference. One-turn microphone and speaker wiring is verified. Promotion depends on accurate recognition, reliable endpointing and acceptable full-turn latency.

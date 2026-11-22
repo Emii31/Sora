@@ -1,0 +1,52 @@
+{
+  "replay-report": {
+    "first_audio_s": 8.613094182999987,
+    "brain_ready_s": 3.937150982999981,
+    "brain_first_token_s": 1.2058692169999858,
+    "buffer_seconds": 0.25,
+    "playback_policy": "streaming",
+    "playback_started_s": 8.620191766000005,
+    "turn_finished_s": 14.735492918999967,
+    "estimated_gaps": 4,
+    "audio_s": 4.981333333333334,
+    "text_characters": 61,
+    "speech_engine": "sopro",
+    "character": "Sora",
+    "history_saved": true
+  },
+  "live-report": {
+    "first_audio_s": 4.33209593700002,
+    "brain_ready_s": 2.587999712999988,
+    "brain_first_token_s": 0.5506533319999676,
+    "buffer_seconds": 0.25,
+    "playback_policy": "streaming",
+    "playback_started_s": 4.335401358000013,
+    "turn_finished_s": 7.6374293470000225,
+    "estimated_gaps": 2,
+    "audio_s": 2.933333333333333,
+    "text_characters": 47,
+    "speech_engine": "sopro",
+    "character": "Sora",
+    "history_saved": true
+  },
+  "live-retry": {
+    "first_audio_s": 4.275093238999943,
+    "brain_ready_s": 2.637922147999916,
+    "brain_first_token_s": 0.6405814759999657,
+    "buffer_seconds": 0.25,
+    "playback_policy": "streaming",
+    "playback_started_s": 4.277467322999996,
+    "turn_finished_s": 7.673976484999912,
+    "estimated_gaps": 2,
+    "audio_s": 3.017333333333333,
+    "text_characters": 47,
+    "speech_engine": "sopro",
+    "character": "Sora",
+    "history_saved": true
+  },
+  "notes": {
+    "microphone_first_turn_owner_heard_speaker": true,
+    "microphone_both_reached_capture_limit": true,
+    "microphone_both_recognition_mismatches": true
+  }
+}
