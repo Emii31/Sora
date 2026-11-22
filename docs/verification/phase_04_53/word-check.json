@@ -1,0 +1,56 @@
+[
+  {
+    "fixture": "reassure",
+    "mode": "whole",
+    "expected": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+    "heard": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+    "word_edits": 0,
+    "words": 14,
+    "decode_s": 2.0185640719996627
+  },
+  {
+    "fixture": "reassure",
+    "mode": "sentences",
+    "expected": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+    "heard": "I'm right here. Take a slow breath, tell me what happened. When you're ready.",
+    "word_edits": 0,
+    "words": 14,
+    "decode_s": 1.8829481289999421
+  },
+  {
+    "fixture": "playful",
+    "mode": "sentences",
+    "expected": "I'm just teasing you, really. Next time, I'll be careful.",
+    "heard": "I'm just teasing you really. Next time, I'll be careful.",
+    "word_edits": 0,
+    "words": 10,
+    "decode_s": 1.9671230959997956
+  },
+  {
+    "fixture": "playful",
+    "mode": "whole",
+    "expected": "I'm just teasing you, really. Next time, I'll be careful.",
+    "heard": "I'm just teasing you really. Next time, I'll be careful.",
+    "word_edits": 0,
+    "words": 10,
+    "decode_s": 1.986745296999743
+  },
+  {
+    "fixture": "single",
+    "mode": "whole",
+    "expected": "I'm right here with you.",
+    "heard": "I'm right here with you.",
+    "word_edits": 0,
+    "words": 5,
+    "decode_s": 2.1795564219996777
+  },
+  {
+    "fixture": "single",
+    "mode": "sentences",
+    "expected": "I'm right here with you.",
+    "heard": "I'm right here with you.",
+    "word_edits": 0,
+    "words": 5,
+    "decode_s": 1.993622535999748
+  }
+]

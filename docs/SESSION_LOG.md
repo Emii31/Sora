@@ -754,3 +754,7 @@ Verified a live Motorola USB microphone turn with direct PCM input. Recognition 
 ## 2026-11-22 — Phase 4.52 sentence endings and latency
 
 Reproduced a clipped ending after a one-second synthetic pause and separated it from Vosk errors on complete audio. Added a diagnostic silence setting with the 900 ms default and split microphone, chat, and Sopro timings. No microphone was opened. See PHASE_04_52.md.
+
+## 2026-11-22 — Phase 4.53 Sopro sentence streaming comparison
+
+Compared the same three recorded Qwen replies using whole-reply synthesis and separate Sopro calls per sentence. Splitting started the two longer replies earlier and added long gaps, so the terminal prototype continues using whole replies. See PHASE_04_53.md.

@@ -643,3 +643,7 @@ The cue prompted a live phone turn through the direct PCM pipe. Sora recognized 
 ## 2026-11-22 — Phase 4.52 voice pipeline diagnostics
 
 Two paced synthetic turns generated local replies and saved one temporary exchange each. Measured 7.53–9.16 seconds to playback submission. Five fixture probes isolated early cutoff from recognition errors. Whisper preserved final words on complete captures but took 1.63–2.36 seconds to decode the 1,200 ms variants. Regression results were 160 passed, 6 skipped. See PHASE_04_52.md and verification/phase_04_52.
+
+## 2026-11-22 — Phase 4.53 Sopro playback verification
+
+Six matched local trials saved exact replies in disposable history. Reliable virtual monitor alignment showed an extra 1.74–2.63 seconds of playback delay for the longer split replies. Offline recognition found no word edits across either set. The focused regression suite returned 29 passed. See PHASE_04_53.md and verification/phase_04_53.

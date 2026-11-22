@@ -1,0 +1,318 @@
+{
+  "reference_sha256": "3eaab2ab4ddab06960886fad564b494c56c6702e115743bb9fec1ed54d2620ce",
+  "runs": [
+    {
+      "fixture": "reassure",
+      "mode": "whole",
+      "first_audio_s": 4.655946697000218,
+      "brain_ready_s": 2.9084850120002557,
+      "brain_first_token_s": 0.179159047000212,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 4.656730678000258,
+      "turn_finished_s": 11.245929882999917,
+      "estimated_gaps": 3,
+      "audio_s": 5.745333333333333,
+      "text_characters": 76,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+      "requests": [
+        {
+          "text": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+          "started_s": 2.9089665379997314,
+          "first_pcm_s": 4.656173573999695,
+          "done_s": 10.178667594999752
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 73,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9863013698630136,
+        "reliable": true,
+        "anchored_span_s": 5.65,
+        "added_time_between_anchors_s": 0.7466249999999999,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.65,
+            "added_s": 0.2930416666666673
+          },
+          {
+            "reference_s": 2.1,
+            "added_s": 0.10670833333333363
+          },
+          {
+            "reference_s": 4.05,
+            "added_s": 0.27737500000000015
+          },
+          {
+            "reference_s": 4.75,
+            "added_s": 0.0426666666666673
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "reassure",
+      "mode": "sentences",
+      "first_sentence_s": 1.1463915669996823,
+      "first_audio_s": 2.6931468829998266,
+      "buffer_seconds": 0.25,
+      "brain_ready_s": 2.910323239999798,
+      "brain_first_token_s": 0.179159047000212,
+      "playback_started_s": 2.6937931939996815,
+      "turn_finished_s": 10.057546472000013,
+      "playback_policy": "sentence_streaming",
+      "segments": 3,
+      "estimated_gaps": 4,
+      "audio_s": 3.8953333333333333,
+      "text_characters": 76,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm right here. Take a slow breath. Tell me what happened when you're ready.",
+      "requests": [
+        {
+          "text": "I'm right here.",
+          "started_s": 1.1480125119996956,
+          "first_pcm_s": 2.6935613380001087,
+          "done_s": 2.996372486999917
+        },
+        {
+          "text": "Take a slow breath.",
+          "started_s": 2.9964013109997722,
+          "first_pcm_s": 5.2553144079997764,
+          "done_s": 5.599438911000107
+        },
+        {
+          "text": "Tell me what happened when you're ready.",
+          "started_s": 5.5994656869997925,
+          "first_pcm_s": 7.282926706000126,
+          "done_s": 9.23626494600012
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 63,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 1.0,
+        "reliable": true,
+        "anchored_span_s": 3.6999999999999997,
+        "added_time_between_anchors_s": 3.381291666666667,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.95,
+            "added_s": 1.6213333333333337
+          },
+          {
+            "reference_s": 1.8,
+            "added_s": 1.0773333333333328
+          },
+          {
+            "reference_s": 2.4,
+            "added_s": 0.15591666666666626
+          },
+          {
+            "reference_s": 3.15,
+            "added_s": 0.5120416666666667
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "playful",
+      "mode": "sentences",
+      "first_sentence_s": 1.4338911319996441,
+      "first_audio_s": 3.6583464379996258,
+      "buffer_seconds": 0.25,
+      "brain_ready_s": 2.4326394009999603,
+      "brain_first_token_s": 0.1617884059996868,
+      "playback_started_s": 3.659096524999768,
+      "turn_finished_s": 8.716054856999563,
+      "playback_policy": "sentence_streaming",
+      "segments": 2,
+      "estimated_gaps": 3,
+      "audio_s": 3.0,
+      "text_characters": 57,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm just teasing you, really. Next time, I'll be careful.",
+      "requests": [
+        {
+          "text": "I'm just teasing you, really.",
+          "started_s": 1.4346359710002616,
+          "first_pcm_s": 3.658555580000211,
+          "done_s": 4.300212609000027
+        },
+        {
+          "text": "Next time, I'll be careful.",
+          "started_s": 4.300236804000178,
+          "first_pcm_s": 6.64772659900018,
+          "done_s": 7.79789917800008
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 52,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9807692307692307,
+        "reliable": true,
+        "anchored_span_s": 2.85,
+        "added_time_between_anchors_s": 1.9733333333333332,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.45,
+            "added_s": 0.19199999999999973
+          },
+          {
+            "reference_s": 1.55,
+            "added_s": 1.2800416666666665
+          },
+          {
+            "reference_s": 1.85,
+            "added_s": 0.5013750000000003
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "playful",
+      "mode": "whole",
+      "first_audio_s": 4.659684820000166,
+      "brain_ready_s": 2.4320716759998504,
+      "brain_first_token_s": 0.1617884059996868,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 4.660792033000234,
+      "turn_finished_s": 8.847283169000093,
+      "estimated_gaps": 2,
+      "audio_s": 3.872,
+      "text_characters": 57,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm just teasing you, really. Next time, I'll be careful.",
+      "requests": [
+        {
+          "text": "I'm just teasing you, really. Next time, I'll be careful.",
+          "started_s": 2.432496608999827,
+          "first_pcm_s": 4.65987605600003,
+          "done_s": 8.231634130999737
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 63,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9682539682539683,
+        "reliable": true,
+        "anchored_span_s": 3.75,
+        "added_time_between_anchors_s": 0.23470833333333374,
+        "material_lag_jumps": [
+          {
+            "reference_s": 1.3,
+            "added_s": 0.0547500000000003
+          },
+          {
+            "reference_s": 2.35,
+            "added_s": 0.04270833333333268
+          },
+          {
+            "reference_s": 2.7,
+            "added_s": 0.11729166666666657
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "single",
+      "mode": "whole",
+      "first_audio_s": 3.161756774999958,
+      "brain_ready_s": 1.009499082000275,
+      "brain_first_token_s": 0.13270549599974402,
+      "buffer_seconds": 0.25,
+      "playback_policy": "streaming",
+      "playback_started_s": 3.16405931700001,
+      "turn_finished_s": 4.431551612000021,
+      "estimated_gaps": 1,
+      "audio_s": 1.0946666666666667,
+      "text_characters": 24,
+      "speech_engine": "sopro",
+      "speech_end_to_chat_s": null,
+      "speech_end_to_playback_pipe_s": null,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm right here with you.",
+      "requests": [
+        {
+          "text": "I'm right here with you.",
+          "started_s": 1.0099315810002736,
+          "first_pcm_s": 3.1619678150000254,
+          "done_s": 3.6649945100002697
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 19,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.9473684210526315,
+        "reliable": true,
+        "anchored_span_s": 0.9500000000000001,
+        "added_time_between_anchors_s": 0.07466666666666644,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.4,
+            "added_s": 0.07470833333333315
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "single",
+      "mode": "sentences",
+      "first_sentence_s": 1.0152133069996125,
+      "first_audio_s": 2.6596112189999985,
+      "buffer_seconds": 0.25,
+      "brain_ready_s": 1.0153724139995575,
+      "brain_first_token_s": 0.13270549599974402,
+      "playback_started_s": 2.6602870799997618,
+      "turn_finished_s": 4.052909089999957,
+      "playback_policy": "sentence_streaming",
+      "segments": 1,
+      "estimated_gaps": 1,
+      "audio_s": 1.17,
+      "text_characters": 24,
+      "character": "Sora",
+      "history_saved": true,
+      "reply": "I'm right here with you.",
+      "requests": [
+        {
+          "text": "I'm right here with you.",
+          "started_s": 1.0162882249996983,
+          "first_pcm_s": 2.659965116999956,
+          "done_s": 3.2336493099996915
+        }
+      ],
+      "monitor": {
+        "attempted_anchors": 21,
+        "alignment_filter": "symmetric_hann_9",
+        "window_s": 0.02,
+        "matched_fraction": 0.8571428571428571,
+        "reliable": true,
+        "anchored_span_s": 1.0,
+        "added_time_between_anchors_s": 0.14933333333333332,
+        "material_lag_jumps": [
+          {
+            "reference_s": 0.35,
+            "added_s": 0.16491666666666704
+          }
+        ]
+      }
+    }
+  ]
+}
