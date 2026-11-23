@@ -47,7 +47,7 @@ The authenticated `POST /api/camera/describe` route takes one still frame and re
 
 ## Shared memory
 
-Connected devices can read and update one account's memory through the laptop's authenticated APIs. The account determines the storage directory for Markdown, slots, core memory, and chat history. Clients revalidate cached reads against the backend. The opt-in pairing backend issues an independently revocable phone credential for the existing laptop account. The USB integration is verified. Protected private Wi-Fi and ordinary Android client integration remain deployment work.
+Connected devices can read and update one account's memory through the laptop's authenticated APIs. The account determines the storage directory for Markdown, slots, core memory, and chat history. Clients revalidate cached reads against the backend. The opt-in pairing backend issues an independently revocable phone credential for the existing laptop account. The backend has separate owner loopback and scoped phone HTTPS listeners. Both USB and direct private Wi-Fi transport were verified with a physical Motorola. Persistent trust and ordinary Android client integration remain deployment work.
 
 ## Personality in full and fast chat
 

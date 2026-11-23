@@ -818,3 +818,7 @@ Screened LFM3-Audio as a direct offline speech-to-speech architecture on the Mot
 ## 2026-11-24 — Phase 6.2 private pairing and shared memory
 
 Resumed Phase 6 with independent phone pairing. The physical Motorola saved a note and chat in the laptop account over USB. Local Qwen recalled the shared detail after restarting the laptop backend. See PHASE_06_02.md.
+
+## 2026-11-24 — Phase 6.3 shared memory over private Wi-Fi
+
+Added a restricted private HTTPS listener and verified physical Motorola pairing, shared note storage and laptop recall over Wi-Fi. The first test port was blocked by the firewall. The successful run used a free already-permitted port with a test peer restriction and no firewall changes. See PHASE_06_03.md.

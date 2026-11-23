@@ -707,3 +707,7 @@ The three timed capped responses delivered speech-level PCM in 4.91–7.71 secon
 ## 2026-11-24 — Phase 6.2 private pairing and shared memory
 
 Verified single-use pairing on the Motorola, same-account note persistence, exact synthetic recall, owner settings isolation and live revocation. The test restarted the backend and phone test client processes. 106 focused tests passed. See PHASE_06_02.md and verification/phase_06_02.
+
+## 2026-11-24 — Phase 6.3 shared memory over private Wi-Fi
+
+Android accepted the supplied certificate authority and rejected untrusted and mismatched certificates. The same note and the Juniper recall survived process restart over direct Wi-Fi. Revocation blocked the phone. 112 focused tests passed. See PHASE_06_03.md and verification/phase_06_03.

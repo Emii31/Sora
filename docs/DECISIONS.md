@@ -79,3 +79,5 @@
 - **Phase 4.67 LFM3 screen**: Reject the tested LFM3-Audio Q4_0 CPU pairing for live Motorola use. Use speech-level PCM and continuous delivery as speed gates before asking the owner to evaluate another voice.
 
 - **Phase 6.2 pairing**: Use a single-use five-minute code to issue a separately revocable scoped phone credential for the existing laptop account. Keep the canonical data on the laptop. Verify the private Wi-Fi transport before personal use.
+
+- **Phase 6.3 private transport**: Serve owner operations on loopback and restrict the private Wi-Fi HTTPS listener to pairing and scoped phone APIs. Keep the canonical account on the laptop. Verify persistent trust and credential storage before daily Android use.

@@ -1235,6 +1235,13 @@ _PHONE_ENDPOINTS = {
     ("GET", "api_memory_slot_get"),
 }
 
+PRIVATE_PAIRING_LAN = "sora.private_pairing_lan"
+
+
+def _phone_route_allowed(req, method):
+    return ((method, req.endpoint) in _PHONE_ENDPOINTS
+            and (req.endpoint != "api_chat" or req.is_json))
+
 
 def is_local_request(req=None) -> bool:
     req = req or request
@@ -1277,14 +1284,26 @@ def check_request(req=None):
     """
     req = req or request
     path = req.path
+    method = "GET" if req.method == "HEAD" else req.method
+    redeem = req.method == "POST" and req.endpoint == "pairing.redeem"
+    auth_header = req.headers.get("Authorization", "")
+
+    import device_pairing
+    if req.environ.get(PRIVATE_PAIRING_LAN):
+        if not req.is_secure or not device_pairing.enabled():
+            abort(404)
+        if not redeem and (method, req.endpoint) != ("GET", "api_health"):
+            if not _phone_route_allowed(req, method):
+                abort(404)
+            if not auth_header.startswith("Bearer " + device_pairing.PHONE_TOKEN_PREFIX):
+                abort(401, description="A paired phone credential is required")
 
     # Exempt routes: serve HTML shell, static assets, login/config API
     # /         → landing page (public)
     # /app      → web app shell with login screen (anonymous; client JS handles token)
     # /login    → DMG invitation code entry page (anonymous; POSTs to /api/auth/login)
     # /pet      → desktop pet shell (auth handled by URL token param)
-    if ((req.method == "POST" and req.endpoint == "pairing.redeem")
-            or path in ("/", "/app", "/login", "/pet", "/privacy")
+    if (redeem or path in ("/", "/app", "/login", "/pet", "/privacy")
             or any(path.startswith(p) for p in _EXEMPT_PREFIXES)):
         _set_anonymous_context()
         return None
@@ -1295,13 +1314,11 @@ def check_request(req=None):
         return None
 
     # Extract token
-    auth_header = req.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         provided_token = auth_header[7:].strip()
     else:
         provided_token = req.args.get("token", "").strip()
 
-    import device_pairing
     if provided_token.startswith(device_pairing.PHONE_TOKEN_PREFIX):
         if not auth_header.startswith("Bearer ") or not device_pairing.enabled():
             abort(401, description="Invalid phone credential")
@@ -1312,9 +1329,7 @@ def check_request(req=None):
         if (not user or user.get("status") != "active"
                 or user.get("account_type") != LOCAL_SINGLE_DEVICE_ACCOUNT_TYPE):
             abort(401, description="Invalid phone credential")
-        method = "GET" if req.method == "HEAD" else req.method
-        if ((method, req.endpoint) not in _PHONE_ENDPOINTS
-                or (req.endpoint == "api_chat" and not req.is_json)):
+        if not _phone_route_allowed(req, method):
             abort(403, description="This route is outside paired phone access")
         _set_user_context(user_id)
         return None
