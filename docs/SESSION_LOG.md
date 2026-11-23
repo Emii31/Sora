@@ -810,3 +810,7 @@ Added --ollama-threads to terminal voice and used the production voice brain in 
 ## 2026-11-23 — Phase 4.66 phone-only voice feasibility
 
 Ran recognition, Qwen and the approved voice entirely on the Motorola with five prerecorded turns. The phone-only test confirmed recent memory and continuous playback. The two-second target still needs a different architecture. See PHASE_04_66.md.
+
+## 2026-11-24 — Phase 4.67 Android direct audio screening
+
+Screened LFM3-Audio as a direct offline speech-to-speech architecture on the Motorola. The first PCM arrived quickly, and useful speech remained too slow. Rejected the test build and kept Sopro. See PHASE_04_67.md.

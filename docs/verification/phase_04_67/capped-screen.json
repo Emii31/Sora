@@ -1,0 +1,58 @@
+{
+  "median_first_voiced_pcm_s": 7.4360100960002455,
+  "turns_under_2s": 0,
+  "turns": 3,
+  "memory_reply_mentions_blue": false,
+  "input_endpoint": "Known fixture ending plus 320 ms of silence",
+  "audio_measurement": "First speech-level PCM received on the laptop from the Motorola over USB. No speaker timestamp.",
+  "requests": [
+    {
+      "fixture": "favorite-color",
+      "first_voiced_pcm_s": 7.712737303998438,
+      "first_pcm_s": 1.091204148999168,
+      "endpoint_s": 0.32106841999848257,
+      "audio_s": 7.68,
+      "output_rate": 24000,
+      "chunk_count": 96,
+      "estimated_extra_buffer_s": 15.698610643999857,
+      "status": "completed",
+      "server_status_details": null,
+      "server_transcript": "",
+      "pcm_sha256": "a053ed9636fa85d6b20a87c250c84e00fc973ce3a5138c32a845b6b939a13679",
+      "offline_playback_transcript": "Hey first. I...",
+      "speed_gate_satisfied": false
+    },
+    {
+      "fixture": "short",
+      "first_voiced_pcm_s": 4.909532121000666,
+      "first_pcm_s": 0.9891980130014417,
+      "endpoint_s": 0.321605017001275,
+      "audio_s": 5.76,
+      "output_rate": 24000,
+      "chunk_count": 73,
+      "estimated_extra_buffer_s": 10.915054151999138,
+      "status": "completed",
+      "server_status_details": null,
+      "server_transcript": "",
+      "pcm_sha256": "6fe1834c4df15fc73a9e31f9dd45307e908b7fba7b6cd15b551334c748d174c9",
+      "offline_playback_transcript": "[sigh] [sigh]",
+      "speed_gate_satisfied": false
+    },
+    {
+      "fixture": "recall",
+      "first_voiced_pcm_s": 7.4360100960002455,
+      "first_pcm_s": 0.945237479001662,
+      "endpoint_s": 0.32261035700139473,
+      "audio_s": 7.68,
+      "output_rate": 24000,
+      "chunk_count": 96,
+      "estimated_extra_buffer_s": 15.633558706998812,
+      "status": "completed",
+      "server_status_details": null,
+      "server_transcript": "",
+      "pcm_sha256": "28d9bd09d7f6f6edf65f8c11bd13c76192d46ad0946618ac895679019c9ec16f",
+      "offline_playback_transcript": "Oleh. A.",
+      "speed_gate_satisfied": false
+    }
+  ]
+}

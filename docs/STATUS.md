@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.66 — Phone-only voice feasibility
-- **Current status**: Five phone-only replays used Whisper, Qwen and the approved Sopro voice entirely on the Motorola. Median speaker onset was 5.77 seconds with zero underruns and correct recent-memory recall.
-- **Next action**: Choose whether to retain the approved voice at its measured speed or evaluate a separate offline voice architecture against both latency and delivery. See [Phase 4.66](phases/PHASE_04_66.md).
+- **Phase**: Phase 4.67 — Direct speech-to-speech latency screen
+- **Current status**: LFM3-Audio on the Motorola produced speech-level PCM in 4.91–7.71 seconds on three timed capped turns. A fourth turn produced no audio. The candidate failed the two-second screen.
+- **Next action**: Keep the approved Sopro voice available and move beyond voice tuning. Screen any future voice candidate for speed before requesting a listening test. See [Phase 4.67](phases/PHASE_04_67.md).

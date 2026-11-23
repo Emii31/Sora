@@ -1,0 +1,25 @@
+{
+  "median_first_voiced_pcm_s": 7.328148806998797,
+  "turns_under_2s": 0,
+  "turns": 1,
+  "memory_reply_mentions_blue": false,
+  "input_endpoint": "Known fixture ending plus 320 ms of silence",
+  "audio_measurement": "First speech-level PCM received on the laptop from the Motorola over USB. No speaker timestamp.",
+  "requests": [
+    {
+      "fixture": "favorite-color",
+      "first_voiced_pcm_s": 7.328148806998797,
+      "first_pcm_s": 1.0562048189985944,
+      "endpoint_s": 0.32129858799817157,
+      "audio_s": 10.24,
+      "output_rate": 24000,
+      "chunk_count": 129,
+      "estimated_extra_buffer_s": 20.666768063001,
+      "status": "completed",
+      "server_transcript": "",
+      "pcm_sha256": "f4e6e0f67676d6cbc6b549811dec183456a1d31284a13d31bab792eed356cb02",
+      "offline_playback_transcript": "Hey first. I need a",
+      "speed_gate_satisfied": false
+    }
+  ]
+}

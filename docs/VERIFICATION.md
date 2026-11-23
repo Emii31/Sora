@@ -699,3 +699,7 @@ All six final phone replies drained with zero reported underruns. The median spe
 ## 2026-11-23 — Phase 4.66 phone-only voice feasibility
 
 On-phone speaker onset ranged from 5.14 to 8.00 seconds, with a 5.77-second median. All five outputs drained without underruns, and the ten saved history messages matched the turn records. Regression tests returned 91 passed and six skipped. See PHASE_04_66.md and verification/phase_04_66.
+
+## 2026-11-24 — Phase 4.67 Android direct audio screening
+
+The three timed capped responses delivered speech-level PCM in 4.91–7.71 seconds, with a 7.44-second median. The reassurance turn produced no audio and recall was not confirmed. Regression tests returned 51 passed. See PHASE_04_67.md and verification/phase_04_67.
