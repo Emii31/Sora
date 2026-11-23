@@ -1,6 +1,7 @@
 """Live terminal voice prototype using Liquid on the connected Android phone."""
 
 import argparse
+from functools import partial
 import json
 import os
 from pathlib import Path
@@ -21,7 +22,7 @@ from voice_sopro_live import SoproStream, sopro_session
 class VoiceTurn:
     def __init__(self, endpoint, *, source=None, sink=None, threshold=0.015, buffer_seconds=None,
                  vosk_model=None, context=None, smooth_long_replies=False, sentence_streaming=False,
-                 continuous_speech=False, sopro_reference=None, silence_ms=900):
+                 continuous_speech=False, sopro_reference=None, silence_ms=900, brain_factory=None):
         if sum((sentence_streaming, smooth_long_replies, continuous_speech)) > 1:
             raise ValueError("Choose one experimental playback mode")
         if continuous_speech and context is None:
@@ -49,7 +50,7 @@ class VoiceTurn:
         self.error = None
         self.thread = None
         self.context = context
-        self.brain = LocalVoiceBrain(self.stopped) if context else None
+        self.brain = (brain_factory or LocalVoiceBrain)(self.stopped) if context else None
 
     def run(self, wav=None):
         try:
@@ -362,6 +363,8 @@ def main():
                         help="Quiet time before ending a microphone utterance (300–2,000 ms, default 900)")
     parser.add_argument("--buffer-seconds", type=float, help="Override automatic reply-length buffering (0–5 seconds)")
     parser.add_argument("--no-warmup", action="store_true", help="Skip chat-model prefill before listening")
+    parser.add_argument("--ollama-threads", type=int, metavar="N",
+                        help="Use N CPU threads for voice chat with a direct local Ollama server")
     playback_modes = parser.add_mutually_exclusive_group()
     playback_modes.add_argument("--smooth-long-replies", action="store_true",
                         help="Wait for complete long replies before playback; avoids generation gaps but starts later")
@@ -387,11 +390,14 @@ def main():
         parser.error("Use a threshold between zero and one and a buffer from zero to five seconds")
     if not 300 <= args.silence_ms <= 2000:
         parser.error("--silence-ms must be between 300 and 2,000")
+    if args.ollama_threads is not None and args.ollama_threads < 1:
+        parser.error("--ollama-threads must be a positive integer")
     if not args.replay and not sys.stdin.isatty():
         parser.error("Live mode needs an interactive terminal")
     from voice_context import LocalVoiceContext
 
     context = LocalVoiceContext(user_id=args.user_id)
+    brain_factory = partial(LocalVoiceBrain, ollama_threads=args.ollama_threads)
     if not args.vosk_model:
         parser.error("Sora context needs local recognition. Supply --vosk-model to transcribe your input")
     print("Using Sora context from " + context.data_dir, flush=True)
@@ -405,7 +411,7 @@ def main():
     if not args.no_warmup:
         print("Warming Sora's local chat model before listening...", flush=True)
         warm_started = time.monotonic()
-        context.warmup(LocalVoiceBrain(threading.Event()))
+        context.warmup(brain_factory(threading.Event()))
         warmup_seconds = time.monotonic() - warm_started
         print(f"Chat model ready after {warmup_seconds:.2f}s. No conversation was saved.", flush=True)
     if args.report:
@@ -429,7 +435,7 @@ def main():
                                  smooth_long_replies=args.smooth_long_replies,
                                  sentence_streaming=args.sentence_streaming,
                                  continuous_speech=args.continuous_speech,
-                                 sopro_reference=args.sopro_reference)
+                                 sopro_reference=args.sopro_reference, brain_factory=brain_factory)
             turn = new_turn()
             try:
                 turn.start(args.replay.read_bytes() if args.replay else None)

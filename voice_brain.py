@@ -10,8 +10,11 @@ import ai_config
 
 
 class LocalVoiceBrain:
-    def __init__(self, stopped):
+    def __init__(self, stopped, *, ollama_threads=None):
+        if ollama_threads is not None and (type(ollama_threads) is not int or ollama_threads < 1):
+            raise ValueError("Ollama thread count must be a positive integer")
         self.stopped = stopped
+        self.ollama_threads = ollama_threads
         self.connection = None
         self.metrics = {}
 
@@ -53,6 +56,17 @@ class LocalVoiceBrain:
             "model": config["model"], "messages": messages, "stream": True,
             "max_tokens": max_tokens, "temperature": 0.3,
         }
+        native_ollama = self.ollama_threads is not None
+        path = url.path + "/chat/completions"
+        if native_ollama:
+            if url.path != "/v1" or url.query or url.fragment:
+                raise RuntimeError("Ollama threads require a direct local Ollama /v1 connection")
+            path = "/api/chat"
+            payload["options"] = {
+                "num_thread": self.ollama_threads,
+                "num_predict": payload.pop("max_tokens"),
+                "temperature": payload.pop("temperature"),
+            }
         headers = {"Content-Type": "application/json"}
         if config.get("api_key"):
             headers["Authorization"] = "Bearer " + config["api_key"]
@@ -69,11 +83,16 @@ class LocalVoiceBrain:
         try:
             if self.stopped.is_set():
                 return ""
-            connection.request("POST", url.path + "/chat/completions", json.dumps(payload), headers)
+            connection.request("POST", path, json.dumps(payload), headers)
             if self.stopped.is_set():
                 return ""
             response = connection.getresponse()
             if response.status != 200:
+                if native_ollama and response.status == 404:
+                    raise RuntimeError(
+                        "The local provider does not expose Ollama /api/chat. "
+                        "Check the connection or omit --ollama-threads."
+                    )
                 raise RuntimeError(f"Local chat provider returned HTTP {response.status}")
             while not self.stopped.is_set():
                 line = response.readline(100001)
@@ -81,17 +100,26 @@ class LocalVoiceBrain:
                     raise ValueError("Local chat event exceeds its size limit")
                 if not line:
                     break
-                if not line.startswith(b"data: "):
-                    continue
-                raw = line[6:].strip()
-                if raw == b"[DONE]":
-                    break
-                event = json.loads(raw)
+                if not native_ollama:
+                    if not line.startswith(b"data: "):
+                        continue
+                    line = line[6:].strip()
+                    if line == b"[DONE]":
+                        break
+                event = json.loads(line)
                 if "error" in event:
                     raise RuntimeError("Local chat generation failed")
-                for choice in event.get("choices", []):
-                    finish = choice.get("finish_reason") or finish
-                    text = (choice.get("delta") or {}).get("content") or ""
+                native_done = native_ollama and event.get("done") is True
+                if native_ollama:
+                    texts = ((event.get("message") or {}).get("content") or "",)
+                    if native_done:
+                        finish = event.get("done_reason")
+                else:
+                    texts = []
+                    for choice in event.get("choices", []):
+                        finish = choice.get("finish_reason") or finish
+                        texts.append((choice.get("delta") or {}).get("content") or "")
+                for text in texts:
                     if text:
                         self.metrics.setdefault("first_token_s", time.monotonic() - started)
                         size += len(text.encode("utf-8"))
@@ -103,6 +131,8 @@ class LocalVoiceBrain:
                         if on_sentence is not None:
                             for sentence in sentences.feed(text):
                                 on_sentence(sentence)
+                if native_done:
+                    break
             if self.stopped.is_set():
                 return ""
             reply = "".join(words).strip()

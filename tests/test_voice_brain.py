@@ -165,3 +165,45 @@ def test_raw_text_consumer_failure_closes_provider(provider):
     with pytest.raises(ValueError, match='Continuous consumer'):
         voice_brain.LocalVoiceBrain(threading.Event()).reply([], on_text=fail)
     assert seen['closed']
+
+
+def ollama_packet(text='', done_reason=None):
+    return (json.dumps({'message': {'content': text}, 'done': done_reason is not None,
+                        'done_reason': done_reason}) + '\n').encode()
+
+
+def test_ollama_opt_in_uses_same_local_connection_for_warmup_and_reply(provider, monkeypatch):
+    seen, response, _ = provider
+    monkeypatch.setattr(voice_brain.ai_config, 'resolve_max_tokens', lambda tier, limit: limit)
+    brain = voice_brain.LocalVoiceBrain(threading.Event(), ollama_threads=4)
+    messages = [{'role': 'user', 'content': 'Hello'}]
+    response.lines = [ollama_packet('Hi', 'length')]
+    brain.warmup(messages)
+    assert seen['payload']['options']['num_predict'] == 1
+    response.lines = [ollama_packet('Hello. '), ollama_packet('How are you?', 'stop')]
+    sentences = []
+    assert brain.reply(messages, on_sentence=sentences.append) == 'Hello. How are you?'
+    assert sentences == ['Hello. ', 'How are you?']
+    assert (seen['host'], seen['port'], seen['path']) == ('127.0.0.1', 11434, '/api/chat')
+    assert seen['headers']['Authorization'] == 'Bearer local-placeholder'
+    assert seen['payload'] == {'model': 'local-chat', 'messages': messages, 'stream': True,
+                               'options': {'num_thread': 4, 'num_predict': 96, 'temperature': 0.3}}
+    assert seen['closed'] and brain.connection is None
+
+
+@pytest.mark.parametrize('base', ['http://127.0.0.1:11434/proxy/v1', 'https://example.com/v1'])
+def test_ollama_opt_in_rejects_a_relay_without_a_request(provider, monkeypatch, base):
+    seen, _, _ = provider
+    monkeypatch.setattr(voice_brain.ai_config, 'get_tier_client', lambda tier: SimpleNamespace(base_url=base))
+    with pytest.raises(RuntimeError, match='local Ollama|loopback'):
+        voice_brain.LocalVoiceBrain(threading.Event(), ollama_threads=4).reply([])
+    assert not seen
+
+
+@pytest.mark.parametrize('lines', [[ollama_packet('Partial')], [ollama_packet('Partial', 'length')]])
+def test_ollama_opt_in_requires_complete_generation(provider, lines):
+    seen, response, _ = provider
+    response.lines = lines
+    with pytest.raises(RuntimeError, match='incomplete'):
+        voice_brain.LocalVoiceBrain(threading.Event(), ollama_threads=4).reply([])
+    assert seen['closed']

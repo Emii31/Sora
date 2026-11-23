@@ -71,3 +71,5 @@
 - **Phase 4.63 sentence delivery**: Keep whole-reply Sopro synthesis as the default. Independent synthesis calls shortened speaker onset but introduced underruns at sentence boundaries. Keep the sentence scheduler experimental and prioritize reducing complete-reply preparation time.
 
 - **Phase 4.64 local Qwen threads**: Treat four threads as an experimental setting for this laptop's native Ollama voice route. Keep one Sopro request per reply and verify sustained multiturn behavior before enabling the profile by default.
+
+- **Phase 4.65 Ollama opt-in**: Expose native Ollama thread selection only through the terminal voice flag for a direct local connection. Keep the default chat protocol and whole-reply Sopro delivery. Measure later-turn context costs before changing conversation defaults.

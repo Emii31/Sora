@@ -802,3 +802,7 @@ Compared whole-reply Sopro synthesis with the experimental sentence scheduler th
 ## 2026-11-23 — Phase 4.64 complete reply timing
 
 Compared automatic, two-thread and four-thread Ollama settings with identical Sora prompts, then replayed the winning configuration on the Motorola. Four threads gave earlier completion and retained whole-reply speech. See PHASE_04_64.md.
+
+## 2026-11-23 — Phase 4.65 Ollama terminal voice and sustained replay
+
+Added --ollama-threads to terminal voice and used the production voice brain in a sustained Motorola replay. The final session preserved six exchanges and recalled the favorite color. See PHASE_04_65.md.

@@ -691,3 +691,7 @@ Two matched synthetic pairs kept identical reply words and saved one complete ex
 ## 2026-11-23 — Phase 4.64 complete reply timing
 
 All 24 Qwen responses matched within their prompt. Four threads won all eight paired timing comparisons. Two Motorola pairs produced identical PCM and zero underruns. The faster profile measured a 6.28-second median after speech. 73 regression tests passed. See PHASE_04_64.md and verification/phase_04_64.
+
+## 2026-11-23 — Phase 4.65 Ollama terminal voice and sustained replay
+
+All six final phone replies drained with zero reported underruns. The median speaker onset was 6.78 seconds after fixture speech. Recall was correct and all 12 history messages persisted within the disposable run. Regression tests returned 125 passed and six skipped. See PHASE_04_65.md and verification/phase_04_65.
