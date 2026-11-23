@@ -774,3 +774,7 @@ Tested acoustic GPU, GPU speech-token generation and native ARM streaming. Warme
 ## 2026-11-23 — Phase 4.57 Motorola mic-to-speaker trial
 
 Measured a live turn from the Motorola microphone through local inference and back to its speaker. The owner reported the same feel in the native reply. The actual turn took 6.88 seconds and the recognizer misheard the test phrase. See PHASE_04_57.md.
+
+## 2026-11-23 — Phase 4.58 Motorola recognition
+
+Compared four offline recognizers and two speech detectors. The chosen Whisper trial heard the full live test sentence and started chat sooner, with speaker onset still around seven seconds. See PHASE_04_58.md.

@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.57 — Live Motorola turn timing
-- **Current status**: The owner reported the same feel for the faster native voice played on the Motorola. The live route took 6.88 seconds to speaker onset and Vosk misheard the test sentence.
-- **Next action**: Reduce endpointing and capture shutdown while improving final-word recognition, then measure phone-speaker timing again. See [Phase 4.57](phases/PHASE_04_57.md).
+- **Phase**: Phase 4.58 — Motorola recognition and input timing
+- **Current status**: The reduced-context Whisper candidate correctly recognized the live sentence. Chat began 0.42 seconds sooner than the last live Vosk turn. Speaker onset was 7.02 seconds. The approved voice settings are preserved.
+- **Next action**: Explore starting chat preparation during silence while retaining final transcript validation. See [Phase 4.58](phases/PHASE_04_58.md).
