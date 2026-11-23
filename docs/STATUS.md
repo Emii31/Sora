@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.65 — Opt-in four-thread local Ollama voice
-- **Current status**: The terminal flag is available. A six-turn synthetic Motorola session recalled the favorite color, kept all 12 history messages and had zero underruns. Median speaker onset was 6.78 seconds.
-- **Next action**: Isolate later-turn chat preparation costs while preserving recall. See [Phase 4.65](phases/PHASE_04_65.md).
+- **Phase**: Phase 4.66 — Phone-only voice feasibility
+- **Current status**: Five phone-only replays used Whisper, Qwen and the approved Sopro voice entirely on the Motorola. Median speaker onset was 5.77 seconds with zero underruns and correct recent-memory recall.
+- **Next action**: Choose whether to retain the approved voice at its measured speed or evaluate a separate offline voice architecture against both latency and delivery. See [Phase 4.66](phases/PHASE_04_66.md).

@@ -695,3 +695,7 @@ All 24 Qwen responses matched within their prompt. Four threads won all eight pa
 ## 2026-11-23 — Phase 4.65 Ollama terminal voice and sustained replay
 
 All six final phone replies drained with zero reported underruns. The median speaker onset was 6.78 seconds after fixture speech. Recall was correct and all 12 history messages persisted within the disposable run. Regression tests returned 125 passed and six skipped. See PHASE_04_65.md and verification/phase_04_65.
+
+## 2026-11-23 — Phase 4.66 phone-only voice feasibility
+
+On-phone speaker onset ranged from 5.14 to 8.00 seconds, with a 5.77-second median. All five outputs drained without underruns, and the ten saved history messages matched the turn records. Regression tests returned 91 passed and six skipped. See PHASE_04_66.md and verification/phase_04_66.

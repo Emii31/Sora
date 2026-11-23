@@ -806,3 +806,7 @@ Compared automatic, two-thread and four-thread Ollama settings with identical So
 ## 2026-11-23 — Phase 4.65 Ollama terminal voice and sustained replay
 
 Added --ollama-threads to terminal voice and used the production voice brain in a sustained Motorola replay. The final session preserved six exchanges and recalled the favorite color. See PHASE_04_65.md.
+
+## 2026-11-23 — Phase 4.66 phone-only voice feasibility
+
+Ran recognition, Qwen and the approved voice entirely on the Motorola with five prerecorded turns. The phone-only test confirmed recent memory and continuous playback. The two-second target still needs a different architecture. See PHASE_04_66.md.
