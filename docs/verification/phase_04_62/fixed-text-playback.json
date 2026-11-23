@@ -1,0 +1,108 @@
+[
+  {
+    "usb_clock_half_round_trip_s": 0.031802777,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "line": "reply",
+    "mode": "legacy",
+    "core_masks": [
+      "4-7"
+    ],
+    "buffer_s": 0.25,
+    "request_to_speaker_s": 2.1110883249994004,
+    "first_pcm_s": 1.9143546159994003,
+    "generation_s": 4.339705974000026,
+    "arrival_deficit_after_first_s": 0.05924965666688031,
+    "complete_pcm_s": 3.3173333333333335
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.023901839,
+    "android_output_device_id": 3,
+    "android_underruns": 3,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "line": "reply",
+    "mode": "primed",
+    "core_masks": [
+      "4-5",
+      "4-7",
+      "6-7"
+    ],
+    "buffer_s": 0.25,
+    "request_to_speaker_s": 2.006455128000198,
+    "first_pcm_s": 1.8477469310000743,
+    "generation_s": 4.524006302999624,
+    "arrival_deficit_after_first_s": 0.2602574393329684,
+    "complete_pcm_s": 3.3173333333333335
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.036840229,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "line": "reply",
+    "mode": "buffered",
+    "core_masks": [
+      "4-7",
+      "6-7"
+    ],
+    "buffer_s": 0.75,
+    "request_to_speaker_s": 3.1349393230002534,
+    "first_pcm_s": 2.19766574499954,
+    "generation_s": 5.156085699999494,
+    "arrival_deficit_after_first_s": 0.41435493933368495,
+    "complete_pcm_s": 3.3173333333333335
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.027612087,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+    "line": "playful",
+    "mode": "buffered",
+    "core_masks": [
+      "4,7"
+    ],
+    "buffer_s": 0.75,
+    "request_to_speaker_s": 2.8361527669994757,
+    "first_pcm_s": 2.717649719000292,
+    "generation_s": 5.178003634000561,
+    "arrival_deficit_after_first_s": 0.0,
+    "complete_pcm_s": 4.0
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.0363403375,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+    "line": "playful",
+    "mode": "primed",
+    "core_masks": [
+      "4,6",
+      "4-7"
+    ],
+    "buffer_s": 0.25,
+    "request_to_speaker_s": 2.6737117749999015,
+    "first_pcm_s": 2.4938478789999863,
+    "generation_s": 4.9628023859995665,
+    "arrival_deficit_after_first_s": 0.0,
+    "complete_pcm_s": 4.0
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.041301458,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+    "line": "playful",
+    "mode": "legacy",
+    "core_masks": [
+      "4-5"
+    ],
+    "buffer_s": 0.25,
+    "request_to_speaker_s": 2.8499576429994704,
+    "first_pcm_s": 2.7288373040000806,
+    "generation_s": 5.577682047999588,
+    "arrival_deficit_after_first_s": 0.0,
+    "complete_pcm_s": 4.0
+  }
+]

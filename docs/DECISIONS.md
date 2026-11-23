@@ -65,3 +65,5 @@
 - **Phase 4.60 native synthesis profiling**: Preserve the approved Sopro configuration. Evaluate improvements in the first acoustic stage with multiple fixed lines and exact PCM parity before measuring any candidate on the speaker.
 
 - **Phase 4.61 acoustic startup**: Keep the graph cache out of the voice path. Treat faster-core scheduling as a Motorola-only experimental profile pending playback continuity and full-turn verification.
+
+- **Phase 4.62 Motorola playback**: Keep priming and the 0.75-second buffer as an experimental continuity configuration. The two synthetic recordings had zero reported underruns but cover only one sentence. Work on earlier safe delivery of a full sentence while preserving the approved voice and verifying playback.

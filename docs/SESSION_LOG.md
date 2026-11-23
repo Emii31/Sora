@@ -790,3 +790,7 @@ Profiled the approved native Sopro voice on the Motorola with a fixed line. Isol
 ## 2026-11-23 — Phase 4.61 Motorola acoustic startup
 
 Tested acoustic graph reuse and faster-core scheduling on the Motorola. The small graph-cache gain cost about 70 MiB of resident memory. Faster-core scheduling shortened fixed-text speaker onset and preserved the generated audio. See PHASE_04_61.md.
+
+## 2026-11-23 — Phase 4.62 Motorola continuity and full-turn verification
+
+Tested a primed Android player and a larger initial buffer, then compared CPU modes through four complete synthetic voice turns. The faster-core runs played the approved voice with zero reported underruns. See PHASE_04_62.md.

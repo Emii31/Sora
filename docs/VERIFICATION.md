@@ -679,3 +679,7 @@ Confirmed all 18 PCM hashes against the previous Motorola replay. The stock firs
 ## 2026-11-23 — Phase 4.61 Motorola acoustic startup
 
 Eight graph-cache pairs and four affinity pairs produced identical PCM. The affinity comparison saved 0.43 s at median first PCM. Speaker medians were 2.48 and 2.15 s with underruns still reported. The relevant voice regressions passed 11/11. See PHASE_04_61.md and verification/phase_04_61.
+
+## 2026-11-23 — Phase 4.62 Motorola continuity and full-turn verification
+
+The primed player with the 0.75-second buffer had zero underruns in both fixed-text checks and all four whole-turn replays. All turns yielded the same transcript, reply and PCM. Median post-speech speaker onsets were 6.90 and 6.49 seconds. Voice regressions returned 86 passed and six skipped. See PHASE_04_62.md and verification/phase_04_62.
