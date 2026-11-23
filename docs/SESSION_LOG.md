@@ -794,3 +794,7 @@ Tested acoustic graph reuse and faster-core scheduling on the Motorola. The smal
 ## 2026-11-23 — Phase 4.62 Motorola continuity and full-turn verification
 
 Tested a primed Android player and a larger initial buffer, then compared CPU modes through four complete synthetic voice turns. The faster-core runs played the approved voice with zero reported underruns. See PHASE_04_62.md.
+
+## 2026-11-23 — Phase 4.63 Motorola first-sentence delivery
+
+Compared whole-reply Sopro synthesis with the experimental sentence scheduler through the Motorola speaker. Sentence scheduling reached the speaker sooner but stalled before the next sentence, so whole-reply synthesis remains the default. See PHASE_04_63.md.

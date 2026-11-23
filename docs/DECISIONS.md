@@ -67,3 +67,5 @@
 - **Phase 4.61 acoustic startup**: Keep the graph cache out of the voice path. Treat faster-core scheduling as a Motorola-only experimental profile pending playback continuity and full-turn verification.
 
 - **Phase 4.62 Motorola playback**: Keep priming and the 0.75-second buffer as an experimental continuity configuration. The two synthetic recordings had zero reported underruns but cover only one sentence. Work on earlier safe delivery of a full sentence while preserving the approved voice and verifying playback.
+
+- **Phase 4.63 sentence delivery**: Keep whole-reply Sopro synthesis as the default. Independent synthesis calls shortened speaker onset but introduced underruns at sentence boundaries. Keep the sentence scheduler experimental and prioritize reducing complete-reply preparation time.

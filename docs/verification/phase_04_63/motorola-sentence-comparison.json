@@ -1,0 +1,208 @@
+[
+  {
+    "first_audio_s": 4.295690859999922,
+    "brain_ready_s": 2.039986511999814,
+    "brain_first_token_s": 0.8029096250002112,
+    "buffer_seconds": 0.75,
+    "playback_policy": "streaming",
+    "playback_started_s": 5.012335168999925,
+    "turn_finished_s": 8.570632887000102,
+    "estimated_gaps": 0,
+    "audio_s": 3.3173333333333335,
+    "text_characters": 41,
+    "speech_engine": "sopro",
+    "capture_end_reason": "silence",
+    "endpoint_silence_s": 1.2,
+    "asr_engine": "whisper_512",
+    "endpoint_profile": "energy-1200",
+    "capture_teardown_wall_s": 0.5680162859998745,
+    "recognition_finalize_s": 0.7551657419999174,
+    "speech_end_to_chat_s": 1.9556366919996435,
+    "speech_end_to_playback_pipe_s": 6.967971860999569,
+    "character": "Sora",
+    "history_saved": true,
+    "usb_clock_half_round_trip_s": 0.038568369,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "speech_end_to_speaker_s": 7.133755792999182,
+    "mode": "whole",
+    "fixture": "tea-us",
+    "core_masks": [
+      "6-7"
+    ],
+    "transcript": "I made some tea today.",
+    "reply": "That sounds nice! What else did you make?",
+    "offline_playback_transcript": "That sounds nice. What else did you make?",
+    "segments_detail": [
+      {
+        "text": "That sounds nice! What else did you make?",
+        "offset_bytes": 0,
+        "pcm_bytes": 159232,
+        "request_since_speech_s": 4.106420773999162,
+        "first_pcm_since_speech_s": 6.251306551999733,
+        "completed_since_speech_s": 8.817306961999748
+      }
+    ],
+    "arrival_deficit_after_playback_start_s": 0,
+    "segment_joins": []
+  },
+  {
+    "first_sentence_s": 0.6791982169997937,
+    "first_audio_s": 2.851331355000184,
+    "buffer_seconds": 0.75,
+    "brain_ready_s": 1.4526668199996493,
+    "brain_first_token_s": 0.12906848800048465,
+    "playback_started_s": 3.3380807939993247,
+    "turn_finished_s": 6.683885212999485,
+    "playback_policy": "sentence_streaming",
+    "segments": 2,
+    "estimated_gaps": 1,
+    "audio_s": 2.1213333333333333,
+    "text_characters": 41,
+    "character": "Sora",
+    "history_saved": true,
+    "usb_clock_half_round_trip_s": 0.038568369,
+    "android_output_device_id": 3,
+    "android_underruns": 1,
+    "pcm_sha256": "8f3efd9a3ebd38c154104b330ed9ba60344836fd12af02c248e4a4ff5b539519",
+    "speech_end_to_speaker_s": 5.25858428399988,
+    "mode": "sentences",
+    "fixture": "tea-us",
+    "core_masks": [
+      "5,7"
+    ],
+    "transcript": "I made some tea today.",
+    "reply": "That sounds nice! What else did you make?",
+    "offline_playback_transcript": "That sounds nice, what else did you make?",
+    "segments_detail": [
+      {
+        "text": "That sounds nice!",
+        "offset_bytes": 0,
+        "pcm_bytes": 51456,
+        "request_since_speech_s": 2.5700032590002593,
+        "first_pcm_since_speech_s": 4.578622587000609,
+        "completed_since_speech_s": 5.0681626270006745
+      },
+      {
+        "text": "What else did you make?",
+        "offset_bytes": 51456,
+        "pcm_bytes": 50368,
+        "request_since_speech_s": 5.069029674999911,
+        "first_pcm_since_speech_s": 7.1657618630006255,
+        "completed_since_speech_s": 7.668342245000531
+      }
+    ],
+    "arrival_deficit_after_playback_start_s": 1.1213558886673296,
+    "speech_end_to_chat_s": 1.7273042550004902,
+    "segment_joins": [
+      {
+        "pcm_offset_s": 1.072,
+        "next_pcm_wait_s": 2.097599235999951
+      }
+    ]
+  },
+  {
+    "first_sentence_s": 1.5549740290007321,
+    "first_audio_s": 4.303141030000006,
+    "buffer_seconds": 0.75,
+    "brain_ready_s": 3.239565692000724,
+    "brain_first_token_s": 0.833151309000641,
+    "playback_started_s": 5.403522507000162,
+    "turn_finished_s": 12.199708144000397,
+    "playback_policy": "sentence_streaming",
+    "segments": 2,
+    "estimated_gaps": 3,
+    "audio_s": 4.944,
+    "text_characters": 76,
+    "character": "Sora",
+    "history_saved": true,
+    "usb_clock_half_round_trip_s": 0.038568369,
+    "android_output_device_id": 3,
+    "android_underruns": 3,
+    "pcm_sha256": "83f75d2e8cf6d88bf48c962dfc979c5ace86f299e7e7ba7e06db9900570059a1",
+    "speech_end_to_speaker_s": 7.606781489999776,
+    "mode": "sentences",
+    "fixture": "plain",
+    "core_masks": [
+      "4,7"
+    ],
+    "transcript": "I have a long day.",
+    "reply": "Oh, that sounds tough. Sometimes, a good chat can make it feel a bit better.",
+    "offline_playback_transcript": "Oh that sounds tough, sometimes a good chat can make it feel a bit better.",
+    "segments_detail": [
+      {
+        "text": "Oh, that sounds tough.",
+        "offset_bytes": 0,
+        "pcm_bytes": 56032,
+        "request_since_speech_s": 3.557986773999801,
+        "first_pcm_since_speech_s": 6.233571587999904,
+        "completed_since_speech_s": 7.334416845000305
+      },
+      {
+        "text": "Sometimes, a good chat can make it feel a bit better.",
+        "offset_bytes": 56032,
+        "pcm_bytes": 181280,
+        "request_since_speech_s": 7.334526335999726,
+        "first_pcm_since_speech_s": 9.862682296999992,
+        "completed_since_speech_s": 13.258420520000072
+      }
+    ],
+    "arrival_deficit_after_playback_start_s": 1.7799522720006715,
+    "speech_end_to_chat_s": 1.9304352459994334,
+    "segment_joins": [
+      {
+        "pcm_offset_s": 1.1673333333333333,
+        "next_pcm_wait_s": 2.5282654519996868
+      }
+    ]
+  },
+  {
+    "first_audio_s": 5.732497813000009,
+    "brain_ready_s": 3.0038020390002202,
+    "brain_first_token_s": 0.1970597750005254,
+    "buffer_seconds": 0.75,
+    "playback_policy": "streaming",
+    "playback_started_s": 6.5557883510000465,
+    "turn_finished_s": 11.34415871300007,
+    "estimated_gaps": 0,
+    "audio_s": 4.554666666666667,
+    "text_characters": 76,
+    "speech_engine": "sopro",
+    "capture_end_reason": "silence",
+    "endpoint_silence_s": 1.2,
+    "asr_engine": "whisper_512",
+    "endpoint_profile": "energy-1200",
+    "capture_teardown_wall_s": 0.365349839999908,
+    "recognition_finalize_s": 0.6174007270001312,
+    "speech_end_to_chat_s": 1.8178682219995608,
+    "speech_end_to_playback_pipe_s": 8.373656572999607,
+    "character": "Sora",
+    "history_saved": true,
+    "usb_clock_half_round_trip_s": 0.038568369,
+    "android_output_device_id": 3,
+    "android_underruns": 0,
+    "pcm_sha256": "c13b7f8709b38d2ce7e3968c44aea558e9d910d2c2350783cd5cc0799d073cbb",
+    "speech_end_to_speaker_s": 8.572696649000136,
+    "mode": "whole",
+    "fixture": "plain",
+    "core_masks": [
+      "4-7"
+    ],
+    "transcript": "I have a long day.",
+    "reply": "Oh, that sounds tough. Sometimes, a good chat can make it feel a bit better.",
+    "offline_playback_transcript": "Oh that sounds tough. Sometimes a good chat can make it feel a bit better.",
+    "segments_detail": [
+      {
+        "text": "Oh, that sounds tough. Sometimes, a good chat can make it feel a bit better.",
+        "offset_bytes": 0,
+        "pcm_bytes": 218624,
+        "request_since_speech_s": 4.903314346000116,
+        "first_pcm_since_speech_s": 7.550360102000013,
+        "completed_since_speech_s": 11.422330182000223
+      }
+    ],
+    "arrival_deficit_after_playback_start_s": 0,
+    "segment_joins": []
+  }
+]

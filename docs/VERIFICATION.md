@@ -683,3 +683,7 @@ Eight graph-cache pairs and four affinity pairs produced identical PCM. The affi
 ## 2026-11-23 — Phase 4.62 Motorola continuity and full-turn verification
 
 The primed player with the 0.75-second buffer had zero underruns in both fixed-text checks and all four whole-turn replays. All turns yielded the same transcript, reply and PCM. Median post-speech speaker onsets were 6.90 and 6.49 seconds. Voice regressions returned 86 passed and six skipped. See PHASE_04_62.md and verification/phase_04_62.
+
+## 2026-11-23 — Phase 4.63 Motorola first-sentence delivery
+
+Two matched synthetic pairs kept identical reply words and saved one complete exchange each. Both sentence-mode runs had underruns, while both whole-reply controls reported zero. Voice regressions returned 64 passed. See PHASE_04_63.md and verification/phase_04_63.
