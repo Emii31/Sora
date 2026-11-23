@@ -1,0 +1,137 @@
+[
+  {
+    "fixture": "tea-us",
+    "zero_temperature": false,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 3.774832000999595,
+    "draft_s": 1.92413676499973,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36828083899990816,
+      "draft_asr_finished": 0.7702506799996627,
+      "draft_chat_started": 0.7722342569995817,
+      "final_transcript_ready": 1.8412020249998022,
+      "draft_chat_finished": 1.9239982549997876
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "one_second_pause",
+    "zero_temperature": false,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 4.4206119819996275,
+    "draft_s": 4.608037247999619,
+    "draft_result": "speech_resumed",
+    "draft_timings": {
+      "draft_asr_started": -0.9760584710002149,
+      "draft_asr_finished": -0.543895120000343,
+      "draft_chat_started": -0.5397794020004767,
+      "final_transcript_ready": 1.6797801669995351,
+      "ordinary_chat_started": 1.6797976019997805
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "plain",
+    "zero_temperature": false,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 5.502355263000027,
+    "draft_s": 2.6425847819996306,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36858118099962667,
+      "draft_asr_finished": 0.8003388570000425,
+      "draft_chat_started": 0.8036638389999098,
+      "final_transcript_ready": 1.9019517879996783,
+      "draft_chat_finished": 2.642521812999803
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "tea-female",
+    "zero_temperature": false,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 3.4001877219998278,
+    "draft_s": 2.7602673519995733,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36781067699985215,
+      "draft_asr_finished": 0.8248209709995535,
+      "draft_chat_started": 0.8287947839999106,
+      "final_transcript_ready": 1.9071247009997023,
+      "draft_chat_finished": 2.760192972999903
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "tea-us",
+    "zero_temperature": true,
+    "same_final_transcript": true,
+    "same_reply": true,
+    "ordinary_s": 4.391896179000014,
+    "draft_s": 3.1494521610002266,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36770518100001937,
+      "draft_asr_finished": 1.1005365870000787,
+      "draft_chat_started": 1.102069116000166,
+      "final_transcript_ready": 1.9467999419998705,
+      "draft_chat_finished": 3.1493907899998703
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "one_second_pause",
+    "zero_temperature": true,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 5.623659410000073,
+    "draft_s": 5.822525898999629,
+    "draft_result": "speech_resumed",
+    "draft_timings": {
+      "draft_asr_started": -0.9757885250000982,
+      "draft_asr_finished": -0.2649652480004079,
+      "final_transcript_ready": 1.887237050999829,
+      "ordinary_chat_started": 1.88727603299958
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "plain",
+    "zero_temperature": true,
+    "same_final_transcript": true,
+    "same_reply": false,
+    "ordinary_s": 5.038194891999865,
+    "draft_s": 4.458000277999872,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36786027999960424,
+      "draft_asr_finished": 1.169087954999668,
+      "draft_chat_started": 1.1706336889997146,
+      "final_transcript_ready": 1.9010197579996202,
+      "draft_chat_finished": 4.456375177999689
+    },
+    "both_histories_verified": true
+  },
+  {
+    "fixture": "tea-female",
+    "zero_temperature": true,
+    "same_final_transcript": true,
+    "same_reply": true,
+    "ordinary_s": 3.2438281829995503,
+    "draft_s": 3.284446436000053,
+    "draft_result": "reused_exact_match",
+    "draft_timings": {
+      "draft_asr_started": 0.36836850100007723,
+      "draft_asr_finished": 0.9849884459999885,
+      "draft_chat_started": 0.9864633400002276,
+      "final_transcript_ready": 1.8857509439999376,
+      "draft_chat_finished": 3.2843855340001937
+    },
+    "both_histories_verified": true
+  }
+]

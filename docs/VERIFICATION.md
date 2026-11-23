@@ -667,3 +667,7 @@ Four reply pairs measured usual and brief prompts, with median starts of 3.40 an
 ## 2026-11-23 — Phase 4.58 recognition and output verification
 
 Both synthetic runs recognized the same words. The live Whisper turn preserved the phrase, drained through the Motorola speaker and measured 7.02 seconds with one underrun. Regression results were 126 passed and 6 skipped. Phone session cleanup and history integrity were verified. See PHASE_04_58.md.
+
+## 2026-11-23 — Phase 4.59 latency and draft safety
+
+Seven prototype tests and 126 voice regressions passed, with six regression skips. Estimated synthetic speaker onset was 5.79 seconds for ordinary handling and 5.86 seconds for early preparation. Both runs produced identical PCM and zero underruns. Warm first-PCM pairs were 4.96 to 5.30 and 5.01 to 4.83 seconds. No live microphone was used. See PHASE_04_59.md and verification/phase_04_59.

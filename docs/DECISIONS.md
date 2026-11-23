@@ -59,3 +59,5 @@
 - **Phase 4.57 native Motorola listening check**: The owner reported “Same feel” for the measured native live reply. Preserve the reference and native synthesis settings for latency work. The abbreviated chat prompt remains experimental because its median gain was small. The live route needs faster input handling and more accurate recognition.
 
 - **Phase 4.58 speech input**: Retain the 1,200 ms pause for the experiment because shorter settings clipped a hesitation. Treat the reduced-context Whisper recognizer as a candidate following its correct live test. Keep production settings and the approved synthesis path while testing latency.
+
+- **Phase 4.59 reply preparation**: Keep early reply preparation experimental. Require an exact final transcript and context match, discard the draft on resumed speech and wait for finalization before synthesis or persistence. Profile the approved native voice startup before selecting another latency optimization.
