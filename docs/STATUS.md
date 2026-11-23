@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.60 — Native Sopro startup profile
-- **Current status**: The Motorola produced first PCM in 6.57 seconds on the stock first request and a median 1.88 seconds with the cached voice. Acoustic generation was the largest measured warm stage. All 18 outputs matched the prior replay PCM exactly.
-- **Next action**: Test whether first acoustic generation can be reduced while preserving the approved audio, then verify any candidate through the Motorola speaker. See [Phase 4.60](phases/PHASE_04_60.md).
+- **Phase**: Phase 4.61 — Motorola acoustic startup candidates
+- **Current status**: Faster Motorola cores cut fixed-text speaker onset from 2.48 to 2.15 seconds with identical generated audio. Playback underruns and whole-turn latency remain open.
+- **Next action**: Check continuous playback and measure the faster CPU profile in the complete conversation route. See [Phase 4.61](phases/PHASE_04_61.md).

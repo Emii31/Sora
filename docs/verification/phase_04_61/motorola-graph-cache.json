@@ -1,0 +1,364 @@
+{
+  "description": "Motorola native Sopro, first two startup graph slots, two CPU threads",
+  "order": [
+    "baseline",
+    "cache",
+    "cache",
+    "baseline"
+  ],
+  "speaker_playback": false,
+  "warm_first_pcm_delta_median_s": -0.0290615,
+  "warm_acoustic_delta_median_s": -0.056049,
+  "warm_pairs": [
+    {
+      "pair": 1,
+      "line": "reply",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.045341,
+      "pre_pcm_acoustic_delta_s": -0.043263
+    },
+    {
+      "pair": 1,
+      "line": "reassuring",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.018446,
+      "pre_pcm_acoustic_delta_s": -0.064724
+    },
+    {
+      "pair": 1,
+      "line": "excited",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.004334,
+      "pre_pcm_acoustic_delta_s": -0.053009
+    },
+    {
+      "pair": 1,
+      "line": "playful",
+      "audio_matches": true,
+      "first_pcm_delta_s": 0.341736,
+      "pre_pcm_acoustic_delta_s": 0.298751
+    },
+    {
+      "pair": 2,
+      "line": "reply",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.019719,
+      "pre_pcm_acoustic_delta_s": -0.059089
+    },
+    {
+      "pair": 2,
+      "line": "reassuring",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.088708,
+      "pre_pcm_acoustic_delta_s": -0.138247
+    },
+    {
+      "pair": 2,
+      "line": "excited",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.092152,
+      "pre_pcm_acoustic_delta_s": -0.081613
+    },
+    {
+      "pair": 2,
+      "line": "playful",
+      "audio_matches": true,
+      "first_pcm_delta_s": -0.038404,
+      "pre_pcm_acoustic_delta_s": -0.051863
+    }
+  ],
+  "reports": [
+    {
+      "mode": "baseline",
+      "memory_kib": {
+        "VmSize": 22020772,
+        "VmHWM": 616740,
+        "VmRSS": 527568
+      },
+      "requests": [
+        {
+          "first_pcm_s": 6.973344409999754,
+          "generated_s": 7.429320760999872,
+          "audio_s": 0.954,
+          "audio_sha256": "1ff2a1c149383da6b5571cea1f0386fb66f1da9c950fd98df9d504ad915b1763",
+          "matches_baseline": true,
+          "line": "warmup",
+          "pre_pcm_acoustic_s": 0.999534,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.237748173,
+          "generated_s": 5.1614836780004225,
+          "audio_s": 3.3173333333333335,
+          "audio_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+          "matches_baseline": true,
+          "line": "reply",
+          "pre_pcm_acoustic_s": 1.011283,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.2609284909999587,
+          "generated_s": 4.6554362949996175,
+          "audio_s": 2.8906666666666667,
+          "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd",
+          "matches_baseline": true,
+          "line": "reassuring",
+          "pre_pcm_acoustic_s": 1.070142,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.3605975109999235,
+          "generated_s": 5.518282065999756,
+          "audio_s": 3.4873333333333334,
+          "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f",
+          "matches_baseline": true,
+          "line": "excited",
+          "pre_pcm_acoustic_s": 1.08861,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 3.012041627000144,
+          "generated_s": 5.8940839970000525,
+          "audio_s": 4.0,
+          "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+          "matches_baseline": true,
+          "line": "playful",
+          "pre_pcm_acoustic_s": 1.572832,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        }
+      ]
+    },
+    {
+      "mode": "cache",
+      "memory_kib": {
+        "VmSize": 24197760,
+        "VmHWM": 688096,
+        "VmRSS": 598888
+      },
+      "requests": [
+        {
+          "first_pcm_s": 7.306961611000133,
+          "generated_s": 7.780173560000094,
+          "audio_s": 0.954,
+          "audio_sha256": "1ff2a1c149383da6b5571cea1f0386fb66f1da9c950fd98df9d504ad915b1763",
+          "matches_baseline": true,
+          "line": "warmup",
+          "pre_pcm_acoustic_s": 1.087627,
+          "startup_cache_lookups": [
+            false,
+            false
+          ],
+          "pre_pcm_graph_lookup_s": 0.0059
+        },
+        {
+          "first_pcm_s": 2.192407108000225,
+          "generated_s": 5.250452415999916,
+          "audio_s": 3.3173333333333335,
+          "audio_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+          "matches_baseline": true,
+          "line": "reply",
+          "pre_pcm_acoustic_s": 0.96802,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.000491
+        },
+        {
+          "first_pcm_s": 2.242482054999982,
+          "generated_s": 4.6560879779999595,
+          "audio_s": 2.8906666666666667,
+          "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd",
+          "matches_baseline": true,
+          "line": "reassuring",
+          "pre_pcm_acoustic_s": 1.005418,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.000452
+        },
+        {
+          "first_pcm_s": 2.356263377000232,
+          "generated_s": 5.572426101000019,
+          "audio_s": 3.4873333333333334,
+          "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f",
+          "matches_baseline": true,
+          "line": "excited",
+          "pre_pcm_acoustic_s": 1.035601,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.000592
+        },
+        {
+          "first_pcm_s": 3.3537776250000206,
+          "generated_s": 6.444141089999903,
+          "audio_s": 4.0,
+          "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+          "matches_baseline": true,
+          "line": "playful",
+          "pre_pcm_acoustic_s": 1.871583,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.016269
+        }
+      ]
+    },
+    {
+      "mode": "cache",
+      "memory_kib": {
+        "VmSize": 24187520,
+        "VmHWM": 691480,
+        "VmRSS": 602304
+      },
+      "requests": [
+        {
+          "first_pcm_s": 6.8877569579999545,
+          "generated_s": 7.296754014999806,
+          "audio_s": 0.954,
+          "audio_sha256": "1ff2a1c149383da6b5571cea1f0386fb66f1da9c950fd98df9d504ad915b1763",
+          "matches_baseline": true,
+          "line": "warmup",
+          "pre_pcm_acoustic_s": 1.040867,
+          "startup_cache_lookups": [
+            false,
+            false
+          ],
+          "pre_pcm_graph_lookup_s": 0.005232
+        },
+        {
+          "first_pcm_s": 2.242791005000072,
+          "generated_s": 5.310532158000115,
+          "audio_s": 3.3173333333333335,
+          "audio_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+          "matches_baseline": true,
+          "line": "reply",
+          "pre_pcm_acoustic_s": 0.981519,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.000644
+        },
+        {
+          "first_pcm_s": 2.0994285320002746,
+          "generated_s": 4.513810835000186,
+          "audio_s": 2.8906666666666667,
+          "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd",
+          "matches_baseline": true,
+          "line": "reassuring",
+          "pre_pcm_acoustic_s": 0.968094,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.00041
+        },
+        {
+          "first_pcm_s": 2.1808090989998163,
+          "generated_s": 5.606673199999932,
+          "audio_s": 3.4873333333333334,
+          "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f",
+          "matches_baseline": true,
+          "line": "excited",
+          "pre_pcm_acoustic_s": 0.986444,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.000619
+        },
+        {
+          "first_pcm_s": 2.9555353939999804,
+          "generated_s": 6.037351616000251,
+          "audio_s": 4.0,
+          "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+          "matches_baseline": true,
+          "line": "playful",
+          "pre_pcm_acoustic_s": 1.544235,
+          "startup_cache_lookups": [
+            true,
+            true
+          ],
+          "pre_pcm_graph_lookup_s": 0.011347
+        }
+      ]
+    },
+    {
+      "mode": "baseline",
+      "memory_kib": {
+        "VmSize": 22090404,
+        "VmHWM": 620084,
+        "VmRSS": 530912
+      },
+      "requests": [
+        {
+          "first_pcm_s": 6.895922044999679,
+          "generated_s": 7.31595236899966,
+          "audio_s": 0.954,
+          "audio_sha256": "1ff2a1c149383da6b5571cea1f0386fb66f1da9c950fd98df9d504ad915b1763",
+          "matches_baseline": true,
+          "line": "warmup",
+          "pre_pcm_acoustic_s": 1.080681,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.262509838000369,
+          "generated_s": 5.230830999000318,
+          "audio_s": 3.3173333333333335,
+          "audio_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+          "matches_baseline": true,
+          "line": "reply",
+          "pre_pcm_acoustic_s": 1.040608,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.1881364850000864,
+          "generated_s": 4.621188783999969,
+          "audio_s": 2.8906666666666667,
+          "audio_sha256": "e0e34b4effac015f52c29b85adbb186e3bd4f33f9dacaceeae5737391d20c9dd",
+          "matches_baseline": true,
+          "line": "reassuring",
+          "pre_pcm_acoustic_s": 1.106341,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.272960604999753,
+          "generated_s": 5.507454179999968,
+          "audio_s": 3.4873333333333334,
+          "audio_sha256": "60151419e02080891ed42d0ae971364995852ed1b4894c49c4f1080266f43d0f",
+          "matches_baseline": true,
+          "line": "excited",
+          "pre_pcm_acoustic_s": 1.068057,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        },
+        {
+          "first_pcm_s": 2.9939390300000923,
+          "generated_s": 6.034378772999844,
+          "audio_s": 4.0,
+          "audio_sha256": "e6252782b9679ad6fe2ca3a01aff548ecf3d7a976c079f2655d254ae89a71b72",
+          "matches_baseline": true,
+          "line": "playful",
+          "pre_pcm_acoustic_s": 1.596098,
+          "startup_cache_lookups": [],
+          "pre_pcm_graph_lookup_s": 0.0
+        }
+      ]
+    }
+  ],
+  "baseline_binary_sha256": "ce3adc0ea143f1241c578f51d5bd14d48fc40e4d431f3960ccc06ab7f6ff776a",
+  "cache_binary_sha256": "8f738a856d012c2d22bd2b09c1117bb73ef002a1d198d810db2e6d58914a87b4"
+}

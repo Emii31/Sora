@@ -786,3 +786,7 @@ Tested preparing local Qwen replies during the existing silence window. The draf
 ## 2026-11-23 — Phase 4.60 native Sopro startup profile
 
 Profiled the approved native Sopro voice on the Motorola with a fixed line. Isolated cold voice preparation from warm synthesis and separated semantic, acoustic and vocoder work. Phase 4.60 identifies the acoustic stage as the largest warm cost. See PHASE_04_60.md.
+
+## 2026-11-23 — Phase 4.61 Motorola acoustic startup
+
+Tested acoustic graph reuse and faster-core scheduling on the Motorola. The small graph-cache gain cost about 70 MiB of resident memory. Faster-core scheduling shortened fixed-text speaker onset and preserved the generated audio. See PHASE_04_61.md.

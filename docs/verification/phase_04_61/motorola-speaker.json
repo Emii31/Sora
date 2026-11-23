@@ -1,0 +1,38 @@
+[
+  {
+    "usb_clock_half_round_trip_s": 0.023901699,
+    "android_output_device_id": 3,
+    "android_underruns": 3,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "request_to_speaker_s": 2.6596078850002414,
+    "first_pcm_s": 2.5087861879997035,
+    "mode": "all"
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.023901699,
+    "android_output_device_id": 3,
+    "android_underruns": 3,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "request_to_speaker_s": 2.184520051000163,
+    "first_pcm_s": 2.058372700000291,
+    "mode": "fast"
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.023901699,
+    "android_output_device_id": 3,
+    "android_underruns": 1,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "request_to_speaker_s": 2.114614572999926,
+    "first_pcm_s": 1.9844158500000049,
+    "mode": "fast"
+  },
+  {
+    "usb_clock_half_round_trip_s": 0.023901699,
+    "android_output_device_id": 3,
+    "android_underruns": 3,
+    "pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+    "request_to_speaker_s": 2.2998984799996833,
+    "first_pcm_s": 2.165991280000071,
+    "mode": "all"
+  }
+]

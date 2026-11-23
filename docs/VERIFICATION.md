@@ -675,3 +675,7 @@ Seven prototype tests and 126 voice regressions passed, with six regression skip
 ## 2026-11-23 — Phase 4.60 native Sopro startup profile
 
 Confirmed all 18 PCM hashes against the previous Motorola replay. The stock first request took 6.57 s to first PCM and the five-repeat warm median was 1.88 s. In the detailed warm build acoustic generation took a median 0.98 s. 11 voice regressions passed. See PHASE_04_60.md and verification/phase_04_60.
+
+## 2026-11-23 — Phase 4.61 Motorola acoustic startup
+
+Eight graph-cache pairs and four affinity pairs produced identical PCM. The affinity comparison saved 0.43 s at median first PCM. Speaker medians were 2.48 and 2.15 s with underruns still reported. The relevant voice regressions passed 11/11. See PHASE_04_61.md and verification/phase_04_61.

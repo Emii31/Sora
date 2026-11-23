@@ -63,3 +63,5 @@
 - **Phase 4.59 reply preparation**: Keep early reply preparation experimental. Require an exact final transcript and context match, discard the draft on resumed speech and wait for finalization before synthesis or persistence. Profile the approved native voice startup before selecting another latency optimization.
 
 - **Phase 4.60 native synthesis profiling**: Preserve the approved Sopro configuration. Evaluate improvements in the first acoustic stage with multiple fixed lines and exact PCM parity before measuring any candidate on the speaker.
+
+- **Phase 4.61 acoustic startup**: Keep the graph cache out of the voice path. Treat faster-core scheduling as a Motorola-only experimental profile pending playback continuity and full-turn verification.
