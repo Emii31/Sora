@@ -687,3 +687,7 @@ The primed player with the 0.75-second buffer had zero underruns in both fixed-t
 ## 2026-11-23 — Phase 4.63 Motorola first-sentence delivery
 
 Two matched synthetic pairs kept identical reply words and saved one complete exchange each. Both sentence-mode runs had underruns, while both whole-reply controls reported zero. Voice regressions returned 64 passed. See PHASE_04_63.md and verification/phase_04_63.
+
+## 2026-11-23 — Phase 4.64 complete reply timing
+
+All 24 Qwen responses matched within their prompt. Four threads won all eight paired timing comparisons. Two Motorola pairs produced identical PCM and zero underruns. The faster profile measured a 6.28-second median after speech. 73 regression tests passed. See PHASE_04_64.md and verification/phase_04_64.

@@ -69,3 +69,5 @@
 - **Phase 4.62 Motorola playback**: Keep priming and the 0.75-second buffer as an experimental continuity configuration. The two synthetic recordings had zero reported underruns but cover only one sentence. Work on earlier safe delivery of a full sentence while preserving the approved voice and verifying playback.
 
 - **Phase 4.63 sentence delivery**: Keep whole-reply Sopro synthesis as the default. Independent synthesis calls shortened speaker onset but introduced underruns at sentence boundaries. Keep the sentence scheduler experimental and prioritize reducing complete-reply preparation time.
+
+- **Phase 4.64 local Qwen threads**: Treat four threads as an experimental setting for this laptop's native Ollama voice route. Keep one Sopro request per reply and verify sustained multiturn behavior before enabling the profile by default.

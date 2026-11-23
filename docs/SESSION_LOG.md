@@ -798,3 +798,7 @@ Tested a primed Android player and a larger initial buffer, then compared CPU mo
 ## 2026-11-23 — Phase 4.63 Motorola first-sentence delivery
 
 Compared whole-reply Sopro synthesis with the experimental sentence scheduler through the Motorola speaker. Sentence scheduling reached the speaker sooner but stalled before the next sentence, so whole-reply synthesis remains the default. See PHASE_04_63.md.
+
+## 2026-11-23 — Phase 4.64 complete reply timing
+
+Compared automatic, two-thread and four-thread Ollama settings with identical Sora prompts, then replayed the winning configuration on the Motorola. Four threads gave earlier completion and retained whole-reply speech. See PHASE_04_64.md.
