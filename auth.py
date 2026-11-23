@@ -1220,6 +1220,21 @@ _EXEMPT_PREFIXES = (
     "/privacy",
 )
 
+# Paired phone credentials grant access to conversation and memory only.
+_PHONE_ENDPOINTS = {
+    ("GET", "api_auth_me"),
+    ("POST", "api_chat"),
+    ("GET", "api_chat_history"),
+    ("GET", "api_core_memory"),
+    ("GET", "api_memory_tree"),
+    ("GET", "api_memory_index"),
+    ("GET", "api_memory_read"),
+    ("GET", "api_memory_search"),
+    ("POST", "api_memory_write"),
+    ("GET", "api_memory_slots"),
+    ("GET", "api_memory_slot_get"),
+}
+
 
 def is_local_request(req=None) -> bool:
     req = req or request
@@ -1268,7 +1283,9 @@ def check_request(req=None):
     # /app      → web app shell with login screen (anonymous; client JS handles token)
     # /login    → DMG invitation code entry page (anonymous; POSTs to /api/auth/login)
     # /pet      → desktop pet shell (auth handled by URL token param)
-    if path in ("/", "/app", "/login", "/pet", "/privacy") or any(path.startswith(p) for p in _EXEMPT_PREFIXES):
+    if ((req.method == "POST" and req.endpoint == "pairing.redeem")
+            or path in ("/", "/app", "/login", "/pet", "/privacy")
+            or any(path.startswith(p) for p in _EXEMPT_PREFIXES)):
         _set_anonymous_context()
         return None
 
@@ -1283,6 +1300,24 @@ def check_request(req=None):
         provided_token = auth_header[7:].strip()
     else:
         provided_token = req.args.get("token", "").strip()
+
+    import device_pairing
+    if provided_token.startswith(device_pairing.PHONE_TOKEN_PREFIX):
+        if not auth_header.startswith("Bearer ") or not device_pairing.enabled():
+            abort(401, description="Invalid phone credential")
+        if not device_pairing.protected_connection(req):
+            abort(403, description="Phone access requires HTTPS or a direct loopback connection")
+        user_id = device_pairing.user_for_token(_ADMIN_DIR, provided_token)
+        user = get_user(user_id) if user_id else None
+        if (not user or user.get("status") != "active"
+                or user.get("account_type") != LOCAL_SINGLE_DEVICE_ACCOUNT_TYPE):
+            abort(401, description="Invalid phone credential")
+        method = "GET" if req.method == "HEAD" else req.method
+        if ((method, req.endpoint) not in _PHONE_ENDPOINTS
+                or (req.endpoint == "api_chat" and not req.is_json)):
+            abort(403, description="This route is outside paired phone access")
+        _set_user_context(user_id)
+        return None
 
     # Admin-only routes: /api/admin/*
     if path.startswith("/api/admin/"):

@@ -77,3 +77,5 @@
 - **Phase 4.66 voice latency**: Stop incremental tuning of the current three-model pipeline for the two-second target. Keep the owner-approved voice available. Any separate offline architecture needs both an on-phone timing pass and owner acceptance of the delivery.
 
 - **Phase 4.67 LFM3 screen**: Reject the tested LFM3-Audio Q4_0 CPU pairing for live Motorola use. Use speech-level PCM and continuous delivery as speed gates before asking the owner to evaluate another voice.
+
+- **Phase 6.2 pairing**: Use a single-use five-minute code to issue a separately revocable scoped phone credential for the existing laptop account. Keep the canonical data on the laptop. Verify the private Wi-Fi transport before personal use.

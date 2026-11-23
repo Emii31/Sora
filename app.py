@@ -50,7 +50,9 @@ Compress(app)
 # Admin API blueprint — kept structurally separate from the user pipeline.
 # All /api/admin/* routes live in admin_api.py and never import from app.py.
 from admin_api import admin_bp as _admin_bp
+from pairing_api import pairing_bp as _pairing_bp
 app.register_blueprint(_admin_bp)
+app.register_blueprint(_pairing_bp)
 
 
 def _http_origin_base(value: str) -> str:

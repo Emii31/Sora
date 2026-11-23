@@ -1,0 +1,18 @@
+{
+  "transport": "USB reverse, loopback only",
+  "phone_paired": true,
+  "single_use": true,
+  "owner_and_phone_same_account": true,
+  "phone_memory_write_status": 200,
+  "phone_chat_status": 200,
+  "initial_reply_saved": true,
+  "laptop_backend_restarted": true,
+  "android_new_process_loaded_saved_credential": true,
+  "memory_survived_restart": true,
+  "laptop_recall": "Your houseplant is named Juniper.",
+  "saved_chat_messages": 4,
+  "phone_private_settings_status": 403,
+  "revoked_phone_status": 401,
+  "owner_still_authorized": true,
+  "canonical_memory_sha256": "99a604b007a548a197dc0636ef2f22f6b5b23b6a547700e9124d5c366a389335"
+}
