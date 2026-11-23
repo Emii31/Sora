@@ -1,6 +1,6 @@
 # STATUS
 
 - **Project**: Sora (Companion)
-- **Phase**: Phase 4.59 — Transcript-gated reply preparation
-- **Current status**: Early preparation saved 0.63 seconds to reply text in one synthetic Motorola replay. Speaker onset stayed around 5.8 seconds, and two additional warm pairs showed opposite changes in time to first PCM. The two-second live target remains open.
-- **Next action**: Profile native Sopro startup by stage on the Motorola using fixed text and the approved voice. See [Phase 4.59](phases/PHASE_04_59.md).
+- **Phase**: Phase 4.60 — Native Sopro startup profile
+- **Current status**: The Motorola produced first PCM in 6.57 seconds on the stock first request and a median 1.88 seconds with the cached voice. Acoustic generation was the largest measured warm stage. All 18 outputs matched the prior replay PCM exactly.
+- **Next action**: Test whether first acoustic generation can be reduced while preserving the approved audio, then verify any candidate through the Motorola speaker. See [Phase 4.60](phases/PHASE_04_60.md).

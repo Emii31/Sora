@@ -671,3 +671,7 @@ Both synthetic runs recognized the same words. The live Whisper turn preserved t
 ## 2026-11-23 — Phase 4.59 latency and draft safety
 
 Seven prototype tests and 126 voice regressions passed, with six regression skips. Estimated synthetic speaker onset was 5.79 seconds for ordinary handling and 5.86 seconds for early preparation. Both runs produced identical PCM and zero underruns. Warm first-PCM pairs were 4.96 to 5.30 and 5.01 to 4.83 seconds. No live microphone was used. See PHASE_04_59.md and verification/phase_04_59.
+
+## 2026-11-23 — Phase 4.60 native Sopro startup profile
+
+Confirmed all 18 PCM hashes against the previous Motorola replay. The stock first request took 6.57 s to first PCM and the five-repeat warm median was 1.88 s. In the detailed warm build acoustic generation took a median 0.98 s. 11 voice regressions passed. See PHASE_04_60.md and verification/phase_04_60.

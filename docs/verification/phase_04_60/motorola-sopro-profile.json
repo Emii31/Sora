@@ -1,0 +1,335 @@
+{
+  "mode": "Android ARM native Sopro, two CPU threads, q8_0, one voice cache slot, stock 64 frames",
+  "text": "That sounds nice! What else did you make?",
+  "seed": 9000,
+  "verified_pcm_sha256": "26fd81d11068581212e02a386d1a176222635bb2d2e2892ef1b69e9c78035ac8",
+  "pcm_matches": 18,
+  "playback": false,
+  "microphone": false,
+  "notes": [
+    "First PCM is measured by the host over USB from the synthesis request.",
+    "The stock and instrumented stage clocks run on the phone.",
+    "The acoustic and vocoder timers are nested within rendering or segment initialization. Their component medians are reported independently.",
+    "Launch to health includes local configuration transfer and ADB setup."
+  ],
+  "runs": {
+    "stock": {
+      "binary_sha256": "e6f8903f4f791f34f798b6e33a1f61dde771ea0eb827db12ff4a42f96c3b6493",
+      "launch_to_health_s": 5.247107,
+      "warm_first_pcm_median_s": 1.884084,
+      "warm_stage_medians_ms": {
+        "first_event_work_ms": 1841.416
+      },
+      "requests": [
+        {
+          "condition": "first request",
+          "first_pcm_s": 6.565088,
+          "generated_s": 9.266855,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "voice_reference_ms": 890.428,
+            "voice_prompt_state_ms": 3592.819,
+            "first_event_work_ms": 2055.355312
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.036846,
+          "generated_s": 4.77486,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "first_event_work_ms": 2020.783489
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.743783,
+          "generated_s": 4.272604,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "first_event_work_ms": 1715.244061
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.018991,
+          "generated_s": 4.645406,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "first_event_work_ms": 1990.478958
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.884084,
+          "generated_s": 4.382574,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "first_event_work_ms": 1841.415572
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.828118,
+          "generated_s": 4.746644,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "first_event_work_ms": 1811.397863
+          },
+          "semantic_batches_before_first_pcm": 0,
+          "renderer_calls_before_first_pcm": 0
+        }
+      ]
+    },
+    "instrumented": {
+      "binary_sha256": "fe047eebad9dd6a027b689090daf023c79cb8df40d551f9133d16335d3b3a113",
+      "launch_to_health_s": 4.93562,
+      "warm_first_pcm_median_s": 2.006677,
+      "warm_stage_medians_ms": {
+        "setup_ms": 1.569,
+        "prefill_ms": 450.805,
+        "semantic_generation_ms": 275.938,
+        "render_ms": 1175.675,
+        "first_event_ms": 1994.726,
+        "first_event_work_ms": 1993.351
+      },
+      "requests": [
+        {
+          "condition": "first request",
+          "first_pcm_s": 6.798387,
+          "generated_s": 9.218443,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "voice_reference_ms": 967.3,
+            "voice_prompt_state_ms": 3794.781,
+            "setup_ms": 1.44,
+            "prefill_ms": 498.942,
+            "semantic_generation_ms": 318.258,
+            "render_ms": 1068.942,
+            "first_event_ms": 1998.054,
+            "first_event_work_ms": 1996.509687
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.500951,
+          "generated_s": 4.907989,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 1.497,
+            "prefill_ms": 448.877,
+            "semantic_generation_ms": 397.793,
+            "render_ms": 1554.538,
+            "first_event_ms": 2488.229,
+            "first_event_work_ms": 2486.647499
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.780969,
+          "generated_s": 4.220377,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 1.675,
+            "prefill_ms": 447.07,
+            "semantic_generation_ms": 193.145,
+            "render_ms": 1050.864,
+            "first_event_ms": 1765.734,
+            "first_event_work_ms": 1763.94901
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.006677,
+          "generated_s": 4.737431,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 1.266,
+            "prefill_ms": 450.805,
+            "semantic_generation_ms": 282.14,
+            "render_ms": 1180.404,
+            "first_event_ms": 1994.726,
+            "first_event_work_ms": 1993.351354
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.086826,
+          "generated_s": 4.834648,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 6.783,
+            "prefill_ms": 484.873,
+            "semantic_generation_ms": 275.938,
+            "render_ms": 1175.675,
+            "first_event_ms": 2051.387,
+            "first_event_work_ms": 2044.400312
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.934516,
+          "generated_s": 4.308198,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 1.569,
+            "prefill_ms": 454.662,
+            "semantic_generation_ms": 261.586,
+            "render_ms": 1103.527,
+            "first_event_ms": 1919.446,
+            "first_event_work_ms": 1917.772915
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        }
+      ]
+    },
+    "detailed": {
+      "binary_sha256": "ce3adc0ea143f1241c578f51d5bd14d48fc40e4d431f3960ccc06ab7f6ff776a",
+      "launch_to_health_s": 5.201038,
+      "warm_first_pcm_median_s": 2.052083,
+      "warm_stage_medians_ms": {
+        "setup_ms": 3.895,
+        "prefill_ms": 474.277,
+        "semantic_generation_ms": 257.205,
+        "render_ms": 1168.736,
+        "acoustic_ms": 975.705,
+        "vocoder_ms": 247.125,
+        "first_event_ms": 2019.357,
+        "first_event_work_ms": 2015.119
+      },
+      "requests": [
+        {
+          "condition": "first request",
+          "first_pcm_s": 6.214937,
+          "generated_s": 8.856974,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "voice_reference_ms": 840.932,
+            "voice_prompt_state_ms": 3541.436,
+            "setup_ms": 1.643,
+            "prefill_ms": 528.257,
+            "semantic_generation_ms": 209.463,
+            "render_ms": 985.881,
+            "acoustic_ms": 842.883,
+            "vocoder_ms": 169.197,
+            "first_event_ms": 1816.111,
+            "first_event_work_ms": 1814.372343
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 1.951114,
+          "generated_s": 4.579544,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 2.59,
+            "prefill_ms": 454.62,
+            "semantic_generation_ms": 241.275,
+            "render_ms": 1143.081,
+            "acoustic_ms": 970.659,
+            "vocoder_ms": 207.815,
+            "first_event_ms": 1920.965,
+            "first_event_work_ms": 1918.274895
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.070403,
+          "generated_s": 4.794684,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 4.664,
+            "prefill_ms": 481.988,
+            "semantic_generation_ms": 272.271,
+            "render_ms": 1167.429,
+            "acoustic_ms": 975.705,
+            "vocoder_ms": 253.355,
+            "first_event_ms": 2031.231,
+            "first_event_work_ms": 2026.425677
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.069821,
+          "generated_s": 4.753217,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 3.895,
+            "prefill_ms": 474.277,
+            "semantic_generation_ms": 283.665,
+            "render_ms": 1168.736,
+            "acoustic_ms": 984.358,
+            "vocoder_ms": 243.659,
+            "first_event_ms": 2033.109,
+            "first_event_work_ms": 2029.063228
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.052083,
+          "generated_s": 4.721512,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 4.15,
+            "prefill_ms": 454.354,
+            "semantic_generation_ms": 257.205,
+            "render_ms": 1203.043,
+            "acoustic_ms": 1012.242,
+            "vocoder_ms": 247.125,
+            "first_event_ms": 2019.357,
+            "first_event_work_ms": 2015.118593
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        },
+        {
+          "condition": "repeated voice",
+          "first_pcm_s": 2.026398,
+          "generated_s": 4.74124,
+          "audio_s": 3.3173333333333335,
+          "stages_ms": {
+            "setup_ms": 3.701,
+            "prefill_ms": 476.775,
+            "semantic_generation_ms": 235.208,
+            "render_ms": 1172.412,
+            "acoustic_ms": 958.584,
+            "vocoder_ms": 273.772,
+            "first_event_ms": 1990.77,
+            "first_event_work_ms": 1986.947083
+          },
+          "semantic_batches_before_first_pcm": 2,
+          "renderer_calls_before_first_pcm": 2
+        }
+      ]
+    }
+  }
+}

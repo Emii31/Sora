@@ -782,3 +782,7 @@ Compared four offline recognizers and two speech detectors. The chosen Whisper t
 ## 2026-11-23 — Phase 4.59 Motorola reply preparation
 
 Tested preparing local Qwen replies during the existing silence window. The draft was reusable only after exact transcript and context validation. The Motorola synthetic speaker replay and two warm PCM pairs showed no repeatable latency gain. The prototype stays experimental. See PHASE_04_59.md.
+
+## 2026-11-23 — Phase 4.60 native Sopro startup profile
+
+Profiled the approved native Sopro voice on the Motorola with a fixed line. Isolated cold voice preparation from warm synthesis and separated semantic, acoustic and vocoder work. Phase 4.60 identifies the acoustic stage as the largest warm cost. See PHASE_04_60.md.
